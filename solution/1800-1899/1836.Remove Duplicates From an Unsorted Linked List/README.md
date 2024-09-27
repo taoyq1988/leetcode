@@ -1,10 +1,21 @@
-# [1836. 从未排序的链表中移除重复元素](https://leetcode.cn/problems/remove-duplicates-from-an-unsorted-linked-list)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1836.Remove%20Duplicates%20From%20an%20Unsorted%20Linked%20List/README.md
+tags:
+    - 哈希表
+    - 链表
+---
+
+<!-- problem:start -->
+
+# [1836. 从未排序的链表中移除重复元素 🔒](https://leetcode.cn/problems/remove-duplicates-from-an-unsorted-linked-list)
 
 [English Version](/solution/1800-1899/1836.Remove%20Duplicates%20From%20an%20Unsorted%20Linked%20List/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个链表的第一个节点 <code>head</code> ，找到链表中所有出现<strong>多于一次</strong>的元素，并删除这些元素所在的节点。</p>
 
@@ -42,17 +53,21 @@
 	<li><code>1 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-“哈希表”实现。
+### 方法一：哈希表
+
+我们可以用哈希表 $cnt$ 统计链表中每个元素出现的次数，然后遍历链表，删除出现次数大于 1 的元素。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为链表的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -62,16 +77,15 @@
 #         self.next = next
 class Solution:
     def deleteDuplicatesUnsorted(self, head: ListNode) -> ListNode:
+        cnt = Counter()
         cur = head
-        counter = Counter()
         while cur:
-            counter[cur.val] += 1
+            cnt[cur.val] += 1
             cur = cur.next
-
         dummy = ListNode(0, head)
         pre, cur = dummy, head
         while cur:
-            if counter[cur.val] > 1:
+            if cnt[cur.val] > 1:
                 pre.next = cur.next
             else:
                 pre = cur
@@ -79,9 +93,7 @@ class Solution:
         return dummy.next
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -96,14 +108,13 @@ class Solution:
  */
 class Solution {
     public ListNode deleteDuplicatesUnsorted(ListNode head) {
-        Map<Integer, Integer> counter = new HashMap<>();
+        Map<Integer, Integer> cnt = new HashMap<>();
         for (ListNode cur = head; cur != null; cur = cur.next) {
-            counter.put(cur.val, counter.getOrDefault(cur.val, 0) + 1);
+            cnt.put(cur.val, cnt.getOrDefault(cur.val, 0) + 1);
         }
-
         ListNode dummy = new ListNode(0, head);
         for (ListNode pre = dummy, cur = head; cur != null; cur = cur.next) {
-            if (counter.get(cur.val) > 1) {
+            if (cnt.get(cur.val) > 1) {
                 pre.next = cur.next;
             } else {
                 pre = cur;
@@ -114,7 +125,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -130,14 +141,13 @@ class Solution {
 class Solution {
 public:
     ListNode* deleteDuplicatesUnsorted(ListNode* head) {
-        unordered_map<int, int> counter;
-        for (ListNode* cur = head; cur != nullptr; cur = cur->next) {
-            ++counter[cur->val];
+        unordered_map<int, int> cnt;
+        for (ListNode* cur = head; cur; cur = cur->next) {
+            cnt[cur->val]++;
         }
-
         ListNode* dummy = new ListNode(0, head);
-        for (ListNode* pre = dummy, *cur = head; cur != nullptr; cur = cur->next) {
-            if (counter[cur->val] > 1) {
+        for (ListNode *pre = dummy, *cur = head; cur; cur = cur->next) {
+            if (cnt[cur->val] > 1) {
                 pre->next = cur->next;
             } else {
                 pre = cur;
@@ -148,10 +158,68 @@ public:
 };
 ```
 
-### **...**
+#### Go
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func deleteDuplicatesUnsorted(head *ListNode) *ListNode {
+	cnt := map[int]int{}
+	for cur := head; cur != nil; cur = cur.Next {
+		cnt[cur.Val]++
+	}
+	dummy := &ListNode{0, head}
+	for pre, cur := dummy, head; cur != nil; cur = cur.Next {
+		if cnt[cur.Val] > 1 {
+			pre.Next = cur.Next
+		} else {
+			pre = cur
+		}
+	}
+	return dummy.Next
+}
 ```
 
+#### TypeScript
+
+```ts
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+function deleteDuplicatesUnsorted(head: ListNode | null): ListNode | null {
+    const cnt: Map<number, number> = new Map();
+    for (let cur = head; cur; cur = cur.next) {
+        const x = cur.val;
+        cnt.set(x, (cnt.get(x) ?? 0) + 1);
+    }
+    const dummy = new ListNode(0, head);
+    for (let pre = dummy, cur = head; cur; cur = cur.next) {
+        if (cnt.get(cur.val)! > 1) {
+            pre.next = cur.next;
+        } else {
+            pre = cur;
+        }
+    }
+    return dummy.next;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

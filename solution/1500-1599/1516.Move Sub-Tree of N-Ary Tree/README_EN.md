@@ -1,10 +1,23 @@
-# [1516. Move Sub-Tree of N-Ary Tree](https://leetcode.com/problems/move-sub-tree-of-n-ary-tree)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1516.Move%20Sub-Tree%20of%20N-Ary%20Tree/README_EN.md
+tags:
+    - Tree
+    - Depth-First Search
+---
+
+<!-- problem:start -->
+
+# [1516. Move Sub-Tree of N-Ary Tree 🔒](https://leetcode.com/problems/move-sub-tree-of-n-ary-tree)
 
 [中文文档](/solution/1500-1599/1516.Move%20Sub-Tree%20of%20N-Ary%20Tree/README.md)
 
 ## Description
 
-<p>Given the <code>root</code> of an <a href="https://leetcode.com/articles/introduction-to-n-ary-trees/">N-ary tree</a> of unique values, and two nodes of the tree <code>p</code> and <code>q</code>.</p>
+<!-- description:start -->
+
+<p>Given the <code>root</code> of an <span data-keyword="n-ary-tree">N-ary tree</span> of unique values, and two nodes of the tree <code>p</code> and <code>q</code>.</p>
 
 <p>You should move the subtree of the node <code>p</code> to become a direct child of node <code>q</code>. If <code>p</code> is already a direct child of <code>q</code>, do not change anything. Node <code>p</code> <strong>must be</strong> the last child in the children list of node <code>q</code>.</p>
 
@@ -31,7 +44,7 @@
 <p>For example, the above tree is serialized as <code>[1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1500-1599/1516.Move%20Sub-Tree%20of%20N-Ary%20Tree/images/move_e1.jpg" style="width: 450px; height: 188px;" />
 <pre>
 <strong>Input:</strong> root = [1,null,2,3,null,4,5,null,6,null,7,8], p = 4, q = 1
@@ -39,7 +52,7 @@
 <strong>Explanation:</strong> This example follows the second case as node p is in the sub-tree of node q. We move node p with its sub-tree to be a direct child of node q.
 Notice that node 4 is the last child of node 1.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1500-1599/1516.Move%20Sub-Tree%20of%20N-Ary%20Tree/images/move_e2.jpg" style="width: 281px; height: 281px;" />
 <pre>
 <strong>Input:</strong> root = [1,null,2,3,null,4,5,null,6,null,7,8], p = 7, q = 4
@@ -47,7 +60,7 @@ Notice that node 4 is the last child of node 1.</pre>
 <strong>Explanation:</strong> Node 7 is already a direct child of node 4. We don&#39;t change anything.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1500-1599/1516.Move%20Sub-Tree%20of%20N-Ary%20Tree/images/move_e3.jpg" style="width: 450px; height: 331px;" />
 <pre>
 <strong>Input:</strong> root = [1,null,2,3,null,4,5,null,6,null,7,8], p = 3, q = 8
@@ -66,26 +79,42 @@ Notice that node 4 is the last child of node 1.</pre>
 	<li><code>p</code> and <code>q</code> are two different nodes (i.e. <code>p != q</code>).</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

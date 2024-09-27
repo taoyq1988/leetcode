@@ -1,24 +1,45 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0553.Optimal%20Division/README.md
+tags:
+    - 数组
+    - 数学
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [553. 最优除法](https://leetcode.cn/problems/optimal-division)
 
 [English Version](/solution/0500-0599/0553.Optimal%20Division/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>给定一组<strong>正整数，</strong>相邻的整数之间将会进行浮点除法操作。例如，&nbsp;[2,3,4] -&gt; 2 / 3 / 4 。</p>
+<p>给定一正整数数组<strong> </strong><code>nums</code><strong>，</strong><code>nums</code> 中的相邻整数将进行浮点除法。</p>
 
-<p>但是，你可以在任意位置添加任意数目的括号，来改变算数的优先级。你需要找出怎么添加括号，才能得到<strong>最大的</strong>结果，并且返回相应的字符串格式的表达式。<strong>你的表达式不应该含有冗余的括号。</strong></p>
+<ul>
+	<li>例如，<code>nums = [2,3,4]</code>，我们将求表达式的值&nbsp;<code>"2/3/4"</code>。</li>
+</ul>
 
-<p><strong>示例：</strong></p>
+<p>但是，你可以在任意位置添加任意数目的括号，来改变算数的优先级。你需要找出怎么添加括号，以便计算后的表达式的值为最大值。</p>
+
+<p>以字符串格式返回具有最大值的对应表达式。</p>
+
+<p><strong>注意：</strong>你的表达式不应该包含多余的括号。</p>
+
+<p>&nbsp;</p>
+
+<p><strong>示例 1：</strong></p>
 
 <pre>
 <strong>输入:</strong> [1000,100,10,2]
-<strong>输出:</strong> &quot;1000/(100/10/2)&quot;
-<strong>解释:</strong>
-1000/(100/10/2) = 1000/((100/10)/2) = 200
-但是，以下加粗的括号 &quot;1000/(<strong>(</strong>100/10<strong>)</strong>/2)&quot; 是冗余的，
-因为他们并不影响操作的优先级，所以你需要返回 &quot;1000/(100/10/2)&quot;。
+<strong>输出:</strong> "1000/(100/10/2)"
+<strong>解释: </strong>1000/(100/10/2) = 1000/((100/10)/2) = 200
+但是，以下加粗的括号 "1000/(<strong>(</strong>100/10<strong>)</strong>/2)" 是冗余的，
+因为他们并不影响操作的优先级，所以你需要返回 "1000/(100/10/2)"。
 
 其他用例:
 1000/(100/10)/2 = 50
@@ -27,29 +48,38 @@
 1000/100/(10/2) = 2
 </pre>
 
+<p>&nbsp;</p>
+
+<p><strong>示例 2:</strong></p>
+
+<pre>
+<strong>输入:</strong> nums = [2,3,4]
+<strong>输出:</strong> "2/(3/4)"
+<strong>解释:</strong> (2/(3/4)) = 8/3 = 2.667
+可以看出，在尝试了所有的可能性之后，我们无法得到一个结果大于 2.667 的表达式。
+</pre>
+
+<p>&nbsp;</p>
+
 <p><strong>说明:</strong></p>
 
-<ol>
-	<li>输入数组的长度在 [1, 10] 之间。</li>
-	<li>数组中每个元素的大小都在 [2, 1000] 之间。</li>
-	<li>每个测试用例只有一个最优除法解。</li>
-</ol>
+<ul>
+	<li><code>1 &lt;= nums.length &lt;= 10</code></li>
+	<li><code>2 &lt;= nums[i] &lt;= 1000</code></li>
+	<li>对于给定的输入只有一种最优除法。</li>
+</ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-贪心。
-
-要使得除法的结果最大，分子应该尽可能大，而分母应该尽可能小。
-
-分子最大应该是 `nums[0]`，而分母最大是 `nums[1] / nums[2] / ... / nums[n - 1]`，此时的除法结果最大。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -62,9 +92,7 @@ class Solution:
         return f'{nums[0]}/({"/".join(map(str, nums[1:]))})'
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -86,7 +114,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -103,7 +131,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func optimalDivision(nums []int) string {
@@ -125,7 +153,7 @@ func optimalDivision(nums []int) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function optimalDivision(nums: number[]): string {
@@ -139,7 +167,7 @@ function optimalDivision(nums: number[]): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -164,10 +192,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

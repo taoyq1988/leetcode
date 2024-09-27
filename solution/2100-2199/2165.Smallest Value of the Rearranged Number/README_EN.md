@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2165.Smallest%20Value%20of%20the%20Rearranged%20Number/README_EN.md
+rating: 1361
+source: Weekly Contest 279 Q2
+tags:
+    - Math
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2165. Smallest Value of the Rearranged Number](https://leetcode.com/problems/smallest-value-of-the-rearranged-number)
 
 [中文文档](/solution/2100-2199/2165.Smallest%20Value%20of%20the%20Rearranged%20Number/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>num.</code> <strong>Rearrange</strong> the digits of <code>num</code> such that its value is <strong>minimized</strong> and it does not contain <strong>any</strong> leading zeros.</p>
 
@@ -11,7 +26,7 @@
 <p>Note that the sign of the number does not change after rearranging the digits.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> num = 310
@@ -20,7 +35,7 @@
 The arrangement with the smallest value that does not contain any leading zeros is 103.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> num = -7605
@@ -36,11 +51,17 @@ The arrangement with the smallest value that does not contain any leading zeros 
 	<li><code>-10<sup>15</sup> &lt;= num &lt;= 10<sup>15</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -71,7 +92,7 @@ class Solution:
         return int(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -114,7 +135,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -124,24 +145,19 @@ public:
         vector<int> cnt(10);
         bool neg = num < 0;
         num = abs(num);
-        while (num)
-        {
+        while (num) {
             cnt[num % 10]++;
             num /= 10;
         }
         long long ans = 0;
-        if (neg)
-        {
+        if (neg) {
             for (int i = 9; i >= 0; --i)
                 while (cnt[i]--) ans = ans * 10 + i;
             return -ans;
         }
-        if (cnt[0])
-        {
-            for (int i = 1; i < 10; ++i)
-            {
-                if (cnt[i])
-                {
+        if (cnt[0]) {
+            for (int i = 1; i < 10; ++i) {
+                if (cnt[i]) {
                     ans = ans * 10 + i;
                     cnt[i]--;
                     break;
@@ -155,7 +171,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func smallestNumber(num int64) int64 {
@@ -198,16 +214,8 @@ func smallestNumber(num int64) int64 {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

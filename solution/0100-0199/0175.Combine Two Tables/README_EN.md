@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0175.Combine%20Two%20Tables/README_EN.md
+tags:
+    - Database
+---
+
+<!-- problem:start -->
+
 # [175. Combine Two Tables](https://leetcode.com/problems/combine-two-tables)
 
 [中文文档](/solution/0100-0199/0175.Combine%20Two%20Tables/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Table: <code>Person</code></p>
 
@@ -14,7 +26,7 @@
 | lastName    | varchar |
 | firstName   | varchar |
 +-------------+---------+
-personId is the primary key column for this table.
+personId is the primary key (column with unique values) for this table.
 This table contains information about the ID of some persons and their first and last names.
 </pre>
 
@@ -31,20 +43,20 @@ This table contains information about the ID of some persons and their first and
 | city        | varchar |
 | state       | varchar |
 +-------------+---------+
-addressId is the primary key column for this table.
+addressId is the primary key (column with unique values) for this table.
 Each row of this table contains information about the city and state of one person with ID = PersonId.
 </pre>
 
 <p>&nbsp;</p>
 
-<p>Write an SQL query to report the first name, last name, city, and state of each person in the <code>Person</code> table. If the address of a <code>personId</code> is not present in the <code>Address</code> table, report <code>null</code> instead.</p>
+<p>Write a solution to report the first name, last name, city, and state of each person in the <code>Person</code> table. If the address of a <code>personId</code> is not present in the <code>Address</code> table, report <code>null</code> instead.</p>
 
 <p>Return the result table in <strong>any order</strong>.</p>
 
-<p>The query result format is in the following example.</p>
+<p>The result format is in the following example.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> 
@@ -74,19 +86,42 @@ There is no address in the address table for the personId = 1 so we return null 
 addressId = 1 contains information about the address of personId = 2.
 </pre>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: LEFT JOIN
+
+We can use a left join to join the `Person` table with the `Address` table on the condition `Person.personId = Address.personId`, which will give us the first name, last name, city, and state of each person. If the address of a `personId` is not in the `Address` table, it will be reported as `null`.
 
 <!-- tabs:start -->
 
-### **SQL**
+#### Python3
+
+```python
+import pandas as pd
+
+
+def combine_two_tables(person: pd.DataFrame, address: pd.DataFrame) -> pd.DataFrame:
+    return pd.merge(left=person, right=address, how="left", on="personId")[
+        ["firstName", "lastName", "city", "state"]
+    ]
+```
+
+#### MySQL
 
 ```sql
-SELECT p.FirstName,
-    p.LastName,
-    a.City,
-    a.State
-FROM Person p
-    LEFT JOIN Address a ON p.PersonId = a.PersonId;
+# Write your MySQL query statement below
+SELECT firstName, lastName, city, state
+FROM
+    Person
+    LEFT JOIN Address USING (personId);
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

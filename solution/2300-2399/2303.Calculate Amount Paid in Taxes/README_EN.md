@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2303.Calculate%20Amount%20Paid%20in%20Taxes/README_EN.md
+rating: 1283
+source: Weekly Contest 297 Q1
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2303. Calculate Amount Paid in Taxes](https://leetcode.com/problems/calculate-amount-paid-in-taxes)
 
 [中文文档](/solution/2300-2399/2303.Calculate%20Amount%20Paid%20in%20Taxes/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> 2D integer array <code>brackets</code> where <code>brackets[i] = [upper<sub>i</sub>, percent<sub>i</sub>]</code> means that the <code>i<sup>th</sup></code> tax bracket has an upper bound of <code>upper<sub>i</sub></code> and is taxed at a rate of <code>percent<sub>i</sub></code>. The brackets are <strong>sorted</strong> by upper bound (i.e. <code>upper<sub>i-1</sub> &lt; upper<sub>i</sub></code> for <code>0 &lt; i &lt; brackets.length</code>).</p>
 
@@ -18,7 +33,7 @@
 <p>You are given an integer <code>income</code> representing the amount of money you earned. Return <em>the amount of money that you have to pay in taxes.</em> Answers within <code>10<sup>-5</sup></code> of the actual answer will be accepted.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> brackets = [[3,50],[7,10],[12,25]], income = 10
@@ -29,7 +44,7 @@ The tax rate for the three tax brackets is 50%, 10%, and 25%, respectively.
 In total, you pay $3 * 50% + $4 * 10% + $3 * 25% = $2.65 in taxes.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> brackets = [[1,0],[4,25],[5,50]], income = 2
@@ -40,7 +55,7 @@ The tax rate for the two tax brackets is 0% and 25%, respectively.
 In total, you pay $1 * 0% + $1 * 25% = $0.25 in taxes.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> brackets = [[2,50]], income = 0
@@ -62,104 +77,94 @@ You have no income to tax, so you have to pay a total of $0 in taxes.
 	<li>The upper bound of the last tax bracket is greater than or equal to <code>income</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+We traverse `brackets`, and for each tax bracket, we calculate the tax amount for that bracket, then accumulate it.
+
+The time complexity is $O(n)$, where $n$ is the length of `brackets`. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def calculateTax(self, brackets: List[List[int]], income: int) -> float:
-        ans = idx = 0
-        prev = 0
-        while income:
-            a, b = brackets[idx]
-            d = a - prev
-            ans += min(d, income) * b / 100
-            if income <= d:
-                break
-            income -= d
-            idx += 1
-            prev = a
-        return ans
+        ans = prev = 0
+        for upper, percent in brackets:
+            ans += max(0, min(income, upper) - prev) * percent
+            prev = upper
+        return ans / 100
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public double calculateTax(int[][] brackets, int income) {
-        double ans = 0;
-        int idx = 0, prev = 0;
-        while (income > 0) {
-            int a = brackets[idx][0], b = brackets[idx][1];
-            int d = a - prev;
-            ans += Math.min(d, income) * b / 100.0;
-            if (income <= d) {
-                break;
-            }
-            income -= d;
-            ++idx;
-            prev = a;
+        int ans = 0, prev = 0;
+        for (var e : brackets) {
+            int upper = e[0], percent = e[1];
+            ans += Math.max(0, Math.min(income, upper) - prev) * percent;
+            prev = upper;
         }
-        return ans;
+        return ans / 100.0;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     double calculateTax(vector<vector<int>>& brackets, int income) {
-        double ans = 0;
-        int idx = 0, prev = 0;
-        while (income)
-        {
-            int a = brackets[idx][0], b = brackets[idx][1];
-            int d = a - prev;
-            ans += min(d, income) * b / 100.0;
-            if (income <= d) break;
-            income -= d;
-            ++idx;
-            prev = a;
+        int ans = 0, prev = 0;
+        for (auto& e : brackets) {
+            int upper = e[0], percent = e[1];
+            ans += max(0, min(income, upper) - prev) * percent;
+            prev = upper;
         }
-        return ans;
+        return ans / 100.0;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func calculateTax(brackets [][]int, income int) float64 {
-	var ans float64
-	idx, prev := 0, 0
-	for income > 0 {
-		a, b := brackets[idx][0], brackets[idx][1]
-		d := a - prev
-		ans += float64(min(d, income)*b) / 100.0
-		if income <= d {
-			break
-		}
-		income -= d
-		idx++
-		prev = a
+	var ans, prev int
+	for _, e := range brackets {
+		upper, percent := e[0], e[1]
+		ans += max(0, min(income, upper)-prev) * percent
+		prev = upper
 	}
-	return ans
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return float64(ans) / 100.0
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function calculateTax(brackets: number[][], income: number): number {
+    let ans = 0;
+    let prev = 0;
+    for (const [upper, percent] of brackets) {
+        ans += Math.max(0, Math.min(income, upper) - prev) * percent;
+        prev = upper;
+    }
+    return ans / 100;
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -178,25 +183,8 @@ impl Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function calculateTax(brackets: number[][], income: number): number {
-    let ans = 0;
-    let prev = 0;
-    for (let [upper, percent] of brackets) {
-        if (prev > income) break;
-        ans += ((Math.min(upper, income) - prev) * percent) / 100;
-        prev = upper;
-    }
-    return ans;
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

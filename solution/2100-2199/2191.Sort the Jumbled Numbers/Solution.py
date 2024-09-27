@@ -1,17 +1,15 @@
 class Solution:
     def sortJumbled(self, mapping: List[int], nums: List[int]) -> List[int]:
-        m = []
-        for i, v in enumerate(nums):
-            a, b, t = v, 0, 1
-            while 1:
-                a, x = divmod(a, 10)
-                x = mapping[x]
-                b = x * t + b
-                t *= 10
-                if a == 0:
-                    break
-            m.append((b, i, v))
-        m.sort()
-        for i, v in enumerate(m):
-            nums[i] = v[2]
-        return nums
+        def f(x: int) -> int:
+            if x == 0:
+                return mapping[0]
+            y, k = 0, 1
+            while x:
+                x, v = divmod(x, 10)
+                v = mapping[v]
+                y = k * v + y
+                k *= 10
+            return y
+
+        arr = sorted((f(x), i) for i, x in enumerate(nums))
+        return [nums[i] for _, i in arr]

@@ -1,10 +1,20 @@
-# [1692. 计算分配糖果的不同方式](https://leetcode.cn/problems/count-ways-to-distribute-candies)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1692.Count%20Ways%20to%20Distribute%20Candies/README.md
+tags:
+    - 动态规划
+---
+
+<!-- problem:start -->
+
+# [1692. 计算分配糖果的不同方式 🔒](https://leetcode.cn/problems/count-ways-to-distribute-candies)
 
 [English Version](/solution/1600-1699/1692.Count%20Ways%20to%20Distribute%20Candies/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>现有 <code>n</code> 颗 <strong>不同</strong> 糖果（分别标记为 <code>1</code> 到 <code>n</code> ）和 <code>k</code> 个相同的手袋。请把糖果分配到各个手袋中并保证每个手袋里至少有一颗糖果。</p>
 
@@ -60,32 +70,119 @@
 	<li><code>1 &lt;= k &lt;= n &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：动态规划
+
+我们定义 $f[i][j]$ 表示将 $i$ 个糖果分配给 $j$ 个手袋的不同分配方式的数量。初始时 $f[0][0]=1$，答案为 $f[n][k]$。
+
+我们考虑第 $i$ 个糖果如何分配，如果第 $i$ 个糖果分配给一个新的手袋，那么 $f[i][j]=f[i-1][j-1]$；如果第 $i$ 个糖果分配给一个已有的手袋，那么 $f[i][j]=f[i-1][j]\times j$。因此，状态转移方程为：
+
+$$
+f[i][j]=f[i-1][j-1]+f[i-1][j]\times j
+$$
+
+最终的答案为 $f[n][k]$。
+
+时间复杂度 $O(n \times k)$，空间复杂度 $O(n \times k)$。其中 $n$ 和 $k$ 分别为糖果的数量和手袋的数量。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def waysToDistribute(self, n: int, k: int) -> int:
+        mod = 10**9 + 7
+        f = [[0] * (k + 1) for _ in range(n + 1)]
+        f[0][0] = 1
+        for i in range(1, n + 1):
+            for j in range(1, k + 1):
+                f[i][j] = (f[i - 1][j] * j + f[i - 1][j - 1]) % mod
+        return f[n][k]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public int waysToDistribute(int n, int k) {
+        final int mod = (int) 1e9 + 7;
+        int[][] f = new int[n + 1][k + 1];
+        f[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= k; j++) {
+                f[i][j] = (int) ((long) f[i - 1][j] * j % mod + f[i - 1][j - 1]) % mod;
+            }
+        }
+        return f[n][k];
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int waysToDistribute(int n, int k) {
+        const int mod = 1e9 + 7;
+        int f[n + 1][k + 1];
+        memset(f, 0, sizeof(f));
+        f[0][0] = 1;
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= k; ++j) {
+                f[i][j] = (1LL * f[i - 1][j] * j + f[i - 1][j - 1]) % mod;
+            }
+        }
+        return f[n][k];
+    }
+};
 ```
 
+#### Go
+
+```go
+func waysToDistribute(n int, k int) int {
+	f := make([][]int, n+1)
+	for i := range f {
+		f[i] = make([]int, k+1)
+	}
+	f[0][0] = 1
+	const mod = 1e9 + 7
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= k; j++ {
+			f[i][j] = (f[i-1][j]*j + f[i-1][j-1]) % mod
+		}
+	}
+	return f[n][k]
+}
+```
+
+#### TypeScript
+
+```ts
+function waysToDistribute(n: number, k: number): number {
+    const mod = 10 ** 9 + 7;
+    const f: number[][] = Array.from({ length: n + 1 }, () =>
+        Array.from({ length: k + 1 }, () => 0),
+    );
+    f[0][0] = 1;
+    for (let i = 1; i <= n; ++i) {
+        for (let j = 1; j <= k; ++j) {
+            f[i][j] = (f[i - 1][j] * j + f[i - 1][j - 1]) % mod;
+        }
+    }
+    return f[n][k];
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

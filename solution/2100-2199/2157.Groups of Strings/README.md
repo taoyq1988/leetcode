@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2157.Groups%20of%20Strings/README.md
+rating: 2499
+source: 第 278 场周赛 Q4
+tags:
+    - 位运算
+    - 并查集
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2157. 字符串分组](https://leetcode.cn/problems/groups-of-strings)
 
 [English Version](/solution/2100-2199/2157.Groups%20of%20Strings/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从&nbsp;<strong>0&nbsp;</strong>开始的字符串数组&nbsp;<code>words</code>&nbsp;。每个字符串都只包含 <strong>小写英文字母</strong>&nbsp;。<code>words</code>&nbsp;中任意一个子串中，每个字母都至多只出现一次。</p>
 
@@ -66,17 +80,17 @@
 	<li><code>words[i]</code> 中每个字母最多只出现一次。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：状态压缩（位运算） + 并查集**
+### 方法一：状态压缩（位运算） + 并查集
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -121,9 +135,7 @@ class Solution:
         return [n, mx]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -161,7 +173,7 @@ class Solution {
                 }
             }
         }
-        return new int[]{n, mx};
+        return new int[] {n, mx};
     }
 
     private int find(int x) {
@@ -187,7 +199,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -199,8 +211,7 @@ public:
         unordered_map<int, int> size;
         mx = 0;
         n = words.size();
-        for (auto& word : words)
-        {
+        for (auto& word : words) {
             int x = 0;
             for (auto& c : word) x |= 1 << (c - 'a');
             p[x] = x;
@@ -208,15 +219,11 @@ public:
             mx = max(mx, size[x]);
             if (size[x] > 1) --n;
         }
-        for (auto& [x, _] : p)
-        {
-            for (int i = 0; i < 26; ++i)
-            {
+        for (auto& [x, _] : p) {
+            for (int i = 0; i < 26; ++i) {
                 unite(x, x ^ (1 << i), p, size);
-                if ((x >> i) & 1)
-                {
-                    for (int j = 0; j < 26; ++j)
-                    {
+                if ((x >> i) & 1) {
+                    for (int j = 0; j < 26; ++j) {
                         if (((x >> j) & 1) == 0) unite(x, x ^ (1 << i) | (1 << j), p, size);
                     }
                 }
@@ -242,7 +249,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func groupStrings(words []string) []int {
@@ -296,25 +303,10 @@ func groupStrings(words []string) []int {
 	}
 	return []int{n, mx}
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

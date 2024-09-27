@@ -1,20 +1,34 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/README.md
+rating: 1253
+source: 第 283 场周赛 Q1
+tags:
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2194. Excel 表中某个范围内的单元格](https://leetcode.cn/problems/cells-in-a-range-on-an-excel-sheet)
 
 [English Version](/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>Excel 表中的一个单元格 <code>(r, c)</code> 会以字符串 <code>"&lt;col&gt;&lt;row&gt;"</code> 的形式进行表示，其中：</p>
 
 <ul>
 	<li><code>&lt;col&gt;</code> 即单元格的列号 <code>c</code> 。用英文字母表中的 <strong>字母</strong> 标识。
+
     <ul>
     	<li>例如，第 <code>1</code> 列用 <code>'A'</code> 表示，第 <code>2</code> 列用 <code>'B'</code> 表示，第 <code>3</code> 列用 <code>'C'</code> 表示，以此类推。</li>
     </ul>
     </li>
     <li><code>&lt;row&gt;</code> 即单元格的行号 <code>r</code> 。第 <code>r</code> 行就用 <strong>整数</strong> <code>r</code> 标识。</li>
+
 </ul>
 
 <p>给你一个格式为 <code>"&lt;col1&gt;&lt;row1&gt;:&lt;col2&gt;&lt;row2&gt;"</code> 的字符串 <code>s</code> ，其中 <code>&lt;col1&gt;</code> 表示 <code>c1</code> 列，<code>&lt;row1&gt;</code> 表示 <code>r1</code> 行，<code>&lt;col2&gt;</code> 表示 <code>c2</code> 列，<code>&lt;row2&gt;</code> 表示 <code>r2</code> 行，并满足 <code>r1 &lt;= r2</code> 且 <code>c1 &lt;= c2</code> 。</p>
@@ -58,25 +72,33 @@
 	<li><code>s</code> 由大写英文字母、数字、和 <code>':'</code> 组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+我们直接遍历范围内的所有单元格，将其添加到答案数组中。
+
+时间复杂度 $O(m \times n)$，空间复杂度 $O(m \times n)$，其中 $m$ 和 $n$ 分别为行数和列数的取值范围。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def cellsInRange(self, s: str) -> List[str]:
-        return [chr(i) + str(j) for i in range(ord(s[0]), ord(s[-2]) + 1) for j in range(int(s[1]), int(s[-1]) + 1)]
+        return [
+            chr(i) + str(j)
+            for i in range(ord(s[0]), ord(s[-2]) + 1)
+            for j in range(int(s[1]), int(s[-1]) + 1)
+        ]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -92,45 +114,52 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<string> cellsInRange(string s) {
         vector<string> ans;
-        for (char i = s[0]; i <= s[3]; ++i)
-            for (char j = s[1]; j <= s[4]; ++j)
+        for (char i = s[0]; i <= s[3]; ++i) {
+            for (char j = s[1]; j <= s[4]; ++j) {
                 ans.push_back({i, j});
+            }
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func cellsInRange(s string) []string {
-	var ans []string
+func cellsInRange(s string) (ans []string) {
 	for i := s[0]; i <= s[3]; i++ {
 		for j := s[1]; j <= s[4]; j++ {
 			ans = append(ans, string(i)+string(j))
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
-```
-
-### **...**
-
-```
-
+function cellsInRange(s: string): string[] {
+    const ans: string[] = [];
+    for (let i = s.charCodeAt(0); i <= s.charCodeAt(3); ++i) {
+        for (let j = s.charCodeAt(1); j <= s.charCodeAt(4); ++j) {
+            ans.push(String.fromCharCode(i) + String.fromCharCode(j));
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0768.Max%20Chunks%20To%20Make%20Sorted%20II/README_EN.md
+tags:
+    - Stack
+    - Greedy
+    - Array
+    - Sorting
+    - Monotonic Stack
+---
+
+<!-- problem:start -->
+
 # [768. Max Chunks To Make Sorted II](https://leetcode.com/problems/max-chunks-to-make-sorted-ii)
 
 [中文文档](/solution/0700-0799/0768.Max%20Chunks%20To%20Make%20Sorted%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>arr</code>.</p>
 
@@ -11,7 +27,7 @@
 <p>Return <em>the largest number of chunks we can make to sort the array</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [5,4,3,2,1]
@@ -21,7 +37,7 @@ Splitting into two or more chunks will not return the required result.
 For example, splitting into [5, 4], [3, 2, 1] will result in [4, 5, 1, 2, 3], which isn&#39;t sorted.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [2,1,3,4,4]
@@ -39,11 +55,17 @@ However, splitting into [2, 1], [3], [4], [4] is the highest number of chunks po
 	<li><code>0 &lt;= arr[i] &lt;= 10<sup>8</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -60,7 +82,7 @@ class Solution:
         return len(stk)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -82,18 +104,17 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxChunksToSorted(vector<int>& arr) {
         stack<int> stk;
-        for (int& v : arr)
-        {
-            if (stk.empty() || stk.top() <= v) stk.push(v);
-            else
-            {
+        for (int& v : arr) {
+            if (stk.empty() || stk.top() <= v)
+                stk.push(v);
+            else {
                 int mx = stk.top();
                 stk.pop();
                 while (!stk.empty() && stk.top() > v) stk.pop();
@@ -105,7 +126,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxChunksToSorted(arr []int) int {
@@ -126,30 +147,50 @@ func maxChunksToSorted(arr []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxChunksToSorted(arr: number[]): number {
-    let stack = [];
-    for (let num of arr) {
-        if (stack.length && num < stack[0]) {
-            let max = stack.shift();
-            while (stack.length && num < stack[0]) {
-                stack.shift();
+    const stack = [];
+    for (const num of arr) {
+        if (stack.length !== 0 && num < stack[stack.length - 1]) {
+            const max = stack.pop();
+            while (stack.length !== 0 && num < stack[stack.length - 1]) {
+                stack.pop();
             }
-            stack.unshift(max);
+            stack.push(max);
         } else {
-            stack.unshift(num);
+            stack.push(num);
         }
     }
     return stack.length;
 }
 ```
 
-### **...**
+#### Rust
 
-```
-
+```rust
+impl Solution {
+    pub fn max_chunks_to_sorted(arr: Vec<i32>) -> i32 {
+        let mut stack = vec![];
+        for num in arr.iter() {
+            if !stack.is_empty() && num < stack.last().unwrap() {
+                let max = stack.pop().unwrap();
+                while !stack.is_empty() && num < stack.last().unwrap() {
+                    stack.pop();
+                }
+                stack.push(max);
+            } else {
+                stack.push(*num);
+            }
+        }
+        stack.len() as i32
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

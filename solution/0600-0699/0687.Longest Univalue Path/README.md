@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0687.Longest%20Univalue%20Path/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
 # [687. 最长同值路径](https://leetcode.cn/problems/longest-univalue-path)
 
 [English Version](/solution/0600-0699/0687.Longest%20Univalue%20Path/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个二叉树的<meta charset="UTF-8" />&nbsp;<code>root</code>&nbsp;，返回&nbsp;<em>最长的路径的长度</em> ，这个路径中的&nbsp;<em>每个节点具有相同值</em>&nbsp;。 这条路径可以经过也可以不经过根节点。</p>
 
@@ -40,17 +52,21 @@
 	<li>树的深度将不超过 <code>1000</code>&nbsp;</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-类似题目：[543. 二叉树的直径](/solution/0500-0599/0543.Diameter%20of%20Binary%20Tree/README.md)
+### 方法一：DFS
+
+相似题目：
+
+-   [543. 二叉树的直径](https://github.com/doocs/leetcode/blob/main/solution/0500-0599/0543.Diameter%20of%20Binary%20Tree/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -76,9 +92,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -119,7 +133,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -154,7 +168,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -189,16 +203,107 @@ func longestUnivaluePath(root *TreeNode) int {
 	dfs(root)
 	return ans
 }
+```
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+#### TypeScript
+
+```ts
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function longestUnivaluePath(root: TreeNode | null): number {
+    if (root == null) {
+        return 0;
+    }
+
+    let res = 0;
+    const dfs = (root: TreeNode | null, target: number) => {
+        if (root == null) {
+            return 0;
+        }
+
+        const { val, left, right } = root;
+
+        let l = dfs(left, val);
+        let r = dfs(right, val);
+        res = Math.max(res, l + r);
+        if (val === target) {
+            return Math.max(l, r) + 1;
+        }
+        return 0;
+    };
+    dfs(root, root.val);
+    return res;
 }
 ```
 
-### **JavaScript**
+#### Rust
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+//
+// impl TreeNode {
+//   #[inline]
+//   pub fn new(val: i32) -> Self {
+//     TreeNode {
+//       val,
+//       left: None,
+//       right: None
+//     }
+//   }
+// }
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, target: i32, res: &mut i32) -> i32 {
+        if root.is_none() {
+            return 0;
+        }
+
+        let root = root.as_ref().unwrap().as_ref().borrow();
+        let left = Self::dfs(&root.left, root.val, res);
+        let right = Self::dfs(&root.right, root.val, res);
+        *res = (*res).max(left + right);
+        if root.val == target {
+            return left.max(right) + 1;
+        }
+        0
+    }
+
+    pub fn longest_univalue_path(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if root.is_none() {
+            return 0;
+        }
+
+        let mut res = 0;
+        Self::dfs(
+            &root,
+            root.as_ref().unwrap().as_ref().borrow().val,
+            &mut res,
+        );
+        res
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -231,10 +336,45 @@ var longestUnivaluePath = function (root) {
 };
 ```
 
-### **...**
+#### C
 
-```
+```c
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
+int dfs(struct TreeNode* root, int target, int* res) {
+    if (!root) {
+        return 0;
+    }
+    int left = dfs(root->left, root->val, res);
+    int right = dfs(root->right, root->val, res);
+    *res = max(*res, left + right);
+    if (root->val == target) {
+        return max(left, right) + 1;
+    }
+    return 0;
+}
+
+int longestUnivaluePath(struct TreeNode* root) {
+    if (!root) {
+        return 0;
+    }
+    int res = 0;
+    dfs(root, root->val, &res);
+    return res;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

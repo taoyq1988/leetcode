@@ -42,12 +42,10 @@
 #        """
 class Solution:
     def deserialize(self, s: str) -> NestedInteger:
-        if not s:
+        if not s or s == '[]':
             return NestedInteger()
         if s[0] != '[':
             return NestedInteger(int(s))
-        if len(s) <= 2:
-            return NestedInteger()
         ans = NestedInteger()
         depth, j = 0, 1
         for i in range(1, len(s)):

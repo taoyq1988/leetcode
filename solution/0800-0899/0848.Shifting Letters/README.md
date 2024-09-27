@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0848.Shifting%20Letters/README.md
+tags:
+    - 数组
+    - 字符串
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [848. 字母移位](https://leetcode.cn/problems/shifting-letters)
 
 [English Version](/solution/0800-0899/0848.Shifting%20Letters/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>有一个由小写字母组成的字符串 <code>s</code>，和一个长度相同的整数数组 <code>shifts</code>。</p>
 
@@ -51,32 +63,88 @@
 </ul>
 <span style="display:block"><span style="height:0px"><span style="position:absolute">​​​​​​</span></span></span>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：后缀和
+
+对于字符串 $s$ 中的每个字符，我们需要计算其最终的偏移量，即 $\textit{shifts}[i]$ 与 $\textit{shifts}[i + 1]$ 与 $\textit{shifts}[i + 2]$ ... 的和。我们可以使用后缀和的思想，从后往前遍历 $\textit{shifts}$，计算每个字符的最终偏移量，然后对 $26$ 取模，得到最终的字符。
+
+时间复杂度 $O(n)$，其中 $n$ 为字符串 $s$ 的长度。忽略答案的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def shiftingLetters(self, s: str, shifts: List[int]) -> str:
+        n, t = len(s), 0
+        s = list(s)
+        for i in range(n - 1, -1, -1):
+            t += shifts[i]
+            j = (ord(s[i]) - ord('a') + t) % 26
+            s[i] = ascii_lowercase[j]
+        return ''.join(s)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public String shiftingLetters(String s, int[] shifts) {
+        char[] cs = s.toCharArray();
+        int n = cs.length;
+        long t = 0;
+        for (int i = n - 1; i >= 0; --i) {
+            t += shifts[i];
+            int j = (int) ((cs[i] - 'a' + t) % 26);
+            cs[i] = (char) ('a' + j);
+        }
+        return String.valueOf(cs);
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    string shiftingLetters(string s, vector<int>& shifts) {
+        long long t = 0;
+        int n = s.size();
+        for (int i = n - 1; ~i; --i) {
+            t += shifts[i];
+            int j = (s[i] - 'a' + t) % 26;
+            s[i] = 'a' + j;
+        }
+        return s;
+    }
+};
 ```
 
+#### Go
+
+```go
+func shiftingLetters(s string, shifts []int) string {
+	t := 0
+	n := len(s)
+	cs := []byte(s)
+	for i := n - 1; i >= 0; i-- {
+		t += shifts[i]
+		j := (int(cs[i]-'a') + t) % 26
+		cs[i] = byte('a' + j)
+	}
+	return string(cs)
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

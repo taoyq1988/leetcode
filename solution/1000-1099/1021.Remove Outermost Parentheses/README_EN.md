@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1021.Remove%20Outermost%20Parentheses/README_EN.md
+rating: 1311
+source: Weekly Contest 131 Q1
+tags:
+    - Stack
+    - String
+---
+
+<!-- problem:start -->
+
 # [1021. Remove Outermost Parentheses](https://leetcode.com/problems/remove-outermost-parentheses)
 
 [中文文档](/solution/1000-1099/1021.Remove%20Outermost%20Parentheses/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A valid parentheses string is either empty <code>&quot;&quot;</code>, <code>&quot;(&quot; + A + &quot;)&quot;</code>, or <code>A + B</code>, where <code>A</code> and <code>B</code> are valid parentheses strings, and <code>+</code> represents string concatenation.</p>
 
@@ -17,7 +32,7 @@
 <p>Return <code>s</code> <em>after removing the outermost parentheses of every primitive string in the primitive decomposition of </em><code>s</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;(()())(())&quot;
@@ -27,7 +42,7 @@ The input string is &quot;(()())(())&quot;, with primitive decomposition &quot;(
 After removing outer parentheses of each part, this is &quot;()()&quot; + &quot;()&quot; = &quot;()()()&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;(()())(())(()(()))&quot;
@@ -37,7 +52,7 @@ The input string is &quot;(()())(())(()(()))&quot;, with primitive decomposition
 After removing outer parentheses of each part, this is &quot;()()&quot; + &quot;()&quot; + &quot;()(())&quot; = &quot;()()()()(())&quot;.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;()()&quot;
@@ -56,11 +71,17 @@ After removing outer parentheses of each part, this is &quot;&quot; + &quot;&quo
 	<li><code>s</code> is a valid parentheses string.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -79,54 +100,55 @@ class Solution:
         return ''.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
-    public String removeOuterParentheses(String S) {
-        StringBuilder res = new StringBuilder();
+    public String removeOuterParentheses(String s) {
+        StringBuilder ans = new StringBuilder();
         int cnt = 0;
-        for (char c : S.toCharArray()) {
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
             if (c == '(') {
                 if (++cnt > 1) {
-                    res.append('(');
+                    ans.append(c);
                 }
             } else {
                 if (--cnt > 0) {
-                    res.append(')');
+                    ans.append(c);
                 }
             }
         }
-        return res.toString();
+        return ans.toString();
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string removeOuterParentheses(string s) {
-        string res;
-        int depth = 0;
-        for (char c: s) {
+        string ans;
+        int cnt = 0;
+        for (char& c : s) {
             if (c == '(') {
-                depth++;
-            }
-            if (depth != 1) {
-                res.push_back(c);
-            }
-            if (c == ')') {
-                depth--;
+                if (++cnt > 1) {
+                    ans.push_back(c);
+                }
+            } else {
+                if (--cnt) {
+                    ans.push_back(c);
+                }
             }
         }
-        return res;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func removeOuterParentheses(s string) string {
@@ -149,7 +171,7 @@ func removeOuterParentheses(s string) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function removeOuterParentheses(s: string): string {
@@ -170,7 +192,7 @@ function removeOuterParentheses(s: string): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -193,10 +215,104 @@ impl Solution {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def removeOuterParentheses(self, s: str) -> str:
+        ans = []
+        cnt = 0
+        for c in s:
+            if c == '(':
+                cnt += 1
+            if cnt > 1:
+                ans.append(c)
+            if c == ')':
+                cnt -= 1
+        return ''.join(ans)
 ```
 
+#### Java
+
+```java
+class Solution {
+    public String removeOuterParentheses(String s) {
+        StringBuilder ans = new StringBuilder();
+        int cnt = 0;
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                ++cnt;
+            }
+            if (cnt > 1) {
+                ans.append(c);
+            }
+            if (c == ')') {
+                --cnt;
+            }
+        }
+        return ans.toString();
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    string removeOuterParentheses(string s) {
+        string ans;
+        int cnt = 0;
+        for (char& c : s) {
+            if (c == '(') {
+                ++cnt;
+            }
+            if (cnt > 1) {
+                ans.push_back(c);
+            }
+            if (c == ')') {
+                --cnt;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func removeOuterParentheses(s string) string {
+	ans := []rune{}
+	cnt := 0
+	for _, c := range s {
+		if c == '(' {
+			cnt++
+		}
+		if cnt > 1 {
+			ans = append(ans, c)
+		}
+		if c == ')' {
+			cnt--
+		}
+	}
+	return string(ans)
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

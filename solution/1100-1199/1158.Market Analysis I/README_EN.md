@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1158.Market%20Analysis%20I/README_EN.md
+tags:
+    - Database
+---
+
+<!-- problem:start -->
+
 # [1158. Market Analysis I](https://leetcode.com/problems/market-analysis-i)
 
 [中文文档](/solution/1100-1199/1158.Market%20Analysis%20I/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Table: <code>Users</code></p>
 
@@ -14,7 +26,7 @@
 | join_date      | date    |
 | favorite_brand | varchar |
 +----------------+---------+
-user_id is the primary key of this table.
+user_id is the primary key (column with unique values) of this table.
 This table has the info of the users of an online shopping website where users can sell and buy items.
 </pre>
 
@@ -32,8 +44,8 @@ This table has the info of the users of an online shopping website where users c
 | buyer_id      | int     |
 | seller_id     | int     |
 +---------------+---------+
-order_id is the primary key of this table.
-item_id is a foreign key to the Items table.
+order_id is the primary key (column with unique values) of this table.
+item_id is a foreign key (reference column) to the Items table.
 buyer_id and seller_id are foreign keys to the Users table.
 </pre>
 
@@ -48,19 +60,19 @@ buyer_id and seller_id are foreign keys to the Users table.
 | item_id       | int     |
 | item_brand    | varchar |
 +---------------+---------+
-item_id is the primary key of this table.
+item_id is the primary key (column with unique values) of this table.
 </pre>
 
 <p>&nbsp;</p>
 
-<p>Write an SQL query to find for each user, the join date and the number of orders they made as a buyer in <code>2019</code>.</p>
+<p>Write a solution&nbsp;to find for each user, the join date and the number of orders they made as a buyer in <code>2019</code>.</p>
 
 <p>Return the result table in <strong>any order</strong>.</p>
 
-<p>The query result format is in the following example.</p>
+<p>The&nbsp;result format is in the following example.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> 
@@ -104,36 +116,56 @@ Items table:
 +-----------+------------+----------------+
 </pre>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **SQL**
+#### MySQL
 
 ```sql
-SELECT user_id AS buyer_id,
-    join_date,
+# Write your MySQL query statement below
+SELECT
+    u.user_id AS buyer_id,
+    u.join_date,
     COUNT(order_id) AS orders_in_2019
-FROM users AS u
-    LEFT JOIN orders AS o ON u.user_id = o.buyer_id
-    AND YEAR(order_date) = 2019
+FROM
+    Users AS u
+    LEFT JOIN Orders AS o ON u.user_id = o.buyer_id AND YEAR(order_date) = 2019
 GROUP BY user_id;
 ```
 
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### MySQL
+
 ```sql
+# Write your MySQL query statement below
 SELECT
     user_id AS buyer_id,
     join_date,
-    (
-        SELECT
-            COUNT(*)
-        FROM
-            orders AS o
-        WHERE
-            u.user_id = o.buyer_id AND YEAR(order_date) = 2019
-    ) AS orders_in_2019
+    IFNULL(SUM(YEAR(order_date) = 2019), 0) AS orders_in_2019
 FROM
-    users AS u;
+    Users AS u
+    LEFT JOIN Orders AS o ON u.user_id = buyer_id
+GROUP BY 1;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

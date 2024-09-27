@@ -1,10 +1,20 @@
-# [2113. 查询删除和添加元素后的数组](https://leetcode.cn/problems/elements-in-array-after-removing-and-replacing-elements)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2113.Elements%20in%20Array%20After%20Removing%20and%20Replacing%20Elements/README.md
+tags:
+    - 数组
+---
+
+<!-- problem:start -->
+
+# [2113. 查询删除和添加元素后的数组 🔒](https://leetcode.cn/problems/elements-in-array-after-removing-and-replacing-elements)
 
 [English Version](/solution/2100-2199/2113.Elements%20in%20Array%20After%20Removing%20and%20Replacing%20Elements/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个&nbsp;<strong>下标从 0 开始</strong>&nbsp;的数组&nbsp;<code>nums</code>。一开始，在第 <code>0</code> 分钟，数组没有变化。此后每过一分钟，数组的 <strong>最左边</strong> 的元素将被移除，直到数组为空。然后，每过一分钟，数组的 <strong>尾部</strong> 将添加一个元素，添加的顺序和删除的顺序相同，直到数组被复原。此后上述操作无限循环进行。</p>
 
@@ -70,40 +80,129 @@
 	<li><code>0 &lt;= index<sub>j</sub> &lt; nums.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：直接计算
+
+我们先初始化一个数组 $ans$，长度为 $m$，用于存储答案，初始化所有元素为 $-1$。
+
+接下来遍历数组 $queries$，对于每个查询，我们先获取当前查询的时间 $t$ 和索引 $i$，先将 $t$ 对 $2n$ 取模，然后判断 $t$ 和 $n$ 的关系：
+
+-   如果 $t \lt n$，那么 $t$ 时刻的数组元素个数为 $n - t$，并且数组元素是原数组元素整体向左移动 $t$ 个位置后的结果，因此如果 $i \lt n - t$，答案为 $nums[i + t]$；
+-   如果 $t \gt n$，那么 $t$ 时刻的数组元素个数为 $t - n$，并且数组元素是原数组元素的前 $t - n$ 个元素，因此如果 $i \lt t - n$，答案为 $nums[i]$。
+
+最后返回数组 $ans$ 即可。
+
+时间复杂度 $O(m)$，其中 $m$ 为数组 $queries$ 的长度。忽略答案数组的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def elementInNums(self, nums: List[int], queries: List[List[int]]) -> List[int]:
+        n, m = len(nums), len(queries)
+        ans = [-1] * m
+        for j, (t, i) in enumerate(queries):
+            t %= 2 * n
+            if t < n and i < n - t:
+                ans[j] = nums[i + t]
+            elif t > n and i < t - n:
+                ans[j] = nums[i]
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public int[] elementInNums(int[] nums, int[][] queries) {
+        int n = nums.length, m = queries.length;
+        int[] ans = new int[m];
+        for (int j = 0; j < m; ++j) {
+            ans[j] = -1;
+            int t = queries[j][0], i = queries[j][1];
+            t %= (2 * n);
+            if (t < n && i < n - t) {
+                ans[j] = nums[i + t];
+            } else if (t > n && i < t - n) {
+                ans[j] = nums[i];
+            }
+        }
+        return ans;
+    }
+}
 ```
 
-### **TypeScript**
+#### C++
 
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+```cpp
+class Solution {
+public:
+    vector<int> elementInNums(vector<int>& nums, vector<vector<int>>& queries) {
+        int n = nums.size(), m = queries.size();
+        vector<int> ans(m, -1);
+        for (int j = 0; j < m; ++j) {
+            int t = queries[j][0], i = queries[j][1];
+            t %= (n * 2);
+            if (t < n && i < n - t) {
+                ans[j] = nums[i + t];
+            } else if (t > n && i < t - n) {
+                ans[j] = nums[i];
+            }
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func elementInNums(nums []int, queries [][]int) []int {
+	n, m := len(nums), len(queries)
+	ans := make([]int, m)
+	for j, q := range queries {
+		t, i := q[0], q[1]
+		t %= (n * 2)
+		ans[j] = -1
+		if t < n && i < n-t {
+			ans[j] = nums[i+t]
+		} else if t > n && i < t-n {
+			ans[j] = nums[i]
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
 
 ```ts
-
-```
-
-### **...**
-
-```
-
+function elementInNums(nums: number[], queries: number[][]): number[] {
+    const n = nums.length;
+    const m = queries.length;
+    const ans: number[] = Array(m).fill(-1);
+    for (let j = 0; j < m; ++j) {
+        let [t, i] = queries[j];
+        t %= 2 * n;
+        if (t < n && i < n - t) {
+            ans[j] = nums[i + t];
+        } else if (t >= n && i < t - n) {
+            ans[j] = nums[i];
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

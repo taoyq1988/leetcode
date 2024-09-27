@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2218.Maximum%20Value%20of%20K%20Coins%20From%20Piles/README.md
+rating: 2157
+source: 第 286 场周赛 Q4
+tags:
+    - 数组
+    - 动态规划
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [2218. 从栈中取出 K 个硬币的最大面值和](https://leetcode.cn/problems/maximum-value-of-k-coins-from-piles)
 
 [English Version](/solution/2200-2299/2218.Maximum%20Value%20of%20K%20Coins%20From%20Piles/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>一张桌子上总共有 <code>n</code>&nbsp;个硬币 <b>栈</b>&nbsp;。每个栈有 <strong>正整数</strong>&nbsp;个带面值的硬币。</p>
 
@@ -46,11 +60,13 @@
 	<li><code>1 &lt;= k &lt;= sum(piles[i].length) &lt;= 2000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：动态规划**
+### 方法一：动态规划
 
 对每个栈求前缀和 $s$，$s_i$ 视为一个体积为 $i$ 且价值为 $s_i$ 的物品。
 
@@ -62,9 +78,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -80,22 +94,7 @@ class Solution:
         return dp[-1][-1]
 ```
 
-```python
-class Solution:
-    def maxValueOfCoins(self, piles: List[List[int]], k: int) -> int:
-        presum = [list(accumulate(p, initial=0)) for p in piles]
-        dp = [0] * (k + 1)
-        for s in presum:
-            for j in range(k, -1, -1):
-                for idx, v in enumerate(s):
-                    if j >= idx:
-                        dp[j] = max(dp[j], dp[j - idx] + v)
-        return dp[-1]
-```
-
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -125,27 +124,23 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxValueOfCoins(vector<vector<int>>& piles, int k) {
         vector<vector<int>> presum;
-        for (auto& p : piles)
-        {
+        for (auto& p : piles) {
             int m = p.size();
             vector<int> s(m + 1);
             for (int i = 0; i < m; ++i) s[i + 1] = s[i] + p[i];
             presum.push_back(s);
         }
         vector<int> dp(k + 1);
-        for (auto& s : presum)
-        {
-            for (int j = k; ~j; --j)
-            {
-                for (int idx = 0; idx < s.size(); ++idx)
-                {
+        for (auto& s : presum) {
+            for (int j = k; ~j; --j) {
+                for (int idx = 0; idx < s.size(); ++idx) {
                     if (j >= idx) dp[j] = max(dp[j], dp[j - idx] + s[idx]);
                 }
             }
@@ -155,7 +150,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxValueOfCoins(piles [][]int, k int) int {
@@ -180,25 +175,35 @@ func maxValueOfCoins(piles [][]int, k int) int {
 	}
 	return dp[k]
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def maxValueOfCoins(self, piles: List[List[int]], k: int) -> int:
+        presum = [list(accumulate(p, initial=0)) for p in piles]
+        dp = [0] * (k + 1)
+        for s in presum:
+            for j in range(k, -1, -1):
+                for idx, v in enumerate(s):
+                    if j >= idx:
+                        dp[j] = max(dp[j], dp[j - idx] + v)
+        return dp[-1]
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

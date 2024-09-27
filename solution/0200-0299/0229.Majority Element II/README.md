@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0229.Majority%20Element%20II/README.md
+tags:
+    - 数组
+    - 哈希表
+    - 计数
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [229. 多数元素 II](https://leetcode.cn/problems/majority-element-ii)
 
 [English Version](/solution/0200-0299/0229.Majority%20Element%20II/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个大小为&nbsp;<em>n&nbsp;</em>的整数数组，找出其中所有出现超过&nbsp;<code>⌊ n/3 ⌋</code>&nbsp;次的元素。</p>
 
@@ -42,17 +55,17 @@
 
 <p><strong>进阶：</strong>尝试设计时间复杂度为 O(n)、空间复杂度为 O(1)的算法解决此问题。</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-摩尔投票法。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -73,9 +86,7 @@ class Solution:
         return [m for m in [m1, m2] if nums.count(m) > len(nums) // 3]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -119,7 +130,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -127,22 +138,18 @@ public:
     vector<int> majorityElement(vector<int>& nums) {
         int n1 = 0, n2 = 0;
         int m1 = 0, m2 = 1;
-        for (int m : nums)
-        {
-            if (m == m1) ++n1;
-            else if (m == m2) ++n2;
-            else if (n1 == 0)
-            {
+        for (int m : nums) {
+            if (m == m1)
+                ++n1;
+            else if (m == m2)
+                ++n2;
+            else if (n1 == 0) {
                 m1 = m;
                 ++n1;
-            }
-            else if (n2 == 0)
-            {
+            } else if (n2 == 0) {
                 m2 = m;
                 ++n2;
-            }
-            else
-            {
+            } else {
                 --n1;
                 --n2;
             }
@@ -155,7 +162,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func majorityElement(nums []int) []int {
@@ -193,7 +200,7 @@ func majorityElement(nums []int) []int {
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -234,10 +241,30 @@ public class Solution {
 }
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param Integer[] $nums
+     * @return Integer[]
+     */
+    function majorityElement($nums) {
+        $rs = [];
+        $n = count($nums);
+        for ($i = 0; $i < $n; $i++) {
+            $hashmap[$nums[$i]] += 1;
+            if ($hashmap[$nums[$i]] > $n / 3) {
+                array_push($rs, $nums[$i]);
+            }
+        }
+        return array_unique($rs);
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

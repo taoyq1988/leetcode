@@ -1,14 +1,29 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2266.Count%20Number%20of%20Texts/README.md
+rating: 1856
+source: 第 292 场周赛 Q3
+tags:
+    - 哈希表
+    - 数学
+    - 字符串
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [2266. 统计打字方案数](https://leetcode.cn/problems/count-number-of-texts)
 
 [English Version](/solution/2200-2299/2266.Count%20Number%20of%20Texts/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>Alice 在给 Bob 用手机打字。数字到字母的 <strong>对应</strong>&nbsp;如下图所示。</p>
 
-<p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2266.Count%20Number%20of%20Texts/images/1200px-telephone-keypad2svg.png" style="width: 200px; height: 162px;"></p>
+<p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2266.Count%20Number%20of%20Texts/images/1722224025-gsUAIv-image.png" style="width: 200px; height: 162px;" /></p>
 
 <p>为了 <strong>打出</strong>&nbsp;一个字母，Alice 需要 <strong>按</strong>&nbsp;对应字母 <code>i</code>&nbsp;次，<code>i</code>&nbsp;是该字母在这个按键上所处的位置。</p>
 
@@ -31,7 +46,8 @@
 
 <p><strong>示例 1：</strong></p>
 
-<pre><b>输入：</b>pressedKeys = "22233"
+<pre>
+<b>输入：</b>pressedKeys = "22233"
 <b>输出：</b>8
 <strong>解释：</strong>
 Alice 可能发出的文字信息包括：
@@ -41,7 +57,8 @@ Alice 可能发出的文字信息包括：
 
 <p><strong>示例 2：</strong></p>
 
-<pre><b>输入：</b>pressedKeys = "222222222222222222222222222222222222"
+<pre>
+<b>输入：</b>pressedKeys = "222222222222222222222222222222222222"
 <b>输出：</b>82876089
 <strong>解释：</strong>
 总共有 2082876103 种 Alice 可能发出的文字信息。
@@ -57,15 +74,17 @@ Alice 可能发出的文字信息包括：
 	<li><code>pressedKeys</code> 只包含数字&nbsp;<code>'2'</code>&nbsp;到&nbsp;<code>'9'</code>&nbsp;。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 mod = 10**9 + 7
@@ -85,9 +104,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -115,7 +132,8 @@ class Solution {
         for (int i = 0, n = pressedKeys.length(); i < n; ++i) {
             int j = i;
             char c = pressedKeys.charAt(i);
-            for (; j + 1 < n && pressedKeys.charAt(j + 1) == c; ++j);
+            for (; j + 1 < n && pressedKeys.charAt(j + 1) == c; ++j)
+                ;
             int cnt = j - i + 1;
             ans = c == '7' || c == '9' ? ans * g[cnt] : ans * f[cnt];
             ans %= MOD;
@@ -126,7 +144,7 @@ class Solution {
 }
 ```
 
-### **Go**
+#### Go
 
 ```go
 const mod int = 1e9 + 7
@@ -162,16 +180,8 @@ func countTexts(pressedKeys string) int {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

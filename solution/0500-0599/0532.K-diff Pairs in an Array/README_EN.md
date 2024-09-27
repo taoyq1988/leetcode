@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0532.K-diff%20Pairs%20in%20an%20Array/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - Two Pointers
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [532. K-diff Pairs in an Array](https://leetcode.com/problems/k-diff-pairs-in-an-array)
 
 [中文文档](/solution/0500-0599/0532.K-diff%20Pairs%20in%20an%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of integers <code>nums</code> and an integer <code>k</code>, return <em>the number of <b>unique</b> k-diff pairs in the array</em>.</p>
 
@@ -11,13 +27,13 @@
 <ul>
 	<li><code>0 &lt;= i, j &lt; nums.length</code></li>
 	<li><code>i != j</code></li>
-	<li><code>nums[i] - nums[j] == k</code></li>
+	<li><code>|nums[i] - nums[j]| == k</code></li>
 </ul>
 
 <p><strong>Notice</strong> that <code>|val|</code> denotes the absolute value of <code>val</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,1,4,1,5], k = 2
@@ -26,7 +42,7 @@
 Although we have two 1s in the input, we should only return the number of <strong>unique</strong> pairs.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,2,3,4,5], k = 1
@@ -34,7 +50,7 @@ Although we have two 1s in the input, we should only return the number of <stron
 <strong>Explanation:</strong> There are four 1-diff pairs in the array, (1, 2), (2, 3), (3, 4) and (4, 5).
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,3,1,5,4], k = 0
@@ -51,11 +67,17 @@ Although we have two 1s in the input, we should only return the number of <stron
 	<li><code>0 &lt;= k &lt;= 10<sup>7</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -70,7 +92,7 @@ class Solution:
         return len(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -91,7 +113,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -99,8 +121,7 @@ public:
     int findPairs(vector<int>& nums, int k) {
         unordered_set<int> vis;
         unordered_set<int> ans;
-        for (int& v : nums)
-        {
+        for (int& v : nums) {
             if (vis.count(v - k)) ans.insert(v - k);
             if (vis.count(v + k)) ans.insert(v);
             vis.insert(v);
@@ -110,7 +131,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findPairs(nums []int, k int) int {
@@ -129,7 +150,7 @@ func findPairs(nums []int, k int) int {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -164,10 +185,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

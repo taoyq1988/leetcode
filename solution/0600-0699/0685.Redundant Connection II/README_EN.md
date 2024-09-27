@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0685.Redundant%20Connection%20II/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Union Find
+    - Graph
+---
+
+<!-- problem:start -->
+
 # [685. Redundant Connection II](https://leetcode.com/problems/redundant-connection-ii)
 
 [中文文档](/solution/0600-0699/0685.Redundant%20Connection%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>In this problem, a rooted tree is a <b>directed</b> graph such that, there is exactly one node (the root) for which all other nodes are descendants of this node, plus every node has exactly one parent, except for the root node which has no parents.</p>
 
@@ -13,14 +28,14 @@
 <p>Return <em>an edge that can be removed so that the resulting graph is a rooted tree of</em> <code>n</code> <em>nodes</em>. If there are multiple answers, return the answer that occurs last in the given 2D-array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0600-0699/0685.Redundant%20Connection%20II/images/graph1.jpg" style="width: 222px; height: 222px;" />
 <pre>
 <strong>Input:</strong> edges = [[1,2],[1,3],[2,3]]
 <strong>Output:</strong> [2,3]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0600-0699/0685.Redundant%20Connection%20II/images/graph2.jpg" style="width: 222px; height: 382px;" />
 <pre>
 <strong>Input:</strong> edges = [[1,2],[2,3],[3,4],[4,1],[1,5]]
@@ -38,13 +53,17 @@
 	<li><code>u<sub>i</sub> != v<sub>i</sub></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Union find.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class UnionFind:
@@ -86,7 +105,7 @@ class Solution:
         return edges[conflict]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -114,7 +133,7 @@ class Solution {
         }
         int v = edges[conflict][1];
         if (cycle != -1) {
-            return new int[]{p[v], v};
+            return new int[] {p[v], v};
         }
         return edges[conflict];
     }
@@ -152,7 +171,7 @@ class UnionFind {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class UnionFind {
@@ -160,7 +179,9 @@ public:
     vector<int> p;
     int n;
 
-    UnionFind(int _n): n(_n), p(_n) {
+    UnionFind(int _n)
+        : n(_n)
+        , p(_n) {
         iota(p.begin(), p.end(), 0);
     }
 
@@ -186,12 +207,11 @@ public:
         for (int i = 0; i <= n; ++i) p[i] = i;
         UnionFind uf(n + 1);
         int conflict = -1, cycle = -1;
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             int u = edges[i][0], v = edges[i][1];
-            if (p[v] != v) conflict = i;
-            else
-            {
+            if (p[v] != v)
+                conflict = i;
+            else {
                 p[v] = u;
                 if (!uf.unite(u, v)) cycle = i;
             }
@@ -204,7 +224,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 type unionFind struct {
@@ -266,10 +286,8 @@ func findRedundantDirectedConnection(edges [][]int) []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

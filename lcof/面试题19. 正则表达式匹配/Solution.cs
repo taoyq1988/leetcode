@@ -1,29 +1,35 @@
 public class Solution {
+    private string s;
+    private string p;
+    private int m;
+    private int n;
+    private int[,] f;
+
     public bool IsMatch(string s, string p) {
-        int m = s.Length, n = p.Length;
-        if (n == 0) {
-            return m == 0;
+        m = s.Length;
+        n = p.Length;
+        f = new int[m + 1, n + 1];
+        this.s = s;
+        this.p = p;
+        return dfs(0, 0);
+    }
+
+    private bool dfs(int i, int j) {
+        if (j >= n) {
+            return i == m;
         }
-        bool[,] dp = new bool[m+1,n+1];
-        dp[0,0] = true;
-        for(int j = 1; j < n + 1; j++) {
-            if (p[j-1] == '*') {
-                dp[0,j] = dp[0,j-2];
-            } 
+        if (f[i, j] != 0) {
+            return f[i, j] == 1;
         }
-        for (int i = 1; i < m + 1; i++) {
-            for (int j = 1; j < n + 1; j++) {
-                if (s[i-1] == p[j-1] || p[j-1] == '.') {
-                    dp[i,j] = dp[i-1,j-1];
-                } else if (p[j-1] == '*') {
-                    if (p[j-2] == '.' || p[j-2] == s[i-1]) {
-                        dp[i,j] = dp[i,j-2] || dp[i-1,j];
-                    } else {
-                        dp[i,j] = dp[i,j-2];
-                    }
-                }
+        int res = -1;
+        if (j + 1 < n && p[j + 1] == '*') {
+            if (dfs(i, j + 2) || (i < m && (s[i] == p[j] || p[j] == '.') && dfs(i + 1, j))) {
+                res = 1;
             }
+        } else if (i < m && (s[i] == p[j] || p[j] == '.') && dfs(i + 1, j + 1)) {
+            res = 1;
         }
-        return dp[m,n];
+        f[i, j] = res;
+        return res == 1;
     }
 }

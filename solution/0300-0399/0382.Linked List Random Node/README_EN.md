@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0382.Linked%20List%20Random%20Node/README_EN.md
+tags:
+    - Reservoir Sampling
+    - Linked List
+    - Math
+    - Randomized
+---
+
+<!-- problem:start -->
+
 # [382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node)
 
 [中文文档](/solution/0300-0399/0382.Linked%20List%20Random%20Node/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a singly linked list, return a random node&#39;s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
 
@@ -14,7 +29,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0300-0399/0382.Linked%20List%20Random%20Node/images/getrand-linked-list.jpg" style="width: 302px; height: 62px;" />
 <pre>
 <strong>Input</strong>
@@ -51,11 +66,17 @@ solution.getRandom(); // return 3
 	<li>Could you solve this efficiently without using extra space?</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -64,7 +85,6 @@ solution.getRandom(); // return 3
 #         self.val = val
 #         self.next = next
 class Solution:
-
     def __init__(self, head: Optional[ListNode]):
         self.head = head
 
@@ -85,7 +105,7 @@ class Solution:
 # param_1 = obj.getRandom()
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -126,7 +146,7 @@ class Solution {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -149,8 +169,7 @@ public:
 
     int getRandom() {
         int n = 0, ans = 0;
-        for (ListNode* node = head; node != nullptr; node = node->next)
-        {
+        for (ListNode* node = head; node != nullptr; node = node->next) {
             n += 1;
             int x = 1 + rand() % n;
             if (n == x) ans = node->val;
@@ -166,7 +185,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -203,10 +222,8 @@ func (this *Solution) GetRandom() int {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

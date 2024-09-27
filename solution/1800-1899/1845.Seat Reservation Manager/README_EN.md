@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1845.Seat%20Reservation%20Manager/README_EN.md
+rating: 1428
+source: Biweekly Contest 51 Q2
+tags:
+    - Design
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1845. Seat Reservation Manager](https://leetcode.com/problems/seat-reservation-manager)
 
 [中文文档](/solution/1800-1899/1845.Seat%20Reservation%20Manager/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a system that manages the reservation state of <code>n</code> seats that are numbered from <code>1</code> to <code>n</code>.</p>
 
@@ -15,7 +30,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -47,17 +62,33 @@ seatManager.unreserve(5); // Unreserve seat 5, so now the available seats are [5
 	<li>At most <code>10<sup>5</sup></code> calls <strong>in total</strong> will be made to <code>reserve</code> and <code>unreserve</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Priority Queue (Min Heap)
+
+We can use a priority queue (min heap) to maintain the smallest number of reservable seats.
+
+Initially, put all seat numbers into the priority queue.
+
+When the `reserve` method is called, take out the smallest number from the priority queue, which is the smallest number of reservable seats.
+
+When the `unreserve` method is called, put the seat number back into the priority queue.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Where $n$ is the number of seats.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class SeatManager:
-
     def __init__(self, n: int):
-        self.q = [i for i in range(1, n + 1)]
+        self.q = list(range(1, n + 1))
+        heapify(self.q)
 
     def reserve(self) -> int:
         return heappop(self.q)
@@ -72,14 +103,13 @@ class SeatManager:
 # obj.unreserve(seatNumber)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class SeatManager {
-    private PriorityQueue<Integer> q;
+    private PriorityQueue<Integer> q = new PriorityQueue<>();
 
     public SeatManager(int n) {
-        q = new PriorityQueue<>(n);
         for (int i = 1; i <= n; ++i) {
             q.offer(i);
         }
@@ -102,10 +132,115 @@ class SeatManager {
  */
 ```
 
-### **...**
+#### C++
 
+```cpp
+class SeatManager {
+public:
+    SeatManager(int n) {
+        for (int i = 1; i <= n; ++i) {
+            q.push(i);
+        }
+    }
+
+    int reserve() {
+        int seat = q.top();
+        q.pop();
+        return seat;
+    }
+
+    void unreserve(int seatNumber) {
+        q.push(seatNumber);
+    }
+
+private:
+    priority_queue<int, vector<int>, greater<int>> q;
+};
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * SeatManager* obj = new SeatManager(n);
+ * int param_1 = obj->reserve();
+ * obj->unreserve(seatNumber);
+ */
 ```
 
+#### Go
+
+```go
+type SeatManager struct {
+	q hp
+}
+
+func Constructor(n int) SeatManager {
+	q := hp{}
+	for i := 1; i <= n; i++ {
+		heap.Push(&q, i)
+	}
+	return SeatManager{q}
+}
+
+func (this *SeatManager) Reserve() int {
+	return heap.Pop(&this.q).(int)
+}
+
+func (this *SeatManager) Unreserve(seatNumber int) {
+	heap.Push(&this.q, seatNumber)
+}
+
+type hp struct{ sort.IntSlice }
+
+func (h hp) Less(i, j int) bool { return h.IntSlice[i] < h.IntSlice[j] }
+func (h *hp) Push(v any)        { h.IntSlice = append(h.IntSlice, v.(int)) }
+func (h *hp) Pop() any {
+	a := h.IntSlice
+	v := a[len(a)-1]
+	h.IntSlice = a[:len(a)-1]
+	return v
+}
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * obj := Constructor(n);
+ * param_1 := obj.Reserve();
+ * obj.Unreserve(seatNumber);
+ */
+```
+
+#### C#
+
+```cs
+public class SeatManager {
+    private SortedSet<int> availableSeats;
+
+    public SeatManager(int n) {
+        availableSeats = new SortedSet<int>();
+        for (int i = 1; i <= n; i++) {
+            availableSeats.Add(i);
+        }
+    }
+
+    public int Reserve() {
+        int reservedSeat = availableSeats.Min;
+        availableSeats.Remove(reservedSeat);
+        return reservedSeat;
+    }
+
+    public void Unreserve(int seatNumber) {
+        availableSeats.Add(seatNumber);
+    }
+}
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * SeatManager obj = new SeatManager(n);
+ * int param_1 = obj.Reserve();
+ * obj.Unreserve(seatNumber);
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

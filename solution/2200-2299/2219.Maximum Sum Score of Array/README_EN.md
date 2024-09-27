@@ -1,8 +1,21 @@
-# [2219. Maximum Sum Score of Array](https://leetcode.com/problems/maximum-sum-score-of-array)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2219.Maximum%20Sum%20Score%20of%20Array/README_EN.md
+tags:
+    - Array
+    - Prefix Sum
+---
+
+<!-- problem:start -->
+
+# [2219. Maximum Sum Score of Array 🔒](https://leetcode.com/problems/maximum-sum-score-of-array)
 
 [中文文档](/solution/2200-2299/2219.Maximum%20Sum%20Score%20of%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> of length <code>n</code>.</p>
 
@@ -16,7 +29,7 @@
 <p>Return <em>the <strong>maximum</strong> <strong>sum </strong><strong>score</strong> of </em><code>nums</code><em> at any index.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [4,3,-2,5]
@@ -29,7 +42,7 @@ The sum score at index 3 is max(4 + 3 + -2 + 5, 5) = max(10, 5) = 10.
 The maximum sum score of nums is 10.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [-3,-5]
@@ -49,11 +62,17 @@ The maximum sum score of nums is -3.
 	<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -62,7 +81,7 @@ class Solution:
         return max(max(s[i + 1], s[-1] - s[i]) for i in range(len(nums)))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -81,7 +100,40 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    long long maximumSumScore(vector<int>& nums) {
+        int n = nums.size();
+        vector<long long> s(n + 1);
+        for (int i = 0; i < n; ++i) s[i + 1] = s[i] + nums[i];
+        long long ans = INT_MIN;
+        for (int i = 0; i < n; ++i) ans = max(ans, max(s[i + 1], s[n] - s[i]));
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func maximumSumScore(nums []int) int64 {
+	n := len(nums)
+	s := make([]int64, n+1)
+	for i, v := range nums {
+		s[i+1] = s[i] + int64(v)
+	}
+	var ans int64 = math.MinInt64
+	for i := 0; i < n; i++ {
+		ans = max(ans, max(s[i+1], s[n]-s[i]))
+	}
+	return ans
+}
+```
+
+#### TypeScript
 
 ```ts
 function maximumSumScore(nums: number[]): number {
@@ -98,47 +150,7 @@ function maximumSumScore(nums: number[]): number {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    long long maximumSumScore(vector<int>& nums) {
-        int n = nums.size();
-        vector<long long> s(n + 1);
-        for (int i = 0; i < n; ++i) s[i + 1] = s[i] + nums[i];
-        long long ans = INT_MIN;
-        for (int i = 0; i < n; ++i) ans = max(ans, max(s[i + 1], s[n] - s[i]));
-        return ans;
-    }
-};
-```
-
-### **Go**
-
-```go
-func maximumSumScore(nums []int) int64 {
-	n := len(nums)
-	s := make([]int64, n+1)
-	for i, v := range nums {
-		s[i+1] = s[i] + int64(v)
-	}
-	var ans int64 = math.MinInt64
-	for i := 0; i < n; i++ {
-		ans = max(ans, max(s[i+1], s[n]-s[i]))
-	}
-	return ans
-}
-
-func max(a, b int64) int64 {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -159,10 +171,8 @@ var maximumSumScore = function (nums) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

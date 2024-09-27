@@ -5,16 +5,10 @@ impl Solution {
         let n = s.len();
         let mut count = [0; 26];
         for i in 0..n {
-            count[(s[i] - b'a') as usize] -= 1;
-            count[(t[i] - b'a') as usize] += 1;
+            count[(s[i] - b'a') as usize] += 1;
+            count[(t[i] - b'a') as usize] -= 1;
         }
-        let mut res = *t.last().unwrap();
-        for i in 0..26 {
-            if count[i] == 1 {
-                res = (i as u8) + b'a';
-                break;
-            }
-        }
-        char::from(res)
+        count[(t[n] - b'a') as usize] -= 1;
+        char::from(b'a' + (count.iter().position(|&v| v != 0).unwrap() as u8))
     }
 }

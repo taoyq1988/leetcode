@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2178.Maximum%20Split%20of%20Positive%20Even%20Integers/README.md
+rating: 1538
+source: 第 72 场双周赛 Q3
+tags:
+    - 贪心
+    - 数学
+    - 回溯
+---
+
+<!-- problem:start -->
+
 # [2178. 拆分成最多数目的正偶数之和](https://leetcode.cn/problems/maximum-split-of-positive-even-integers)
 
 [English Version](/solution/2100-2199/2178.Maximum%20Split%20of%20Positive%20Even%20Integers/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数&nbsp;<code>finalSum</code>&nbsp;。请你将它拆分成若干个&nbsp;<strong>互不相同</strong> 的正偶数之和，且拆分出来的正偶数数目&nbsp;<strong>最多</strong>&nbsp;。</p>
 
@@ -53,17 +67,23 @@
 	<li><code>1 &lt;= finalSum &lt;= 10<sup>10</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：贪心
+
+如果 $finalSum$ 是奇数，那么无法拆分成若干个互不相同的正偶数之和，直接返回空数组。
+
+否则，我们可以贪心地按照 $2, 4, 6, \cdots$ 的顺序拆分 $finalSum$，直到 $finalSum$ 无法再拆分出一个不同的正偶数为止，此时我们将剩余的 $finalSum$ 加到最后一个正偶数上即可。
+
+时间复杂度 $O(\sqrt{finalSum})$，忽略答案数组的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -80,9 +100,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +119,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -109,8 +127,7 @@ public:
     vector<long long> maximumEvenSplit(long long finalSum) {
         vector<long long> ans;
         if (finalSum % 2) return ans;
-        for (long long i = 2; i <= finalSum; i += 2)
-        {
+        for (long long i = 2; i <= finalSum; i += 2) {
             ans.push_back(i);
             finalSum -= i;
         }
@@ -120,33 +137,60 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func maximumEvenSplit(finalSum int64) []int64 {
-	ans := []int64{}
+func maximumEvenSplit(finalSum int64) (ans []int64) {
 	if finalSum%2 == 1 {
-		return ans
+		return
 	}
 	for i := int64(2); i <= finalSum; i += 2 {
 		ans = append(ans, i)
 		finalSum -= i
 	}
 	ans[len(ans)-1] += finalSum
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function maximumEvenSplit(finalSum: number): number[] {
+    const ans: number[] = [];
+    if (finalSum % 2 === 1) {
+        return ans;
+    }
+    for (let i = 2; i <= finalSum; i += 2) {
+        ans.push(i);
+        finalSum -= i;
+    }
+    ans[ans.length - 1] += finalSum;
+    return ans;
+}
 ```
 
-### **...**
+#### C#
 
-```
-
+```cs
+public class Solution {
+    public IList<long> MaximumEvenSplit(long finalSum) {
+        IList<long> ans = new List<long>();
+        if (finalSum % 2 == 1) {
+            return ans;
+        }
+        for (long i = 2; i <= finalSum; i += 2) {
+            ans.Add(i);
+            finalSum -= i;
+        }
+        ans[ans.Count - 1] += finalSum;
+        return ans;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

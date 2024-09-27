@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0089.Gray%20Code/README.md
+tags:
+    - 位运算
+    - 数学
+    - 回溯
+---
+
+<!-- problem:start -->
+
 # [89. 格雷编码](https://leetcode.cn/problems/gray-code)
 
 [English Version](/solution/0000-0099/0089.Gray%20Code/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <strong>n 位格雷码序列</strong> 是一个由 <code>2<sup>n</sup></code> 个整数组成的序列，其中：
 
@@ -53,17 +65,35 @@
 	<li><code>1 &lt;= n &lt;= 16</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-`G(i) = i ^ (i/2)`。
+### 方法一：二进制码转格雷码
+
+格雷码是我们在工程中常会遇到的一种编码方式，它的基本的特点就是任意两个相邻的代码只有一位二进制数不同。
+
+二进制码转换成二进制格雷码，其法则是保留二进制码的最高位作为格雷码的最高位，而次高位格雷码为二进制码的高位与次高位相异或，而格雷码其余各位与次高位的求法相类似。
+
+假设某个二进制数表示为 $B_{n-1}B_{n-2}...B_2B_1B_0$，其格雷码表示为 $G_{n-1}G_{n-2}...G_2G_1G_0$。最高位保留，所以 $G_{n-1} = B_{n-1}$；而其它各位 $G_i = B_{i+1} \oplus B_{i}$，其中 $i=0,1,2..,n-2$。
+
+因此，对于一个整数 $x$，我们可以用函数 $gray(x)$ 得到其格雷码：
+
+```java
+int gray(x) {
+    return x ^ (x >> 1);
+}
+```
+
+我们直接将 $[0,..2^n - 1]$ 这些整数映射成对应的格雷码，即可得到答案数组。
+
+时间复杂度 $O(2^n)$，其中 $n$ 为题目给定的整数。忽略答案的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -71,9 +101,7 @@ class Solution:
         return [i ^ (i >> 1) for i in range(1 << n)]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -87,32 +115,33 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> grayCode(int n) {
         vector<int> ans;
-        for (int i = 0; i < 1 << n; ++i) ans.push_back(i ^ (i >> 1));
+        for (int i = 0; i < 1 << n; ++i) {
+            ans.push_back(i ^ (i >> 1));
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func grayCode(n int) []int {
-	var ans []int
+func grayCode(n int) (ans []int) {
 	for i := 0; i < 1<<n; i++ {
 		ans = append(ans, i^(i>>1))
 	}
-	return ans
+	return
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -120,7 +149,7 @@ func grayCode(n int) []int {
  * @return {number[]}
  */
 var grayCode = function (n) {
-    let ans = [];
+    const ans = [];
     for (let i = 0; i < 1 << n; ++i) {
         ans.push(i ^ (i >> 1));
     }
@@ -128,10 +157,8 @@ var grayCode = function (n) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0553.Optimal%20Division/README_EN.md
+tags:
+    - Array
+    - Math
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [553. Optimal Division](https://leetcode.com/problems/optimal-division)
 
 [中文文档](/solution/0500-0599/0553.Optimal%20Division/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code>. The adjacent integers in <code>nums</code> will perform the float division.</p>
 
@@ -17,14 +31,14 @@
 <p><strong>Note:</strong> your expression should not contain redundant parenthesis.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1000,100,10,2]
 <strong>Output:</strong> &quot;1000/(100/10/2)&quot;
-<strong>Explanation:</strong>
-1000/(100/10/2) = 1000/((100/10)/2) = 200
-However, the bold parenthesis in &quot;1000/((100/10)/2)&quot; are redundant, since they don&#39;t influence the operation priority. So you should return &quot;1000/(100/10/2)&quot;.
+<strong>Explanation:</strong> 1000/(100/10/2) = 1000/((100/10)/2) = 200
+However, the bold parenthesis in &quot;1000/(<strong>(</strong>100/10<strong>)</strong>/2)&quot; are redundant since they do not influence the operation priority.
+So you should return &quot;1000/(100/10/2)&quot;.
 Other cases:
 1000/(100/10)/2 = 50
 1000/(100/(10/2)) = 50
@@ -32,18 +46,13 @@ Other cases:
 1000/100/(10/2) = 2
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,3,4]
 <strong>Output:</strong> &quot;2/(3/4)&quot;
-</pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [2]
-<strong>Output:</strong> &quot;2&quot;
+<strong>Explanation:</strong> (2/(3/4)) = 8/3 = 2.667
+It can be shown that after trying all possibilities, we cannot get an expression with evaluation greater than 2.667
 </pre>
 
 <p>&nbsp;</p>
@@ -52,14 +61,20 @@ Other cases:
 <ul>
 	<li><code>1 &lt;= nums.length &lt;= 10</code></li>
 	<li><code>2 &lt;= nums[i] &lt;= 1000</code></li>
-	<li>There is only one optimal division for the given iput.</li>
+	<li>There is only one optimal division for the given input.</li>
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -72,7 +87,7 @@ class Solution:
         return f'{nums[0]}/({"/".join(map(str, nums[1:]))})'
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +109,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -111,7 +126,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func optimalDivision(nums []int) string {
@@ -133,7 +148,7 @@ func optimalDivision(nums []int) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function optimalDivision(nums: number[]): string {
@@ -147,7 +162,7 @@ function optimalDivision(nums: number[]): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -172,10 +187,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

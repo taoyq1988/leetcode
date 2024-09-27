@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1268.Search%20Suggestions%20System/README_EN.md
+rating: 1573
+source: Weekly Contest 164 Q3
+tags:
+    - Trie
+    - Array
+    - String
+    - Binary Search
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1268. Search Suggestions System](https://leetcode.com/problems/search-suggestions-system)
 
 [中文文档](/solution/1200-1299/1268.Search%20Suggestions%20System/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of strings <code>products</code> and a string <code>searchWord</code>.</p>
 
@@ -11,34 +30,22 @@
 <p>Return <em>a list of lists of the suggested products after each character of </em><code>searchWord</code><em> is typed</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> products = [&quot;mobile&quot;,&quot;mouse&quot;,&quot;moneypot&quot;,&quot;monitor&quot;,&quot;mousepad&quot;], searchWord = &quot;mouse&quot;
-<strong>Output:</strong> [
-[&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;],
-[&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;],
-[&quot;mouse&quot;,&quot;mousepad&quot;],
-[&quot;mouse&quot;,&quot;mousepad&quot;],
-[&quot;mouse&quot;,&quot;mousepad&quot;]
-]
-<strong>Explanation:</strong> products sorted lexicographically = [&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;,&quot;mouse&quot;,&quot;mousepad&quot;]
-After typing m and mo all products match and we show user [&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;]
-After typing mou, mous and mouse the system suggests [&quot;mouse&quot;,&quot;mousepad&quot;]
+<strong>Output:</strong> [[&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;],[&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;],[&quot;mouse&quot;,&quot;mousepad&quot;],[&quot;mouse&quot;,&quot;mousepad&quot;],[&quot;mouse&quot;,&quot;mousepad&quot;]]
+<strong>Explanation:</strong> products sorted lexicographically = [&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;,&quot;mouse&quot;,&quot;mousepad&quot;].
+After typing m and mo all products match and we show user [&quot;mobile&quot;,&quot;moneypot&quot;,&quot;monitor&quot;].
+After typing mou, mous and mouse the system suggests [&quot;mouse&quot;,&quot;mousepad&quot;].
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> products = [&quot;havana&quot;], searchWord = &quot;havana&quot;
 <strong>Output:</strong> [[&quot;havana&quot;],[&quot;havana&quot;],[&quot;havana&quot;],[&quot;havana&quot;],[&quot;havana&quot;],[&quot;havana&quot;]]
-</pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> products = [&quot;bags&quot;,&quot;baggage&quot;,&quot;banner&quot;,&quot;box&quot;,&quot;cloths&quot;], searchWord = &quot;bags&quot;
-<strong>Output:</strong> [[&quot;baggage&quot;,&quot;bags&quot;,&quot;banner&quot;],[&quot;baggage&quot;,&quot;bags&quot;,&quot;banner&quot;],[&quot;baggage&quot;,&quot;bags&quot;],[&quot;bags&quot;]]
+<strong>Explanation:</strong> The only word &quot;havana&quot; will be always suggested while typing the search word.
 </pre>
 
 <p>&nbsp;</p>
@@ -54,87 +61,105 @@ After typing mou, mous and mouse the system suggests [&quot;mouse&quot;,&quot;mo
 	<li><code>searchWord</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Sorting + Trie
+
+The problem requires that after each letter of the input `searchWord`, recommend up to three products from the `products` array that have the same prefix as `searchWord`. If there are more than three products with the same prefix that can be recommended, return the three with the smallest lexicographic order.
+
+To find products with the same prefix, we can use a trie; to return the three products with the smallest lexicographic order, we can first sort the `products` array, and then store the indices of the sorted array in the trie.
+
+Each node of the trie maintains the following information:
+
+-   `children`: This is an array of length $26$, used to store the child nodes of the current node. `children[i]` represents the node whose character is `i + 'a'` among the child nodes of the current node.
+-   `v`: This is an array, used to store the indices of the characters in the `products` array among the child nodes of the current node, storing up to three indices.
+
+During the search, we start from the root node of the trie, find the index array corresponding to each prefix, and store it in the result array. Finally, we only need to map each index in the index array to the `products` array.
+
+The time complexity is $O(L \times \log n + m)$, and the space complexity is $O(L)$. Where $L$ is the sum of the lengths of all strings in the `products` array, and $n$ and $m$ are the lengths of the `products` array and `searchWord`, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Trie:
     def __init__(self):
-        self.children = [None] * 26
-        self.v = []
+        self.children: List[Union[Trie, None]] = [None] * 26
+        self.v: List[int] = []
 
-    def insert(self, word, i):
+    def insert(self, w, i):
         node = self
-        for c in word:
+        for c in w:
             idx = ord(c) - ord('a')
             if node.children[idx] is None:
                 node.children[idx] = Trie()
             node = node.children[idx]
-            node.v.append(i)
+            if len(node.v) < 3:
+                node.v.append(i)
 
-    def search(self, word):
-        res = [[] for _ in range(len(word))]
+    def search(self, w):
         node = self
-        for i, c in enumerate(word):
+        ans = [[] for _ in range(len(w))]
+        for i, c in enumerate(w):
             idx = ord(c) - ord('a')
             if node.children[idx] is None:
                 break
             node = node.children[idx]
-            res[i] = node.v[:3]
-        return res
+            ans[i] = node.v
+        return ans
 
 
 class Solution:
-    def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
+    def suggestedProducts(
+        self, products: List[str], searchWord: str
+    ) -> List[List[str]]:
         products.sort()
         trie = Trie()
         for i, w in enumerate(products):
             trie.insert(w, i)
-        res = trie.search(searchWord)
-        return [[products[j] for j in v] for v in res]
+        return [[products[i] for i in v] for v in trie.search(searchWord)]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Trie {
     Trie[] children = new Trie[26];
     List<Integer> v = new ArrayList<>();
 
-    void insert(String word, int i) {
+    public void insert(String w, int i) {
         Trie node = this;
-        for (char c : word.toCharArray()) {
-            c -= 'a';
-            if (node.children[c] == null) {
-                node.children[c] = new Trie();
+        for (int j = 0; j < w.length(); ++j) {
+            int idx = w.charAt(j) - 'a';
+            if (node.children[idx] == null) {
+                node.children[idx] = new Trie();
             }
-            node = node.children[c];
+            node = node.children[idx];
             if (node.v.size() < 3) {
                 node.v.add(i);
             }
         }
     }
 
-    List<List<Integer>> search(String word) {
-        List<List<Integer>> res = new ArrayList<>();
-        int n = word.length();
-        for (int i = 0; i < n; ++i) {
-            res.add(new ArrayList<>());
-        }
+    public List<Integer>[] search(String w) {
         Trie node = this;
+        int n = w.length();
+        List<Integer>[] ans = new List[n];
+        Arrays.setAll(ans, k -> new ArrayList<>());
         for (int i = 0; i < n; ++i) {
-            char c = word.charAt(i);
-            c -= 'a';
-            if (node.children[c] == null) {
+            int idx = w.charAt(i) - 'a';
+            if (node.children[idx] == null) {
                 break;
             }
-            node = node.children[c];
-            res.set(i, node.v);
+            node = node.children[idx];
+            ans[i] = node.v;
         }
-        return res;
+        return ans;
     }
 }
 
@@ -145,9 +170,8 @@ class Solution {
         for (int i = 0; i < products.length; ++i) {
             trie.insert(products[i], i);
         }
-        List<List<Integer>> res = trie.search(searchWord);
         List<List<String>> ans = new ArrayList<>();
-        for (List<Integer> v : res) {
+        for (var v : trie.search(searchWord)) {
             List<String> t = new ArrayList<>();
             for (int i : v) {
                 t.add(products[i]);
@@ -159,7 +183,67 @@ class Solution {
 }
 ```
 
-### **Go**
+#### C++
+
+```cpp
+class Trie {
+public:
+    void insert(string& w, int i) {
+        Trie* node = this;
+        for (int j = 0; j < w.size(); ++j) {
+            int idx = w[j] - 'a';
+            if (!node->children[idx]) {
+                node->children[idx] = new Trie();
+            }
+            node = node->children[idx];
+            if (node->v.size() < 3) {
+                node->v.push_back(i);
+            }
+        }
+    }
+
+    vector<vector<int>> search(string& w) {
+        Trie* node = this;
+        int n = w.size();
+        vector<vector<int>> ans(n);
+        for (int i = 0; i < w.size(); ++i) {
+            int idx = w[i] - 'a';
+            if (!node->children[idx]) {
+                break;
+            }
+            node = node->children[idx];
+            ans[i] = move(node->v);
+        }
+        return ans;
+    }
+
+private:
+    vector<Trie*> children = vector<Trie*>(26);
+    vector<int> v;
+};
+
+class Solution {
+public:
+    vector<vector<string>> suggestedProducts(vector<string>& products, string searchWord) {
+        sort(products.begin(), products.end());
+        Trie* trie = new Trie();
+        for (int i = 0; i < products.size(); ++i) {
+            trie->insert(products[i], i);
+        }
+        vector<vector<string>> ans;
+        for (auto& v : trie->search(searchWord)) {
+            vector<string> t;
+            for (int i : v) {
+                t.push_back(products[i]);
+            }
+            ans.push_back(move(t));
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
 
 ```go
 type Trie struct {
@@ -170,9 +254,9 @@ type Trie struct {
 func newTrie() *Trie {
 	return &Trie{}
 }
-func (this *Trie) insert(word string, i int) {
+func (this *Trie) insert(w string, i int) {
 	node := this
-	for _, c := range word {
+	for _, c := range w {
 		c -= 'a'
 		if node.children[c] == nil {
 			node.children[c] = newTrie()
@@ -184,44 +268,40 @@ func (this *Trie) insert(word string, i int) {
 	}
 }
 
-func (this *Trie) search(word string) [][]int {
+func (this *Trie) search(w string) [][]int {
 	node := this
-	n := len(word)
-	res := make([][]int, n)
-	for i, c := range word {
+	n := len(w)
+	ans := make([][]int, n)
+	for i, c := range w {
 		c -= 'a'
 		if node.children[c] == nil {
 			break
 		}
 		node = node.children[c]
-		res[i] = node.v
+		ans[i] = node.v
 	}
-	return res
+	return ans
 }
 
-func suggestedProducts(products []string, searchWord string) [][]string {
+func suggestedProducts(products []string, searchWord string) (ans [][]string) {
 	sort.Strings(products)
 	trie := newTrie()
 	for i, w := range products {
 		trie.insert(w, i)
 	}
-	res := trie.search(searchWord)
-	var ans [][]string
-	for _, v := range res {
+	for _, v := range trie.search(searchWord) {
 		t := []string{}
 		for _, i := range v {
 			t = append(t, products[i])
 		}
 		ans = append(ans, t)
 	}
-	return ans
+	return
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

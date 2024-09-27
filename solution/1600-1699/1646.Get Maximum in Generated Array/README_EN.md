@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1646.Get%20Maximum%20in%20Generated%20Array/README_EN.md
+rating: 1301
+source: Weekly Contest 214 Q1
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [1646. Get Maximum in Generated Array](https://leetcode.com/problems/get-maximum-in-generated-array)
 
 [中文文档](/solution/1600-1699/1646.Get%20Maximum%20in%20Generated%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>n</code>. A <strong>0-indexed</strong> integer array <code>nums</code> of length <code>n + 1</code> is generated in the following way:</p>
 
@@ -16,7 +31,7 @@
 <p>Return<strong> </strong><em>the <strong>maximum</strong> integer in the array </em><code>nums</code>​​​.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 7
@@ -33,7 +48,7 @@
 Hence, nums = [0,1,1,2,1,3,2,3], and the maximum is max(0,1,1,2,1,3,2,3) = 3.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 2
@@ -41,7 +56,7 @@ Hence, nums = [0,1,1,2,1,3,2,3], and the maximum is max(0,1,1,2,1,3,2,3) = 3.
 <strong>Explanation:</strong> According to the given rules, nums = [0,1,1]. The maximum is max(0,1,1) = 1.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3
@@ -56,36 +71,41 @@ Hence, nums = [0,1,1,2,1,3,2,3], and the maximum is max(0,1,1,2,1,3,2,3) = 3.
 	<li><code>0 &lt;= n &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def getMaximumGenerated(self, n: int) -> int:
-        if n == 0:
-            return 0
+        if n < 2:
+            return n
         nums = [0] * (n + 1)
         nums[1] = 1
         for i in range(2, n + 1):
-            nums[i] = nums[i >> 1] if i % 2 == 0 else nums[i >> 1] + \
-                nums[(i >> 1) + 1]
+            nums[i] = nums[i >> 1] if i % 2 == 0 else nums[i >> 1] + nums[(i >> 1) + 1]
         return max(nums)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int getMaximumGenerated(int n) {
-        if (n == 0) {
-            return 0;
+        if (n < 2) {
+            return n;
         }
         int[] nums = new int[n + 1];
         nums[1] = 1;
-        for (int i = 2; i < n + 1; ++i) {
+        for (int i = 2; i <= n; ++i) {
             nums[i] = i % 2 == 0 ? nums[i >> 1] : nums[i >> 1] + nums[(i >> 1) + 1];
         }
         return Arrays.stream(nums).max().getAsInt();
@@ -93,57 +113,64 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int getMaximumGenerated(int n) {
-        if (n == 0) return 0;
-        vector<int> ans(n + 1, 0);
-        ans[1] = 1;
-        for (int i = 2; i < n + 1; ++i)
-            ans[i] = i % 2 == 0 ? ans[i >> 1] : ans[i >> 1] + ans[(i >> 1) + 1];
-        return *max_element(ans.begin(), ans.end());
+        if (n < 2) {
+            return n;
+        }
+        int nums[n + 1];
+        nums[0] = 0;
+        nums[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            nums[i] = i % 2 == 0 ? nums[i >> 1] : nums[i >> 1] + nums[(i >> 1) + 1];
+        }
+        return *max_element(nums, nums + n + 1);
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func getMaximumGenerated(n int) int {
-	if n == 0 {
-		return 0
+	if n < 2 {
+		return n
 	}
 	nums := make([]int, n+1)
 	nums[1] = 1
 	for i := 2; i <= n; i++ {
 		if i%2 == 0 {
-			nums[i] = nums[i>>1]
+			nums[i] = nums[i/2]
 		} else {
-			nums[i] = nums[i>>1] + nums[(i>>1)+1]
+			nums[i] = nums[i/2] + nums[i/2+1]
 		}
 	}
-	var ans int
-	for _, num := range nums {
-		ans = max(ans, num)
-	}
-	return ans
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return slices.Max(nums)
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function getMaximumGenerated(n: number): number {
+    if (n === 0) {
+        return 0;
+    }
+    const nums: number[] = new Array(n + 1).fill(0);
+    nums[1] = 1;
+    for (let i = 2; i < n + 1; ++i) {
+        nums[i] = i % 2 === 0 ? nums[i >> 1] : nums[i >> 1] + nums[(i >> 1) + 1];
+    }
+    return Math.max(...nums);
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

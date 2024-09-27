@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0866.Prime%20Palindrome/README_EN.md
+tags:
+    - Math
+    - Number Theory
+---
+
+<!-- problem:start -->
+
 # [866. Prime Palindrome](https://leetcode.com/problems/prime-palindrome)
 
 [中文文档](/solution/0800-0899/0866.Prime%20Palindrome/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an integer n, return <em>the smallest <strong>prime palindrome</strong> greater than or equal to </em><code>n</code>.</p>
 
@@ -21,13 +34,13 @@
 <p>The test cases are generated so that the answer always exists and is in the range <code>[2, 2 * 10<sup>8</sup>]</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <pre><strong>Input:</strong> n = 6
 <strong>Output:</strong> 7
-</pre><p><strong>Example 2:</strong></p>
+</pre><p><strong class="example">Example 2:</strong></p>
 <pre><strong>Input:</strong> n = 8
 <strong>Output:</strong> 11
-</pre><p><strong>Example 3:</strong></p>
+</pre><p><strong class="example">Example 3:</strong></p>
 <pre><strong>Input:</strong> n = 13
 <strong>Output:</strong> 101
 </pre>
@@ -38,11 +51,17 @@
 	<li><code>1 &lt;= n &lt;= 10<sup>8</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -72,7 +91,7 @@ class Solution:
             n += 1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -111,14 +130,13 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int primePalindrome(int n) {
-        while (1)
-        {
+        while (1) {
             if (reverse(n) == n && isPrime(n)) return n;
             if (n > 10000000 && n < 100000000) n = 100000000;
             ++n;
@@ -135,8 +153,7 @@ public:
 
     int reverse(int x) {
         int res = 0;
-        while (x)
-        {
+        while (x) {
             res = res * 10 + x % 10;
             x /= 10;
         }
@@ -145,7 +162,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func primePalindrome(n int) int {
@@ -181,10 +198,8 @@ func primePalindrome(n int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

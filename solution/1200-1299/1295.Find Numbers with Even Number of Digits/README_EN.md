@@ -1,13 +1,28 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1295.Find%20Numbers%20with%20Even%20Number%20of%20Digits/README_EN.md
+rating: 1139
+source: Weekly Contest 168 Q1
+tags:
+    - Array
+    - Math
+---
+
+<!-- problem:start -->
+
 # [1295. Find Numbers with Even Number of Digits](https://leetcode.com/problems/find-numbers-with-even-number-of-digits)
 
 [中文文档](/solution/1200-1299/1295.Find%20Numbers%20with%20Even%20Number%20of%20Digits/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an array <code>nums</code> of integers, return how many of them contain an <strong>even number</strong> of digits.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [12,345,2,6,7896]
@@ -21,7 +36,7 @@
 Therefore only 12 and 7896 contain an even number of digits.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [555,901,482,1771]
@@ -38,67 +53,86 @@ Only 1771 contains an even number of digits.
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def findNumbers(self, nums: List[int]) -> int:
-        return sum(1 for num in nums if (len(str(num)) & 1) == 0)
+        return sum(len(str(v)) % 2 == 0 for v in nums)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int findNumbers(int[] nums) {
-        int s = 0;
-        for (int num : nums) {
-            if ((String.valueOf(num).length() & 1) == 0) {
-                ++s;
+        int ans = 0;
+        for (int v : nums) {
+            if (String.valueOf(v).length() % 2 == 0) {
+                ++ans;
             }
         }
-        return s;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int findNumbers(vector<int>& nums) {
-        int s = 0;
-        for (int num : nums) {
-            s += (to_string(num).size() & 1) == 0;
+        int ans = 0;
+        for (int& v : nums) {
+            ans += to_string(v).size() % 2 == 0;
         }
-        return s;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func findNumbers(nums []int) int {
-	s := 0
-	for _, num := range nums {
-		if (len(strconv.Itoa(num)) & 1) == 0 {
-			s++
+func findNumbers(nums []int) (ans int) {
+	for _, v := range nums {
+		if len(strconv.Itoa(v))%2 == 0 {
+			ans++
 		}
 	}
-	return s
+	return
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findNumbers = function (nums) {
+    let ans = 0;
+    for (const v of nums) {
+        ans += String(v).length % 2 == 0;
+    }
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

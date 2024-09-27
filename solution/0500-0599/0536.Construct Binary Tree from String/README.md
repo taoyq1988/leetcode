@@ -1,10 +1,24 @@
-# [536. 从字符串生成二叉树](https://leetcode.cn/problems/construct-binary-tree-from-string)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0536.Construct%20Binary%20Tree%20from%20String/README.md
+tags:
+    - 栈
+    - 树
+    - 深度优先搜索
+    - 字符串
+    - 二叉树
+---
+
+<!-- problem:start -->
+
+# [536. 从字符串生成二叉树 🔒](https://leetcode.cn/problems/construct-binary-tree-from-string)
 
 [English Version](/solution/0500-0599/0536.Construct%20Binary%20Tree%20from%20String/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>你需要用一个包括括号和整数的字符串构建一棵二叉树。</p>
 
@@ -45,19 +59,17 @@
 	<li>空树由&nbsp;<code>""</code>&nbsp;而非<code>"()"</code>表示。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-DFS。
-
-利用 cnt 变量，检测子树的位置，若 cnt == 0，说明已经定位到其中一棵子树，start 表示子树开始的位置（注意要去掉括号）。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -84,18 +96,16 @@ class Solution:
                     cnt -= 1
                 if cnt == 0:
                     if start == p:
-                        root.left = dfs(s[start + 1: i])
+                        root.left = dfs(s[start + 1 : i])
                         start = i + 1
                     else:
-                        root.right = dfs(s[start + 1: i])
+                        root.right = dfs(s[start + 1 : i])
             return root
 
         return dfs(s)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -149,7 +159,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -176,18 +186,17 @@ public:
         TreeNode* root = new TreeNode(stoi(s.substr(0, p)));
         int start = p;
         int cnt = 0;
-        for (int i = p; i < s.size(); ++i)
-        {
-            if (s[i] == '(') ++cnt;
-            else if (s[i] == ')') --cnt;
-            if (cnt == 0)
-            {
-                if (start == p)
-                {
+        for (int i = p; i < s.size(); ++i) {
+            if (s[i] == '(')
+                ++cnt;
+            else if (s[i] == ')')
+                --cnt;
+            if (cnt == 0) {
+                if (start == p) {
                     root->left = dfs(s.substr(start + 1, i - start - 1));
                     start = i + 1;
-                }
-                else root->right = dfs(s.substr(start + 1, i - start - 1));
+                } else
+                    root->right = dfs(s.substr(start + 1, i - start - 1));
             }
         }
         return root;
@@ -195,7 +204,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -242,10 +251,8 @@ func str2tree(s string) *TreeNode {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0535.Encode%20and%20Decode%20TinyURL/README.md
+tags:
+    - 设计
+    - 哈希表
+    - 字符串
+    - 哈希函数
+---
+
+<!-- problem:start -->
+
 # [535. TinyURL 的加密与解密](https://leetcode.cn/problems/encode-and-decode-tinyurl)
 
 [English Version](/solution/0500-0599/0535.Encode%20and%20Decode%20TinyURL/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>TinyURL 是一种 URL 简化服务， 比如：当你输入一个 URL&nbsp;<code>https://leetcode.com/problems/design-tinyurl</code>&nbsp;时，它将返回一个简化的URL&nbsp;<code>http://tinyurl.com/4e9iAk</code> 。请你设计一个类来加密与解密 TinyURL 。</p>
 
@@ -45,17 +58,17 @@ string ans = obj.decode(tiny); // 返回解密后得到的原本的 URL 。
 </div>
 </div>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表**
+### 方法一：哈希表
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Codec:
@@ -65,15 +78,13 @@ class Codec:
         self.domain = 'https://tinyurl.com/'
 
     def encode(self, longUrl: str) -> str:
-        """Encodes a URL to a shortened URL.
-        """
+        """Encodes a URL to a shortened URL."""
         self.idx += 1
         self.m[str(self.idx)] = longUrl
         return f'{self.domain}{self.idx}'
 
     def decode(self, shortUrl: str) -> str:
-        """Decodes a shortened URL to its original URL.
-        """
+        """Decodes a shortened URL to its original URL."""
         idx = shortUrl.split('/')[-1]
         return self.m[idx]
 
@@ -83,9 +94,7 @@ class Codec:
 # codec.decode(codec.encode(url))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 public class Codec {
@@ -112,12 +121,11 @@ public class Codec {
 // codec.decode(codec.encode(url));
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-
     // Encodes a URL to a shortened URL.
     string encode(string longUrl) {
         string v = to_string(++idx);
@@ -142,7 +150,7 @@ private:
 // solution.decode(solution.encode(url));
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Codec struct {
@@ -177,10 +185,8 @@ func (this *Codec) decode(shortUrl string) string {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

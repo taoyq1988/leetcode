@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1691.Maximum%20Height%20by%20Stacking%20Cuboids/README.md
+rating: 2171
+source: 第 219 场周赛 Q4
+tags:
+    - 数组
+    - 动态规划
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [1691. 堆叠长方体的最大高度](https://leetcode.cn/problems/maximum-height-by-stacking-cuboids)
 
 [English Version](/solution/1600-1699/1691.Maximum%20Height%20by%20Stacking%20Cuboids/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你 <code>n</code> 个长方体 <code>cuboids</code> ，其中第 <code>i</code> 个长方体的长宽高表示为 <code>cuboids[i] = [width<sub>i</sub>, length<sub>i</sub>, height<sub>i</sub>]</code>（<strong>下标从 0 开始</strong>）。请你从 <code>cuboids</code> 选出一个 <strong>子集</strong> ，并将它们堆叠起来。</p>
 
@@ -59,28 +73,37 @@
 	<li><code>1 <= width<sub>i</sub>, length<sub>i</sub>, height<sub>i</sub> <= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-考虑两个长方体，假设其三边分别是 `(a1, b1, c2)` 和 `(a2, b2, c2)`。这里不妨设 `a1≤b1≤c1`, `a2≤b2≤c2`。我们可以发现，假设两个长方体能够拼接到一起（假设第一个长方体较小），则必然有：`a1≤a2, b1≤b2, c1≤c2`。
+### 方法一：排序 + 动态规划
 
-直观上我们可以发现，如果两个长方体能够拼接到一起，则他们可以从任何一个面进行拼接。本题允许我们任意旋转长方体，看起来情况比较复杂，需要讨论 6 种排列情况，但实际上，因为我们希望高度尽可能高，所以根据上面的观察，我们应该选择**从较短的两条边组成的面**进行拼接。
+根据题目描述，长方体 $j$ 能够放在长方体 $i$ 上，当且仅当长方体 $j$ 的“长、宽、高”分别小于等于长方体 $i$ 的“长、宽、高”。
 
-因此，我们进行两次排序：
+本题允许我们旋转长方体，意味着我们可以选择长方体的任意一边作为长方体的“高”。对于任意一种合法的堆叠，如果我们把里面每个长方体都旋转至“长 <= 宽 <= 高”，堆叠仍然是合法的，并且能够保证堆叠的高度最大化。
 
-1. 将每个长方体的三条边按升序排列；
-1. 将每个长方体升序排列。
+因此，我们可以把所有长方体的边长进行排序，使得每个长方体满足“长 <= 宽 <= 高”。然后将每个长方体升序排列。
 
-之后，问题转换为最长上升子序列问题。对于第 i 个长方体，我们依次考虑第 `[1...i-1]` 个长方体，看能否将第 i 个长方体拼接在它的下方，然后更新当前的最大值。
+接下来，我们可以使用动态规划的方法求解本题。
 
-时间复杂度 O(n²)。
+我们定义 $f[i]$ 表示以长方体 $i$ 为最底部长方体时的最大高度。我们可以枚举每个长方体 $i$ 的上方的长方体 $j$，其中 $0 \leq j < i$。如果 $j$ 可以放在 $i$ 的上方，那么我们可以得到状态转移方程：
+
+$$
+f[i] = \max_{0 \leq j < i} \{f[j] + h[i]\}
+$$
+
+其中 $h[i]$ 表示长方体 $i$ 的高度。
+
+最终的答案即为 $f[i]$ 的最大值。
+
+时间复杂度 $O(n^2)$，空间复杂度 $O(n)$。其中 $n$ 为长方体的数量。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -89,80 +112,66 @@ class Solution:
             c.sort()
         cuboids.sort()
         n = len(cuboids)
-        dp = [0] * n
+        f = [0] * n
         for i in range(n):
             for j in range(i):
                 if cuboids[j][1] <= cuboids[i][1] and cuboids[j][2] <= cuboids[i][2]:
-                    dp[i] = max(dp[i], dp[j])
-            dp[i] += cuboids[i][2]
-        return max(dp)
+                    f[i] = max(f[i], f[j])
+            f[i] += cuboids[i][2]
+        return max(f)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int maxHeight(int[][] cuboids) {
-        for (int[] c : cuboids) {
+        for (var c : cuboids) {
             Arrays.sort(c);
         }
-        Arrays.sort(cuboids, (a, b) -> {
-            if (a[0] != b[0]) {
-                return a[0] - b[0];
-            }
-            if (a[1] != b[1]) {
-                return a[1] - b[1];
-            }
-            return a[2] - b[2];
-        });
+        Arrays.sort(cuboids,
+            (a, b) -> a[0] == b[0] ? (a[1] == b[1] ? a[2] - b[2] : a[1] - b[1]) : a[0] - b[0]);
         int n = cuboids.length;
-        int[] dp = new int[n];
-        int ans = 0;
+        int[] f = new int[n];
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < i; ++j) {
                 if (cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2]) {
-                    dp[i] = Math.max(dp[i], dp[j]);
+                    f[i] = Math.max(f[i], f[j]);
                 }
             }
-            dp[i] += cuboids[i][2];
-            ans = Math.max(ans, dp[i]);
+            f[i] += cuboids[i][2];
         }
-        return ans;
+        return Arrays.stream(f).max().getAsInt();
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxHeight(vector<vector<int>>& cuboids) {
-        for (auto& c : cuboids) sort(c.begin(), c.end());
+        for (auto& c : cuboids) {
+            sort(c.begin(), c.end());
+        }
         sort(cuboids.begin(), cuboids.end());
         int n = cuboids.size();
-        vector<int> dp(n);
-        int ans = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            for (int j = 0; j < i; ++j)
-            {
-                if (cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2])
-                {
-                    dp[i] = max(dp[i], dp[j]);
+        vector<int> f(n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2]) {
+                    f[i] = max(f[i], f[j]);
                 }
             }
-            dp[i] += cuboids[i][2];
-            ans = max(ans, dp[i]);
+            f[i] += cuboids[i][2];
         }
-        return ans;
+        return *max_element(f.begin(), f.end());
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxHeight(cuboids [][]int) int {
@@ -170,41 +179,87 @@ func maxHeight(cuboids [][]int) int {
 		sort.Ints(c)
 	}
 	sort.Slice(cuboids, func(i, j int) bool {
-		if cuboids[i][0] != cuboids[j][0] {
-			return cuboids[i][0] < cuboids[j][0]
-		}
-		if cuboids[i][1] != cuboids[j][1] {
-			return cuboids[i][1] < cuboids[j][1]
-		}
-		return cuboids[i][2] < cuboids[j][2]
+		a, b := cuboids[i], cuboids[j]
+		return a[0] < b[0] || a[0] == b[0] && (a[1] < b[1] || a[1] == b[1] && a[2] < b[2])
 	})
 	n := len(cuboids)
-	dp := make([]int, n)
-	ans := 0
-	for i := 0; i < n; i++ {
+	f := make([]int, n)
+	for i := range f {
 		for j := 0; j < i; j++ {
 			if cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2] {
-				dp[i] = max(dp[i], dp[j])
+				f[i] = max(f[i], f[j])
 			}
 		}
-		dp[i] += cuboids[i][2]
-		ans = max(ans, dp[i])
+		f[i] += cuboids[i][2]
 	}
-	return ans
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return slices.Max(f)
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function maxHeight(cuboids: number[][]): number {
+    for (const c of cuboids) {
+        c.sort((a, b) => a - b);
+    }
+    cuboids.sort((a, b) => {
+        if (a[0] !== b[0]) {
+            return a[0] - b[0];
+        }
+        if (a[1] !== b[1]) {
+            return a[1] - b[1];
+        }
+        return a[2] - b[2];
+    });
+    const n = cuboids.length;
+    const f = Array(n).fill(0);
+    for (let i = 0; i < n; ++i) {
+        for (let j = 0; j < i; ++j) {
+            const ok = cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2];
+            if (ok) f[i] = Math.max(f[i], f[j]);
+        }
+        f[i] += cuboids[i][2];
+    }
+    return Math.max(...f);
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number[][]} cuboids
+ * @return {number}
+ */
+var maxHeight = function (cuboids) {
+    for (const c of cuboids) {
+        c.sort((a, b) => a - b);
+    }
+    cuboids.sort((a, b) => {
+        if (a[0] !== b[0]) {
+            return a[0] - b[0];
+        }
+        if (a[1] !== b[1]) {
+            return a[1] - b[1];
+        }
+        return a[2] - b[2];
+    });
+    const n = cuboids.length;
+    const f = Array(n).fill(0);
+    for (let i = 0; i < n; ++i) {
+        for (let j = 0; j < i; ++j) {
+            const ok = cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2];
+            if (ok) f[i] = Math.max(f[i], f[j]);
+        }
+        f[i] += cuboids[i][2];
+    }
+    return Math.max(...f);
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1008.Construct%20Binary%20Search%20Tree%20from%20Preorder%20Traversal/README_EN.md
+rating: 1562
+source: Weekly Contest 127 Q4
+tags:
+    - Stack
+    - Tree
+    - Binary Search Tree
+    - Array
+    - Binary Tree
+    - Monotonic Stack
+---
+
+<!-- problem:start -->
+
 # [1008. Construct Binary Search Tree from Preorder Traversal](https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal)
 
 [中文文档](/solution/1000-1099/1008.Construct%20Binary%20Search%20Tree%20from%20Preorder%20Traversal/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of integers preorder, which represents the <strong>preorder traversal</strong> of a BST (i.e., <strong>binary search tree</strong>), construct the tree and return <em>its root</em>.</p>
 
@@ -13,14 +32,14 @@
 <p>A <strong>preorder traversal</strong> of a binary tree displays the value of the node first, then traverses <code>Node.left</code>, then traverses <code>Node.right</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1000-1099/1008.Construct%20Binary%20Search%20Tree%20from%20Preorder%20Traversal/images/1266.png" style="height: 386px; width: 590px;" />
 <pre>
 <strong>Input:</strong> preorder = [8,5,1,7,10,12]
 <strong>Output:</strong> [8,5,10,1,7,null,12]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> preorder = [1,3]
@@ -36,11 +55,17 @@
 	<li>All the values of <code>preorder</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -69,7 +94,7 @@ class Solution:
         return dfs(preorder)
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -112,10 +137,9 @@ class Solution {
         return root;
     }
 }
-
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -139,11 +163,12 @@ public:
         if (i > j || i >= preorder.size()) return nullptr;
         TreeNode* root = new TreeNode(preorder[i]);
         int left = i + 1, right = j + 1;
-        while (left < right)
-        {
+        while (left < right) {
             int mid = (left + right) >> 1;
-            if (preorder[mid] > preorder[i]) right = mid;
-            else left = mid + 1;
+            if (preorder[mid] > preorder[i])
+                right = mid;
+            else
+                left = mid + 1;
         }
         root->left = dfs(preorder, i + 1, left - 1);
         root->right = dfs(preorder, left, j);
@@ -152,7 +177,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -187,7 +212,7 @@ func bstFromPreorder(preorder []int) *TreeNode {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -209,10 +234,7 @@ function bstFromPreorder(preorder: number[]): TreeNode | null {
     const next = new Array(n);
     const stack = [];
     for (let i = n - 1; i >= 0; i--) {
-        while (
-            stack.length !== 0 &&
-            preorder[stack[stack.length - 1]] < preorder[i]
-        ) {
+        while (stack.length !== 0 && preorder[stack[stack.length - 1]] < preorder[i]) {
             stack.pop();
         }
         next[i] = stack[stack.length - 1] ?? n;
@@ -223,17 +245,13 @@ function bstFromPreorder(preorder: number[]): TreeNode | null {
         if (left >= right) {
             return null;
         }
-        return new TreeNode(
-            preorder[left],
-            dfs(left + 1, next[left]),
-            dfs(next[left], right),
-        );
+        return new TreeNode(preorder[left], dfs(left + 1, next[left]), dfs(next[left], right));
     };
     return dfs(0, n);
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -254,8 +272,8 @@ function bstFromPreorder(preorder: number[]): TreeNode | null {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 impl Solution {
     fn dfs(
         preorder: &Vec<i32>,
@@ -291,10 +309,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1882.Process%20Tasks%20Using%20Servers/README_EN.md
+rating: 1979
+source: Weekly Contest 243 Q3
+tags:
+    - Array
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1882. Process Tasks Using Servers](https://leetcode.com/problems/process-tasks-using-servers)
 
 [中文文档](/solution/1800-1899/1882.Process%20Tasks%20Using%20Servers/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two <strong>0-indexed</strong> integer arrays <code>servers</code> and <code>tasks</code> of lengths <code>n</code>​​​​​​ and <code>m</code>​​​​​​ respectively. <code>servers[i]</code> is the <strong>weight</strong> of the <code>i<sup>​​​​​​th</sup></code>​​​​ server, and <code>tasks[j]</code> is the <strong>time needed</strong> to process the <code>j<sup>​​​​​​th</sup></code>​​​​ task <strong>in seconds</strong>.</p>
 
@@ -19,7 +34,7 @@
 <p>Return <em>the array </em><code>ans</code>​​​​.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> servers = [3,3,2], tasks = [1,2,3,2,1,2]
@@ -32,7 +47,7 @@
 - At second 4, task 4 is added and processed using server 1 until second 5.
 - At second 5, all servers become free. Task 5 is added and processed using server 2 until second 7.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> servers = [5,1,4,3,2], tasks = [2,1,2,4,5,2,1]
@@ -57,11 +72,17 @@
 	<li><code>1 &lt;= servers[i], tasks[j] &lt;= 2 * 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -84,13 +105,14 @@ class Solution:
         return res
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] assignTasks(int[] servers, int[] tasks) {
         int m = tasks.length, n = servers.length;
-        PriorityQueue<int[]> idle = new PriorityQueue<>((a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+        PriorityQueue<int[]> idle
+            = new PriorityQueue<>((a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
         PriorityQueue<int[]> busy = new PriorityQueue<>((a, b) -> {
             if (a[0] == b[0]) {
                 return a[1] == b[1] ? a[2] - b[2] : a[1] - b[1];
@@ -98,7 +120,7 @@ class Solution {
             return a[0] - b[0];
         });
         for (int i = 0; i < n; ++i) {
-            idle.offer(new int[]{servers[i], i});
+            idle.offer(new int[] {servers[i], i});
         }
         int[] res = new int[m];
         int j = 0;
@@ -106,16 +128,16 @@ class Solution {
             int cost = tasks[start];
             while (!busy.isEmpty() && busy.peek()[0] <= start) {
                 int[] item = busy.poll();
-                idle.offer(new int[]{item[1], item[2]});
+                idle.offer(new int[] {item[1], item[2]});
             }
             if (!idle.isEmpty()) {
                 int[] item = idle.poll();
                 res[j++] = item[1];
-                busy.offer(new int[]{start + cost, item[0], item[1]});
+                busy.offer(new int[] {start + cost, item[0], item[1]});
             } else {
                 int[] item = busy.poll();
                 res[j++] = item[2];
-                busy.offer(new int[]{item[0] + cost, item[1], item[2]});
+                busy.offer(new int[] {item[0] + cost, item[1], item[2]});
             }
         }
         return res;
@@ -123,10 +145,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

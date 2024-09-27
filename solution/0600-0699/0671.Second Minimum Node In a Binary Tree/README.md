@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0671.Second%20Minimum%20Node%20In%20a%20Binary%20Tree/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
 # [671. 二叉树中第二小的节点](https://leetcode.cn/problems/second-minimum-node-in-a-binary-tree)
 
 [English Version](/solution/0600-0699/0671.Second%20Minimum%20Node%20In%20a%20Binary%20Tree/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个非空特殊的二叉树，每个节点都是正数，并且每个节点的子节点数量只能为&nbsp;<code>2</code>&nbsp;或&nbsp;<code>0</code>。如果一个节点有两个子节点的话，那么该节点的值等于两个子节点中较小的一个。</p>
 
@@ -42,15 +54,21 @@
 	<li>对于树中每个节点 <code>root.val == min(root.left.val, root.right.val)</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：DFS
+
+直接 DFS 遍历二叉树，找到大于 `root.val` 的最小值。若不存在，则返回 -1。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是二叉树的节点数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -60,23 +78,21 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def findSecondMinimumValue(self, root: TreeNode) -> int:
-        def dfs(root, val):
+    def findSecondMinimumValue(self, root: Optional[TreeNode]) -> int:
+        def dfs(root):
             if root:
-                dfs(root.left, val)
-                dfs(root.right, val)
-                nonlocal ans
-                if root.val > val:
+                dfs(root.left)
+                dfs(root.right)
+                nonlocal ans, v
+                if root.val > v:
                     ans = root.val if ans == -1 else min(ans, root.val)
 
-        ans = -1
-        dfs(root, root.val)
+        ans, v = -1, root.val
+        dfs(root)
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -95,10 +111,9 @@ class Solution:
  * }
  */
 class Solution {
-    private int ans;
+    private int ans = -1;
 
     public int findSecondMinimumValue(TreeNode root) {
-        ans = -1;
         dfs(root, root.val);
         return ans;
     }
@@ -115,7 +130,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -131,10 +146,9 @@ class Solution {
  */
 class Solution {
 public:
-    int ans;
+    int ans = -1;
 
     int findSecondMinimumValue(TreeNode* root) {
-        ans = -1;
         dfs(root, root->val);
         return ans;
     }
@@ -148,7 +162,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -160,40 +174,62 @@ public:
  * }
  */
 func findSecondMinimumValue(root *TreeNode) int {
-	ans := -1
-
-	var dfs func(root *TreeNode, val int)
-	dfs = func(root *TreeNode, val int) {
+	ans, v := -1, root.Val
+	var dfs func(*TreeNode)
+	dfs = func(root *TreeNode) {
 		if root == nil {
 			return
 		}
-		dfs(root.Left, val)
-		dfs(root.Right, val)
-		if root.Val > val {
-			if ans == -1 {
+		dfs(root.Left)
+		dfs(root.Right)
+		if root.Val > v {
+			if ans == -1 || ans > root.Val {
 				ans = root.Val
-			} else {
-				ans = min(ans, root.Val)
 			}
 		}
 	}
-
-	dfs(root, root.Val)
+	dfs(root)
 	return ans
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var findSecondMinimumValue = function (root) {
+    let ans = -1;
+    const v = root.val;
+    function dfs(root) {
+        if (!root) {
+            return;
+        }
+        dfs(root.left);
+        dfs(root.right);
+        if (root.val > v) {
+            if (ans == -1 || ans > root.val) {
+                ans = root.val;
+            }
+        }
+    }
+    dfs(root);
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

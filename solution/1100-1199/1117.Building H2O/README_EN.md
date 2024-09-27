@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1117.Building%20H2O/README_EN.md
+tags:
+    - Concurrency
+---
+
+<!-- problem:start -->
+
 # [1117. Building H2O](https://leetcode.com/problems/building-h2o)
 
 [中文文档](/solution/1100-1199/1117.Building%20H2O/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are two kinds of threads: <code>oxygen</code> and <code>hydrogen</code>. Your goal is to group these threads to form water molecules.</p>
 
@@ -20,7 +32,7 @@
 <p>Write synchronization code for oxygen and hydrogen molecules that enforces these constraints.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> water = &quot;HOH&quot;
@@ -28,7 +40,7 @@
 <strong>Explanation:</strong> &quot;HOH&quot; and &quot;OHH&quot; are also valid answers.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> water = &quot;OOHHHH&quot;
@@ -47,26 +59,107 @@
 	<li>There will be exactly <code>n</code> <code>&#39;O&#39;</code> in <code>water</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+from threading import Semaphore
 
+
+class H2O:
+    def __init__(self):
+        self.h = Semaphore(2)
+        self.o = Semaphore(0)
+
+    def hydrogen(self, releaseHydrogen: "Callable[[], None]") -> None:
+        self.h.acquire()
+        # releaseHydrogen() outputs "H". Do not change or remove this line.
+        releaseHydrogen()
+        if self.h._value == 0:
+            self.o.release()
+
+    def oxygen(self, releaseOxygen: "Callable[[], None]") -> None:
+        self.o.acquire()
+        # releaseOxygen() outputs "O". Do not change or remove this line.
+        releaseOxygen()
+        self.h.release(2)
 ```
 
-### **Java**
+#### Java
 
 ```java
+class H2O {
+    private Semaphore h = new Semaphore(2);
+    private Semaphore o = new Semaphore(0);
 
+    public H2O() {
+    }
+
+    public void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
+        h.acquire();
+        // releaseHydrogen.run() outputs "H". Do not change or remove this line.
+        releaseHydrogen.run();
+        o.release();
+    }
+
+    public void oxygen(Runnable releaseOxygen) throws InterruptedException {
+        o.acquire(2);
+        // releaseOxygen.run() outputs "O". Do not change or remove this line.
+        releaseOxygen.run();
+        h.release(2);
+    }
+}
 ```
 
-### **...**
+#### C++
 
-```
+```cpp
+#include <semaphore.h>
 
+class H2O {
+private:
+    sem_t h, o;
+    int st;
+
+public:
+    H2O() {
+        sem_init(&h, 0, 2);
+        sem_init(&o, 0, 0);
+        st = 0;
+    }
+
+    void hydrogen(function<void()> releaseHydrogen) {
+        sem_wait(&h);
+        // releaseHydrogen() outputs "H". Do not change or remove this line.
+        releaseHydrogen();
+        ++st;
+        if (st == 2) {
+            sem_post(&o);
+        }
+    }
+
+    void oxygen(function<void()> releaseOxygen) {
+        sem_wait(&o);
+        // releaseOxygen() outputs "O". Do not change or remove this line.
+        releaseOxygen();
+        st = 0;
+        sem_post(&h);
+        sem_post(&h);
+    }
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

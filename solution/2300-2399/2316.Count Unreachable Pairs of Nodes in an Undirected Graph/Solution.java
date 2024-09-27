@@ -1,41 +1,34 @@
 class Solution {
-    private boolean[] vis;
     private List<Integer>[] g;
+    private boolean[] vis;
 
     public long countPairs(int n, int[][] edges) {
-        vis = new boolean[n];
         g = new List[n];
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<>();
-        }
-        for (int[] e : edges) {
+        vis = new boolean[n];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for (var e : edges) {
             int a = e[0], b = e[1];
             g[a].add(b);
             g[b].add(a);
         }
-        List<Integer> arr = new ArrayList<>();
+        long ans = 0, s = 0;
         for (int i = 0; i < n; ++i) {
-            if (!vis[i]) {
-                arr.add(dfs(i));
-            }
-        }
-        int t = 0;
-        long ans = 0;
-        for (int v : arr) {
-            t += v;
-            ans += (long) v * (n - t);
+            int t = dfs(i);
+            ans += s * t;
+            s += t;
         }
         return ans;
     }
 
     private int dfs(int i) {
-        vis[i] = true;
-        int res = 1;
-        for (int j : g[i]) {
-            if (!vis[j]) {
-                res += dfs(j);
-            }
+        if (vis[i]) {
+            return 0;
         }
-        return res;
+        vis[i] = true;
+        int cnt = 1;
+        for (int j : g[i]) {
+            cnt += dfs(j);
+        }
+        return cnt;
     }
 }

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1471.The%20k%20Strongest%20Values%20in%20an%20Array/README_EN.md
+rating: 1332
+source: Weekly Contest 192 Q2
+tags:
+    - Array
+    - Two Pointers
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [1471. The k Strongest Values in an Array](https://leetcode.com/problems/the-k-strongest-values-in-an-array)
 
 [中文文档](/solution/1400-1499/1471.The%20k%20Strongest%20Values%20in%20an%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of integers <code>arr</code> and an integer <code>k</code>.</p>
 
@@ -19,7 +35,7 @@ If <code>|arr[i] - m| == |arr[j] - m|</code>, then <code>arr[i]</code> is said t
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,2,3,4,5], k = 2
@@ -28,7 +44,7 @@ If <code>|arr[i] - m| == |arr[j] - m|</code>, then <code>arr[i]</code> is said t
 Please note that although |5 - 3| == |1 - 3| but 5 is stronger than 1 because 5 &gt; 1.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,1,3,5,5], k = 2
@@ -36,7 +52,7 @@ Please note that although |5 - 3| == |1 - 3| but 5 is stronger than 1 because 5 
 <strong>Explanation:</strong> Median is 3, the elements of the array sorted by the strongest are [5,5,1,1,3]. The strongest 2 elements are [5, 5].
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [6,7,11,7,6,8], k = 5
@@ -54,11 +70,17 @@ Any permutation of [11,8,6,6,7] is <strong>accepted</strong>.
 	<li><code>1 &lt;= k &lt;= arr.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -69,7 +91,7 @@ class Solution:
         return arr[:k]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +116,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -112,7 +134,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func getStrongest(arr []int, k int) []int {
@@ -136,10 +158,8 @@ func abs(x int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

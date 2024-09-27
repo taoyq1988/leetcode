@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0609.Find%20Duplicate%20File%20in%20System/README.md
+tags:
+    - 数组
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [609. 在系统中查找重复文件](https://leetcode.cn/problems/find-duplicate-file-in-system)
 
 [English Version](/solution/0600-0699/0609.Find%20Duplicate%20File%20in%20System/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个目录信息列表&nbsp;<code>paths</code> ，包括目录路径，以及该目录中的所有文件及其内容，请你按路径返回文件系统中的所有重复文件。答案可按 <strong>任意顺序</strong> 返回。</p>
 
@@ -65,63 +77,58 @@
 	<li>如何确保您发现的重复文件不是误报？</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表**
+### 方法一：哈希表
 
-`key` 为文件内容，`value` 为文件路径数组，最后取出所有长度大于 1 的 `value` 即答案。
+我们创建哈希表 `d`，其中键是文件内容，值是具有相同内容的文件路径列表。
+
+遍历 `paths`，我们处理出每个文件的路径和内容，然后将其添加到哈希表 `d` 中。
+
+最后，我们返回哈希表 `d` 中所有具有多个文件路径的值。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为 `paths` 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def findDuplicate(self, paths: List[str]) -> List[List[str]]:
-        m = defaultdict(list)
-        for path in paths:
-            a = path.split(" ")
-            for i in range(1, len(a)):
-                j = a[i].find("(")
-                content = a[i][j + 1 : -1]
-                name = a[0] + "/" + a[i][:j]
-                m[content].append(name)
-
-        ans = []
-        for names in m.values():
-            if len(names) > 1:
-                ans.append(names)
-        return ans
+        d = defaultdict(list)
+        for p in paths:
+            ps = p.split()
+            for f in ps[1:]:
+                i = f.find('(')
+                name, content = f[:i], f[i + 1 : -1]
+                d[content].append(ps[0] + '/' + name)
+        return [v for v in d.values() if len(v) > 1]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public List<List<String>> findDuplicate(String[] paths) {
-        Map<String, List<String>> map = new HashMap<>();
-        for (String path : paths) {
-            String[] a = path.split(" ");
-            for (int i = 1; i < a.length; i++) {
-                int j = a[i].indexOf('(');
-                String content = a[i].substring(j + 1, a[i].length() - 1);
-                String name = a[0] + '/' + a[i].substring(0, j);
-                List<String> list = map.getOrDefault(content, new ArrayList<>());
-                list.add(name);
-                map.put(content, list);
+        Map<String, List<String>> d = new HashMap<>();
+        for (String p : paths) {
+            String[] ps = p.split(" ");
+            for (int i = 1; i < ps.length; ++i) {
+                int j = ps[i].indexOf('(');
+                String content = ps[i].substring(j + 1, ps[i].length() - 1);
+                String name = ps[0] + '/' + ps[i].substring(0, j);
+                d.computeIfAbsent(content, k -> new ArrayList<>()).add(name);
             }
         }
-
         List<List<String>> ans = new ArrayList<>();
-        for (List<String> names : map.values()) {
-            if (names.size() > 1) {
-                ans.add(names);
+        for (var e : d.values()) {
+            if (e.size() > 1) {
+                ans.add(e);
             }
         }
         return ans;
@@ -129,74 +136,87 @@ class Solution {
 }
 ```
 
-### **Go**
+#### C++
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> findDuplicate(vector<string>& paths) {
+        unordered_map<string, vector<string>> d;
+        for (auto& p : paths) {
+            auto ps = split(p, ' ');
+            for (int i = 1; i < ps.size(); ++i) {
+                int j = ps[i].find('(');
+                auto content = ps[i].substr(j + 1, ps[i].size() - j - 2);
+                auto name = ps[0] + '/' + ps[i].substr(0, j);
+                d[content].push_back(name);
+            }
+        }
+        vector<vector<string>> ans;
+        for (auto& [_, e] : d) {
+            if (e.size() > 1) {
+                ans.push_back(e);
+            }
+        }
+        return ans;
+    }
+
+    vector<string> split(string& s, char c) {
+        vector<string> res;
+        stringstream ss(s);
+        string t;
+        while (getline(ss, t, c)) {
+            res.push_back(t);
+        }
+        return res;
+    }
+};
+```
+
+#### Go
 
 ```go
 func findDuplicate(paths []string) [][]string {
-	m := make(map[string][]string)
-	for _, path := range paths {
-		a := strings.Split(path, " ")
-		for i := 1; i < len(a); i++ {
-			j := strings.Index(a[i], "(")
-			content := a[i][j+1 : len(a[i])-1]
-			name := a[0] + "/" + a[i][:j]
-			m[content] = append(m[content], name)
+	d := map[string][]string{}
+	for _, p := range paths {
+		ps := strings.Split(p, " ")
+		for i := 1; i < len(ps); i++ {
+			j := strings.IndexByte(ps[i], '(')
+			content := ps[i][j+1 : len(ps[i])-1]
+			name := ps[0] + "/" + ps[i][:j]
+			d[content] = append(d[content], name)
 		}
 	}
-
-	var ans [][]string
-	for _, names := range m {
-		if len(names) > 1 {
-			ans = append(ans, names)
+	ans := [][]string{}
+	for _, e := range d {
+		if len(e) > 1 {
+			ans = append(ans, e)
 		}
 	}
 	return ans
 }
 ```
 
-### **C++**
+#### TypeScript
 
-```cpp
-class Solution {
-    vector<string> split(const string& s, char delim) {
-        vector<string> result;
-        stringstream ss(s);
-        string item;
-        while (getline(ss, item, delim)) {
-            result.push_back(item);
+```ts
+function findDuplicate(paths: string[]): string[][] {
+    const d = new Map<string, string[]>();
+    for (const p of paths) {
+        const [root, ...fs] = p.split(' ');
+        for (const f of fs) {
+            const [name, content] = f.split(/\(|\)/g).filter(Boolean);
+            const t = d.get(content) ?? [];
+            t.push(root + '/' + name);
+            d.set(content, t);
         }
-        return result;
     }
-
-public:
-    vector<vector<string>> findDuplicate(vector<string>& paths) {
-        unordered_map<string, vector<string>> m;
-        for (auto& path : paths) {
-            auto a = split(path, ' ');
-            for (int i = 1; i < a.size(); ++i) {
-                int j = a[i].find('(');
-                auto content = a[i].substr(j + 1, a[i].size() - j - 2);
-                auto name = a[0] + '/' + a[i].substr(0, j);
-                if (m.find(content) == m.end()) {
-                    m[content] = vector<string>();
-                }
-                m[content].emplace_back(name);
-            }
-        }
-
-        vector<vector<string>> ans;
-        for (auto& [_, names] : m) {
-            if (names.size() > 1) ans.emplace_back(names);
-        }
-        return ans;
-    }
-};
-```
-
-### **...**
-
-```
-
+    return [...d.values()].filter(e => e.length > 1);
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

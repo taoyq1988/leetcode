@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0729.My%20Calendar%20I/README_EN.md
+tags:
+    - Design
+    - Segment Tree
+    - Array
+    - Binary Search
+    - Ordered Set
+---
+
+<!-- problem:start -->
+
 # [729. My Calendar I](https://leetcode.com/problems/my-calendar-i)
 
 [中文文档](/solution/0700-0799/0729.My%20Calendar%20I/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are implementing a program to use as your calendar. We can add a new event if adding the event will not cause a <strong>double booking</strong>.</p>
 
@@ -18,7 +34,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -41,18 +57,23 @@ myCalendar.book(20, 30); // return True, The event can be booked, as the first e
 	<li>At most <code>1000</code> calls will be made to <code>book</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 from sortedcontainers import SortedDict
 
 
 class MyCalendar:
-
     def __init__(self):
         self.sd = SortedDict()
 
@@ -69,7 +90,7 @@ class MyCalendar:
 # param_1 = obj.book(start,end)
 ```
 
-### **Java**
+#### Java
 
 ```java
 import java.util.Map;
@@ -102,7 +123,40 @@ class MyCalendar {
  */
 ```
 
-### **Go**
+#### C++
+
+```cpp
+class MyCalendar {
+public:
+    map<int, int> m;
+
+    MyCalendar() {
+    }
+
+    bool book(int start, int end) {
+        ++m[start];
+        --m[end];
+        int s = 0;
+        for (auto& [k, v] : m) {
+            s += v;
+            if (s > 1) {
+                --m[start];
+                ++m[end];
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar* obj = new MyCalendar();
+ * bool param_1 = obj->book(start,end);
+ */
+```
+
+#### Go
 
 ```go
 type MyCalendar struct {
@@ -126,7 +180,6 @@ func (this *MyCalendar) Book(start int, end int) bool {
 	return true
 }
 
-
 /**
  * Your MyCalendar object will be instantiated and called as such:
  * obj := Constructor();
@@ -134,43 +187,7 @@ func (this *MyCalendar) Book(start int, end int) bool {
  */
 ```
 
-### **C++**
-
-```cpp
-class MyCalendar {
-public:
-    map<int, int> m;
-
-    MyCalendar() {
-
-    }
-
-    bool book(int start, int end) {
-        ++m[start];
-        --m[end];
-        int s = 0;
-        for (auto& [k, v] : m)
-        {
-            s += v;
-            if (s > 1)
-            {
-                --m[start];
-                ++m[end];
-                return false;
-            }
-        }
-        return true;
-    }
-};
-
-/**
- * Your MyCalendar object will be instantiated and called as such:
- * MyCalendar* obj = new MyCalendar();
- * bool param_1 = obj->book(start,end);
- */
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 class MyCalendar {
@@ -199,7 +216,7 @@ class MyCalendar {
  */
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::BTreeMap;
@@ -235,18 +252,40 @@ impl MyCalendar {
         true
     }
 }
+```
+
+#### JavaScript
+
+```js
+var MyCalendar = function () {
+    this.calendar = [];
+};
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @return {boolean}
+ */
+MyCalendar.prototype.book = function (start, end) {
+    for (const item of this.calendar) {
+        if (end <= item[0] || item[1] <= start) {
+            continue;
+        }
+        return false;
+    }
+    this.calendar.push([start, end]);
+    return true;
+};
 
 /**
  * Your MyCalendar object will be instantiated and called as such:
- * let obj = MyCalendar::new();
- * let ret_1: bool = obj.book(start, end);
+ * var obj = new MyCalendar()
+ * var param_1 = obj.book(start,end)
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

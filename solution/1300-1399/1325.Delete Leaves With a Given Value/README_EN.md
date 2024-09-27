@@ -1,15 +1,31 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1325.Delete%20Leaves%20With%20a%20Given%20Value/README_EN.md
+rating: 1407
+source: Weekly Contest 172 Q3
+tags:
+    - Tree
+    - Depth-First Search
+    - Binary Tree
+---
+
+<!-- problem:start -->
+
 # [1325. Delete Leaves With a Given Value](https://leetcode.com/problems/delete-leaves-with-a-given-value)
 
 [中文文档](/solution/1300-1399/1325.Delete%20Leaves%20With%20a%20Given%20Value/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a binary tree <code>root</code> and an integer <code>target</code>, delete all the <strong>leaf nodes</strong> with value <code>target</code>.</p>
 
 <p>Note that once you delete a leaf node with value <code>target</code><strong>, </strong>if its parent node becomes a leaf node and has the value <code>target</code>, it should also be deleted (you need to continue doing that until you cannot).</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <p><strong><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1300-1399/1325.Delete%20Leaves%20With%20a%20Given%20Value/images/sample_1_1684.png" style="width: 500px; height: 112px;" /></strong></p>
 
@@ -20,7 +36,7 @@
 After removing, new nodes become leaf nodes with value (target = 2) (Picture in center).
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <p><strong><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1300-1399/1325.Delete%20Leaves%20With%20a%20Given%20Value/images/sample_2_1684.png" style="width: 400px; height: 154px;" /></strong></p>
 
@@ -29,7 +45,7 @@ After removing, new nodes become leaf nodes with value (target = 2) (Picture in 
 <strong>Output:</strong> [1,3,null,null,2]
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <p><strong><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1300-1399/1325.Delete%20Leaves%20With%20a%20Given%20Value/images/sample_3_1684.png" style="width: 500px; height: 166px;" /></strong></p>
 
@@ -47,11 +63,17 @@ After removing, new nodes become leaf nodes with value (target = 2) (Picture in 
 	<li><code>1 &lt;= Node.val, target &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -61,24 +83,19 @@ After removing, new nodes become leaf nodes with value (target = 2) (Picture in 
 #         self.left = left
 #         self.right = right
 class Solution:
-    def removeLeafNodes(self, root: Optional[TreeNode], target: int) -> Optional[TreeNode]:
-        def dfs(root, prev):
-            if root is None:
-                return
-            dfs(root.left, root)
-            dfs(root.right, root)
-            if root.left is None and root.right is None and root.val == target:
-                if prev.left == root:
-                    prev.left = None
-                else:
-                    prev.right = None
-
-        p = TreeNode(val=0, left=root)
-        dfs(root, p)
-        return p.left
+    def removeLeafNodes(
+        self, root: Optional[TreeNode], target: int
+    ) -> Optional[TreeNode]:
+        if root is None:
+            return None
+        root.left = self.removeLeafNodes(root.left, target)
+        root.right = self.removeLeafNodes(root.right, target)
+        if root.left is None and root.right is None and root.val == target:
+            return None
+        return root
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -98,29 +115,20 @@ class Solution:
  */
 class Solution {
     public TreeNode removeLeafNodes(TreeNode root, int target) {
-        TreeNode p = new TreeNode(0, root, null);
-        dfs(root, p, target);
-        return p.left;
-    }
-
-    private void dfs(TreeNode root, TreeNode prev, int target) {
         if (root == null) {
-            return;
+            return null;
         }
-        dfs(root.left, root, target);
-        dfs(root.right, root, target);
+        root.left = removeLeafNodes(root.left, target);
+        root.right = removeLeafNodes(root.right, target);
         if (root.left == null && root.right == null && root.val == target) {
-            if (prev.left == root) {
-                prev.left = null;
-            } else {
-                prev.right = null;
-            }
+            return null;
         }
+        return root;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -137,25 +145,20 @@ class Solution {
 class Solution {
 public:
     TreeNode* removeLeafNodes(TreeNode* root, int target) {
-        TreeNode* p = new TreeNode(0, root, nullptr);
-        dfs(root, p, target);
-        return p->left;
-    }
-
-    void dfs(TreeNode* root, TreeNode* prev, int target) {
-        if (!root) return;
-        dfs(root->left, root, target);
-        dfs(root->right, root, target);
-        if (!root->left && !root->right && root->val == target)
-        {
-            if (prev->left == root) prev->left = nullptr;
-            else prev->right = nullptr;
+        if (!root) {
+            return nullptr;
         }
+        root->left = removeLeafNodes(root->left, target);
+        root->right = removeLeafNodes(root->right, target);
+        if (!root->left && !root->right && root->val == target) {
+            return nullptr;
+        }
+        return root;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -167,31 +170,50 @@ public:
  * }
  */
 func removeLeafNodes(root *TreeNode, target int) *TreeNode {
-	p := &TreeNode{0, root, nil}
-	var dfs func(root, prev *TreeNode)
-	dfs = func(root, prev *TreeNode) {
-		if root == nil {
-			return
-		}
-		dfs(root.Left, root)
-		dfs(root.Right, root)
-		if root.Left == nil && root.Right == nil && root.Val == target {
-			if prev.Left == root {
-				prev.Left = nil
-			} else {
-				prev.Right = nil
-			}
-		}
+	if root == nil {
+		return nil
 	}
-	dfs(root, p)
-	return p.Left
+	root.Left = removeLeafNodes(root.Left, target)
+	root.Right = removeLeafNodes(root.Right, target)
+	if root.Left == nil && root.Right == nil && root.Val == target {
+		return nil
+	}
+	return root
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
 
+function removeLeafNodes(root: TreeNode | null, target: number): TreeNode | null {
+    if (!root) {
+        return null;
+    }
+    root.left = removeLeafNodes(root.left, target);
+    root.right = removeLeafNodes(root.right, target);
+    if (!root.left && !root.right && root.val == target) {
+        return null;
+    }
+    return root;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

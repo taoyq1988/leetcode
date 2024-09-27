@@ -1,10 +1,26 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2333.Minimum%20Sum%20of%20Squared%20Difference/README.md
+rating: 2011
+source: 第 82 场双周赛 Q3
+tags:
+    - 贪心
+    - 数组
+    - 二分查找
+    - 排序
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [2333. 最小差值平方和](https://leetcode.cn/problems/minimum-sum-of-squared-difference)
 
 [English Version](/solution/2300-2399/2333.Minimum%20Sum%20of%20Squared%20Difference/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个下标从 <strong>0</strong>&nbsp;开始的整数数组&nbsp;<code>nums1</code> 和&nbsp;<code>nums2</code>&nbsp;，长度为&nbsp;<code>n</code>&nbsp;。</p>
 
@@ -48,21 +64,23 @@
 	<li><code>0 &lt;= k1, k2 &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：二分查找**
+### 方法一：二分查找
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def minSumSquareDiff(self, nums1: List[int], nums2: List[int], k1: int, k2: int) -> int:
+    def minSumSquareDiff(
+        self, nums1: List[int], nums2: List[int], k1: int, k2: int
+    ) -> int:
         d = [abs(a - b) for a, b in zip(nums1, nums2)]
         k = k1 + k2
         if sum(d) <= k:
@@ -86,9 +104,7 @@ class Solution:
         return sum(v * v for v in d)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +117,7 @@ class Solution {
         for (int i = 0; i < n; ++i) {
             d[i] = Math.abs(nums1[i] - nums2[i]);
             s += d[i];
-            mx = Math.max(mx ,d[i]);
+            mx = Math.max(mx, d[i]);
         }
         if (s <= k) {
             return 0;
@@ -138,7 +154,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -151,31 +167,28 @@ public:
         ll s = 0;
         int mx = 0;
         int k = k1 + k2;
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             d[i] = abs(nums1[i] - nums2[i]);
             s += d[i];
             mx = max(mx, d[i]);
         }
         if (s <= k) return 0;
         int left = 0, right = mx;
-        while (left < right)
-        {
+        while (left < right) {
             int mid = (left + right) >> 1;
             ll t = 0;
             for (int v : d) t += max(v - mid, 0);
-            if (t <= k) right = mid;
-            else left = mid + 1;
+            if (t <= k)
+                right = mid;
+            else
+                left = mid + 1;
         }
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             k -= max(0, d[i] - left);
             d[i] = min(d[i], left);
         }
-        for (int i = 0; i < n && k; ++i)
-        {
-            if (d[i] == left)
-            {
+        for (int i = 0; i < n && k; ++i) {
+            if (d[i] == left) {
                 --k;
                 --d[i];
             }
@@ -187,7 +200,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minSumSquareDiff(nums1 []int, nums2 []int, k1 int, k2 int) int64 {
@@ -242,32 +255,10 @@ func abs(x int) int {
 	}
 	return x
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

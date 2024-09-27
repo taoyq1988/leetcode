@@ -1,18 +1,34 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/README_EN.md
+rating: 1253
+source: Weekly Contest 283 Q1
+tags:
+    - String
+---
+
+<!-- problem:start -->
+
 # [2194. Cells in a Range on an Excel Sheet](https://leetcode.com/problems/cells-in-a-range-on-an-excel-sheet)
 
 [中文文档](/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>A cell <code>(r, c)</code> of an excel sheet is represented as a string <code>&quot;&lt;col&gt;&lt;row&gt;&quot;</code> where:</p>
 
 <ul>
 	<li><code>&lt;col&gt;</code> denotes the column number <code>c</code> of the cell. It is represented by <strong>alphabetical letters</strong>.
+
     <ul>
     	<li>For example, the <code>1<sup>st</sup></code> column is denoted by <code>&#39;A&#39;</code>, the <code>2<sup>nd</sup></code> by <code>&#39;B&#39;</code>, the <code>3<sup>rd</sup></code> by <code>&#39;C&#39;</code>, and so on.</li>
     </ul>
     </li>
     <li><code>&lt;row&gt;</code> is the row number <code>r</code> of the cell. The <code>r<sup>th</sup></code> row is represented by the <strong>integer</strong> <code>r</code>.</li>
+
 </ul>
 
 <p>You are given a string <code>s</code>&nbsp;in&nbsp;the format <code>&quot;&lt;col1&gt;&lt;row1&gt;:&lt;col2&gt;&lt;row2&gt;&quot;</code>, where <code>&lt;col1&gt;</code> represents the column <code>c1</code>, <code>&lt;row1&gt;</code> represents the row <code>r1</code>, <code>&lt;col2&gt;</code> represents the column <code>c2</code>, and <code>&lt;row2&gt;</code> represents the row <code>r2</code>, such that <code>r1 &lt;= r2</code> and <code>c1 &lt;= c2</code>.</p>
@@ -20,7 +36,7 @@
 <p>Return <em>the <strong>list of cells</strong></em> <code>(x, y)</code> <em>such that</em> <code>r1 &lt;= x &lt;= r2</code> <em>and</em> <code>c1 &lt;= y &lt;= c2</code>. The cells should be represented as&nbsp;<strong>strings</strong> in the format mentioned above and be sorted in <strong>non-decreasing</strong> order first by columns and then by rows.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/images/ex1drawio.png" style="width: 250px; height: 160px;" />
 <pre>
 <strong>Input:</strong> s = &quot;K1:L2&quot;
@@ -30,7 +46,7 @@ The above diagram shows the cells which should be present in the list.
 The red arrows denote the order in which the cells should be presented.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2194.Cells%20in%20a%20Range%20on%20an%20Excel%20Sheet/images/exam2drawio.png" style="width: 500px; height: 50px;" />
 <pre>
 <strong>Input:</strong> s = &quot;A1:F1&quot;
@@ -50,19 +66,33 @@ The red arrow denotes the order in which the cells should be presented.
 	<li><code>s</code> consists of uppercase English letters, digits and <code>&#39;:&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+We directly traverse all the cells within the range and add them to the answer array.
+
+The time complexity is $O(m \times n)$, and the space complexity is $O(m \times n)$, where $m$ and $n$ are the range of rows and columns, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def cellsInRange(self, s: str) -> List[str]:
-        return [chr(i) + str(j) for i in range(ord(s[0]), ord(s[-2]) + 1) for j in range(int(s[1]), int(s[-1]) + 1)]
+        return [
+            chr(i) + str(j)
+            for i in range(ord(s[0]), ord(s[-2]) + 1)
+            for j in range(int(s[1]), int(s[-1]) + 1)
+        ]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -78,45 +108,52 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<string> cellsInRange(string s) {
         vector<string> ans;
-        for (char i = s[0]; i <= s[3]; ++i)
-            for (char j = s[1]; j <= s[4]; ++j)
+        for (char i = s[0]; i <= s[3]; ++i) {
+            for (char j = s[1]; j <= s[4]; ++j) {
                 ans.push_back({i, j});
+            }
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func cellsInRange(s string) []string {
-	var ans []string
+func cellsInRange(s string) (ans []string) {
 	for i := s[0]; i <= s[3]; i++ {
 		for j := s[1]; j <= s[4]; j++ {
 			ans = append(ans, string(i)+string(j))
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
-```
-
-### **...**
-
-```
-
+function cellsInRange(s: string): string[] {
+    const ans: string[] = [];
+    for (let i = s.charCodeAt(0); i <= s.charCodeAt(3); ++i) {
+        for (let j = s.charCodeAt(1); j <= s.charCodeAt(4); ++j) {
+            ans.push(String.fromCharCode(i) + String.fromCharCode(j));
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

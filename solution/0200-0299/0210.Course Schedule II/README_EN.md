@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0210.Course%20Schedule%20II/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Graph
+    - Topological Sort
+---
+
+<!-- problem:start -->
+
 # [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii)
 
 [中文文档](/solution/0200-0299/0210.Course%20Schedule%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are a total of <code>numCourses</code> courses you have to take, labeled from <code>0</code> to <code>numCourses - 1</code>. You are given an array <code>prerequisites</code> where <code>prerequisites[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that you <strong>must</strong> take course <code>b<sub>i</sub></code> first if you want to take course <code>a<sub>i</sub></code>.</p>
 
@@ -13,7 +28,7 @@
 <p>Return <em>the ordering of courses you should take to finish all courses</em>. If there are many valid answers, return <strong>any</strong> of them. If it is impossible to finish all courses, return <strong>an empty array</strong>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> numCourses = 2, prerequisites = [[1,0]]
@@ -21,7 +36,7 @@
 <strong>Explanation:</strong> There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
@@ -30,7 +45,7 @@
 So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> numCourses = 1, prerequisites = []
@@ -49,11 +64,17 @@ So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
 	<li>All the pairs <code>[a<sub>i</sub>, b<sub>i</sub>]</code> are <strong>distinct</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,8 +84,8 @@ class Solution:
         for a, b in prerequisites:
             g[b].append(a)
             indeg[a] += 1
-        q = deque([i for i, v in enumerate(indeg) if v == 0])
         ans = []
+        q = deque(i for i, x in enumerate(indeg) if x == 0)
         while q:
             i = q.popleft()
             ans.append(i)
@@ -75,15 +96,13 @@ class Solution:
         return ans if len(ans) == numCourses else []
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         List<Integer>[] g = new List[numCourses];
-        for (int i = 0; i < numCourses; ++i) {
-            g[i] = new ArrayList<>();
-        }
+        Arrays.setAll(g, k -> new ArrayList<>());
         int[] indeg = new int[numCourses];
         for (var p : prerequisites) {
             int a = p[0], b = p[1];
@@ -112,37 +131,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function findOrder(numCourses: number, prerequisites: number[][]): number[] {
-    let g = Array.from({ length: numCourses }, () => []);
-    let indeg = new Array(numCourses).fill(0);
-    for (let [a, b] of prerequisites) {
-        g[b].push(a);
-        ++indeg[a];
-    }
-    let q = [];
-    for (let i = 0; i < numCourses; ++i) {
-        if (!indeg[i]) {
-            q.push(i);
-        }
-    }
-    let ans = [];
-    while (q.length) {
-        const i = q.shift();
-        ans.push(i);
-        for (let j of g[i]) {
-            if (--indeg[j] == 0) {
-                q.push(j);
-            }
-        }
-    }
-    return ans.length == numCourses ? ans : [];
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -150,28 +139,34 @@ public:
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
         vector<vector<int>> g(numCourses);
         vector<int> indeg(numCourses);
-        for (auto& p : prerequisites)
-        {
+        for (auto& p : prerequisites) {
             int a = p[0], b = p[1];
             g[b].push_back(a);
             ++indeg[a];
         }
         queue<int> q;
-        for (int i = 0; i < numCourses; ++i) if (indeg[i] == 0) q.push(i);
+        for (int i = 0; i < numCourses; ++i) {
+            if (indeg[i] == 0) {
+                q.push(i);
+            }
+        }
         vector<int> ans;
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int i = q.front();
             q.pop();
             ans.push_back(i);
-            for (int j : g[i]) if (--indeg[j] == 0) q.push(j);
+            for (int j : g[i]) {
+                if (--indeg[j] == 0) {
+                    q.push(j);
+                }
+            }
         }
         return ans.size() == numCourses ? ans : vector<int>();
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findOrder(numCourses int, prerequisites [][]int) []int {
@@ -183,8 +178,8 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
 		indeg[a]++
 	}
 	q := []int{}
-	for i, v := range indeg {
-		if v == 0 {
+	for i, x := range indeg {
+		if x == 0 {
 			q = append(q, i)
 		}
 	}
@@ -207,37 +202,109 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
 }
 ```
 
-### **C#**
+#### TypeScript
+
+```ts
+function findOrder(numCourses: number, prerequisites: number[][]): number[] {
+    const g: number[][] = Array.from({ length: numCourses }, () => []);
+    const indeg: number[] = new Array(numCourses).fill(0);
+    for (const [a, b] of prerequisites) {
+        g[b].push(a);
+        indeg[a]++;
+    }
+    const q: number[] = [];
+    for (let i = 0; i < numCourses; ++i) {
+        if (indeg[i] === 0) {
+            q.push(i);
+        }
+    }
+    const ans: number[] = [];
+    while (q.length) {
+        const i = q.shift()!;
+        ans.push(i);
+        for (const j of g[i]) {
+            if (--indeg[j] === 0) {
+                q.push(j);
+            }
+        }
+    }
+    return ans.length === numCourses ? ans : [];
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = num_courses as usize;
+        let mut adjacency = vec![vec![]; n];
+        let mut entry = vec![0; n];
+        // init
+        for iter in prerequisites.iter() {
+            let (a, b) = (iter[0], iter[1]);
+            adjacency[b as usize].push(a);
+            entry[a as usize] += 1;
+        }
+        // construct deque & reslut
+        let mut deque = std::collections::VecDeque::new();
+        for index in 0..n {
+            if entry[index] == 0 {
+                deque.push_back(index);
+            }
+        }
+        let mut result = vec![];
+        // bfs
+        while !deque.is_empty() {
+            let head = deque.pop_front().unwrap();
+            result.push(head as i32);
+            // update degree of entry
+            for &out_entry in adjacency[head].iter() {
+                entry[out_entry as usize] -= 1;
+                if entry[out_entry as usize] == 0 {
+                    deque.push_back(out_entry as usize);
+                }
+            }
+        }
+        if result.len() == n {
+            result
+        } else {
+            vec![]
+        }
+    }
+}
+```
+
+#### C#
 
 ```cs
 public class Solution {
     public int[] FindOrder(int numCourses, int[][] prerequisites) {
         var g = new List<int>[numCourses];
-        for (int i = 0; i < numCourses; ++i)
-        {
+        for (int i = 0; i < numCourses; ++i) {
             g[i] = new List<int>();
         }
         var indeg = new int[numCourses];
-        foreach (var p in prerequisites)
-        {
+        foreach (var p in prerequisites) {
             int a = p[0], b = p[1];
             g[b].Add(a);
             ++indeg[a];
         }
         var q = new Queue<int>();
-        for (int i = 0; i < numCourses; ++i)
-        {
-            if (indeg[i] == 0) q.Enqueue(i);
+        for (int i = 0; i < numCourses; ++i) {
+            if (indeg[i] == 0) {
+                q.Enqueue(i);
+            }
         }
         var ans = new int[numCourses];
         var cnt = 0;
-        while (q.Count > 0)
-        {
+        while (q.Count > 0) {
             int i = q.Dequeue();
             ans[cnt++] = i;
-            foreach (int j in g[i])
-            {
-                if (--indeg[j] == 0) q.Enqueue(j);
+            foreach (int j in g[i]) {
+                if (--indeg[j] == 0) {
+                    q.Enqueue(j);
+                }
             }
         }
         return cnt == numCourses ? ans : new int[0];
@@ -245,10 +312,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

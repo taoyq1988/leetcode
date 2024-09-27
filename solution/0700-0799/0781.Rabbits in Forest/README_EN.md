@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0781.Rabbits%20in%20Forest/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Hash Table
+    - Math
+---
+
+<!-- problem:start -->
+
 # [781. Rabbits in Forest](https://leetcode.com/problems/rabbits-in-forest)
 
 [中文文档](/solution/0700-0799/0781.Rabbits%20in%20Forest/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>There is a forest with an unknown number of rabbits. We asked n rabbits <strong>&quot;How many rabbits have the same color as you?&quot;</strong> and collected the answers in an integer array <code>answers</code> where <code>answers[i]</code> is the answer of the <code>i<sup>th</sup></code> rabbit.</p>
 
 <p>Given the array <code>answers</code>, return <em>the minimum number of rabbits that could be in the forest</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> answers = [1,1,2]
@@ -22,7 +37,7 @@ Then there should be 2 other blue rabbits in the forest that didn&#39;t answer i
 The smallest possible number of rabbits in the forest is therefore 5: 3 that answered plus 2 that didn&#39;t.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> answers = [10,10,10]
@@ -37,11 +52,17 @@ The smallest possible number of rabbits in the forest is therefore 5: 3 that ans
 	<li><code>0 &lt;= answers[i] &lt; 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -50,7 +71,7 @@ class Solution:
         return sum([math.ceil(v / (k + 1)) * (k + 1) for k, v in counter.items()])
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -69,10 +90,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

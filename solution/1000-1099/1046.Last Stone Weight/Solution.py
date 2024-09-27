@@ -1,6 +1,6 @@
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
-        h = [-s for s in stones]
+        h = [-x for x in stones]
         heapify(h)
         while len(h) > 1:
             y, x = -heappop(h), -heappop(h)

@@ -4,13 +4,9 @@ class Solution:
         s = set()
         for i in range(n):
             cnt = 0
-            t = ""
             for j in range(i, n):
-                if nums[j] % p == 0:
-                    cnt += 1
-                if cnt <= k:
-                    t += str(nums[j]) + ","
-                    s.add(t)
-                else:
+                cnt += nums[j] % p == 0
+                if cnt > k:
                     break
+                s.add(tuple(nums[i : j + 1]))
         return len(s)

@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1900.The%20Earliest%20and%20Latest%20Rounds%20Where%20Players%20Compete/README_EN.md
+rating: 2454
+source: Weekly Contest 245 Q4
+tags:
+    - Memoization
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [1900. The Earliest and Latest Rounds Where Players Compete](https://leetcode.com/problems/the-earliest-and-latest-rounds-where-players-compete)
 
 [中文文档](/solution/1900-1999/1900.The%20Earliest%20and%20Latest%20Rounds%20Where%20Players%20Compete/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a tournament where <code>n</code> players are participating. The players are standing in a single row and are numbered from <code>1</code> to <code>n</code> based on their <strong>initial</strong> standing position (player <code>1</code> is the first player in the row, player <code>2</code> is the second player in the row, etc.).</p>
 
@@ -10,12 +25,14 @@
 
 <ul>
 	<li>For example, if the row consists of players <code>1, 2, 4, 6, 7</code>
+
     <ul>
     	<li>Player <code>1</code> competes against player <code>7</code>.</li>
     	<li>Player <code>2</code> competes against player <code>6</code>.</li>
     	<li>Player <code>4</code> automatically advances to the next round.</li>
     </ul>
     </li>
+
 </ul>
 
 <p>After each round is over, the winners are lined back up in the row based on the <strong>original ordering</strong> assigned to them initially (ascending order).</p>
@@ -25,7 +42,7 @@
 <p>Given the integers <code>n</code>, <code>firstPlayer</code>, and <code>secondPlayer</code>, return <em>an integer array containing two values, the <strong>earliest</strong> possible round number and the&nbsp;<strong>latest</strong> possible round number in which these two players will compete against each other, respectively</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 11, firstPlayer = 2, secondPlayer = 4
@@ -42,7 +59,7 @@ Third round: 1, 2, 4
 Fourth round: 2, 4
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 5, firstPlayer = 1, secondPlayer = 5
@@ -59,26 +76,51 @@ There is no way to make them compete in any other round.
 	<li><code>1 &lt;= firstPlayer &lt; secondPlayer &lt;= n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+class Solution:
+    def earliestAndLatest(
+        self, n: int, firstPlayer: int, secondPlayer: int
+    ) -> List[int]:
+        # dp[i][j][k] := (earliest, latest) pair w/ firstPlayer is i-th player from
+        # Front, secondPlayer is j-th player from end, and there're k people
+        @functools.lru_cache(None)
+        def dp(l: int, r: int, k: int) -> List[int]:
+            if l == r:
+                return [1, 1]
+            if l > r:
+                return dp(r, l, k)
 
-```
+            a = math.inf
+            b = -math.inf
 
-### **Java**
+            # Enumerate all possible positions
+            for i in range(1, l + 1):
+                for j in range(l - i + 1, r - i + 1):
+                    if not l + r - k // 2 <= i + j <= (k + 1) // 2:
+                        continue
+                    x, y = dp(i, j, (k + 1) // 2)
+                    a = min(a, x + 1)
+                    b = max(b, y + 1)
 
-```java
+            return [a, b]
 
-```
-
-### **...**
-
-```
-
+        return dp(firstPlayer, n - secondPlayer + 1, n)
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

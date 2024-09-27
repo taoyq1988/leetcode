@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2320.Count%20Number%20of%20Ways%20to%20Place%20Houses/README.md
+rating: 1607
+source: 第 299 场周赛 Q2
+tags:
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [2320. 统计放置房子的方式数](https://leetcode.cn/problems/count-number-of-ways-to-place-houses)
 
 [English Version](/solution/2300-2399/2320.Count%20Number%20of%20Ways%20to%20Place%20Houses/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>一条街道上共有 <code>n * 2</code> 个 <strong>地块</strong> ，街道的两侧各有 <code>n</code> 个地块。每一边的地块都按从 <code>1</code> 到 <code>n</code> 编号。每个地块上都可以放置一所房子。</p>
 
@@ -41,106 +53,138 @@
 	<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：动态规划
+
+由于街道两侧房子的摆放互不影响，因此，我们可以只考虑一侧的摆放情况，最后将一侧的方案数平方取模得到最终结果。
+
+我们定义 $f[i]$ 表示放置前 $i+1$ 个地块，且最后一个地块放置房子的方案数，定义 $g[i]$ 表示放置前 $i+1$ 个地块，且最后一个地块不放置房子的方案数。初始时 $f[0] = g[0] = 1$。
+
+当我们放置第 $i+1$ 个地块时，有两种情况：
+
+-   如果第 $i+1$ 个地块放置房子，那么第 $i$ 个地块必须不放置房子，因此方案数 $f[i]=g[i-1]$；
+-   如果第 $i+1$ 个地块不放置房子，那么第 $i$ 个地块可以放置房子，也可以不放置房子，因此方案数 $g[i]=f[i-1]+g[i-1]$。
+
+最终，我们将 $f[n-1]+g[n-1]$ 的平方取模即为答案。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为街道的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def countHousePlacements(self, n: int) -> int:
         mod = 10**9 + 7
-        f = [[0] * 2 for _ in range(n)]
-        f[0] = [1, 1]
+        f = [1] * n
+        g = [1] * n
         for i in range(1, n):
-            f[i][0] = f[i - 1][0] + f[i - 1][1]
-            f[i][1] = f[i - 1][0]
-        s = sum(f[-1])
-        return (s * s) % mod
+            f[i] = g[i - 1]
+            g[i] = (f[i - 1] + g[i - 1]) % mod
+        v = f[-1] + g[-1]
+        return v * v % mod
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int countHousePlacements(int n) {
-        int mod = (int) 1e9 + 7;
-        long[][] f = new long[n][2];
-        f[0] = new long[]{1, 1};
+        final int mod = (int) 1e9 + 7;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        f[0] = 1;
+        g[0] = 1;
         for (int i = 1; i < n; ++i) {
-            f[i][0] = (f[i - 1][0] + f[i - 1][1]) % mod;
-            f[i][1] = f[i - 1][0];
+            f[i] = g[i - 1];
+            g[i] = (f[i - 1] + g[i - 1]) % mod;
         }
-        long s = f[n - 1][0] + f[n - 1][1];
-        return (int) ((s * s) % mod);
+        long v = (f[n - 1] + g[n - 1]) % mod;
+        return (int) (v * v % mod);
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int countHousePlacements(int n) {
-        int mod = 1e9 + 7;
-        vector<vector<long>> f(n, vector<long>(2));
-        f[0] = {1, 1};
-        for (int i = 1; i < n; ++i)
-        {
-            f[i][0] = (f[i - 1][0] + f[i - 1][1]) % mod;
-            f[i][1] = f[i - 1][0];
+        const int mod = 1e9 + 7;
+        int f[n], g[n];
+        f[0] = g[0] = 1;
+        for (int i = 1; i < n; ++i) {
+            f[i] = g[i - 1];
+            g[i] = (f[i - 1] + g[i - 1]) % mod;
         }
-        long s = f[n - 1][0] + f[n - 1][1];
-        return (int) ((s * s) % mod);
+        long v = f[n - 1] + g[n - 1];
+        return v * v % mod;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countHousePlacements(n int) int {
-	mod := int(1e9) + 7
-	f := make([][]int, n)
-	for i := range f {
-		f[i] = make([]int, 2)
-	}
-	f[0] = []int{1, 1}
+	const mod = 1e9 + 7
+	f := make([]int, n)
+	g := make([]int, n)
+	f[0], g[0] = 1, 1
 	for i := 1; i < n; i++ {
-		f[i][0] = (f[i-1][0] + f[i-1][1]) % mod
-		f[i][1] = f[i-1][0]
+		f[i] = g[i-1]
+		g[i] = (f[i-1] + g[i-1]) % mod
 	}
-	s := f[n-1][0] + f[n-1][1]
-	return (s * s) % mod
+	v := f[n-1] + g[n-1]
+	return v * v % mod
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function countHousePlacements(n: number): number {
+    const f = new Array(n);
+    const g = new Array(n);
+    f[0] = g[0] = 1n;
     const mod = BigInt(10 ** 9 + 7);
-    let pre = 1n,
-        count = 2n;
-    for (let i = 2; i <= n; i++) {
-        [count, pre] = [(count + pre) % mod, count];
+    for (let i = 1; i < n; ++i) {
+        f[i] = g[i - 1];
+        g[i] = (f[i - 1] + g[i - 1]) % mod;
     }
-    return Number(count ** 2n % mod);
+    const v = f[n - 1] + g[n - 1];
+    return Number(v ** 2n % mod);
 }
 ```
 
-### **...**
+#### C#
 
-```
-
+```cs
+public class Solution {
+    public int CountHousePlacements(int n) {
+        const int mod = (int) 1e9 + 7;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        f[0] = g[0] = 1;
+        for (int i = 1; i < n; ++i) {
+            f[i] = g[i - 1];
+            g[i] = (f[i - 1] + g[i - 1]) % mod;
+        }
+        long v = (f[n - 1] + g[n - 1]) % mod;
+        return (int) (v * v % mod);
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

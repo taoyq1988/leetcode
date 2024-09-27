@@ -1,16 +1,12 @@
 class Solution {
     public String greatestLetter(String s) {
-        int[] cnt = new int[26];
+        Set<Character> ss = new HashSet<>();
         for (char c : s.toCharArray()) {
-            if (Character.isLowerCase(c)) {
-                cnt[c - 'a'] |= 1;
-            } else if (Character.isUpperCase(c)) {
-                cnt[c - 'A'] |= 2;
-            }
+            ss.add(c);
         }
-        for (int i = 25; i >= 0; --i) {
-            if (cnt[i] == 3) {
-                return String.valueOf((char) ('A' + i));
+        for (char a = 'Z'; a >= 'A'; --a) {
+            if (ss.contains(a) && ss.contains((char) (a + 32))) {
+                return String.valueOf(a);
             }
         }
         return "";

@@ -1,15 +1,21 @@
 class Solution {
+    private int[] piles;
+    private int[][] f;
+
     public boolean stoneGame(int[] piles) {
+        this.piles = piles;
         int n = piles.length;
-        int[][] dp = new int[n][n];
-        for (int i = 0; i < n; ++i) {
-            dp[i][i] = piles[i];
+        f = new int[n][n];
+        return dfs(0, n - 1) > 0;
+    }
+
+    private int dfs(int i, int j) {
+        if (i > j) {
+            return 0;
         }
-        for (int i = n - 2; i >= 0; --i) {
-            for (int j = i + 1; j < n; ++j) {
-                dp[i][j] = Math.max(piles[i] - dp[i + 1][j], piles[j] - dp[i][j - 1]);
-            }
+        if (f[i][j] != 0) {
+            return f[i][j];
         }
-        return dp[0][n - 1] > 0;
+        return f[i][j] = Math.max(piles[i] - dfs(i + 1, j), piles[j] - dfs(i, j - 1));
     }
 }

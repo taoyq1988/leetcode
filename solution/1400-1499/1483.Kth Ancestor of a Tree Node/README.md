@@ -1,10 +1,27 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1483.Kth%20Ancestor%20of%20a%20Tree%20Node/README.md
+rating: 2115
+source: 第 193 场周赛 Q4
+tags:
+    - 树
+    - 深度优先搜索
+    - 广度优先搜索
+    - 设计
+    - 二分查找
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [1483. 树节点的第 K 个祖先](https://leetcode.cn/problems/kth-ancestor-of-a-tree-node)
 
 [English Version](/solution/1400-1499/1483.Kth%20Ancestor%20of%20a%20Tree%20Node/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一棵树，树上有 <code>n</code> 个节点，按从 <code>0</code> 到 <code>n-1</code> 编号。树以父节点数组的形式给出，其中 <code>parent[i]</code> 是节点 <code>i</code> 的父节点。树的根节点是编号为 <code>0</code> 的节点。</p>
 
@@ -51,32 +68,290 @@ treeAncestor.getKthAncestor(6, 3);  // 返回 -1 因为不存在满足要求的�
 	<li>至多查询&nbsp;<code>5 * 10<sup>4</sup></code> 次</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：动态规划 + 倍增
+
+题目要我们寻找节点 $node$ 的第 $k$ 个祖先节点，如果暴力求解，需要从 $node$ 开始向上遍历 $k$ 次，时间复杂度为 $O(k)$，显然会超时。
+
+我们可以使用动态规划，结合倍增的思想来处理。
+
+我们定义 $p[i][j]$ 表示节点 $i$ 的第 $2^j$ 个祖先节点，即 $p[i][j]$ 表示节点 $i$ 向上走 $2^j$ 步的节点。那么我们可以得到状态转移方程：
+
+$$
+p[i][j] = p[p[i][j-1]][j-1]
+$$
+
+即：要想找到节点 $i$ 的第 $2^j$ 个祖先节点，我们可以先找到节点 $i$ 的第 $2^{j-1}$ 个祖先节点，然后再找到该节点的第 $2^{j-1}$ 个祖先节点即可。所以，我们要找到每个节点的距离为 $2^j$ 的祖先节点，直到达到树的最大高度。
+
+之后对于每次查询，我们可以把 $k$ 拆成二进制的表示形式，然后根据二进制中 $1$ 的位置，累计向上查询，最终得到节点 $node$ 的第 $k$ 个祖先节点。
+
+时间复杂度方面，初始化为 $O(n \times \log n)$，查询为 $O(\log n)$。空间复杂度 $O(n \times \log n)$。其中 $n$ 为树的节点数。
+
+相似题目：
+
+-   [2836. 在传球游戏中最大化函数值](https://github.com/doocs/leetcode/blob/main/solution/2800-2899/2836.Maximize%20Value%20of%20Function%20in%20a%20Ball%20Passing%20Game/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
+class TreeAncestor:
+    def __init__(self, n: int, parent: List[int]):
+        self.p = [[-1] * 18 for _ in range(n)]
+        for i, fa in enumerate(parent):
+            self.p[i][0] = fa
+        for j in range(1, 18):
+            for i in range(n):
+                if self.p[i][j - 1] == -1:
+                    continue
+                self.p[i][j] = self.p[self.p[i][j - 1]][j - 1]
 
+    def getKthAncestor(self, node: int, k: int) -> int:
+        for i in range(17, -1, -1):
+            if k >> i & 1:
+                node = self.p[node][i]
+                if node == -1:
+                    break
+        return node
+
+
+# Your TreeAncestor object will be instantiated and called as such:
+# obj = TreeAncestor(n, parent)
+# param_1 = obj.getKthAncestor(node,k)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
+class TreeAncestor {
+    private int[][] p;
 
+    public TreeAncestor(int n, int[] parent) {
+        p = new int[n][18];
+        for (var e : p) {
+            Arrays.fill(e, -1);
+        }
+        for (int i = 0; i < n; ++i) {
+            p[i][0] = parent[i];
+        }
+        for (int j = 1; j < 18; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (p[i][j - 1] == -1) {
+                    continue;
+                }
+                p[i][j] = p[p[i][j - 1]][j - 1];
+            }
+        }
+    }
+
+    public int getKthAncestor(int node, int k) {
+        for (int i = 17; i >= 0; --i) {
+            if (((k >> i) & 1) == 1) {
+                node = p[node][i];
+                if (node == -1) {
+                    break;
+                }
+            }
+        }
+        return node;
+    }
+}
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * TreeAncestor obj = new TreeAncestor(n, parent);
+ * int param_1 = obj.getKthAncestor(node,k);
+ */
 ```
 
-### **...**
+#### C++
 
+```cpp
+class TreeAncestor {
+public:
+    TreeAncestor(int n, vector<int>& parent) {
+        p = vector<vector<int>>(n, vector<int>(18, -1));
+        for (int i = 0; i < n; ++i) {
+            p[i][0] = parent[i];
+        }
+        for (int j = 1; j < 18; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (p[i][j - 1] == -1) {
+                    continue;
+                }
+                p[i][j] = p[p[i][j - 1]][j - 1];
+            }
+        }
+    }
+
+    int getKthAncestor(int node, int k) {
+        for (int i = 17; ~i; --i) {
+            if (k >> i & 1) {
+                node = p[node][i];
+                if (node == -1) {
+                    break;
+                }
+            }
+        }
+        return node;
+    }
+
+private:
+    vector<vector<int>> p;
+};
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * TreeAncestor* obj = new TreeAncestor(n, parent);
+ * int param_1 = obj->getKthAncestor(node,k);
+ */
 ```
 
+#### Go
+
+```go
+type TreeAncestor struct {
+	p [][18]int
+}
+
+func Constructor(n int, parent []int) TreeAncestor {
+	p := make([][18]int, n)
+	for i, fa := range parent {
+		p[i][0] = fa
+		for j := 1; j < 18; j++ {
+			p[i][j] = -1
+		}
+	}
+	for j := 1; j < 18; j++ {
+		for i := range p {
+			if p[i][j-1] == -1 {
+				continue
+			}
+			p[i][j] = p[p[i][j-1]][j-1]
+		}
+	}
+	return TreeAncestor{p}
+}
+
+func (this *TreeAncestor) GetKthAncestor(node int, k int) int {
+	for i := 17; i >= 0; i-- {
+		if k>>i&1 == 1 {
+			node = this.p[node][i]
+			if node == -1 {
+				break
+			}
+		}
+	}
+	return node
+}
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * obj := Constructor(n, parent);
+ * param_1 := obj.GetKthAncestor(node,k);
+ */
+```
+
+#### TypeScript
+
+```ts
+class TreeAncestor {
+    private p: number[][];
+
+    constructor(n: number, parent: number[]) {
+        const p = new Array(n).fill(0).map(() => new Array(18).fill(-1));
+        for (let i = 0; i < n; ++i) {
+            p[i][0] = parent[i];
+        }
+        for (let j = 1; j < 18; ++j) {
+            for (let i = 0; i < n; ++i) {
+                if (p[i][j - 1] === -1) {
+                    continue;
+                }
+                p[i][j] = p[p[i][j - 1]][j - 1];
+            }
+        }
+        this.p = p;
+    }
+
+    getKthAncestor(node: number, k: number): number {
+        for (let i = 17; i >= 0; --i) {
+            if (((k >> i) & 1) === 1) {
+                node = this.p[node][i];
+                if (node === -1) {
+                    break;
+                }
+            }
+        }
+        return node;
+    }
+}
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * var obj = new TreeAncestor(n, parent)
+ * var param_1 = obj.getKthAncestor(node,k)
+ */
+```
+
+#### C#
+
+```cs
+public class TreeAncestor {
+    private int[][] p;
+
+    public TreeAncestor(int n, int[] parent) {
+        p = new int[n][];
+        for (int i = 0; i < n; i++) {
+            p[i] = new int[18];
+            for (int j = 0; j < 18; j++) {
+                p[i][j] = -1;
+            }
+        }
+
+        for (int i = 0; i < n; ++i) {
+            p[i][0] = parent[i];
+        }
+
+        for (int j = 1; j < 18; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (p[i][j - 1] == -1) {
+                    continue;
+                }
+                p[i][j] = p[p[i][j - 1]][j - 1];
+            }
+        }
+    }
+
+    public int GetKthAncestor(int node, int k) {
+        for (int i = 17; i >= 0; --i) {
+            if (((k >> i) & 1) == 1) {
+                node = p[node][i];
+                if (node == -1) {
+                    break;
+                }
+            }
+        }
+        return node;
+    }
+}
+
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * TreeAncestor obj = new TreeAncestor(n, parent);
+ * int param_1 = obj.GetKthAncestor(node,k);
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

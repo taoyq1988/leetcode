@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1718.Construct%20the%20Lexicographically%20Largest%20Valid%20Sequence/README_EN.md
+rating: 2080
+source: Biweekly Contest 43 Q3
+tags:
+    - Array
+    - Backtracking
+---
+
+<!-- problem:start -->
+
 # [1718. Construct the Lexicographically Largest Valid Sequence](https://leetcode.com/problems/construct-the-lexicographically-largest-valid-sequence)
 
 [中文文档](/solution/1700-1799/1718.Construct%20the%20Lexicographically%20Largest%20Valid%20Sequence/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an integer <code>n</code>, find a sequence that satisfies all of the following:</p>
 
@@ -19,7 +34,7 @@
 <p>A sequence <code>a</code> is lexicographically larger than a sequence <code>b</code> (of the same length) if in the first position where <code>a</code> and <code>b</code> differ, sequence <code>a</code> has a number greater than the corresponding number in <code>b</code>. For example, <code>[0,1,9,0]</code> is lexicographically larger than <code>[0,1,5,6]</code> because the first position they differ is at the third number, and <code>9</code> is greater than <code>5</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3
@@ -27,7 +42,7 @@
 <strong>Explanation:</strong> [2,3,2,1,3] is also a valid sequence, but [3,1,2,3,2] is the lexicographically largest valid sequence.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 5
@@ -41,13 +56,17 @@
 	<li><code>1 &lt;= n &lt;= 20</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-DFS.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -79,7 +98,7 @@ class Solution:
         return path[1:]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -109,7 +128,7 @@ class Solution {
             return dfs(u + 1);
         }
         for (int i = n; i > 1; --i) {
-            if (cnt[i] > 0 && u + i < n * 2 &&  path[u + i] == 0) {
+            if (cnt[i] > 0 && u + i < n * 2 && path[u + i] == 0) {
                 cnt[i] = 0;
                 path[u] = i;
                 path[u + i] = i;
@@ -135,7 +154,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -157,10 +176,8 @@ public:
     bool dfs(int u) {
         if (u == n * 2) return 1;
         if (path[u]) return dfs(u + 1);
-        for (int i = n; i > 1; --i)
-        {
-            if (cnt[i] && u + i < n * 2 && !path[u + i])
-            {
+        for (int i = n; i > 1; --i) {
+            if (cnt[i] && u + i < n * 2 && !path[u + i]) {
                 path[u] = path[u + i] = i;
                 cnt[i] = 0;
                 if (dfs(u + 1)) return 1;
@@ -168,8 +185,7 @@ public:
                 path[u] = path[u + i] = 0;
             }
         }
-        if (cnt[1])
-        {
+        if (cnt[1]) {
             path[u] = 1;
             cnt[1] = 0;
             if (dfs(u + 1)) return 1;
@@ -181,7 +197,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func constructDistancedSequence(n int) []int {
@@ -226,10 +242,8 @@ func constructDistancedSequence(n int) []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

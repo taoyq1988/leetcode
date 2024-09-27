@@ -4,29 +4,33 @@
  * @return {number}
  */
 var maximumRequests = function (n, requests) {
-    function check(x) {
-        let d = new Array(n).fill(0);
-        for (let i = 0; i < m; ++i) {
-            if ((x >> i) & 1) {
-                const [f, t] = requests[i];
-                d[f]--;
-                d[t]++;
-            }
-        }
-        for (const v of d) {
-            if (v) {
-                return false;
-            }
-        }
-        return true;
-    }
+    const m = requests.length;
     let ans = 0;
-    let m = requests.length;
-    for (let mask = 1; mask < 1 << m; ++mask) {
-        let cnt = mask.toString(2).split('0').join('').length;
+    const check = mask => {
+        const cnt = new Array(n).fill(0);
+        for (let i = 0; i < m; ++i) {
+            if ((mask >> i) & 1) {
+                const [f, t] = requests[i];
+                --cnt[f];
+                ++cnt[t];
+            }
+        }
+        return cnt.every(v => v === 0);
+    };
+    for (let mask = 0; mask < 1 << m; ++mask) {
+        const cnt = bitCount(mask);
         if (ans < cnt && check(mask)) {
             ans = cnt;
         }
     }
     return ans;
 };
+
+function bitCount(i) {
+    i = i - ((i >>> 1) & 0x55555555);
+    i = (i & 0x33333333) + ((i >>> 2) & 0x33333333);
+    i = (i + (i >>> 4)) & 0x0f0f0f0f;
+    i = i + (i >>> 8);
+    i = i + (i >>> 16);
+    return i & 0x3f;
+}

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2288.Apply%20Discount%20to%20Prices/README_EN.md
+rating: 1577
+source: Weekly Contest 295 Q2
+tags:
+    - String
+---
+
+<!-- problem:start -->
+
 # [2288. Apply Discount to Prices](https://leetcode.com/problems/apply-discount-to-prices)
 
 [中文文档](/solution/2200-2299/2288.Apply%20Discount%20to%20Prices/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A <strong>sentence</strong> is a string of single-space separated words where each word can contain digits, lowercase letters, and the dollar sign <code>&#39;$&#39;</code>. A word represents a <strong>price</strong> if it is a sequence of digits preceded by a dollar sign.</p>
 
@@ -17,7 +31,7 @@
 <p>Note that all prices will contain <strong>at most</strong> <code>10</code> digits.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> sentence = &quot;there are $1 $2 and 5$ candies in the shop&quot;, discount = 50
@@ -28,7 +42,7 @@ The words which represent prices are &quot;$1&quot; and &quot;$2&quot;.
 - A 50% discount on &quot;$2&quot; yields &quot;$1&quot;. Since we need to have exactly 2 decimal places after a price, we replace &quot;$2&quot; with &quot;$1.00&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> sentence = &quot;1 2 $3 4 $5 $6 7 8$ $9 $10$&quot;, discount = 100
@@ -52,11 +66,21 @@ Each of them is replaced by &quot;$0.00&quot;.
 	<li><code>0 &lt;= discount &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+We can split the sentence into an array of words by spaces, then iterate through the array of words. For each word, if it represents a price, we update it to the price after applying the discount. Finally, we concatenate the updated array of words into a space-separated string.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$. Here, $n$ is the length of the string `sentence`.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,36 +88,32 @@ class Solution:
         ans = []
         for w in sentence.split():
             if w[0] == '$' and w[1:].isdigit():
-                t = int(w[1:]) * (1 - discount / 100)
-                ans.append('$' + '{:.2f}'.format(t))
-            else:
-                ans.append(w)
+                w = f'${int(w[1:]) * (1 - discount / 100):.2f}'
+            ans.append(w)
         return ' '.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String discountPrices(String sentence, int discount) {
-        List<String> ans = new ArrayList<>();
-        for (String w : sentence.split(" ")) {
-            if (w.charAt(0) == '$' && isNumber(w.substring(1))) {
-                double t = Long.parseLong(w.substring(1)) * (1 - discount / 100.0);
-                ans.add("$" + String.format("%.2f", t));
-            } else {
-                ans.add(w);
+        String[] words = sentence.split(" ");
+        for (int i = 0; i < words.length; ++i) {
+            if (check(words[i])) {
+                double t = Long.parseLong(words[i].substring(1)) * (1 - discount / 100.0);
+                words[i] = String.format("$%.2f", t);
             }
         }
-        return String.join(" ", ans);
+        return String.join(" ", words);
     }
 
-    private boolean isNumber(String s) {
-        if (s == null || "".equals(s)) {
+    private boolean check(String s) {
+        if (s.charAt(0) != '$' || s.length() == 1) {
             return false;
         }
-        for (char c : s.toCharArray()) {
-            if (!Character.isDigit(c)) {
+        for (int i = 1; i < s.length(); ++i) {
+            if (!Character.isDigit(s.charAt(i))) {
                 return false;
             }
         }
@@ -102,26 +122,77 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    string discountPrices(string sentence, int discount) {
+        istringstream is(sentence);
+        string w;
+        string ans;
+        auto check = [](string s) {
+            if (s[0] != '$' || s.size() == 1) {
+                return false;
+            }
+            for (int i = 1; i < s.size(); ++i) {
+                if (!isdigit(s[i])) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        while (is >> w) {
+            if (check(w)) {
+                long long v = stoll(w.substr(1)) * (100 - discount);
+                char t[20];
+                sprintf(t, "$%lld.%02lld", v / 100, v % 100);
+                ans += t;
+            } else {
+                ans += w;
+            }
+            ans += ' ';
+        }
+        ans.pop_back();
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func discountPrices(sentence string, discount int) string {
+	words := strings.Split(sentence, " ")
+	for i, w := range words {
+		if w[0] == '$' {
+			if v, err := strconv.Atoi(w[1:]); err == nil {
+				words[i] = fmt.Sprintf("$%.2f", float64(v*(100-discount))/100)
+			}
+		}
+	}
+	return strings.Join(words, " ")
+}
+```
+
+#### TypeScript
 
 ```ts
 function discountPrices(sentence: string, discount: number): string {
     const sell = (100 - discount) / 100;
-    let reg = new RegExp(/^(\$)(([1-9]\d*\.?\d*)|(0\.\d*))$/g);
-    let arr = sentence.split(' ').map(d => {
+    const reg = new RegExp(/^(\$)(([1-9]\d*\.?\d*)|(0\.\d*))$/g);
+    const words = sentence.split(' ').map(d => {
         if (!reg.test(d)) return d;
         return d.replace(reg, (s, $1, $2) => {
             return `$${(sell * $2).toFixed(2)}`;
         });
     });
-    return arr.join(' ');
+    return words.join(' ');
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

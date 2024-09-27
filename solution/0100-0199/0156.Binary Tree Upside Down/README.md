@@ -1,10 +1,22 @@
-# [156. 上下翻转二叉树](https://leetcode.cn/problems/binary-tree-upside-down)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0156.Binary%20Tree%20Upside%20Down/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
+# [156. 上下翻转二叉树 🔒](https://leetcode.cn/problems/binary-tree-upside-down)
 
 [English Version](/solution/0100-0199/0156.Binary%20Tree%20Upside%20Down/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个二叉树的根节点 <code>root</code> ，请你将此二叉树上下翻转，并返回新的根节点。</p>
 
@@ -52,9 +64,13 @@
 	<li>树中的每个右节点都没有子节点</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：递归
 
 若根节点为空，或者根节点左子树为空，直接返回根节点。
 
@@ -64,11 +80,11 @@
 
 接着将根节点 root 的左右子节点置为空，最后返回 newRoot 即可。
 
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为二叉树节点个数。
+
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -89,9 +105,7 @@ class Solution:
         return new_root
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -124,7 +138,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -152,7 +166,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -176,10 +190,8 @@ func upsideDownBinaryTree(root *TreeNode) *TreeNode {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

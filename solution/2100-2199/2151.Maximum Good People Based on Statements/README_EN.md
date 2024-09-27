@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/README_EN.md
+rating: 1979
+source: Weekly Contest 277 Q4
+tags:
+    - Bit Manipulation
+    - Array
+    - Backtracking
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2151. Maximum Good People Based on Statements](https://leetcode.com/problems/maximum-good-people-based-on-statements)
 
 [中文文档](/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are two types of persons:</p>
 
@@ -24,7 +41,7 @@
 <p>Return <em>the <strong>maximum</strong> number of people who can be <strong>good</strong> based on the statements made by the </em><code>n</code><em> people</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/images/logic1.jpg" style="width: 600px; height: 262px;" />
 <pre>
 <strong>Input:</strong> statements = [[2,1,2],[1,2,2],[2,0,2]]
@@ -52,7 +69,7 @@ We can see that at most 2 persons are good in the best case, so we return 2.
 Note that there is more than one way to arrive at this conclusion.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/images/logic2.jpg" style="width: 600px; height: 262px;" />
 <pre>
 <strong>Input:</strong> statements = [[2,0],[0,2]]
@@ -84,11 +101,17 @@ Note that there is more than one way to arrive at this conclusion.
 	<li><code>statements[i][i] == 2</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -106,7 +129,7 @@ class Solution:
         return max(check(mask) for mask in range(1, 1 << len(statements)))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -137,7 +160,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -151,12 +174,9 @@ public:
     int check(int mask, vector<vector<int>>& statements) {
         int cnt = 0;
         int n = statements.size();
-        for (int i = 0; i < n; ++i)
-        {
-            if ((mask >> i) & 1)
-            {
-                for (int j = 0; j < n; ++j)
-                {
+        for (int i = 0; i < n; ++i) {
+            if ((mask >> i) & 1) {
+                for (int j = 0; j < n; ++j) {
                     int v = statements[i][j];
                     if (v < 2 && ((mask >> j) & 1) != v) return 0;
                 }
@@ -168,7 +188,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumGood(statements [][]int) int {
@@ -193,16 +213,9 @@ func maximumGood(statements [][]int) int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maximumGood(statements: number[][]): number {
@@ -230,10 +243,8 @@ function maximumGood(statements: number[][]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

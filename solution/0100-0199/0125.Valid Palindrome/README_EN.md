@@ -1,15 +1,28 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0125.Valid%20Palindrome/README_EN.md
+tags:
+    - Two Pointers
+    - String
+---
+
+<!-- problem:start -->
+
 # [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome)
 
 [中文文档](/solution/0100-0199/0125.Valid%20Palindrome/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>A phrase is a <strong>palindrome</strong> if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.</p>
 
 <p>Given a string <code>s</code>, return <code>true</code><em> if it is a <strong>palindrome</strong>, or </em><code>false</code><em> otherwise</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;A man, a plan, a canal: Panama&quot;
@@ -17,7 +30,7 @@
 <strong>Explanation:</strong> &quot;amanaplanacanalpanama&quot; is a palindrome.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;race a car&quot;
@@ -25,7 +38,7 @@
 <strong>Explanation:</strong> &quot;raceacar&quot; is not a palindrome.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot; &quot;
@@ -42,11 +55,28 @@ Since an empty string reads the same forward and backward, it is a palindrome.
 	<li><code>s</code> consists only of printable ASCII characters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Two Pointers
+
+We use two pointers $i$ and $j$ to point to the two ends of the string $s$, and then loop through the following process until $i \geq j$:
+
+1. If $s[i]$ is not a letter or a number, move the pointer $i$ one step to the right and continue to the next loop.
+2. If $s[j]$ is not a letter or a number, move the pointer $j$ one step to the left and continue to the next loop.
+3. If the lowercase form of $s[i]$ and $s[j]$ are not equal, return `false`.
+4. Otherwise, move the pointer $i$ one step to the right and the pointer $j$ one step to the left, and continue to the next loop.
+
+At the end of the loop, return `true`.
+
+The time complexity is $O(n)$, where $n$ is the length of the string $s$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -60,12 +90,11 @@ class Solution:
             elif s[i].lower() != s[j].lower():
                 return False
             else:
-                i += 1
-                j -= 1
+                i, j = i + 1, j - 1
         return True
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -76,7 +105,7 @@ class Solution {
                 ++i;
             } else if (!Character.isLetterOrDigit(s.charAt(j))) {
                 --j;
-            } else if (Character.toUpperCase(s.charAt(i)) != Character.toUpperCase(s.charAt(j))) {
+            } else if (Character.toLowerCase(s.charAt(i)) != Character.toLowerCase(s.charAt(j))) {
                 return false;
             } else {
                 ++i;
@@ -88,7 +117,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -96,146 +125,76 @@ public:
     bool isPalindrome(string s) {
         int i = 0, j = s.size() - 1;
         while (i < j) {
-            if (!isAlphaNum(s[i])) ++i;
-            else if (!isAlphaNum(s[j])) --j;
-            else if ((s[i] + 32 - 'a') % 32 != (s[j] + 32 - 'a') % 32) return false;
-            else {
+            if (!isalnum(s[i])) {
+                ++i;
+            } else if (!isalnum(s[j])) {
+                --j;
+            } else if (tolower(s[i]) != tolower(s[j])) {
+                return false;
+            } else {
                 ++i;
                 --j;
             }
         }
         return true;
     }
-
-private:
-    bool isAlphaNum(char &ch) {
-        if (ch >= 'a' && ch <= 'z') return true;
-        if (ch >= 'A' && ch <= 'Z') return true;
-        if (ch >= '0' && ch <= '9') return true;
-        return false;
-    }
 };
 ```
 
-### **C#**
+#### Go
 
-```cs
-using System.Linq;
+```go
+func isPalindrome(s string) bool {
+	i, j := 0, len(s)-1
+	for i < j {
+		if !isalnum(s[i]) {
+			i++
+		} else if !isalnum(s[j]) {
+			j--
+		} else if tolower(s[i]) != tolower(s[j]) {
+			return false
+		} else {
+			i, j = i+1, j-1
+		}
+	}
+	return true
+}
 
-public class Solution {
-    public bool IsPalindrome(string s) {
-        var chars = s.Where(ch => char.IsLetterOrDigit(ch)).Select(char.ToLower).ToList();
-        var i = 0;
-        var j = chars.Count - 1;
-        for (; i < j; ++i, --j)
-        {
-            if (chars[i] != chars[j]) return false;
-        }
-        return true;
-    }
+func isalnum(ch byte) bool {
+	return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')
+}
+
+func tolower(ch byte) byte {
+	if ch >= 'A' && ch <= 'Z' {
+		return ch + 32
+	}
+	return ch
 }
 ```
 
-### **JavaScript**
+#### TypeScript
 
-```js
-/**
- * @param {string} s
- * @return {boolean}
- */
-var isPalindrome = function (s) {
-    let arr1 = [],
-        arr2 = [];
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] >= 'A' && s[i] <= 'Z') {
-            arr1.push(s[i].toLowerCase());
-        }
-        if ((s[i] >= '0' && s[i] <= '9') || (s[i] >= 'a' && s[i] <= 'z')) {
-            arr1.push(s[i]);
-        }
-    }
-    arr2 = [...arr1];
-    arr2.reverse();
-    return arr1.join('') === arr2.join('');
-};
-```
-
-```js
-/**
- * @param {string} s
- * @return {boolean}
- */
-var isPalindrome = function (s) {
-    function isNumOrAl(a) {
-        if (
-            (a >= 'A' && a <= 'Z') ||
-            (a >= '0' && a <= '9') ||
-            (a >= 'a' && a <= 'z')
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    if (s.length === 0) {
-        return true;
-    }
-    let i = 0,
-        j = s.length - 1;
+```ts
+function isPalindrome(s: string): boolean {
+    let i = 0;
+    let j = s.length - 1;
     while (i < j) {
-        while (i < j && !isNumOrAl(s[i])) {
-            i++;
-        }
-        while (i < j && !isNumOrAl(s[j])) {
-            j--;
-        }
-        if (s[i].toLowerCase() !== s[j].toLowerCase()) {
+        if (!/[a-zA-Z0-9]/.test(s[i])) {
+            ++i;
+        } else if (!/[a-zA-Z0-9]/.test(s[j])) {
+            --j;
+        } else if (s[i].toLowerCase() !== s[j].toLowerCase()) {
             return false;
         } else {
-            i++;
-            j--;
-        }
-    }
-    return true;
-};
-```
-
-### **TypeScript**
-
-```ts
-function isPalindrome(s: string): boolean {
-    let left: number = 0,
-        right: number = s.length - 1;
-    while (left < right) {
-        let char1: string = s.charAt(left);
-        let char2: string = s.charAt(right);
-        if (!/[a-zA-Z0-9]/.test(char1)) {
-            ++left;
-        } else if (!/[a-zA-Z0-9]/.test(char2)) {
-            --right;
-        } else if (char1.toLocaleLowerCase() != char2.toLocaleLowerCase()) {
-            return false;
-        } else {
-            ++left;
-            --right;
+            ++i;
+            --j;
         }
     }
     return true;
 }
 ```
 
-```ts
-function isPalindrome(s: string): boolean {
-    const isAlphanumeric = (c: string) => {
-        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
-    };
-    const cs = s.toLocaleLowerCase().split('').filter(isAlphanumeric);
-    return cs.join('') === cs.reverse().join('');
-}
-```
-
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -264,10 +223,80 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isPalindrome = function (s) {
+    let i = 0;
+    let j = s.length - 1;
+    while (i < j) {
+        if (!/[a-zA-Z0-9]/.test(s[i])) {
+            ++i;
+        } else if (!/[a-zA-Z0-9]/.test(s[j])) {
+            --j;
+        } else if (s[i].toLowerCase() !== s[j].toLowerCase()) {
+            return false;
+        } else {
+            ++i;
+            --j;
+        }
+    }
+    return true;
+};
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public bool IsPalindrome(string s) {
+        int i = 0, j = s.Length - 1;
+        while (i < j) {
+            if (!char.IsLetterOrDigit(s[i])) {
+                ++i;
+            } else if (!char.IsLetterOrDigit(s[j])) {
+                --j;
+            } else if (char.ToLower(s[i++]) != char.ToLower(s[j--])) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param String $s
+     * @return Boolean
+     */
+    function isPalindrome($s) {
+        $regex = '/[a-z0-9]/';
+        $s = strtolower($s);
+        preg_match_all($regex, $s, $matches);
+        if ($matches[0] == null) {
+            return true;
+        }
+        $len = floor(count($matches[0]) / 2);
+        for ($i = 0; $i < $len; $i++) {
+            if ($matches[0][$i] != $matches[0][count($matches[0]) - 1 - $i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

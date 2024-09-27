@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1337.The%20K%20Weakest%20Rows%20in%20a%20Matrix/README_EN.md
+rating: 1224
+source: Weekly Contest 174 Q1
+tags:
+    - Array
+    - Binary Search
+    - Matrix
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1337. The K Weakest Rows in a Matrix](https://leetcode.com/problems/the-k-weakest-rows-in-a-matrix)
 
 [中文文档](/solution/1300-1399/1337.The%20K%20Weakest%20Rows%20in%20a%20Matrix/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> binary matrix <code>mat</code> of <code>1</code>&#39;s (representing soldiers) and <code>0</code>&#39;s (representing civilians). The soldiers are positioned <strong>in front</strong> of the civilians. That is, all the <code>1</code>&#39;s will appear to the <strong>left</strong> of all the <code>0</code>&#39;s in each row.</p>
 
@@ -16,7 +34,7 @@
 <p>Return <em>the indices of the </em><code>k</code><em> <strong>weakest</strong> rows in the matrix ordered from weakest to strongest</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> mat = 
@@ -37,7 +55,7 @@ The number of soldiers in each row is:
 The rows ordered from weakest to strongest are [2,0,3,1,4].
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> mat = 
@@ -67,13 +85,17 @@ The rows ordered from weakest to strongest are [0,2,3,1].
 	<li><code>matrix[i][j]</code> is either 0 or 1.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Binary search & sort.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -85,7 +107,7 @@ class Solution:
         return idx[:k]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -117,40 +139,15 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function kWeakestRows(mat: number[][], k: number): number[] {
-    let n = mat.length;
-    let sumMap = mat.map((d, i) => [d.reduce((a, c) => a + c, 0), i]);
-    let ans = [];
-    // 冒泡排序
-    for (let i = 0; i < k; i++) {
-        for (let j = i; j < n; j++) {
-            if (
-                sumMap[j][0] < sumMap[i][0] ||
-                (sumMap[j][0] == sumMap[i][0] && sumMap[i][1] > sumMap[j][1])
-            ) {
-                [sumMap[i], sumMap[j]] = [sumMap[j], sumMap[i]];
-            }
-        }
-        ans.push(sumMap[i][1]);
-    }
-    return ans;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    int search(vector<int>& m)
-    {
+    int search(vector<int>& m) {
         int l = 0;
         int h = m.size() - 1;
-        while (l <= h)
-        {
+        while (l <= h) {
             int mid = l + (h - l) / 2;
             if (m[mid] == 0)
                 h = mid - 1;
@@ -163,14 +160,12 @@ public:
     vector<int> kWeakestRows(vector<vector<int>>& mat, int k) {
         vector<pair<int, int>> p;
         vector<int> res;
-        for (int i = 0; i < mat.size(); i++)
-        {
+        for (int i = 0; i < mat.size(); i++) {
             int count = search(mat[i]);
             p.push_back({count, i});
         }
         sort(p.begin(), p.end());
-        for (int i = 0; i < k; i++)
-        {
+        for (int i = 0; i < k; i++) {
             res.push_back(p[i].second);
         }
         return res;
@@ -178,7 +173,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func kWeakestRows(mat [][]int, k int) []int {
@@ -205,10 +200,31 @@ func kWeakestRows(mat [][]int, k int) []int {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function kWeakestRows(mat: number[][], k: number): number[] {
+    let n = mat.length;
+    let sumMap = mat.map((d, i) => [d.reduce((a, c) => a + c, 0), i]);
+    let ans = [];
+    // 冒泡排序
+    for (let i = 0; i < k; i++) {
+        for (let j = i; j < n; j++) {
+            if (
+                sumMap[j][0] < sumMap[i][0] ||
+                (sumMap[j][0] == sumMap[i][0] && sumMap[i][1] > sumMap[j][1])
+            ) {
+                [sumMap[i], sumMap[j]] = [sumMap[j], sumMap[i]];
+            }
+        }
+        ans.push(sumMap[i][1]);
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

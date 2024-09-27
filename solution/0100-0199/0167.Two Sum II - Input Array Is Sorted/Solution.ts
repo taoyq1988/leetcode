@@ -1,16 +1,19 @@
 function twoSum(numbers: number[], target: number): number[] {
-    let i = 1,
-        j = numbers.length;
-    while (i < j) {
-        const x = numbers[i - 1] + numbers[j - 1];
-        if (x == target) {
-            return [i, j];
+    const n = numbers.length;
+    for (let i = 0; ; ++i) {
+        const x = target - numbers[i];
+        let l = i + 1;
+        let r = n - 1;
+        while (l < r) {
+            const mid = (l + r) >> 1;
+            if (numbers[mid] >= x) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
         }
-        if (x < target) {
-            ++i;
-        } else {
-            --j;
+        if (numbers[l] === x) {
+            return [i + 1, l + 1];
         }
     }
-    return [-1, -1];
 }

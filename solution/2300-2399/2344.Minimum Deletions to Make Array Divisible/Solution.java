@@ -1,8 +1,8 @@
 class Solution {
     public int minOperations(int[] nums, int[] numsDivide) {
-        int x = numsDivide[0];
-        for (int i = 1; i < numsDivide.length; ++i) {
-            x = gcd(x, numsDivide[i]);
+        int x = 0;
+        for (int v : numsDivide) {
+            x = gcd(x, v);
         }
         Arrays.sort(nums);
         for (int i = 0; i < nums.length; ++i) {

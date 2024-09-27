@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2290.Minimum%20Obstacle%20Removal%20to%20Reach%20Corner/README_EN.md
+rating: 2137
+source: Weekly Contest 295 Q4
+tags:
+    - Breadth-First Search
+    - Graph
+    - Array
+    - Matrix
+    - Shortest Path
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2290. Minimum Obstacle Removal to Reach Corner](https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner)
 
 [中文文档](/solution/2200-2299/2290.Minimum%20Obstacle%20Removal%20to%20Reach%20Corner/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> 2D integer array <code>grid</code> of size <code>m x n</code>. Each cell has one of two values:</p>
 
@@ -16,7 +35,7 @@
 <p>Return <em>the <strong>minimum</strong> number of <strong>obstacles</strong> to <strong>remove</strong> so you can move from the upper left corner </em><code>(0, 0)</code><em> to the lower right corner </em><code>(m - 1, n - 1)</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2290.Minimum%20Obstacle%20Removal%20to%20Reach%20Corner/images/example1drawio-1.png" style="width: 605px; height: 246px;" />
 <pre>
 <strong>Input:</strong> grid = [[0,1,1],[1,1,0],[1,1,0]]
@@ -26,7 +45,7 @@ It can be shown that we need to remove at least 2 obstacles, so we return 2.
 Note that there may be other ways to remove 2 obstacles to create a path.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2290.Minimum%20Obstacle%20Removal%20to%20Reach%20Corner/images/example1drawio.png" style="width: 405px; height: 246px;" />
 <pre>
 <strong>Input:</strong> grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]
@@ -46,48 +65,53 @@ Note that there may be other ways to remove 2 obstacles to create a path.
 	<li><code>grid[0][0] == grid[m - 1][n - 1] == 0</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def minimumObstacles(self, grid: List[List[int]]) -> int:
-        q = deque([(0, 0, 0)])
         m, n = len(grid), len(grid[0])
+        q = deque([(0, 0, 0)])
         vis = set()
-        while q:
+        dirs = (-1, 0, 1, 0, -1)
+        while 1:
             i, j, k = q.popleft()
             if i == m - 1 and j == n - 1:
                 return k
             if (i, j) in vis:
                 continue
             vis.add((i, j))
-            for a, b in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+            for a, b in pairwise(dirs):
                 x, y = i + a, j + b
                 if 0 <= x < m and 0 <= y < n:
                     if grid[x][y] == 0:
                         q.appendleft((x, y, k))
                     else:
                         q.append((x, y, k + 1))
-        return 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int minimumObstacles(int[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
+        int m = grid.length, n = grid[0].length;
         Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 0, 0});
+        q.offer(new int[] {0, 0, 0});
         int[] dirs = {-1, 0, 1, 0, -1};
         boolean[][] vis = new boolean[m][n];
-        while (!q.isEmpty()) {
-            int[] p = q.poll();
+        while (true) {
+            var p = q.poll();
             int i = p[0], j = p[1], k = p[2];
             if (i == m - 1 && j == n - 1) {
                 return k;
@@ -96,24 +120,22 @@ class Solution {
                 continue;
             }
             vis[i][j] = true;
-            for (int o = 0; o < 4; ++o) {
-                int x = i + dirs[o], y = j + dirs[o + 1];
+            for (int h = 0; h < 4; ++h) {
+                int x = i + dirs[h], y = j + dirs[h + 1];
                 if (x >= 0 && x < m && y >= 0 && y < n) {
                     if (grid[x][y] == 0) {
-                        q.offerFirst(new int[]{x, y, k});
-                    }
-                    if (grid[x][y] == 1) {
-                        q.offerLast(new int[]{x, y, k + 1});
+                        q.offerFirst(new int[] {x, y, k});
+                    } else {
+                        q.offerLast(new int[] {x, y, k + 1});
                     }
                 }
             }
         }
-        return 0;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -121,46 +143,52 @@ public:
     int minimumObstacles(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
         deque<tuple<int, int, int>> q{{0, 0, 0}};
-        vector<vector<bool>> vis(m, vector<bool>(n));
-        vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
+        bool vis[m][n];
+        memset(vis, 0, sizeof vis);
+        int dirs[5] = {-1, 0, 1, 0, -1};
+        while (1) {
             auto [i, j, k] = q.front();
             q.pop_front();
-            if (i == m - 1 && j == n - 1) return k;
-            if (vis[i][j]) continue;
+            if (i == m - 1 && j == n - 1) {
+                return k;
+            }
+            if (vis[i][j]) {
+                continue;
+            }
             vis[i][j] = true;
-            for (int o = 0; o < 4; ++o)
-            {
-                int x = i + dirs[o], y = j + dirs[o + 1];
+            for (int h = 0; h < 4; ++h) {
+                int x = i + dirs[h], y = j + dirs[h + 1];
                 if (x >= 0 && x < m && y >= 0 && y < n) {
-                    if (grid[x][y] == 0) q.push_front({x, y, k});
-                    else q.push_back({x, y, k + 1});
+                    if (grid[x][y] == 0) {
+                        q.push_front({x, y, k});
+                    } else {
+                        q.push_back({x, y, k + 1});
+                    }
                 }
             }
         }
-        return 0;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumObstacles(grid [][]int) int {
 	m, n := len(grid), len(grid[0])
 	q := doublylinkedlist.New()
-	q.Add([]int{0, 0, 0})
+	type tuple struct{ i, j, k int }
+	q.Add(tuple{0, 0, 0})
 	vis := make([][]bool, m)
 	for i := range vis {
 		vis[i] = make([]bool, n)
 	}
-	dirs := []int{-1, 0, 1, 0, -1}
-	for !q.Empty() {
+	dirs := [5]int{-1, 0, 1, 0, -1}
+	for {
 		v, _ := q.Get(0)
-		p := v.([]int)
+		p := v.(tuple)
 		q.Remove(0)
-		i, j, k := p[0], p[1], p[2]
+		i, j, k := p.i, p.j, p.k
 		if i == m-1 && j == n-1 {
 			return k
 		}
@@ -168,22 +196,21 @@ func minimumObstacles(grid [][]int) int {
 			continue
 		}
 		vis[i][j] = true
-		for o := 0; o < 4; o++ {
-			x, y := i+dirs[o], j+dirs[o+1]
+		for h := 0; h < 4; h++ {
+			x, y := i+dirs[h], j+dirs[h+1]
 			if x >= 0 && x < m && y >= 0 && y < n {
 				if grid[x][y] == 0 {
-					q.Insert(0, []int{x, y, k})
+					q.Insert(0, tuple{x, y, k})
 				} else {
-					q.Add([]int{x, y, k + 1})
+					q.Add(tuple{x, y, k + 1})
 				}
 			}
 		}
 	}
-	return 0
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minimumObstacles(grid: number[][]): number {
@@ -213,10 +240,8 @@ function minimumObstacles(grid: number[][]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

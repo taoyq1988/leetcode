@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1029.Two%20City%20Scheduling/README.md
+rating: 1348
+source: 第 133 场周赛 Q1
+tags:
+    - 贪心
+    - 数组
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [1029. 两地调度](https://leetcode.cn/problems/two-city-scheduling)
 
 [English Version](/solution/1000-1099/1029.Two%20City%20Scheduling/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>公司计划面试 <code>2n</code> 人。给你一个数组 <code>costs</code> ，其中 <code>costs[i] = [aCost<sub>i</sub>, bCost<sub>i</sub>]</code> 。第 <code>i</code> 人飞往 <code>a</code> 市的费用为 <code>aCost<sub>i</sub></code> ，飞往 <code>b</code> 市的费用为 <code>bCost<sub>i</sub></code> 。</p>
 
@@ -51,19 +65,25 @@
 	<li><code>1 <= aCost<sub>i</sub>, bCost<sub>i</sub> <= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：排序 + 贪心
 
-选出 `aCost - bCost` 最小的 N 个人，让他们飞往 a 市，其余人飞往 b 市。
+我们不妨先假设所有人都去 $b$ 市，然后我们要从中选出 $n$ 个人去 $a$ 市，使得总费用最小。如果一个人去 $a$ 市的费用比去 $b$ 市的费用小，我们把这个人从 $b$ 市调到 $a$ 市，这样总费用就会减少。因此，我们可以将所有人按照去 $a$ 市的费用与去 $b$ 市的费用的差值从小到大排序，然后选出前 $n$ 个人去 $a$ 市，剩下的人去 $b$ 市，这样总费用就是最小的。
+
+时间复杂度 $O(n \times \log n)$，空间复杂度 $O(\log n)$。其中 $n$ 为数组 `costs` 的长度。
+
+相似题目：
+
+-   [2611. 老鼠和奶酪](https://github.com/doocs/leetcode/blob/main/solution/2600-2699/2611.Mice%20and%20Cheese/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -73,16 +93,12 @@ class Solution:
         return sum(costs[i][0] + costs[i + n][1] for i in range(n))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int twoCitySchedCost(int[][] costs) {
-        Arrays.sort(costs, (a, b) -> {
-            return a[0] - a[1] - (b[0] - b[1]);
-        });
+        Arrays.sort(costs, (a, b) -> { return a[0] - a[1] - (b[0] - b[1]); });
         int ans = 0;
         int n = costs.length >> 1;
         for (int i = 0; i < n; ++i) {
@@ -93,32 +109,17 @@ class Solution {
 }
 ```
 
-### **Go**
-
-```go
-func twoCitySchedCost(costs [][]int) int {
-	sort.Slice(costs, func(i, j int) bool {
-		return costs[i][0]-costs[i][1] < costs[j][0]-costs[j][1]
-	})
-	ans, n := 0, len(costs)>>1
-	for i := 0; i < n; i++ {
-		ans += costs[i][0] + costs[i+n][1]
-	}
-	return ans
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int twoCitySchedCost(vector<vector<int>>& costs) {
-        sort(costs.begin(), costs.end(), [](const std::vector<int> &a, const std::vector<int> &b) {
-            return a[0] - a[1] < (b[0] - b[1]);
+        sort(costs.begin(), costs.end(), [](const vector<int>& a, const vector<int>& b) {
+            return a[0] - a[1] < b[0] - b[1];
         });
+        int n = costs.size() / 2;
         int ans = 0;
-        int n = costs.size() >> 1;
         for (int i = 0; i < n; ++i) {
             ans += costs[i][0] + costs[i + n][1];
         }
@@ -127,10 +128,37 @@ public:
 };
 ```
 
-### **...**
+#### Go
 
+```go
+func twoCitySchedCost(costs [][]int) (ans int) {
+	sort.Slice(costs, func(i, j int) bool {
+		return costs[i][0]-costs[i][1] < costs[j][0]-costs[j][1]
+	})
+	n := len(costs) >> 1
+	for i, a := range costs[:n] {
+		ans += a[0] + costs[i+n][1]
+	}
+	return
+}
 ```
 
+#### TypeScript
+
+```ts
+function twoCitySchedCost(costs: number[][]): number {
+    costs.sort((a, b) => a[0] - a[1] - (b[0] - b[1]));
+    const n = costs.length >> 1;
+    let ans = 0;
+    for (let i = 0; i < n; ++i) {
+        ans += costs[i][0] + costs[i + n][1];
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

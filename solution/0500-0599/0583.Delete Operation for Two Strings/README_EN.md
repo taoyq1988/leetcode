@@ -1,15 +1,28 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0583.Delete%20Operation%20for%20Two%20Strings/README_EN.md
+tags:
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings)
 
 [中文文档](/solution/0500-0599/0583.Delete%20Operation%20for%20Two%20Strings/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given two strings <code>word1</code> and <code>word2</code>, return <em>the minimum number of <strong>steps</strong> required to make</em> <code>word1</code> <em>and</em> <code>word2</code> <em>the same</em>.</p>
 
 <p>In one <strong>step</strong>, you can delete exactly one character in either string.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> word1 = &quot;sea&quot;, word2 = &quot;eat&quot;
@@ -17,7 +30,7 @@
 <strong>Explanation:</strong> You need one step to make &quot;sea&quot; to &quot;ea&quot; and another step to make &quot;eat&quot; to &quot;ea&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> word1 = &quot;leetcode&quot;, word2 = &quot;etco&quot;
@@ -32,13 +45,17 @@
 	<li><code>word1</code> and <code>word2</code> consist of only lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Dynamic programming.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -58,7 +75,7 @@ class Solution:
         return dp[-1][-1]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -85,7 +102,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -95,12 +112,12 @@ public:
         vector<vector<int>> dp(m + 1, vector<int>(n + 1));
         for (int i = 1; i <= m; ++i) dp[i][0] = i;
         for (int j = 1; j <= n; ++j) dp[0][j] = j;
-        for (int i = 1; i <= m; ++i)
-        {
-            for (int j = 1; j <= n; ++j)
-            {
-                if (word1[i - 1] == word2[j - 1]) dp[i][j] = dp[i - 1][j - 1];
-                else dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1]);
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                if (word1[i - 1] == word2[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1];
+                else
+                    dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1]);
             }
         }
         return dp[m][n];
@@ -108,7 +125,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minDistance(word1 string, word2 string) int {
@@ -132,16 +149,9 @@ func minDistance(word1 string, word2 string) int {
 	}
 	return dp[m][n]
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minDistance(word1: string, word2: string): number {
@@ -162,7 +172,7 @@ function minDistance(word1: string, word2: string): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -176,19 +186,17 @@ impl Solution {
                     dp[i - 1][j - 1] + 1
                 } else {
                     dp[i - 1][j].max(dp[i][j - 1])
-                }
+                };
             }
         }
         let max = dp[m][n];
-        ((m - max) + (n - max)) as i32
+        (m - max + (n - max)) as i32
     }
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

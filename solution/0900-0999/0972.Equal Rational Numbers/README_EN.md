@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0972.Equal%20Rational%20Numbers/README_EN.md
+tags:
+    - Math
+    - String
+---
+
+<!-- problem:start -->
+
 # [972. Equal Rational Numbers](https://leetcode.com/problems/equal-rational-numbers)
 
 [中文文档](/solution/0900-0999/0972.Equal%20Rational%20Numbers/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two strings <code>s</code> and <code>t</code>, each of which represents a non-negative rational number, return <code>true</code> if and only if they represent the same number. The strings may use parentheses to denote the repeating part of the rational number.</p>
 
@@ -10,6 +23,7 @@
 
 <ul>
 	<li><code>&lt;IntegerPart&gt;</code>
+
     <ul>
     	<li>For example, <code>12</code>, <code>0</code>, and <code>123</code>.</li>
     </ul>
@@ -24,6 +38,7 @@
     	<li>For example, <code>0.1(6)</code>, <code>1.(9)</code>, <code>123.00(1212)</code>.</li>
     </ul>
     </li>
+
 </ul>
 
 <p>The repeating portion of a decimal expansion is conventionally denoted within a pair of round brackets. For example:</p>
@@ -33,7 +48,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;0.(52)&quot;, t = &quot;0.5(25)&quot;
@@ -41,14 +56,14 @@
 <strong>Explanation:</strong> Because &quot;0.(52)&quot; represents 0.52525252..., and &quot;0.5(25)&quot; represents 0.52525252525..... , the strings represent the same number.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;0.1666(6)&quot;, t = &quot;0.166(66)&quot;
 <strong>Output:</strong> true
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;0.9(9)&quot;, t = &quot;1.&quot;
@@ -68,26 +83,42 @@
 	<li><code>1 &lt;= &lt;RepeatingPart&gt;.length &lt;= 4</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

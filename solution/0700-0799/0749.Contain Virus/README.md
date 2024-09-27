@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0749.Contain%20Virus/README.md
+tags:
+    - 深度优先搜索
+    - 广度优先搜索
+    - 数组
+    - 矩阵
+    - 模拟
+---
+
+<!-- problem:start -->
+
 # [749. 隔离病毒](https://leetcode.cn/problems/contain-virus)
 
 [English Version](/solution/0700-0799/0749.Contain%20Virus/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>病毒扩散得很快，现在你的任务是尽可能地通过安装防火墙来隔离病毒。</p>
 
@@ -25,14 +39,14 @@
 <strong>输出:</strong> 10
 <strong>解释:</strong>一共有两块被病毒感染的区域。
 在第一天，添加 5 墙隔离病毒区域的左侧。病毒传播后的状态是:
-<img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus12edited-grid.jpg" />
+<img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus12edited-grid.jpg" style="height: 261px; width: 500px;" />
 第二天，在右侧添加 5 个墙来隔离病毒区域。此时病毒已经被完全控制住了。
 <img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus13edited-grid.jpg" style="height: 261px; width: 500px;" />
 </pre>
 
 <p><strong>示例 2：</strong></p>
 
-<p><img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus2-grid.jpg" style="height: 253px; width: https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/653px;" /></p>
+<p><img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus2-grid.jpg" style="height: 253px; width: 653px;" /></p>
 
 <pre>
 <strong>输入:</strong> isInfected = [[1,1,1],[1,0,1],[1,1,1]]
@@ -63,11 +77,13 @@
 
 <p>&nbsp;</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：DFS 暴力模拟**
+### 方法一：DFS 暴力模拟
 
 DFS 找到每个病毒区域 `areas[i]`，同时记录每个区域边界节点 `boundaries[i]` 以及周长 `c[i]`。
 
@@ -77,9 +93,7 @@ DFS 找到每个病毒区域 `areas[i]`，同时记录每个区域边界节点 `
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -127,9 +141,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -224,7 +236,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -244,18 +256,15 @@ public:
         n = infected[0].size();
         vis.assign(m, vector<bool>(n));
         int ans = 0;
-        while (1)
-        {
-            for (int i = 0; i < m; ++i) for (int j = 0; j < n; ++j) vis[i][j] = false;
+        while (1) {
+            for (int i = 0; i < m; ++i)
+                for (int j = 0; j < n; ++j) vis[i][j] = false;
             c.clear();
             areas.clear();
             boundaries.clear();
-            for (int i = 0; i < m; ++i)
-            {
-                for (int j = 0; j < n; ++j)
-                {
-                    if (infected[i][j] == 1 && !vis[i][j])
-                    {
+            for (int i = 0; i < m; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (infected[i][j] == 1 && !vis[i][j]) {
                         c.push_back(0);
                         areas.push_back({});
                         boundaries.push_back({});
@@ -266,23 +275,16 @@ public:
             if (areas.empty()) break;
             int idx = getMax();
             ans += c[idx];
-            for (int t = 0; t < areas.size(); ++t)
-            {
-                if (t == idx)
-                {
-                    for (int v : areas[t])
-                    {
+            for (int t = 0; t < areas.size(); ++t) {
+                if (t == idx) {
+                    for (int v : areas[t]) {
                         int i = v / n, j = v % n;
                         infected[i][j] = -1;
                     }
-                }
-                else
-                {
-                    for (int v : areas[t])
-                    {
+                } else {
+                    for (int v : areas[t]) {
                         int i = v / n, j = v % n;
-                        for (int k = 0; k < 4; ++k)
-                        {
+                        for (int k = 0; k < 4; ++k) {
                             int x = i + dirs[k], y = j + dirs[k + 1];
                             if (x >= 0 && x < m && y >= 0 && y < n && infected[x][y] == 0) infected[x][y] = 1;
                         }
@@ -296,11 +298,9 @@ public:
     int getMax() {
         int idx = 0;
         int mx = boundaries[0].size();
-        for (int i = 1; i < boundaries.size(); ++i)
-        {
+        for (int i = 1; i < boundaries.size(); ++i) {
             int t = boundaries[i].size();
-            if (mx < t)
-            {
+            if (mx < t) {
                 mx = t;
                 idx = i;
             }
@@ -311,14 +311,12 @@ public:
     void dfs(int i, int j) {
         vis[i][j] = true;
         areas.back().push_back(i * n + j);
-        for (int k = 0; k < 4; ++k)
-        {
+        for (int k = 0; k < 4; ++k) {
             int x = i + dirs[k], y = j + dirs[k + 1];
-            if (x >= 0 && x < m && y >= 0 && y < n)
-            {
-                if (infected[x][y] == 1 && !vis[x][y]) dfs(x, y);
-                else if (infected[x][y] == 0)
-                {
+            if (x >= 0 && x < m && y >= 0 && y < n) {
+                if (infected[x][y] == 1 && !vis[x][y])
+                    dfs(x, y);
+                else if (infected[x][y] == 0) {
                     c.back() += 1;
                     boundaries.back().insert(x * n + y);
                 }
@@ -328,7 +326,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func containVirus(isInfected [][]int) int {
@@ -414,10 +412,8 @@ func containVirus(isInfected [][]int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

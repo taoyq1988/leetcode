@@ -1,14 +1,28 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0472.Concatenated%20Words/README.md
+tags:
+    - 深度优先搜索
+    - 字典树
+    - 数组
+    - 字符串
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [472. 连接词](https://leetcode.cn/problems/concatenated-words)
 
 [English Version](/solution/0400-0499/0472.Concatenated%20Words/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个 <strong>不含重复 </strong>单词的字符串数组 <code>words</code> ，请你找出并返回 <code>words</code> 中的所有 <strong>连接词</strong> 。</p>
 
-<p><strong>连接词</strong> 定义为：一个完全由给定数组中的至少两个较短单词组成的字符串。</p>
+<p><strong>连接词</strong> 定义为：一个完全由给定数组中的至少两个较短单词（不一定是不同的两个单词）组成的字符串。</p>
 
 <p>&nbsp;</p>
 
@@ -34,16 +48,19 @@
 
 <ul>
 	<li><code>1 &lt;= words.length &lt;= 10<sup>4</sup></code></li>
-	<li><code>0 &lt;= words[i].length &lt;= 30</code></li>
-	<li><code>words[i]</code> 仅由小写字母组成</li>
-	<li><code>0 &lt;= sum(words[i].length) &lt;= 10<sup>5</sup></code></li>
+	<li><code>1 &lt;= words[i].length &lt;= 30</code></li>
+	<li><code>words[i]</code>&nbsp;仅由小写英文字母组成。&nbsp;</li>
+	<li><code>words</code>&nbsp;中的所有字符串都是 <strong>唯一</strong> 的。</li>
+	<li><code>1 &lt;= sum(words[i].length) &lt;= 10<sup>5</sup></code></li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：前缀树 + DFS**
+### 方法一：前缀树 + DFS
 
 判断一个单词是不是连接词，需要判断这个单词是否完全由至少两个给定数组中的更短的非空单词（可以重复）组成。判断更短的单词是否在给定数组中，可以使用字典树实现。
 
@@ -62,9 +79,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Trie:
@@ -93,7 +108,7 @@ class Solution:
                 if node.children[idx] is None:
                     return False
                 node = node.children[idx]
-                if node.is_end and dfs(w[i + 1:]):
+                if node.is_end and dfs(w[i + 1 :]):
                     return True
             return False
 
@@ -108,9 +123,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Trie {
@@ -166,19 +179,20 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Trie {
 public:
     vector<Trie*> children;
     bool isEnd;
-    Trie(): children(26), isEnd(false) {}
+    Trie()
+        : children(26)
+        , isEnd(false) {}
 
     void insert(string w) {
         Trie* node = this;
-        for (char c : w)
-        {
+        for (char c : w) {
             c -= 'a';
             if (!node->children[c]) node->children[c] = new Trie();
             node = node->children[c];
@@ -192,14 +206,15 @@ public:
     Trie* trie = new Trie();
 
     vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
-        sort(words.begin(), words.end(), [&](const string & a, const string & b){
+        sort(words.begin(), words.end(), [&](const string& a, const string& b) {
             return a.size() < b.size();
         });
         vector<string> ans;
-        for (auto& w : words)
-        {
-            if (dfs(w)) ans.push_back(w);
-            else trie->insert(w);
+        for (auto& w : words) {
+            if (dfs(w))
+                ans.push_back(w);
+            else
+                trie->insert(w);
         }
         return ans;
     }
@@ -207,8 +222,7 @@ public:
     bool dfs(string w) {
         if (w == "") return true;
         Trie* node = trie;
-        for (int i = 0; i < w.size(); ++i)
-        {
+        for (int i = 0; i < w.size(); ++i) {
             int idx = w[i] - 'a';
             if (!node->children[idx]) return false;
             node = node->children[idx];
@@ -219,7 +233,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Trie struct {
@@ -274,10 +288,8 @@ func findAllConcatenatedWordsInADict(words []string) (ans []string) {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

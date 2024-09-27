@@ -1,21 +1,18 @@
 func stoneGame(piles []int) bool {
 	n := len(piles)
-	dp := make([][]int, n)
-	for i, v := range piles {
-		dp[i] = make([]int, n)
-		dp[i][i] = v
+	f := make([][]int, n)
+	for i := range f {
+		f[i] = make([]int, n)
 	}
-	for i := n - 2; i >= 0; i-- {
-		for j := i + 1; j < n; j++ {
-			dp[i][j] = max(piles[i]-dp[i+1][j], piles[j]-dp[i][j-1])
+	var dfs func(i, j int) int
+	dfs = func(i, j int) int {
+		if i > j {
+			return 0
 		}
+		if f[i][j] == 0 {
+			f[i][j] = max(piles[i]-dfs(i+1, j), piles[j]-dfs(i, j-1))
+		}
+		return f[i][j]
 	}
-	return dp[0][n-1] > 0
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return dfs(0, n-1) > 0
 }

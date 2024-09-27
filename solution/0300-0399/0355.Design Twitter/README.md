@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0355.Design%20Twitter/README.md
+tags:
+    - 设计
+    - 哈希表
+    - 链表
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [355. 设计推特](https://leetcode.cn/problems/design-twitter)
 
 [English Version](/solution/0300-0399/0355.Design%20Twitter/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>设计一个简化版的推特(Twitter)，可以让用户实现发送推文，关注/取消关注其他用户，能够看见关注人（包括自己）的最近 <code>10</code> 条推文。</p>
 
@@ -50,21 +63,20 @@ twitter.getNewsFeed(1);  // 用户 1 获取推文应当返回一个列表，其�
 	<li><code>postTweet</code>、<code>getNewsFeed</code>、<code>follow</code> 和 <code>unfollow</code> 方法最多调用 <code>3 * 10<sup>4</sup></code> 次</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-“哈希表 + 堆”实现。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Twitter:
-
     def __init__(self):
         """
         Initialize your data structure here.
@@ -108,7 +120,6 @@ class Twitter:
             following.remove(followeeId)
 
 
-
 # Your Twitter object will be instantiated and called as such:
 # obj = Twitter()
 # obj.postTweet(userId,tweetId)
@@ -117,9 +128,7 @@ class Twitter:
 # obj.unfollow(followerId,followeeId)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Twitter {
@@ -142,12 +151,17 @@ class Twitter {
         tweets.put(tweetId, ++time);
     }
 
-    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    /**
+     * Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed
+     * must be posted by users who the user followed or by the user herself. Tweets must be ordered
+     * from most recent to least recent.
+     */
     public List<Integer> getNewsFeed(int userId) {
         Set<Integer> following = userFollowing.getOrDefault(userId, new HashSet<>());
         Set<Integer> users = new HashSet<>(following);
         users.add(userId);
-        PriorityQueue<Integer> pq = new PriorityQueue<>(10, (a, b) -> (tweets.get(b) - tweets.get(a)));
+        PriorityQueue<Integer> pq
+            = new PriorityQueue<>(10, (a, b) -> (tweets.get(b) - tweets.get(a)));
         for (Integer u : users) {
             List<Integer> userTweet = userTweets.get(u);
             if (userTweet != null && !userTweet.isEmpty()) {
@@ -184,10 +198,8 @@ class Twitter {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,16 +1,30 @@
-# [1167. 连接棒材的最低费用](https://leetcode.cn/problems/minimum-cost-to-connect-sticks)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1167.Minimum%20Cost%20to%20Connect%20Sticks/README.md
+rating: 1481
+source: 第 7 场双周赛 Q3
+tags:
+    - 贪心
+    - 数组
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
+# [1167. 连接木棍的最低费用 🔒](https://leetcode.cn/problems/minimum-cost-to-connect-sticks)
 
 [English Version](/solution/1100-1199/1167.Minimum%20Cost%20to%20Connect%20Sticks/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>你有一些长度为正整数的棍子。这些长度以数组<meta charset="UTF-8" />&nbsp;<code>sticks</code>&nbsp;的形式给出，<meta charset="UTF-8" />&nbsp;<code>sticks[i]</code>&nbsp;是 <code>第i个</code> 木棍的长度。</p>
+<p>你有一些长度为正整数的木棍。这些长度以数组<meta charset="UTF-8" />&nbsp;<code>sticks</code>&nbsp;的形式给出，<meta charset="UTF-8" />&nbsp;<code>sticks[i]</code>&nbsp;是第 <code>i</code> 个木棍的长度。</p>
 
-<p>你可以通过支付 <code>x + y</code> 的成本将任意两个长度为 <code>x</code> 和 <code>y</code> 的棍子连接成一个棍子。你必须连接所有的棍子，直到剩下一个棍子。</p>
+<p>你可以通过支付 <code>x + y</code> 的成本将任意两个长度为 <code>x</code> 和 <code>y</code> 的木棍连接成一个木棍。你必须连接所有的木棍，直到剩下一个木棍。</p>
 
-<p>返回以这种方式将所有给定的棍子连接成一个棍子的 <em>最小成本</em> 。</p>
+<p>返回以这种方式将所有给定的木棍连接成一个木棍的<em> 最小成本 </em>。</p>
 
 <p>&nbsp;</p>
 
@@ -54,114 +68,191 @@
 	<li><code>1 &lt;= sticks[i] &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-优先队列。
+### 方法一：贪心 + 优先队列（小根堆）
+
+我们可以使用贪心的思路，每次选择最短的两根棍子进行拼接，这样可以保证拼接的代价最小。
+
+因此，我们可以使用优先队列（小根堆）来维护当前棍子的长度，每次从优先队列中取出两根棍子进行拼接，再将拼接后的棍子放回优先队列中，直到优先队列中只剩下一根棍子为止。
+
+时间复杂度 $O(n \times \log n)$，空间复杂度 $O(n)$。其中 $n$ 是数组 `sticks` 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def connectSticks(self, sticks: List[int]) -> int:
-        h = []
-        for s in sticks:
-            heappush(h, s)
-        res = 0
-        while len(h) > 1:
-            val = heappop(h) + heappop(h)
-            res += val
-            heappush(h, val)
-        return res
+        heapify(sticks)
+        ans = 0
+        while len(sticks) > 1:
+            z = heappop(sticks) + heappop(sticks)
+            ans += z
+            heappush(sticks, z)
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int connectSticks(int[] sticks) {
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int s : sticks) {
-            pq.offer(s);
+        for (int x : sticks) {
+            pq.offer(x);
         }
-        int res = 0;
+        int ans = 0;
         while (pq.size() > 1) {
-            int val = pq.poll() + pq.poll();
-            res += val;
-            pq.offer(val);
+            int z = pq.poll() + pq.poll();
+            ans += z;
+            pq.offer(z);
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int connectSticks(vector<int>& sticks) {
-        priority_queue <int, vector <int>, greater <int> > pq;
-        for (int x: sticks) pq.push(x);
-        int res = 0;
-        while (pq.size() > 1)
-        {
-            int val = pq.top();
-            pq.pop();
-            val += pq.top();
-            pq.pop();
-            res += val;
-            pq.push(val);
+        priority_queue<int, vector<int>, greater<int>> pq;
+        for (auto& x : sticks) {
+            pq.push(x);
         }
-        return res;
+        int ans = 0;
+        while (pq.size() > 1) {
+            int x = pq.top();
+            pq.pop();
+            int y = pq.top();
+            pq.pop();
+            int z = x + y;
+            ans += z;
+            pq.push(z);
+        }
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func connectSticks(sticks []int) int {
-	h := IntHeap(sticks)
-	heap.Init(&h)
-	res := 0
-	for h.Len() > 1 {
-		val := heap.Pop(&h).(int)
-		val += heap.Pop(&h).(int)
-		res += val
-		heap.Push(&h, val)
+func connectSticks(sticks []int) (ans int) {
+	hp := &hp{sticks}
+	heap.Init(hp)
+	for hp.Len() > 1 {
+		x, y := heap.Pop(hp).(int), heap.Pop(hp).(int)
+		ans += x + y
+		heap.Push(hp, x+y)
 	}
-	return res
+	return
 }
 
-type IntHeap []int
+type hp struct{ sort.IntSlice }
 
-func (h IntHeap) Len() int           { return len(h) }
-func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
-func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *IntHeap) Push(x interface{}) {
-	*h = append(*h, x.(int))
-}
-func (h *IntHeap) Pop() interface{} {
-	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[0 : n-1]
-	return x
+func (h hp) Less(i, j int) bool { return h.IntSlice[i] < h.IntSlice[j] }
+func (h *hp) Push(v any)        { h.IntSlice = append(h.IntSlice, v.(int)) }
+func (h *hp) Pop() any {
+	a := h.IntSlice
+	v := a[len(a)-1]
+	h.IntSlice = a[:len(a)-1]
+	return v
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+function connectSticks(sticks: number[]): number {
+    const pq = new Heap(sticks);
+    let ans = 0;
+    while (pq.size() > 1) {
+        const x = pq.pop();
+        const y = pq.pop();
+        ans += x + y;
+        pq.push(x + y);
+    }
+    return ans;
+}
 
+type Compare<T> = (lhs: T, rhs: T) => number;
+
+class Heap<T = number> {
+    data: Array<T | null>;
+    lt: (i: number, j: number) => boolean;
+    constructor();
+    constructor(data: T[]);
+    constructor(compare: Compare<T>);
+    constructor(data: T[], compare: Compare<T>);
+    constructor(data: T[] | Compare<T>, compare?: (lhs: T, rhs: T) => number);
+    constructor(
+        data: T[] | Compare<T> = [],
+        compare: Compare<T> = (lhs: T, rhs: T) => (lhs < rhs ? -1 : lhs > rhs ? 1 : 0),
+    ) {
+        if (typeof data === 'function') {
+            compare = data;
+            data = [];
+        }
+        this.data = [null, ...data];
+        this.lt = (i, j) => compare(this.data[i]!, this.data[j]!) < 0;
+        for (let i = this.size(); i > 0; i--) this.heapify(i);
+    }
+
+    size(): number {
+        return this.data.length - 1;
+    }
+
+    push(v: T): void {
+        this.data.push(v);
+        let i = this.size();
+        while (i >> 1 !== 0 && this.lt(i, i >> 1)) this.swap(i, (i >>= 1));
+    }
+
+    pop(): T {
+        this.swap(1, this.size());
+        const top = this.data.pop();
+        this.heapify(1);
+        return top!;
+    }
+
+    top(): T {
+        return this.data[1]!;
+    }
+    heapify(i: number): void {
+        while (true) {
+            let min = i;
+            const [l, r, n] = [i * 2, i * 2 + 1, this.data.length];
+            if (l < n && this.lt(l, min)) min = l;
+            if (r < n && this.lt(r, min)) min = r;
+            if (min !== i) {
+                this.swap(i, min);
+                i = min;
+            } else break;
+        }
+    }
+
+    clear(): void {
+        this.data = [null];
+    }
+
+    private swap(i: number, j: number): void {
+        const d = this.data;
+        [d[i], d[j]] = [d[j], d[i]];
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,15 +1,28 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0696.Count%20Binary%20Substrings/README_EN.md
+tags:
+    - Two Pointers
+    - String
+---
+
+<!-- problem:start -->
+
 # [696. Count Binary Substrings](https://leetcode.com/problems/count-binary-substrings)
 
 [中文文档](/solution/0600-0699/0696.Count%20Binary%20Substrings/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a binary string <code>s</code>, return the number of non-empty substrings that have the same number of <code>0</code>&#39;s and <code>1</code>&#39;s, and all the <code>0</code>&#39;s and all the <code>1</code>&#39;s in these substrings are grouped consecutively.</p>
 
 <p>Substrings that occur multiple times are counted the number of times they occur.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;00110011&quot;
@@ -19,7 +32,7 @@ Notice that some of these substrings repeat and are counted the number of times 
 Also, &quot;00110011&quot; is not a valid substring because all the 0&#39;s (and 1&#39;s) are not grouped together.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;10101&quot;
@@ -35,11 +48,17 @@ Also, &quot;00110011&quot; is not a valid substring because all the 0&#39;s (and
 	<li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -59,7 +78,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -84,7 +103,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -92,11 +111,9 @@ public:
     int countBinarySubstrings(string s) {
         int i = 0, n = s.size();
         vector<int> t;
-        while (i < n)
-        {
+        while (i < n) {
             int cnt = 1;
-            while (i + 1 < n && s[i + 1] == s[i])
-            {
+            while (i + 1 < n && s[i + 1] == s[i]) {
                 ++cnt;
                 ++i;
             }
@@ -110,7 +127,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countBinarySubstrings(s string) int {
@@ -131,19 +148,10 @@ func countBinarySubstrings(s string) int {
 	}
 	return ans
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

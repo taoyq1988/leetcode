@@ -12,24 +12,17 @@
  * }
  */
 
-const dfs = (root: TreeNode | null, isLeft: boolean) => {
-    let res = 0;
-    const { val, left, right } = root;
-    if (left == null && right == null) {
-        if (isLeft) {
-            return val;
-        }
-        return res;
-    }
-    if (left != null) {
-        res += dfs(left, true);
-    }
-    if (right != null) {
-        res += dfs(right, false);
-    }
-    return res;
-};
-
 function sumOfLeftLeaves(root: TreeNode | null): number {
-    return dfs(root, false);
+    if (!root) {
+        return 0;
+    }
+    let ans = sumOfLeftLeaves(root.right);
+    if (root.left) {
+        if (root.left.left === root.left.right) {
+            ans += root.left.val;
+        } else {
+            ans += sumOfLeftLeaves(root.left);
+        }
+    }
+    return ans;
 }

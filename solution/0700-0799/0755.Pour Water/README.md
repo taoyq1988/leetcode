@@ -1,10 +1,21 @@
-# [755. 倒水](https://leetcode.cn/problems/pour-water)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0755.Pour%20Water/README.md
+tags:
+    - 数组
+    - 模拟
+---
+
+<!-- problem:start -->
+
+# [755. 倒水 🔒](https://leetcode.cn/problems/pour-water)
 
 [English Version](/solution/0700-0799/0755.Pour%20Water/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给出一个地形高度图， <code>heights[i]</code> 表示该索引处的高度。每个索引的宽度为 1。在 <code>V</code> 个单位的水落在索引 <code>K</code> 处以后，每个索引位置有多少水？</p>
 
@@ -139,32 +150,129 @@
 	<li><code>K</code> 的范围 <code>[0, heights.length - 1]</code>。</li>
 </ol>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+我们可以模拟每一单位的水滴下落的过程，每次下落时，我们首先尝试向左移动，如果可以移动到更低的高度，则移动到最低的高度处；如果不能移动到更低的高度，则尝试向右移动，如果可以移动到更低的高度，则移动到最低的高度处；如果不能移动到更低的高度，则在当前位置上升。
+
+时间复杂度 $O(v \times n)，空间复杂度 O(1)$。其中 $v$ 和 $n$ 分别是水滴的数量和高度数组的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def pourWater(self, heights: List[int], volume: int, k: int) -> List[int]:
+        for _ in range(volume):
+            for d in (-1, 1):
+                i = j = k
+                while 0 <= i + d < len(heights) and heights[i + d] <= heights[i]:
+                    if heights[i + d] < heights[i]:
+                        j = i + d
+                    i += d
+                if j != k:
+                    heights[j] += 1
+                    break
+            else:
+                heights[k] += 1
+        return heights
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public int[] pourWater(int[] heights, int volume, int k) {
+        while (volume-- > 0) {
+            boolean find = false;
+            for (int d = -1; d < 2 && !find; d += 2) {
+                int i = k, j = k;
+                while (i + d >= 0 && i + d < heights.length && heights[i + d] <= heights[i]) {
+                    if (heights[i + d] < heights[i]) {
+                        j = i + d;
+                    }
+                    i += d;
+                }
+                if (j != k) {
+                    find = true;
+                    ++heights[j];
+                }
+            }
+            if (!find) {
+                ++heights[k];
+            }
+        }
+        return heights;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<int> pourWater(vector<int>& heights, int volume, int k) {
+        while (volume--) {
+            bool find = false;
+            for (int d = -1; d < 2 && !find; d += 2) {
+                int i = k, j = k;
+                while (i + d >= 0 && i + d < heights.size() && heights[i + d] <= heights[i]) {
+                    if (heights[i + d] < heights[i]) {
+                        j = i + d;
+                    }
+                    i += d;
+                }
+                if (j != k) {
+                    find = true;
+                    ++heights[j];
+                }
+            }
+            if (!find) {
+                ++heights[k];
+            }
+        }
+        return heights;
+    }
+};
 ```
 
+#### Go
+
+```go
+func pourWater(heights []int, volume int, k int) []int {
+	for ; volume > 0; volume-- {
+		find := false
+		for _, d := range [2]int{-1, 1} {
+			i, j := k, k
+			for i+d >= 0 && i+d < len(heights) && heights[i+d] <= heights[i] {
+				if heights[i+d] < heights[i] {
+					j = i + d
+				}
+				i += d
+			}
+			if j != k {
+				find = true
+				heights[j]++
+				break
+			}
+		}
+		if !find {
+			heights[k]++
+		}
+	}
+	return heights
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

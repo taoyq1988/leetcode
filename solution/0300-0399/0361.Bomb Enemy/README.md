@@ -1,10 +1,22 @@
-# [361. 轰炸敌人](https://leetcode.cn/problems/bomb-enemy)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0361.Bomb%20Enemy/README.md
+tags:
+    - 数组
+    - 动态规划
+    - 矩阵
+---
+
+<!-- problem:start -->
+
+# [361. 轰炸敌人 🔒](https://leetcode.cn/problems/bomb-enemy)
 
 [English Version](/solution/0300-0399/0361.Bomb%20Enemy/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个大小为 <code>m x n</code> 的矩阵 <code>grid</code> ，其中每个单元格都放置有一个字符：</p>
 
@@ -45,15 +57,17 @@
 	<li><code>grid[i][j]</code> 可以是 <code>'W'</code>、<code>'E'</code> 或 <code>'0'</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -90,12 +104,13 @@ class Solution:
                 elif grid[i][j] == 'E':
                     t += 1
                 g[i][j] += t
-        return max([g[i][j] for i in range(m) for j in range(n) if grid[i][j] == '0'], default=0)
+        return max(
+            [g[i][j] for i in range(m) for j in range(n) if grid[i][j] == '0'],
+            default=0,
+        )
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -156,7 +171,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -164,45 +179,45 @@ public:
     int maxKilledEnemies(vector<vector<char>>& grid) {
         int m = grid.size(), n = grid[0].size();
         vector<vector<int>> g(m, vector<int>(n));
-        for (int i = 0; i < m; ++i)
-        {
+        for (int i = 0; i < m; ++i) {
             int t = 0;
-            for (int j = 0; j < n; ++j)
-            {
-                if (grid[i][j] == 'W') t = 0;
-                else if (grid[i][j] == 'E') ++t;
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 'W')
+                    t = 0;
+                else if (grid[i][j] == 'E')
+                    ++t;
                 g[i][j] += t;
             }
             t = 0;
-            for (int j = n - 1; j >= 0; --j)
-            {
-                if (grid[i][j] == 'W') t = 0;
-                else if (grid[i][j] == 'E') ++t;
+            for (int j = n - 1; j >= 0; --j) {
+                if (grid[i][j] == 'W')
+                    t = 0;
+                else if (grid[i][j] == 'E')
+                    ++t;
                 g[i][j] += t;
             }
         }
-        for (int j = 0; j < n; ++j)
-        {
+        for (int j = 0; j < n; ++j) {
             int t = 0;
-            for (int i = 0; i < m; ++i)
-            {
-                if (grid[i][j] == 'W') t = 0;
-                else if (grid[i][j] == 'E') ++t;
+            for (int i = 0; i < m; ++i) {
+                if (grid[i][j] == 'W')
+                    t = 0;
+                else if (grid[i][j] == 'E')
+                    ++t;
                 g[i][j] += t;
             }
             t = 0;
-            for (int i = m - 1; i >= 0; --i)
-            {
-                if (grid[i][j] == 'W') t = 0;
-                else if (grid[i][j] == 'E') ++t;
+            for (int i = m - 1; i >= 0; --i) {
+                if (grid[i][j] == 'W')
+                    t = 0;
+                else if (grid[i][j] == 'E')
+                    ++t;
                 g[i][j] += t;
             }
         }
         int ans = 0;
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == '0') ans = max(ans, g[i][j]);
             }
         }
@@ -211,7 +226,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxKilledEnemies(grid [][]byte) int {
@@ -272,10 +287,8 @@ func maxKilledEnemies(grid [][]byte) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

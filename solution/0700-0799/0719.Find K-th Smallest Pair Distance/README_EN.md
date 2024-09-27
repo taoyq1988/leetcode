@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0719.Find%20K-th%20Smallest%20Pair%20Distance/README_EN.md
+tags:
+    - Array
+    - Two Pointers
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [719. Find K-th Smallest Pair Distance](https://leetcode.com/problems/find-k-th-smallest-pair-distance)
 
 [中文文档](/solution/0700-0799/0719.Find%20K-th%20Smallest%20Pair%20Distance/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>The <strong>distance of a pair</strong> of integers <code>a</code> and <code>b</code> is defined as the absolute difference between <code>a</code> and <code>b</code>.</p>
 
 <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>smallest <strong>distance among all the pairs</strong></em> <code>nums[i]</code> <em>and</em> <code>nums[j]</code> <em>where</em> <code>0 &lt;= i &lt; j &lt; nums.length</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,3,1], k = 1
@@ -21,14 +36,14 @@
 Then the 1<sup>st</sup> smallest distance pair is (1,1), and its distance is 0.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,1,1], k = 2
 <strong>Output:</strong> 0
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,6,1], k = 3
@@ -45,11 +60,17 @@ Then the 1<sup>st</sup> smallest distance pair is (1,1), and its distance is 0.
 	<li><code>1 &lt;= k &lt;= n * (n - 1) / 2</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -66,7 +87,7 @@ class Solution:
         return bisect_left(range(nums[-1] - nums[0]), k, key=count)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -104,35 +125,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function smallestDistancePair(nums: number[], k: number): number {
-    nums.sort((a, b) => a - b);
-    const n = nums.length;
-    let left = 0,
-        right = nums[n - 1] - nums[0];
-    while (left < right) {
-        let mid = (left + right) >> 1;
-        let count = 0,
-            i = 0;
-        for (let j = 0; j < n; j++) {
-            while (nums[j] - nums[i] > mid) {
-                i++;
-            }
-            count += j - i;
-        }
-        if (count >= k) {
-            right = mid;
-        } else {
-            left = mid + 1;
-        }
-    }
-    return left;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -140,19 +133,19 @@ public:
     int smallestDistancePair(vector<int>& nums, int k) {
         sort(nums.begin(), nums.end());
         int left = 0, right = nums.back() - nums.front();
-        while (left < right)
-        {
+        while (left < right) {
             int mid = (left + right) >> 1;
-            if (count(mid, k, nums) >= k) right = mid;
-            else left = mid + 1;
+            if (count(mid, k, nums) >= k)
+                right = mid;
+            else
+                left = mid + 1;
         }
         return left;
     }
 
     int count(int dist, int k, vector<int>& nums) {
         int cnt = 0;
-        for (int i = 0; i < nums.size(); ++i)
-        {
+        for (int i = 0; i < nums.size(); ++i) {
             int target = nums[i] - dist;
             int j = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
             cnt += i - j;
@@ -162,7 +155,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func smallestDistancePair(nums []int, k int) int {
@@ -198,10 +191,74 @@ func smallestDistancePair(nums []int, k int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function smallestDistancePair(nums: number[], k: number): number {
+    nums.sort((a, b) => a - b);
+    const n = nums.length;
+    let left = 0,
+        right = nums[n - 1] - nums[0];
+    while (left < right) {
+        let mid = (left + right) >> 1;
+        let count = 0,
+            i = 0;
+        for (let j = 0; j < n; j++) {
+            // 索引[i, j]距离nums[j]的距离<=mid
+            while (nums[j] - nums[i] > mid) {
+                i++;
+            }
+            count += j - i;
+        }
+        if (count >= k) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return left;
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+function smallestDistancePair(nums, k) {
+    nums.sort((a, b) => a - b);
+    const n = nums.length;
+    let left = 0,
+        right = nums[n - 1] - nums[0];
+
+    while (left < right) {
+        const mid = (left + right) >> 1;
+        let count = 0,
+            i = 0;
+
+        for (let j = 0; j < n; j++) {
+            while (nums[j] - nums[i] > mid) {
+                i++;
+            }
+            count += j - i;
+        }
+
+        if (count >= k) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return left;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

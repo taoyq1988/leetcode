@@ -1,20 +1,15 @@
 class Solution {
 public:
     bool isHappy(int n) {
-        auto getNext = [](int n) {
-            int res = 0;
-            while (n) {
-                res += pow(n % 10, 2);
-                n /= 10;
+        unordered_set<int> vis;
+        while (n != 1 && !vis.count(n)) {
+            vis.insert(n);
+            int x = 0;
+            for (; n; n /= 10) {
+                x += (n % 10) * (n % 10);
             }
-            return res;
-        };
-        int slow = n;
-        int fast = getNext(n);
-        while (slow != fast) {
-            slow = getNext(slow);
-            fast = getNext(getNext(fast));
+            n = x;
         }
-        return slow == 1;
+        return n == 1;
     }
 };

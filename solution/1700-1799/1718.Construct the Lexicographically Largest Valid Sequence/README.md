@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1718.Construct%20the%20Lexicographically%20Largest%20Valid%20Sequence/README.md
+rating: 2080
+source: 第 43 场双周赛 Q3
+tags:
+    - 数组
+    - 回溯
+---
+
+<!-- problem:start -->
+
 # [1718. 构建字典序最大的可行序列](https://leetcode.cn/problems/construct-the-lexicographically-largest-valid-sequence)
 
 [English Version](/solution/1700-1799/1718.Construct%20the%20Lexicographically%20Largest%20Valid%20Sequence/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数 <code>n</code> ，请你找到满足下面条件的一个序列：</p>
 
@@ -43,17 +56,17 @@
 	<li><code>1 &lt;= n &lt;= 20</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-DFS 回溯。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -85,9 +98,7 @@ class Solution:
         return path[1:]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -117,7 +128,7 @@ class Solution {
             return dfs(u + 1);
         }
         for (int i = n; i > 1; --i) {
-            if (cnt[i] > 0 && u + i < n * 2 &&  path[u + i] == 0) {
+            if (cnt[i] > 0 && u + i < n * 2 && path[u + i] == 0) {
                 cnt[i] = 0;
                 path[u] = i;
                 path[u + i] = i;
@@ -143,7 +154,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -165,10 +176,8 @@ public:
     bool dfs(int u) {
         if (u == n * 2) return 1;
         if (path[u]) return dfs(u + 1);
-        for (int i = n; i > 1; --i)
-        {
-            if (cnt[i] && u + i < n * 2 && !path[u + i])
-            {
+        for (int i = n; i > 1; --i) {
+            if (cnt[i] && u + i < n * 2 && !path[u + i]) {
                 path[u] = path[u + i] = i;
                 cnt[i] = 0;
                 if (dfs(u + 1)) return 1;
@@ -176,8 +185,7 @@ public:
                 path[u] = path[u + i] = 0;
             }
         }
-        if (cnt[1])
-        {
+        if (cnt[1]) {
             path[u] = 1;
             cnt[1] = 0;
             if (dfs(u + 1)) return 1;
@@ -189,7 +197,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func constructDistancedSequence(n int) []int {
@@ -234,10 +242,8 @@ func constructDistancedSequence(n int) []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

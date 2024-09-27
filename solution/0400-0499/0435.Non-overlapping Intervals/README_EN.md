@@ -1,13 +1,28 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0435.Non-overlapping%20Intervals/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Dynamic Programming
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals)
 
 [中文文档](/solution/0400-0499/0435.Non-overlapping%20Intervals/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an array of intervals <code>intervals</code> where <code>intervals[i] = [start<sub>i</sub>, end<sub>i</sub>]</code>, return <em>the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> intervals = [[1,2],[2,3],[3,4],[1,3]]
@@ -15,7 +30,7 @@
 <strong>Explanation:</strong> [1,3] can be removed and the rest of the intervals are non-overlapping.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> intervals = [[1,2],[1,2],[1,2]]
@@ -23,7 +38,7 @@
 <strong>Explanation:</strong> You need to remove two [1,2] to make the rest of the intervals non-overlapping.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> intervals = [[1,2],[2,3]]
@@ -40,13 +55,17 @@
 	<li><code>-5 * 10<sup>4</sup> &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 5 * 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Greedy.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -61,21 +80,7 @@ class Solution:
         return ans
 ```
 
-```python
-class Solution:
-    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
-        intervals.sort()
-        d = [intervals[0][1]]
-        for s, e in intervals[1:]:
-            if s >= d[-1]:
-                d.append(e)
-            else:
-                idx = bisect_left(d, s)
-                d[idx] = min(d[idx], e)
-        return len(intervals) - len(d)
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -93,6 +98,91 @@ class Solution {
     }
 }
 ```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end(), [](const auto& a, const auto& b) { return a[1] < b[1]; });
+        int ans = 0, t = intervals[0][1];
+        for (int i = 1; i < intervals.size(); ++i) {
+            if (t <= intervals[i][0])
+                t = intervals[i][1];
+            else
+                ++ans;
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+	sort.Slice(intervals, func(i, j int) bool {
+		return intervals[i][1] < intervals[j][1]
+	})
+	t, ans := intervals[0][1], 0
+	for i := 1; i < len(intervals); i++ {
+		if intervals[i][0] >= t {
+			t = intervals[i][1]
+		} else {
+			ans++
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+function eraseOverlapIntervals(intervals: number[][]): number {
+    intervals.sort((a, b) => a[1] - b[1]);
+    let end = intervals[0][1],
+        ans = 0;
+    for (let i = 1; i < intervals.length; ++i) {
+        let cur = intervals[i];
+        if (end > cur[0]) {
+            ans++;
+        } else {
+            end = cur[1];
+        }
+    }
+    return ans;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        intervals.sort()
+        d = [intervals[0][1]]
+        for s, e in intervals[1:]:
+            if s >= d[-1]:
+                d.append(e)
+            else:
+                idx = bisect_left(d, s)
+                d[idx] = min(d[idx], e)
+        return len(intervals) - len(d)
+```
+
+#### Java
 
 ```java
 class Solution {
@@ -129,66 +219,8 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function eraseOverlapIntervals(intervals: number[][]): number {
-    intervals.sort((a, b) => a[1] - b[1]);
-    let end = intervals[0][1],
-        ans = 0;
-    for (let i = 1; i < intervals.length; ++i) {
-        let cur = intervals[i];
-        if (end > cur[0]) {
-            ans++;
-        } else {
-            end = cur[1];
-        }
-    }
-    return ans;
-}
-```
-
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
-        sort(intervals.begin(), intervals.end(), [](const auto &a, const auto &b) { return a[1] < b[1]; });
-        int ans = 0, t = intervals[0][1];
-        for (int i = 1; i < intervals.size(); ++i)
-        {
-            if (t <= intervals[i][0]) t = intervals[i][1];
-            else ++ans;
-        }
-        return ans;
-    }
-};
-```
-
-### **Go**
-
-```go
-func eraseOverlapIntervals(intervals [][]int) int {
-	sort.Slice(intervals, func(i, j int) bool {
-		return intervals[i][1] < intervals[j][1]
-	})
-	t, ans := intervals[0][1], 0
-	for i := 1; i < len(intervals); i++ {
-		if intervals[i][0] >= t {
-			t = intervals[i][1]
-		} else {
-			ans++
-		}
-	}
-	return ans
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0888.Fair%20Candy%20Swap/README.md
+tags:
+    - 数组
+    - 哈希表
+    - 二分查找
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [888. 公平的糖果交换](https://leetcode.cn/problems/fair-candy-swap)
 
 [English Version](/solution/0800-0899/0888.Fair%20Candy%20Swap/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>爱丽丝和鲍勃拥有不同总数量的糖果。给你两个数组 <code>aliceSizes</code> 和 <code>bobSizes</code> ，<code>aliceSizes[i]</code> 是爱丽丝拥有的第 <code>i</code> 盒糖果中的糖果数量，<code>bobSizes[j]</code> 是鲍勃拥有的第 <code>j</code> 盒糖果中的糖果数量。</p>
 
@@ -53,17 +66,17 @@
 	<li>题目数据保证对于给定的输入至少存在一个有效答案。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-哈希表实现。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -76,9 +89,7 @@ class Solution:
                 return [a, target]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -96,7 +107,7 @@ class Solution {
         for (int a : aliceSizes) {
             int target = a - diff;
             if (s.contains(target)) {
-                return new int[]{a, target};
+                return new int[] {a, target};
             }
         }
         return null;
@@ -104,23 +115,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function fairCandySwap(aliceSizes: number[], bobSizes: number[]): number[] {
-    let s1 = aliceSizes.reduce((a, c) => a + c, 0);
-    let s2 = bobSizes.reduce((a, c) => a + c, 0);
-    let diff = (s1 - s2) >> 1;
-    for (let num of aliceSizes) {
-        let target = num - diff;
-        if (bobSizes.includes(target)) {
-            return [num, target];
-        }
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -143,10 +138,24 @@ public:
 };
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function fairCandySwap(aliceSizes: number[], bobSizes: number[]): number[] {
+    let s1 = aliceSizes.reduce((a, c) => a + c, 0);
+    let s2 = bobSizes.reduce((a, c) => a + c, 0);
+    let diff = (s1 - s2) >> 1;
+    for (let num of aliceSizes) {
+        let target = num - diff;
+        if (bobSizes.includes(target)) {
+            return [num, target];
+        }
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

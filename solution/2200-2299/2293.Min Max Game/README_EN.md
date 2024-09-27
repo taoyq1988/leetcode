@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2293.Min%20Max%20Game/README_EN.md
+rating: 1241
+source: Weekly Contest 296 Q1
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2293. Min Max Game](https://leetcode.com/problems/min-max-game)
 
 [中文文档](/solution/2200-2299/2293.Min%20Max%20Game/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> whose length is a power of <code>2</code>.</p>
 
@@ -19,7 +34,7 @@
 <p>Return <em>the last number that remains in </em><code>nums</code><em> after applying the algorithm.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2293.Min%20Max%20Game/images/example1drawio-1.png" style="width: 500px; height: 240px;" />
 <pre>
 <strong>Input:</strong> nums = [1,3,5,2,4,8,2,2]
@@ -31,7 +46,7 @@ Third: nums = [1]
 1 is the last remaining number, so we return 1.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3]
@@ -48,123 +63,145 @@ Third: nums = [1]
 	<li><code>nums.length</code> is a power of <code>2</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+According to the problem statement, we can simulate the entire process, and the remaining number will be the answer. In implementation, we do not need to create an additional array; we can directly operate on the original array.
+
+The time complexity is $O(n)$, where $n$ is the length of the array $\textit{nums}$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def minMaxGame(self, nums: List[int]) -> int:
         n = len(nums)
-        if n == 1:
-            return nums[0]
-        t = []
-        for i in range(n >> 1):
-            v = max(nums[i << 1], nums[i << 1 | 1]) if i & 1 else min(
-                nums[i << 1], nums[i << 1 | 1])
-            t.append(v)
-        return self.minMaxGame(t)
+        while n > 1:
+            n >>= 1
+            for i in range(n):
+                a, b = nums[i << 1], nums[i << 1 | 1]
+                nums[i] = min(a, b) if i % 2 == 0 else max(a, b)
+        return nums[0]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int minMaxGame(int[] nums) {
-        int n = nums.length;
-        if (n == 1) {
-            return nums[0];
+        for (int n = nums.length; n > 1;) {
+            n >>= 1;
+            for (int i = 0; i < n; ++i) {
+                int a = nums[i << 1], b = nums[i << 1 | 1];
+                nums[i] = i % 2 == 0 ? Math.min(a, b) : Math.max(a, b);
+            }
         }
-        int[] t = new int[n >> 1];
-        for (int i = 0; i < t.length; ++i) {
-            int a = nums[i << 1], b = nums[i << 1 | 1];
-            t[i] = (i & 1) == 1 ? Math.max(a, b) : Math.min(a, b);
-        }
-        return minMaxGame(t);
+        return nums[0];
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int minMaxGame(vector<int>& nums) {
-        int n = nums.size();
-        if (n == 1) return nums[0];
-        vector<int> t(n >> 1);
-        for (int i = 0; i < t.size(); ++i)
-        {
-            int a = nums[i << 1], b = nums[i << 1 | 1];
-            t[i] = (i & 1) == 1 ? max(a, b) : min(a, b);
+        for (int n = nums.size(); n > 1;) {
+            n >>= 1;
+            for (int i = 0; i < n; ++i) {
+                int a = nums[i << 1], b = nums[i << 1 | 1];
+                nums[i] = i % 2 == 0 ? min(a, b) : max(a, b);
+            }
         }
-        return minMaxGame(t);
+        return nums[0];
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minMaxGame(nums []int) int {
-	n := len(nums)
-	if n == 1 {
-		return nums[0]
-	}
-	var t []int
-	for i := 0; i < n>>1; i++ {
-		a, b := nums[i<<1], nums[i<<1|1]
-		if (i & 1) == 1 {
-			t = append(t, max(a, b))
-		} else {
-			t = append(t, min(a, b))
+	for n := len(nums); n > 1; {
+		n >>= 1
+		for i := 0; i < n; i++ {
+			a, b := nums[i<<1], nums[i<<1|1]
+			if i%2 == 0 {
+				nums[i] = min(a, b)
+			} else {
+				nums[i] = max(a, b)
+			}
 		}
 	}
-	return minMaxGame(t)
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return nums[0]
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minMaxGame(nums: number[]): number {
-    while (nums.length > 1) {
-        let n = nums.length;
-        let tmp = [];
-        for (let i = 0; i < n; i += 2) {
-            if (i % 4 == 2) {
-                tmp.push(Math.max(nums[i], nums[i + 1]));
-            } else {
-                tmp.push(Math.min(nums[i], nums[i + 1]));
-            }
+    for (let n = nums.length; n > 1; ) {
+        n >>= 1;
+        for (let i = 0; i < n; ++i) {
+            const a = nums[i << 1];
+            const b = nums[(i << 1) | 1];
+            nums[i] = i % 2 == 0 ? Math.min(a, b) : Math.max(a, b);
         }
-        nums = tmp;
     }
     return nums[0];
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn min_max_game(mut nums: Vec<i32>) -> i32 {
+        let mut n = nums.len();
+        while n != 1 {
+            n >>= 1;
+            for i in 0..n {
+                nums[i] = (if (i & 1) == 1 { i32::max } else { i32::min })(
+                    nums[i << 1],
+                    nums[(i << 1) | 1],
+                );
+            }
+        }
+        nums[0]
+    }
+}
 ```
 
+#### C
+
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
+int minMaxGame(int* nums, int numsSize) {
+    while (numsSize != 1) {
+        numsSize >>= 1;
+        for (int i = 0; i < numsSize; i++) {
+            int a = nums[i << 1];
+            int b = nums[i << 1 | 1];
+            nums[i] = i & 1 ? max(a, b) : min(a, b);
+        }
+    }
+    return nums[0];
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

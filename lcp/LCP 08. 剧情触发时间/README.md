@@ -1,8 +1,15 @@
+---
+comments: true
+edit_url: https://github.com/doocs/leetcode/edit/main/lcp/LCP%2008.%20%E5%89%A7%E6%83%85%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4/README.md
+---
+
+<!-- problem:start -->
+
 # [LCP 08. 剧情触发时间](https://leetcode.cn/problems/ju-qing-hong-fa-shi-jian)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>在战略游戏中，玩家往往需要发展自己的势力来触发各种新的剧情。一个势力的主要属性有三种，分别是文明等级（<code>C</code>），资源储备（<code>R</code>）以及人口数量（<code>H</code>）。在游戏开始时（第 0 天），三种属性的值均为 0。</p>
 
@@ -57,21 +64,23 @@
 	<li><code>0 &lt;= requirements[i] &lt;= 100000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：前缀和 + 二分查找**
+### 方法一：前缀和 + 二分查找
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def getTriggerTime(self, increase: List[List[int]], requirements: List[List[int]]) -> List[int]:
+    def getTriggerTime(
+        self, increase: List[List[int]], requirements: List[List[int]]
+    ) -> List[int]:
         increase.insert(0, [0, 0, 0])
         m, n = len(increase), len(requirements)
         for i in range(1, m):
@@ -90,9 +99,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -133,10 +140,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

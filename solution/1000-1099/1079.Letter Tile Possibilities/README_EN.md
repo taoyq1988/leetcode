@@ -1,15 +1,32 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1079.Letter%20Tile%20Possibilities/README_EN.md
+rating: 1740
+source: Weekly Contest 140 Q2
+tags:
+    - Hash Table
+    - String
+    - Backtracking
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [1079. Letter Tile Possibilities](https://leetcode.com/problems/letter-tile-possibilities)
 
 [中文文档](/solution/1000-1099/1079.Letter%20Tile%20Possibilities/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You have <code>n</code>&nbsp;&nbsp;<code>tiles</code>, where each tile has one letter <code>tiles[i]</code> printed on it.</p>
 
 <p>Return <em>the number of possible non-empty sequences of letters</em> you can make using the letters printed on those <code>tiles</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> tiles = &quot;AAB&quot;
@@ -17,14 +34,14 @@
 <strong>Explanation: </strong>The possible sequences are &quot;A&quot;, &quot;B&quot;, &quot;AA&quot;, &quot;AB&quot;, &quot;BA&quot;, &quot;AAB&quot;, &quot;ABA&quot;, &quot;BAA&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> tiles = &quot;AAABBC&quot;
 <strong>Output:</strong> 188
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> tiles = &quot;V&quot;
@@ -39,32 +56,36 @@
 	<li><code>tiles</code> consists of uppercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def numTilePossibilities(self, tiles: str) -> int:
-        def dfs():
+        def dfs(cnt: Counter) -> int:
             ans = 0
-            for i in range(26):
-                if cnt[i]:
+            for i, x in cnt.items():
+                if x > 0:
                     ans += 1
                     cnt[i] -= 1
-                    ans += dfs()
+                    ans += dfs(cnt)
                     cnt[i] += 1
             return ans
 
-        cnt = [0] * 26
-        for t in tiles:
-            cnt[ord(t) - ord('A')] += 1
-        return dfs()
+        cnt = Counter(tiles)
+        return dfs(cnt)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -91,63 +112,83 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int numTilePossibilities(string tiles) {
-        vector<int> cnt(26);
-        for (char& c : tiles) ++cnt[c - 'A'];
+        int cnt[26]{};
+        for (char c : tiles) {
+            ++cnt[c - 'A'];
+        }
+        function<int(int* cnt)> dfs = [&](int* cnt) -> int {
+            int res = 0;
+            for (int i = 0; i < 26; ++i) {
+                if (cnt[i] > 0) {
+                    ++res;
+                    --cnt[i];
+                    res += dfs(cnt);
+                    ++cnt[i];
+                }
+            }
+            return res;
+        };
         return dfs(cnt);
     }
+};
+```
 
-    int dfs(vector<int>& cnt) {
-        int res = 0;
-        for (int i = 0; i < 26; ++i)
-        {
-            if (cnt[i])
-            {
-                --cnt[i];
+#### Go
+
+```go
+func numTilePossibilities(tiles string) int {
+	cnt := [26]int{}
+	for _, c := range tiles {
+		cnt[c-'A']++
+	}
+	var dfs func(cnt [26]int) int
+	dfs = func(cnt [26]int) (res int) {
+		for i, x := range cnt {
+			if x > 0 {
+				res++
+				cnt[i]--
+				res += dfs(cnt)
+				cnt[i]++
+			}
+		}
+		return
+	}
+	return dfs(cnt)
+}
+```
+
+#### TypeScript
+
+```ts
+function numTilePossibilities(tiles: string): number {
+    const cnt: number[] = new Array(26).fill(0);
+    for (const c of tiles) {
+        ++cnt[c.charCodeAt(0) - 'A'.charCodeAt(0)];
+    }
+    const dfs = (cnt: number[]): number => {
+        let res = 0;
+        for (let i = 0; i < 26; ++i) {
+            if (cnt[i] > 0) {
                 ++res;
+                --cnt[i];
                 res += dfs(cnt);
                 ++cnt[i];
             }
         }
         return res;
-    }
-};
-```
-
-### **Go**
-
-```go
-func numTilePossibilities(tiles string) int {
-	cnt := make([]int, 26)
-	for _, c := range tiles {
-		cnt[c-'A']++
-	}
-	var dfs func() int
-	dfs = func() int {
-		res := 0
-		for i := 0; i < 26; i++ {
-			if cnt[i] > 0 {
-				res++
-				cnt[i]--
-				res += dfs()
-				cnt[i]++
-			}
-		}
-		return res
-	}
-	return dfs()
+    };
+    return dfs(cnt);
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

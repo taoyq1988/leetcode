@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1856.Maximum%20Subarray%20Min-Product/README_EN.md
+rating: 2051
+source: Weekly Contest 240 Q3
+tags:
+    - Stack
+    - Array
+    - Prefix Sum
+    - Monotonic Stack
+---
+
+<!-- problem:start -->
+
 # [1856. Maximum Subarray Min-Product](https://leetcode.com/problems/maximum-subarray-min-product)
 
 [中文文档](/solution/1800-1899/1856.Maximum%20Subarray%20Min-Product/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>The <strong>min-product</strong> of an array is equal to the <strong>minimum value</strong> in the array <strong>multiplied by</strong> the array&#39;s <strong>sum</strong>.</p>
 
@@ -17,7 +34,7 @@
 <p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,<u>2,3,2</u>]
@@ -26,7 +43,7 @@
 2 * (2+3+2) = 2 * 7 = 14.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,<u>3,3</u>,1,2]
@@ -35,7 +52,7 @@
 3 * (3+3) = 3 * 6 = 18.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,1,<u>5,6,4</u>,2]
@@ -52,22 +69,35 @@
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>7</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Monotonic Stack + Prefix Sum
+
+We can enumerate each element $nums[i]$ as the minimum value of the subarray, and find the left and right boundaries $left[i]$ and $right[i]$ of the subarray. Where $left[i]$ represents the first position strictly less than $nums[i]$ on the left side of $i$, and $right[i]$ represents the first position less than or equal to $nums[i]$ on the right side of $i$.
+
+To conveniently calculate the sum of the subarray, we can preprocess the prefix sum array $s$, where $s[i]$ represents the sum of the first $i$ elements of $nums$.
+
+Then the minimum product with $nums[i]$ as the minimum value of the subarray is $nums[i] \times (s[right[i]] - s[left[i] + 1])$. We can enumerate each element $nums[i]$, find the minimum product with $nums[i]$ as the minimum value of the subarray, and then take the maximum value.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$. Where $n$ is the length of the array $nums$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def maxSumMinProduct(self, nums: List[int]) -> int:
-        mod = int(1e9) + 7
         n = len(nums)
         left = [-1] * n
         right = [n] * n
         stk = []
-        for i, v in enumerate(nums):
-            while stk and nums[stk[-1]] >= v:
+        for i, x in enumerate(nums):
+            while stk and nums[stk[-1]] >= x:
                 stk.pop()
             if stk:
                 left[i] = stk[-1]
@@ -79,12 +109,12 @@ class Solution:
             if stk:
                 right[i] = stk[-1]
             stk.append(i)
-        s = [0] + list(accumulate(nums))
-        ans = max(v * (s[right[i]] - s[left[i] + 1]) for i, v in enumerate(nums))
-        return ans % mod
+        s = list(accumulate(nums, initial=0))
+        mod = 10**9 + 7
+        return max((s[right[i]] - s[left[i] + 1]) * x for i, x in enumerate(nums)) % mod
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -120,15 +150,15 @@ class Solution {
         }
         long ans = 0;
         for (int i = 0; i < n; ++i) {
-            long t = nums[i] * (s[right[i]] - s[left[i] + 1]);
-            ans = Math.max(ans, t);
+            ans = Math.max(ans, nums[i] * (s[right[i]] - s[left[i] + 1]));
         }
-        return (int) (ans % 1000000007);
+        final int mod = (int) 1e9 + 7;
+        return (int) (ans % mod);
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -138,34 +168,41 @@ public:
         vector<int> left(n, -1);
         vector<int> right(n, n);
         stack<int> stk;
-        for (int i = 0; i < n; ++i)
-        {
-            while (!stk.empty() && nums[stk.top()] >= nums[i]) stk.pop();
-            if (!stk.empty()) left[i] = stk.top();
+        for (int i = 0; i < n; ++i) {
+            while (!stk.empty() && nums[stk.top()] >= nums[i]) {
+                stk.pop();
+            }
+            if (!stk.empty()) {
+                left[i] = stk.top();
+            }
             stk.push(i);
         }
         stk = stack<int>();
-        for (int i = n - 1; i >= 0; --i)
-        {
-            while (!stk.empty() && nums[stk.top()] > nums[i]) stk.pop();
-            if (!stk.empty()) right[i] = stk.top();
+        for (int i = n - 1; ~i; --i) {
+            while (!stk.empty() && nums[stk.top()] > nums[i]) {
+                stk.pop();
+            }
+            if (!stk.empty()) {
+                right[i] = stk.top();
+            }
             stk.push(i);
         }
-        vector<long long> s(n + 1);
-        for (int i = 0; i < n; ++i) s[i + 1] = s[i] + nums[i];
-        long long ans = 0;
-        const int mod = 1e9 + 7;
-        for (int i = 0; i < n; ++i)
-        {
-            long long t = nums[i] * (s[right[i]] - s[left[i] + 1]);
-            ans = max(ans, t);
+        long long s[n + 1];
+        s[0] = 0;
+        for (int i = 0; i < n; ++i) {
+            s[i + 1] = s[i] + nums[i];
         }
-        return (int) (ans % mod);
+        long long ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans = max(ans, nums[i] * (s[right[i]] - s[left[i] + 1]));
+        }
+        const int mod = 1e9 + 7;
+        return ans % mod;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxSumMinProduct(nums []int) int {
@@ -177,8 +214,8 @@ func maxSumMinProduct(nums []int) int {
 		right[i] = n
 	}
 	stk := []int{}
-	for i, v := range nums {
-		for len(stk) > 0 && nums[stk[len(stk)-1]] >= v {
+	for i, x := range nums {
+		for len(stk) > 0 && nums[stk[len(stk)-1]] >= x {
 			stk = stk[:len(stk)-1]
 		}
 		if len(stk) > 0 {
@@ -197,25 +234,65 @@ func maxSumMinProduct(nums []int) int {
 		stk = append(stk, i)
 	}
 	s := make([]int, n+1)
-	for i, v := range nums {
-		s[i+1] = s[i] + v
+	for i, x := range nums {
+		s[i+1] = s[i] + x
 	}
 	ans := 0
-	for i, v := range nums {
-		t := v * (s[right[i]] - s[left[i]+1])
-		if ans < t {
+	for i, x := range nums {
+		if t := x * (s[right[i]] - s[left[i]+1]); ans < t {
 			ans = t
 		}
 	}
-	mod := int(1e9) + 7
+	const mod = 1e9 + 7
 	return ans % mod
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function maxSumMinProduct(nums: number[]): number {
+    const n = nums.length;
+    const left: number[] = Array(n).fill(-1);
+    const right: number[] = Array(n).fill(n);
+    const stk: number[] = [];
+    for (let i = 0; i < n; ++i) {
+        while (stk.length && nums[stk.at(-1)!] >= nums[i]) {
+            stk.pop();
+        }
+        if (stk.length) {
+            left[i] = stk.at(-1)!;
+        }
+        stk.push(i);
+    }
+    stk.length = 0;
+    for (let i = n - 1; i >= 0; --i) {
+        while (stk.length && nums[stk.at(-1)!] > nums[i]) {
+            stk.pop();
+        }
+        if (stk.length) {
+            right[i] = stk.at(-1)!;
+        }
+        stk.push(i);
+    }
+    const s: number[] = Array(n + 1).fill(0);
+    for (let i = 0; i < n; ++i) {
+        s[i + 1] = s[i] + nums[i];
+    }
+    let ans: bigint = 0n;
+    const mod = 10 ** 9 + 7;
+    for (let i = 0; i < n; ++i) {
+        const t = BigInt(nums[i]) * BigInt(s[right[i]] - s[left[i] + 1]);
+        if (ans < t) {
+            ans = t;
+        }
+    }
+    return Number(ans % BigInt(mod));
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

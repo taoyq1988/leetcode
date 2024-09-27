@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2325.Decode%20the%20Message/README_EN.md
+rating: 1268
+source: Weekly Contest 300 Q1
+tags:
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [2325. Decode the Message](https://leetcode.com/problems/decode-the-message)
 
 [中文文档](/solution/2300-2399/2325.Decode%20the%20Message/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given the strings <code>key</code> and <code>message</code>, which represent a cipher key and a secret message, respectively. The steps to decode <code>message</code> are as follows:</p>
 
@@ -20,7 +35,7 @@
 <p>Return <em>the decoded message</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2300-2399/2325.Decode%20the%20Message/images/ex1new4.jpg" style="width: 752px; height: 150px;" />
 <pre>
 <strong>Input:</strong> key = &quot;the quick brown fox jumps over the lazy dog&quot;, message = &quot;vkbs bs t suepuv&quot;
@@ -29,7 +44,7 @@
 It is obtained by taking the first appearance of each letter in &quot;<u><strong>the</strong></u> <u><strong>quick</strong></u> <u><strong>brown</strong></u> <u><strong>f</strong></u>o<u><strong>x</strong></u> <u><strong>j</strong></u>u<u><strong>mps</strong></u> o<u><strong>v</strong></u>er the <u><strong>lazy</strong></u> <u><strong>d</strong></u>o<u><strong>g</strong></u>&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2300-2399/2325.Decode%20the%20Message/images/ex2new.jpg" style="width: 754px; height: 150px;" />
 <pre>
 <strong>Input:</strong> key = &quot;eljuxhpwnyrdgtqkviszcfmabo&quot;, message = &quot;zwx hnfx lqantp mnoeius ycgk vcnjrdb&quot;
@@ -49,11 +64,17 @@ It is obtained by taking the first appearance of each letter in &quot;<u><strong
 	<li><code>message</code> consists of lowercase English letters and <code>&#39; &#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -61,108 +82,139 @@ class Solution:
         d = {" ": " "}
         i = 0
         for c in key:
-            if c in d:
-                continue
-            d[c] = ascii_lowercase[i]
-            i += 1
+            if c not in d:
+                d[c] = ascii_lowercase[i]
+                i += 1
         return "".join(d[c] for c in message)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String decodeMessage(String key, String message) {
-        Map<Character, Character> d = new HashMap<>();
-        String lowcase = "abcdefghijklmnopqrstuvwxyz";
-        d.put(' ', ' ');
-        int i = 0;
-        for (char c : key.toCharArray()) {
-            if (d.containsKey(c)) {
-                continue;
+        char[] d = new char[128];
+        d[' '] = ' ';
+        for (int i = 0, j = 0; i < key.length(); ++i) {
+            char c = key.charAt(i);
+            if (d[c] == 0) {
+                d[c] = (char) ('a' + j++);
             }
-            d.put(c, lowcase.charAt(i++));
         }
-        StringBuilder ans = new StringBuilder();
-        for (char c : message.toCharArray()) {
-            ans.append(d.get(c));
+        char[] ans = message.toCharArray();
+        for (int i = 0; i < ans.length; ++i) {
+            ans[i] = d[ans[i]];
         }
-        return ans.toString();
+        return String.valueOf(ans);
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string decodeMessage(string key, string message) {
-        unordered_map<char, char> d;
+        char d[128]{};
         d[' '] = ' ';
-        int i = 0;
-        string lowcase = "abcdefghijklmnopqrstuvwxyz";
-        for (char c : key)
-        {
-            if (d.count(c)) continue;
-            d[c] = lowcase[i]++;
+        char i = 'a';
+        for (char& c : key) {
+            if (!d[c]) {
+                d[c] = i++;
+            }
         }
-        string ans;
-        for (char c : message) ans.push_back(d[c]);
-        return ans;
+        for (char& c : message) {
+            c = d[c];
+        }
+        return message;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func decodeMessage(key string, message string) string {
-	d := map[rune]byte{}
+	d := [128]byte{}
 	d[' '] = ' '
-	i := 0
-	lowcase := "abcdefghijklmnopqrstuvwxyz"
-	for _, c := range key {
-		if _, ok := d[c]; ok {
-			continue
+	for i, j := 0, 0; i < len(key); i++ {
+		if d[key[i]] == 0 {
+			d[key[i]] = byte('a' + j)
+			j++
 		}
-		d[c] = lowcase[i]
-		i++
 	}
-	var ans []byte
-	for _, c := range message {
-		ans = append(ans, d[c])
+	ans := []byte(message)
+	for i, c := range ans {
+		ans[i] = d[c]
 	}
 	return string(ans)
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function decodeMessage(key: string, message: string): string {
-    let decodeMap = new Map();
-    const m = key.length,
-        n = 26;
-    for (let i = 0, j = 0; i < m; i++) {
-        let char = key.charAt(i);
-        if (char != ' ' && !decodeMap.has(char)) {
-            decodeMap.set(char, String.fromCharCode(j + 97));
-            j++;
+    const d = new Map<string, string>();
+    for (const c of key) {
+        if (c === ' ' || d.has(c)) {
+            continue;
         }
+        d.set(c, String.fromCharCode('a'.charCodeAt(0) + d.size));
     }
-    let ans = [];
-    for (let char of message) {
-        ans.push(char == ' ' ? ' ' : decodeMap.get(char));
-    }
-    return ans.join('');
+    d.set(' ', ' ');
+    return [...message].map(v => d.get(v)).join('');
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+use std::collections::HashMap;
+impl Solution {
+    pub fn decode_message(key: String, message: String) -> String {
+        let mut d = HashMap::new();
+        for c in key.as_bytes() {
+            if *c == b' ' || d.contains_key(c) {
+                continue;
+            }
+            d.insert(c, char::from((97 + d.len()) as u8));
+        }
+        message
+            .as_bytes()
+            .iter()
+            .map(|c| d.get(c).unwrap_or(&' '))
+            .collect()
+    }
+}
 ```
 
+#### C
+
+```c
+char* decodeMessage(char* key, char* message) {
+    int m = strlen(key);
+    int n = strlen(message);
+    char d[26];
+    memset(d, ' ', 26);
+    for (int i = 0, j = 0; i < m; i++) {
+        if (key[i] == ' ' || d[key[i] - 'a'] != ' ') {
+            continue;
+        }
+        d[key[i] - 'a'] = 'a' + j++;
+    }
+    char* ans = malloc(n + 1);
+    for (int i = 0; i < n; i++) {
+        ans[i] = message[i] == ' ' ? ' ' : d[message[i] - 'a'];
+    }
+    ans[n] = '\0';
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

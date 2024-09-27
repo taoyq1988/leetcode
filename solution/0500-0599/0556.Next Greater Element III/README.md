@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0556.Next%20Greater%20Element%20III/README.md
+tags:
+    - 数学
+    - 双指针
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [556. 下一个更大元素 III](https://leetcode.cn/problems/next-greater-element-iii)
 
 [English Version](/solution/0500-0599/0556.Next%20Greater%20Element%20III/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个正整数 <code>n</code> ，请你找出符合条件的最小整数，其由重新排列 <code>n</code><strong> </strong>中存在的每位数字组成，并且其值大于 <code>n</code> 。如果不存在这样的正整数，则返回 <code>-1</code> 。</p>
 
@@ -34,17 +46,17 @@
 	<li><code>1 <= n <= 2<sup>31</sup> - 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：双指针**
+### 方法一：双指针
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -64,9 +76,7 @@ class Solution:
         return -1 if ans > 2**31 - 1 else ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -74,11 +84,13 @@ class Solution {
         char[] cs = String.valueOf(n).toCharArray();
         n = cs.length;
         int i = n - 2, j = n - 1;
-        for (; i >= 0 && cs[i] >= cs[i + 1]; --i);
+        for (; i >= 0 && cs[i] >= cs[i + 1]; --i)
+            ;
         if (i < 0) {
             return -1;
         }
-        for (; cs[i] >= cs[j]; --j);
+        for (; cs[i] >= cs[j]; --j)
+            ;
         swap(cs, i, j);
         reverse(cs, i + 1, n - 1);
         long ans = Long.parseLong(String.valueOf(cs));
@@ -99,7 +111,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -108,9 +120,11 @@ public:
         string s = to_string(n);
         n = s.size();
         int i = n - 2, j = n - 1;
-        for (; i >= 0 && s[i] >= s[i + 1]; --i);
+        for (; i >= 0 && s[i] >= s[i + 1]; --i)
+            ;
         if (i < 0) return -1;
-        for (; s[i] >= s[j]; --j);
+        for (; s[i] >= s[j]; --j)
+            ;
         swap(s[i], s[j]);
         reverse(s.begin() + i + 1, s.end());
         long ans = stol(s);
@@ -119,7 +133,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func nextGreaterElement(n int) int {
@@ -145,10 +159,8 @@ func nextGreaterElement(n int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

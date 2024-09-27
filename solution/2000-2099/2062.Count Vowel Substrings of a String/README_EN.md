@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2062.Count%20Vowel%20Substrings%20of%20a%20String/README_EN.md
+rating: 1458
+source: Weekly Contest 266 Q1
+tags:
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [2062. Count Vowel Substrings of a String](https://leetcode.com/problems/count-vowel-substrings-of-a-string)
 
 [中文文档](/solution/2000-2099/2062.Count%20Vowel%20Substrings%20of%20a%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A <strong>substring</strong> is a contiguous (non-empty) sequence of characters within a string.</p>
 
@@ -11,7 +26,7 @@
 <p>Given a string <code>word</code>, return <em>the number of <strong>vowel substrings</strong> in</em> <code>word</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;aeiouu&quot;
@@ -21,7 +36,7 @@
 - &quot;<strong><u>aeiouu</u></strong>&quot;
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;unicornarihan&quot;
@@ -29,7 +44,7 @@
 <strong>Explanation:</strong> Not all 5 vowels are present, so there are no vowel substrings.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;cuaieuouac&quot;
@@ -52,21 +67,27 @@
 	<li><code>word</code> consists of lowercase English letters only.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def countVowelSubstrings(self, word: str) -> int:
         n = len(word)
         s = set('aeiou')
-        return sum(set(word[i: j]) == s for i in range(n) for j in range(i + 1, n + 1))
+        return sum(set(word[i:j]) == s for i in range(n) for j in range(i + 1, n + 1))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -95,7 +116,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -103,11 +124,9 @@ public:
     int countVowelSubstrings(string word) {
         int ans = 0;
         int n = word.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             unordered_set<char> t;
-            for (int j = i; j < n; ++j)
-            {
+            for (int j = i; j < n; ++j) {
                 char c = word[j];
                 if (!isVowel(c)) break;
                 t.insert(c);
@@ -123,7 +142,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countVowelSubstrings(word string) int {
@@ -145,45 +164,58 @@ func countVowelSubstrings(word string) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function countVowelSubstrings(word: string): number {
-    const n = word.length;
-    let left = 0,
-        right = 0;
     let ans = 0;
-    while (right < n) {
-        if (!isVowel(word.charAt(right))) {
-            // 移动左指针
-            left = right + 1;
-        } else {
-            let cur = word.substring(left, right + 1).split('');
-            while (cur.length > 0) {
-                if (isValiedArr(cur)) {
-                    ans++;
-                }
-                cur.shift();
+    const n = word.length;
+    for (let i = 0; i < n; ++i) {
+        const t = new Set<string>();
+        for (let j = i; j < n; ++j) {
+            const c = word[j];
+            if (!(c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u')) {
+                break;
+            }
+            t.add(c);
+            if (t.size === 5) {
+                ans++;
             }
         }
-        right++;
     }
     return ans;
 }
-
-function isVowel(char: string): boolean {
-    return ['a', 'e', 'i', 'o', 'u'].includes(char);
-}
-
-function isValiedArr(arr: Array<string>): boolean {
-    return new Set(arr).size == 5;
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def countVowelSubstrings(self, word: str) -> int:
+        s = set('aeiou')
+        ans, n = 0, len(word)
+        for i in range(n):
+            t = set()
+            for c in word[i:]:
+                if c not in s:
+                    break
+                t.add(c)
+                ans += len(t) == 5
+        return ans
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,26 @@
-# [642. Design Search Autocomplete System](https://leetcode.com/problems/design-search-autocomplete-system)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0642.Design%20Search%20Autocomplete%20System/README_EN.md
+tags:
+    - Depth-First Search
+    - Design
+    - Trie
+    - String
+    - Data Stream
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
+# [642. Design Search Autocomplete System 🔒](https://leetcode.com/problems/design-search-autocomplete-system)
 
 [中文文档](/solution/0600-0699/0642.Design%20Search%20Autocomplete%20System/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a search autocomplete system for a search engine. Users may input a sentence (at least one word and end with a special character <code>&#39;#&#39;</code>).</p>
 
@@ -30,7 +48,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -63,11 +81,17 @@ obj.input(&quot;#&quot;); // return []. The user finished the input, the sentenc
 	<li>At most <code>5000</code> calls will be made to <code>input</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Trie:
@@ -97,7 +121,6 @@ class Trie:
 
 
 class AutocompleteSystem:
-
     def __init__(self, sentences: List[str], times: List[int]):
         self.trie = Trie()
         for a, b in zip(sentences, times):
@@ -134,7 +157,7 @@ class AutocompleteSystem:
 # param_1 = obj.input(c)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Trie {
@@ -191,7 +214,8 @@ class AutocompleteSystem {
         if (node == null) {
             return res;
         }
-        PriorityQueue<Trie> q = new PriorityQueue<>((a, b) -> a.v == b.v ? b.w.compareTo(a.w) : a.v - b.v);
+        PriorityQueue<Trie> q
+            = new PriorityQueue<>((a, b) -> a.v == b.v ? b.w.compareTo(a.w) : a.v - b.v);
         dfs(node, q);
         while (!q.isEmpty()) {
             res.add(0, q.poll().w);
@@ -222,10 +246,8 @@ class AutocompleteSystem {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

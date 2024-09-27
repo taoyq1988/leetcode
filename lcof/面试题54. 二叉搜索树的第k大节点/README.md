@@ -1,6 +1,16 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/lcof/%E9%9D%A2%E8%AF%95%E9%A2%9854.%20%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E5%A4%A7%E8%8A%82%E7%82%B9/README.md
+---
+
+<!-- problem:start -->
+
 # [面试题 54. 二叉搜索树的第 k 大节点](https://leetcode.cn/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/)
 
 ## 题目描述
+
+<!-- description:start -->
 
 <p>给定一棵二叉搜索树，请找出其中第 <code>k</code> 大的节点的值。</p>
 
@@ -38,42 +48,23 @@
 	<li>1 ≤ k ≤ 二叉搜索树元素个数</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-朴素解法：
+<!-- solution:start -->
 
-1.  中序遍历，并使用数组存储遍历结果。
-2.  遍历结束，返回 `arr[arr.length - k]`。
+### 方法一：反序中序遍历
 
-_优化_：
+由于二叉搜索树的中序遍历是升序的，因此可以反序中序遍历，即先递归遍历右子树，再访问根节点，最后递归遍历左子树。
 
-其中，只关注**第 k 大节点的值**，可以选择倒序遍历，记录当前遍历节点的数量，当数量为 `k` 时，记录当前节点值做为返回值即可，而无需记录所有的遍历结果。
+这样就可以得到一个降序的序列，第 $k$ 个节点就是第 $k$ 大的节点。
 
-> 中序遍历的顺序是从小到大，倒序的中序遍历便是从大到小。
-
-常规中序遍历：
-
-```txt
-IN-ORDER(R)
-    IN-ORDER(R.left)
-    print(R.val)
-    In-ORDER(R.right)
-```
-
-倒序中序遍历：
-
-```txt
-IN-ORDER-REVERSE(R)
-    In-ORDER-REVERSE(R.right)
-    print(R.val)
-    IN-ORDER-REVERSE(R.left)
-```
-
-若是抬杠说，可能每次 `k` 都是节点数量，那么倒序就毫无意义并且加长时间消耗。这些情况是无法假设的，如果 `k = 1`，那又该怎么说，选择倒序先得最大值，才是符合题意的精神。
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是二叉搜索树的节点个数。
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -83,24 +74,25 @@ IN-ORDER-REVERSE(R)
 #         self.left = None
 #         self.right = None
 
+
 class Solution:
     def kthLargest(self, root: TreeNode, k: int) -> int:
-        def inorder(root):
-            if root is None:
+        def dfs(root):
+            nonlocal k, ans
+            if root is None or k == 0:
                 return
-            inorder(root.right)
-            self.cur -= 1
-            if self.cur == 0:
-                self.res = root.val
-                return
-            inorder(root.left)
+            dfs(root.right)
+            k -= 1
+            if k == 0:
+                ans = root.val
+            dfs(root.left)
 
-        self.cur = k
-        inorder(root)
-        return self.res
+        ans = 0
+        dfs(root)
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -113,67 +105,29 @@ class Solution:
  * }
  */
 class Solution {
-    private int cur;
-    private int res;
+    private int k;
+    private int ans;
 
     public int kthLargest(TreeNode root, int k) {
-        cur = k;
-        res = 0;
-        inorder(root);
-        return res;
+        this.k = k;
+        dfs(root);
+        return ans;
     }
 
-    private void inorder(TreeNode root) {
-        if (root == null) {
+    private void dfs(TreeNode root) {
+        if (root == null || k == 0) {
             return;
         }
-        inorder(root.right);
-        --cur;
-        if (cur == 0) {
-            res = root.val;
-            return;
+        dfs(root.right);
+        if (--k == 0) {
+            ans = root.val;
         }
-        inorder(root.left);
+        dfs(root.left);
     }
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
- * }
- */
-/**
- * @param {TreeNode} root
- * @param {number} k
- * @return {number}
- */
-var kthLargest = function (root, k) {
-    const inorder = root => {
-        if (!root) {
-            return;
-        }
-        inorder(root.right);
-        --cur;
-        if (cur == 0) {
-            res = root.val;
-            return;
-        }
-        inorder(root.left);
-    };
-    let res = 0;
-    let cur = k;
-    inorder(root);
-    return res;
-};
-```
-
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -188,32 +142,24 @@ var kthLargest = function (root, k) {
 class Solution {
 public:
     int kthLargest(TreeNode* root, int k) {
-        cur = k;
-        inorder(root);
-        return res;
-    }
-
-private:
-    int cur, res;
-
-    void inorder(TreeNode* root) {
-        if (!root) {
-            return;
-        }
-        inorder(root->right);
-        --cur;
-        if (cur == 0) {
-            res = root->val;
-            return;
-        }
-        inorder(root->left);
+        int ans = 0;
+        function<void(TreeNode*)> dfs = [&](TreeNode* root) {
+            if (!root || !k) {
+                return;
+            }
+            dfs(root->right);
+            if (--k == 0) {
+                ans = root->val;
+            }
+            dfs(root->left);
+        };
+        dfs(root);
+        return ans;
     }
 };
 ```
 
-### **Go**
-
-利用 Go 的特性，中序遍历“生产”的数字传到 `channel`，返回第 `k` 个。
+#### Go
 
 ```go
 /**
@@ -224,31 +170,25 @@ private:
  *     Right *TreeNode
  * }
  */
-func kthLargest(root *TreeNode, k int) int {
-	ch := make(chan int)
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	go inorder(ctx, root, ch)
-	for ; k > 1; k-- {
-		<-ch
-	}
-	return <-ch
-}
-
-func inorder(ctx context.Context, cur *TreeNode, ch chan<- int) {
-	if cur != nil {
-		inorder(ctx, cur.Right, ch)
-		select {
-		case ch <- cur.Val:
-		case <-ctx.Done():
+func kthLargest(root *TreeNode, k int) (ans int) {
+	var dfs func(*TreeNode)
+	dfs = func(root *TreeNode) {
+		if root == nil || k == 0 {
 			return
 		}
-		inorder(ctx, cur.Left, ch)
+		dfs(root.Right)
+		k--
+		if k == 0 {
+			ans = root.Val
+		}
+		dfs(root.Left)
 	}
+	dfs(root)
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -283,7 +223,7 @@ function kthLargest(root: TreeNode | null, k: number): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -304,8 +244,8 @@ function kthLargest(root: TreeNode | null, k: number): number {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 impl Solution {
     fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
@@ -324,7 +264,39 @@ impl Solution {
 }
 ```
 
-### **C#**
+#### JavaScript
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+var kthLargest = function (root, k) {
+    let ans = 0;
+    const dfs = root => {
+        if (!root || !k) {
+            return;
+        }
+        dfs(root.right);
+        if (--k == 0) {
+            ans = root.val;
+        }
+        dfs(root.left);
+    };
+    dfs(root);
+    return ans;
+};
+```
+
+#### C#
 
 ```cs
 /**
@@ -337,29 +309,68 @@ impl Solution {
  * }
  */
 public class Solution {
+    private int ans;
+    private int k;
+
     public int KthLargest(TreeNode root, int k) {
-        List<int> list = new List<int>();
-        list = postorder(root, list);
-        return list[list.Count() - k];
+        this.k = k;
+        dfs(root);
+        return ans;
     }
 
-    public List<int> postorder(TreeNode root, List<int> list) {
-        if (root == null) {
-            return list;
-        } else {
-            postorder(root.left, list);
-            list.Add(root.val);
-            postorder(root.right, list);
+    private void dfs(TreeNode root) {
+        if (root == null || k == 0) {
+            return;
         }
-        return list;
+        dfs(root.right);
+        if (--k == 0) {
+            ans = root.val;
+        }
+        dfs(root.left);
     }
 }
 ```
 
-### **...**
+#### Swift
 
-```
+```swift
+/* public class TreeNode {
+*     public var val: Int
+*     public var left: TreeNode?
+*     public var right: TreeNode?
+*     public init(_ val: Int) {
+*         self.val = val
+*         self.left = nil
+*         self.right = nil
+*     }
+* }
+*/
 
+class Solution {
+    private var k: Int = 0
+    private var ans: Int = 0
+
+    func kthLargest(_ root: TreeNode?, _ k: Int) -> Int {
+        self.k = k
+        dfs(root)
+        return ans
+    }
+
+    private func dfs(_ root: TreeNode?) {
+        guard let root = root, k > 0 else { return }
+        dfs(root.right)
+        k -= 1
+        if k == 0 {
+            ans = root.val
+            return
+        }
+        dfs(root.left)
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

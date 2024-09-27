@@ -1,10 +1,20 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0868.Binary%20Gap/README.md
+tags:
+    - 位运算
+---
+
+<!-- problem:start -->
+
 # [868. 二进制间距](https://leetcode.cn/problems/binary-gap)
 
 [English Version](/solution/0800-0899/0868.Binary%20Gap/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个正整数 <code>n</code>，找到并返回 <code>n</code> 的二进制表示中两个 <strong>相邻</strong> 1 之间的<strong> 最长距离 </strong>。如果不存在两个相邻的 1，返回 <code>0</code> 。</p>
 
@@ -52,15 +62,17 @@
 	<li><code>1 &lt;= n &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -75,9 +87,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -96,7 +106,42 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int binaryGap(int n) {
+        int ans = 0;
+        for (int i = 0, j = -1; n; ++i, n >>= 1) {
+            if (n & 1) {
+                if (j != -1) ans = max(ans, i - j);
+                j = i;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func binaryGap(n int) int {
+	ans := 0
+	for i, j := 0, -1; n != 0; i, n = i+1, n>>1 {
+		if (n & 1) == 1 {
+			if j != -1 && ans < i-j {
+				ans = i - j
+			}
+			j = i
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
 
 ```ts
 function binaryGap(n: number): number {
@@ -115,7 +160,7 @@ function binaryGap(n: number): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -124,7 +169,7 @@ impl Solution {
         let mut i = 0;
         let mut j = -1;
         while n != 0 {
-            if n & 1 == 1 {
+            if (n & 1) == 1 {
                 if j != -1 {
                     res = res.max(i - j);
                 }
@@ -138,47 +183,8 @@ impl Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int binaryGap(int n) {
-        int ans = 0;
-        for (int i = 0, j = -1; n; ++i, n >>= 1)
-        {
-            if (n & 1)
-            {
-                if (j != -1) ans = max(ans, i - j);
-                j = i;
-            }
-        }
-        return ans;
-    }
-};
-```
-
-### **Go**
-
-```go
-func binaryGap(n int) int {
-	ans := 0
-	for i, j := 0, -1; n != 0; i, n = i+1, n>>1 {
-		if (n & 1) == 1 {
-			if j != -1 && ans < i-j {
-				ans = i - j
-			}
-			j = i
-		}
-	}
-	return ans
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

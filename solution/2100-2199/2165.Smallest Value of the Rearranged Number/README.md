@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2165.Smallest%20Value%20of%20the%20Rearranged%20Number/README.md
+rating: 1361
+source: 第 279 场周赛 Q2
+tags:
+    - 数学
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [2165. 重排数字的最小值](https://leetcode.cn/problems/smallest-value-of-the-rearranged-number)
 
 [English Version](/solution/2100-2199/2165.Smallest%20Value%20of%20the%20Rearranged%20Number/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数 <code>num</code> 。<strong>重排</strong> <code>num</code> 中的各位数字，使其值 <strong>最小化</strong> 且不含 <strong>任何</strong> 前导零。</p>
 
@@ -37,15 +50,17 @@
 	<li><code>-10<sup>15</sup> &lt;= num &lt;= 10<sup>15</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -76,9 +91,7 @@ class Solution:
         return int(ans)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -121,7 +134,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -131,24 +144,19 @@ public:
         vector<int> cnt(10);
         bool neg = num < 0;
         num = abs(num);
-        while (num)
-        {
+        while (num) {
             cnt[num % 10]++;
             num /= 10;
         }
         long long ans = 0;
-        if (neg)
-        {
+        if (neg) {
             for (int i = 9; i >= 0; --i)
                 while (cnt[i]--) ans = ans * 10 + i;
             return -ans;
         }
-        if (cnt[0])
-        {
-            for (int i = 1; i < 10; ++i)
-            {
-                if (cnt[i])
-                {
+        if (cnt[0]) {
+            for (int i = 1; i < 10; ++i) {
+                if (cnt[i]) {
                     ans = ans * 10 + i;
                     cnt[i]--;
                     break;
@@ -162,7 +170,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func smallestNumber(num int64) int64 {
@@ -205,16 +213,8 @@ func smallestNumber(num int64) int64 {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

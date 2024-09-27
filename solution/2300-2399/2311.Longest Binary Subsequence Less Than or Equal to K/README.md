@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2311.Longest%20Binary%20Subsequence%20Less%20Than%20or%20Equal%20to%20K/README.md
+rating: 1839
+source: 第 298 场周赛 Q3
+tags:
+    - 贪心
+    - 记忆化搜索
+    - 字符串
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [2311. 小于等于 K 的最长二进制子序列](https://leetcode.cn/problems/longest-binary-subsequence-less-than-or-equal-to-k)
 
 [English Version](/solution/2300-2399/2311.Longest%20Binary%20Subsequence%20Less%20Than%20or%20Equal%20to%20K/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个二进制字符串&nbsp;<code>s</code>&nbsp;和一个正整数&nbsp;<code>k</code>&nbsp;。</p>
 
@@ -47,67 +62,47 @@
 	<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：贪心
 
-最长二进制子序列必然包含原字符串中所有的 $0$，在此基础上，我们从右到左遍历 $s$，若遇到 $1$，判断子序列能否添加 $1$，使得子序列对应的二进制数字 $v<=k$。
+最长二进制子序列必然包含原字符串中所有的 $0$，在此基础上，我们从右到左遍历 $s$，若遇到 $1$，判断子序列能否添加 $1$，使得子序列对应的二进制数字 $v \leq k$。
 
-时间复杂度 $O(n)$，其中 $n$ 表示字符串 $s$ 的长度。
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为字符串 $s$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
-
-```python
-class Solution:
-    def longestSubsequence(self, s: str, k: int) -> int:
-        n = len(s)
-        ans = s.count('0')
-        v = 0
-        for i in range(n - 1, -1, -1):
-            if s[i] == '1':
-                if v + (1 << (n - i - 1)) > k:
-                    break
-                ans += 1
-                v += 1 << (n - i - 1)
-        return ans
-```
+#### Python3
 
 ```python
 class Solution:
     def longestSubsequence(self, s: str, k: int) -> int:
         ans = v = 0
         for c in s[::-1]:
-            if c == '0':
+            if c == "0":
                 ans += 1
-            elif v + (1 << ans) <= k:
-                v += 1 << ans
+            elif ans < 30 and (v | 1 << ans) <= k:
+                v |= 1 << ans
                 ans += 1
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int longestSubsequence(String s, int k) {
-        int ans = 0;
-        long v = 0;
+        int ans = 0, v = 0;
         for (int i = s.length() - 1; i >= 0; --i) {
             if (s.charAt(i) == '0') {
                 ++ans;
-            } else {
-                if (ans < 32 && v + (1L << ans) <= k) {
-                    v += 1L << ans;
-                    ++ans;
-                }
+            } else if (ans < 30 && (v | 1 << ans) <= k) {
+                v |= 1 << ans;
+                ++ans;
             }
         }
         return ans;
@@ -115,20 +110,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int longestSubsequence(string s, int k) {
-        int ans = 0;
-        long long v = 0;
-        for (int i = s.size() - 1; ~i; --i)
-        {
-            if (s[i] == '0') ++ans;
-            else if (ans < 32 && v + (1ll << ans) <= k)
-            {
-                v += 1ll << ans;
+        int ans = 0, v = 0;
+        for (int i = s.size() - 1; ~i; --i) {
+            if (s[i] == '0') {
+                ++ans;
+            } else if (ans < 30 && (v | 1 << ans) <= k) {
+                v |= 1 << ans;
                 ++ans;
             }
         }
@@ -137,62 +130,82 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func longestSubsequence(s string, k int) int {
-	ans := 0
-	v := 0
-	for i := len(s) - 1; i >= 0; i-- {
+func longestSubsequence(s string, k int) (ans int) {
+	for i, v := len(s)-1, 0; i >= 0; i-- {
 		if s[i] == '0' {
 			ans++
-		} else if ans < 32 && v+(1<<ans) <= k {
-			v += 1 << ans
+		} else if ans < 30 && (v|1<<ans) <= k {
+			v |= 1 << ans
 			ans++
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function longestSubsequence(s: string, k: number): number {
-    let numStr = '';
-    const n = s.length,
-        m = s.split('').reduce((a, c) => a + Number(c), 0);
-    for (let i = n - 1; i >= 0; i--) {
-        const cur = s.charAt(i).concat(numStr);
-        if (parseInt(cur, 2) > k) break;
-        numStr = cur;
+    let ans = 0;
+    for (let i = s.length - 1, v = 0; ~i; --i) {
+        if (s[i] == '0') {
+            ++ans;
+        } else if (ans < 30 && (v | (1 << ans)) <= k) {
+            v |= 1 << ans;
+            ++ans;
+        }
     }
-    return n - m + numStr.split('').reduce((a, c) => a + Number(c), 0);
+    return ans;
 }
 ```
 
-```ts
-function longestSubsequence(s: string, k: number): number {
-    const cs = s.split('');
-    const n = s.length;
-    let i = 0;
-    while (parseInt(cs.join(''), 2) > k) {
-        for (let j = i; j < n; j++) {
-            if (cs[j] === '1') {
-                cs[j] = '0';
-                break;
+#### JavaScript
+
+```js
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var longestSubsequence = function (s, k) {
+    let ans = 0;
+    for (let i = s.length - 1, v = 0; ~i; --i) {
+        if (s[i] == '0') {
+            ++ans;
+        } else if (ans < 30 && (v | (1 << ans)) <= k) {
+            v |= 1 << ans;
+            ++ans;
+        }
+    }
+    return ans;
+};
+```
+
+#### C#
+
+```cs
+public class Solution {
+    public int LongestSubsequence(string s, int k) {
+        int ans = 0, v = 0;
+        for (int i = s.Length - 1; i >= 0; --i) {
+            if (s[i] == '0') {
+                ++ans;
+            } else if (ans < 30 && (v | 1 << ans) <= k) {
+                v |= 1 << ans;
+                ++ans;
             }
         }
-        i++;
+        return ans;
     }
-    return n - i;
 }
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,6 +1,16 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/lcof/%E9%9D%A2%E8%AF%95%E9%A2%9827.%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F/README.md
+---
+
+<!-- problem:start -->
+
 # [面试题 27. 二叉树的镜像](https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/)
 
 ## 题目描述
+
+<!-- description:start -->
 
 <p>请完成一个函数，输入一个二叉树，该函数输出它的镜像。</p>
 
@@ -35,11 +45,21 @@
 
 <p>注意：本题与主站 226 题相同：<a href="https://leetcode.cn/problems/invert-binary-tree/">https://leetcode.cn/problems/invert-binary-tree/</a></p>
 
+<!-- description:end -->
+
 ## 解法
+
+<!-- solution:start -->
+
+### 方法一：递归
+
+我们先判断根节点是否为空，如果为空，直接返回空。如果不为空，我们交换根节点的左右子树，然后递归地交换左子树和右子树。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是二叉树的节点个数。最坏情况下，二叉树退化为链表，递归深度为 $n$，因此系统使用 $O(n)$ 大小的栈空间。
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -48,6 +68,7 @@
 #         self.val = x
 #         self.left = None
 #         self.right = None
+
 
 class Solution:
     def mirrorTree(self, root: TreeNode) -> TreeNode:
@@ -59,7 +80,7 @@ class Solution:
         return root
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -73,7 +94,9 @@ class Solution:
  */
 class Solution {
     public TreeNode mirrorTree(TreeNode root) {
-        if (root == null) return null;
+        if (root == null) {
+            return null;
+        }
         TreeNode t = root.left;
         root.left = root.right;
         root.right = t;
@@ -84,52 +107,7 @@ class Solution {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {TreeNode}
- */
-var mirrorTree = function (root) {
-    if (!root) return null;
-    [root.left, root.right] = [root.right, root.left];
-    mirrorTree(root.left);
-    mirrorTree(root.right);
-    return root;
-};
-```
-
-### **Go**
-
-```go
-/**
- * Definition for a binary tree node.
- * type TreeNode struct {
- *     Val int
- *     Left *TreeNode
- *     Right *TreeNode
- * }
- */
-func mirrorTree(root *TreeNode) *TreeNode {
-    if root == nil {
-        return root
-    }
-    root.Left, root.Right = root.Right, root.Left
-    mirrorTree(root.Left)
-    mirrorTree(root.Right)
-    return root
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -141,26 +119,43 @@ func mirrorTree(root *TreeNode) *TreeNode {
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-
 class Solution {
 public:
     TreeNode* mirrorTree(TreeNode* root) {
-        // 后续遍历
-        if (nullptr == root) {
-            return nullptr;
+        if (!root) {
+            return root;
         }
-
+        swap(root->left, root->right);
         mirrorTree(root->left);
         mirrorTree(root->right);
-        std::swap(root->left, root->right);
-
         return root;
     }
 };
-
 ```
 
-### **TypeScript**
+#### Go
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func mirrorTree(root *TreeNode) *TreeNode {
+	if root == nil {
+		return root
+	}
+	root.Left, root.Right = root.Right, root.Left
+	mirrorTree(root.Left)
+	mirrorTree(root.Right)
+	return root
+}
+```
+
+#### TypeScript
 
 ```ts
 /**
@@ -190,7 +185,7 @@ function mirrorTree(root: TreeNode | null): TreeNode | null {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -211,8 +206,8 @@ function mirrorTree(root: TreeNode | null): TreeNode | null {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 impl Solution {
     fn dfs(root: &mut Option<Rc<RefCell<TreeNode>>>) {
         if let Some(node) = root {
@@ -232,7 +227,34 @@ impl Solution {
 }
 ```
 
-### **C#**
+#### JavaScript
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var mirrorTree = function (root) {
+    if (!root) {
+        return null;
+    }
+    const { left, right } = root;
+    root.left = right;
+    root.right = left;
+    mirrorTree(left);
+    mirrorTree(right);
+    return root;
+};
+```
+
+#### C#
 
 ```cs
 /**
@@ -247,11 +269,11 @@ impl Solution {
 public class Solution {
     public TreeNode MirrorTree(TreeNode root) {
         if (root == null) {
-            return null;
+            return root;
         }
-        TreeNode tmp = root.left;
+        TreeNode t = root.left;
         root.left = root.right;
-        root.right = tmp;
+        root.right = t;
         MirrorTree(root.left);
         MirrorTree(root.right);
         return root;
@@ -259,10 +281,38 @@ public class Solution {
 }
 ```
 
-### **...**
+#### Swift
 
-```
+```swift
+/* public class TreeNode {
+*     var val: Int
+*     var left: TreeNode?
+*     var right: TreeNode?
+*     init(_ val: Int) {
+*         self.val = val
+*         self.left = nil
+*         self.right = nil
+*     }
+* }
+*/
 
+class Solution {
+    func mirrorTree(_ root: TreeNode?) -> TreeNode? {
+        guard let root = root else {
+            return nil
+        }
+        let temp = root.left
+        root.left = root.right
+        root.right = temp
+        _ = mirrorTree(root.left)
+        _ = mirrorTree(root.right)
+        return root
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0953.Verifying%20an%20Alien%20Dictionary/README.md
+tags:
+    - 数组
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [953. 验证外星语词典](https://leetcode.cn/problems/verifying-an-alien-dictionary)
 
 [English Version](/solution/0900-0999/0953.Verifying%20an%20Alien%20Dictionary/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>某种外星语也使用英文小写字母，但可能顺序 <code>order</code> 不同。字母表的顺序（<code>order</code>）是一些小写字母的排列。</p>
 
@@ -45,17 +57,17 @@
 	<li>在 <code>words[i]</code> 和 <code>order</code> 中的所有字符都是英文小写字母。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-用数组或哈希表存放字母顺序。依次遍历单词列表，检测相邻两单词是否满足字典序。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -76,9 +88,7 @@ class Solution:
         return True
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -109,7 +119,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -117,12 +127,10 @@ public:
     bool isAlienSorted(vector<string>& words, string order) {
         vector<int> m(26);
         for (int i = 0; i < 26; ++i) m[order[i] - 'a'] = i;
-        for (int i = 0; i < 20; ++i)
-        {
+        for (int i = 0; i < 20; ++i) {
             int prev = -1;
             bool valid = true;
-            for (auto& x : words)
-            {
+            for (auto& x : words) {
                 int curr = i >= x.size() ? -1 : m[x[i] - 'a'];
                 if (prev > curr) return false;
                 if (prev == curr) valid = false;
@@ -135,7 +143,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isAlienSorted(words []string, order string) bool {
@@ -167,7 +175,38 @@ func isAlienSorted(words []string, order string) bool {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function isAlienSorted(words: string[], order: string): boolean {
+    const map = new Map();
+    for (const c of order) {
+        map.set(c, map.size);
+    }
+    const n = words.length;
+    for (let i = 1; i < n; i++) {
+        const s1 = words[i - 1];
+        const s2 = words[i];
+        const m = Math.min(s1.length, s2.length);
+        let isEqual = false;
+        for (let j = 0; j < m; j++) {
+            if (map.get(s1[j]) > map.get(s2[j])) {
+                return false;
+            }
+            if (map.get(s1[j]) < map.get(s2[j])) {
+                isEqual = true;
+                break;
+            }
+        }
+        if (!isEqual && s1.length > s2.length) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+#### Rust
 
 ```rust
 use std::collections::HashMap;
@@ -200,10 +239,42 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C
 
-```
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 
+bool isAlienSorted(char** words, int wordsSize, char* order) {
+    int map[26] = {0};
+    for (int i = 0; i < 26; i++) {
+        map[order[i] - 'a'] = i;
+    }
+    for (int i = 1; i < wordsSize; i++) {
+        char* s1 = words[i - 1];
+        char* s2 = words[i];
+        int n = strlen(s1);
+        int m = strlen(s2);
+        int len = min(n, m);
+        int isEqual = 1;
+        for (int j = 0; j < len; j++) {
+            if (map[s1[j] - 'a'] > map[s2[j] - 'a']) {
+                return 0;
+            }
+            if (map[s1[j] - 'a'] < map[s2[j] - 'a']) {
+                isEqual = 0;
+                break;
+            }
+        }
+        if (isEqual && n > m) {
+            return 0;
+        }
+    }
+    return 1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

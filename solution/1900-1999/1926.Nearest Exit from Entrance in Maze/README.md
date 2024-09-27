@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/README.md
+rating: 1638
+source: 第 56 场双周赛 Q2
+tags:
+    - 广度优先搜索
+    - 数组
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [1926. 迷宫中离入口最近的出口](https://leetcode.cn/problems/nearest-exit-from-entrance-in-maze)
 
 [English Version](/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个 <code>m x n</code> 的迷宫矩阵 <code>maze</code> （<strong>下标从 0 开始</strong>），矩阵中有空格子（用 <code>'.'</code> 表示）和墙（用 <code>'+'</code> 表示）。同时给你迷宫的入口 <code>entrance</code> ，用 <code>entrance = [entrance<sub>row</sub>, entrance<sub>col</sub>]</code> 表示你一开始所在格子的行和列。</p>
 
@@ -59,17 +73,17 @@
 	<li><code>entrance</code> 一定是空格子。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-BFS 最短路模型。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -93,9 +107,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -118,7 +130,7 @@ class Solution {
                         if (x == 0 || x == m - 1 || y == 0 || y == n - 1) {
                             return ans;
                         }
-                        q.offer(new int[]{x, y});
+                        q.offer(new int[] {x, y});
                         maze[x][y] = '+';
                     }
                 }
@@ -129,7 +141,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -140,18 +152,14 @@ public:
         maze[entrance[0]][entrance[1]] = '+';
         int ans = 0;
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             ++ans;
-            for (int k = q.size(); k > 0; --k)
-            {
+            for (int k = q.size(); k > 0; --k) {
                 auto p = q.front();
                 q.pop();
-                for (int l = 0; l < 4; ++l)
-                {
+                for (int l = 0; l < 4; ++l) {
                     int x = p[0] + dirs[l], y = p[1] + dirs[l + 1];
-                    if (x >= 0 && x < m && y >= 0 && y < n && maze[x][y] == '.')
-                    {
+                    if (x >= 0 && x < m && y >= 0 && y < n && maze[x][y] == '.') {
                         if (x == 0 || x == m - 1 || y == 0 || y == n - 1) return ans;
                         q.push({x, y});
                         maze[x][y] = '+';
@@ -164,7 +172,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func nearestExit(maze [][]byte, entrance []int) int {
@@ -194,10 +202,34 @@ func nearestExit(maze [][]byte, entrance []int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function nearestExit(maze: string[][], entrance: number[]): number {
+    const m = maze.length;
+    const n = maze[0].length;
+    const dir = [0, 1, 0, -1, 0];
+    const q = [[...entrance, 0]];
+    maze[entrance[0]][entrance[1]] = '+';
+    for (const [i, j, ans] of q) {
+        for (let d = 0; d < 4; d++) {
+            const [x, y] = [i + dir[d], j + dir[d + 1]];
+            const v = maze[x]?.[y];
+            if (!v && ans) {
+                return ans;
+            }
+            if (v === '.') {
+                q.push([x, y, ans + 1]);
+                maze[x][y] = '+';
+            }
+        }
+    }
+    return -1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

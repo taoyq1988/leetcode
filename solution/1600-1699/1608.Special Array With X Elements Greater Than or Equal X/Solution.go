@@ -1,17 +1,11 @@
 func specialArray(nums []int) int {
-	n := len(nums)
-	sort.Ints(nums)
-	for x := 0; x <= n; x++ {
-		left, right := 0, n
-		for left < right {
-			mid := (left + right) >> 1
-			if nums[mid] >= x {
-				right = mid
-			} else {
-				left = mid + 1
+	for x := 1; x <= len(nums); x++ {
+		cnt := 0
+		for _, v := range nums {
+			if v >= x {
+				cnt++
 			}
 		}
-		cnt := n - 1 - left + 1
 		if cnt == x {
 			return x
 		}

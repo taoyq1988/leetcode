@@ -1,56 +1,40 @@
+use std::collections::VecDeque;
 struct MinStack {
-    items: Vec<i32>,
-    min: Vec<i32>,
+    stk1: VecDeque<i32>,
+    stk2: VecDeque<i32>,
 }
-
 
 /**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
  */
 impl MinStack {
-
-    /** initialize your data structure here. */
     fn new() -> Self {
-        MinStack {
-            items: Vec::new(),
-            min: Vec::new(),
+        Self {
+            stk1: VecDeque::new(),
+            stk2: VecDeque::new(),
         }
     }
-    
+
     fn push(&mut self, x: i32) {
-        self.items.push(x);
-        match self.min.last() {
-            Some(min) => {
-                if min >= &x {
-                    self.min.push(x);
-                }
-            },
-            None => self.min.push(x),
+        self.stk1.push_back(x);
+        if self.stk2.is_empty() || *self.stk2.back().unwrap() >= x {
+            self.stk2.push_back(x);
         }
     }
 
     fn pop(&mut self) {
-        if &self.items.pop().unwrap() == self.min.last().unwrap() {
-            self.min.pop();
+        let val = self.stk1.pop_back().unwrap();
+        if *self.stk2.back().unwrap() == val {
+            self.stk2.pop_back();
         }
     }
 
     fn top(&self) -> i32 {
-        *self.items.last().unwrap()
+        *self.stk1.back().unwrap()
     }
 
     fn get_min(&self) -> i32 {
-        *self.min.last().unwrap()
+        *self.stk2.back().unwrap()
     }
 }
-
-
-/**
- * Your MinStack object will be instantiated and called as such:
- * let obj = MinStack::new();
- * obj.push(val);
- * obj.pop();
- * let ret_3: i32 = obj.top();
- * let ret_4: i32 = obj.get_min();
- */

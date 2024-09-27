@@ -1,22 +1,23 @@
 class Solution:
     def maximumMinimumPath(self, grid: List[List[int]]) -> int:
-        def find(x):
+        def find(x: int) -> int:
             if p[x] != x:
                 p[x] = find(p[x])
             return p[x]
 
         m, n = len(grid), len(grid[0])
         p = list(range(m * n))
-        ans = min(grid[0][0], grid[-1][-1])
-        vis = {(0, 0), (m - 1, n - 1)}
-        scores = [[grid[i][j], i, j] for i in range(m) for j in range(n)]
-        scores.sort()
+        q = [(v, i, j) for i, row in enumerate(grid) for j, v in enumerate(row)]
+        q.sort()
+        ans = 0
+        dirs = (-1, 0, 1, 0, -1)
+        vis = set()
         while find(0) != find(m * n - 1):
-            score, i, j = scores.pop()
-            ans = min(ans, score)
+            v, i, j = q.pop()
+            ans = v
             vis.add((i, j))
-            for a, b in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
+            for a, b in pairwise(dirs):
                 x, y = i + a, j + b
-                if 0 <= x < m and 0 <= y < n and (x, y) in vis:
-                    p[find(x * n + y)] = find(i * n + j)
+                if (x, y) in vis:
+                    p[find(i * n + j)] = find(x * n + y)
         return ans

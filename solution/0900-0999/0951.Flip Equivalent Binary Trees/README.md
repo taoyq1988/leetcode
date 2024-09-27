@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0951.Flip%20Equivalent%20Binary%20Trees/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
 # [951. 翻转等价二叉树](https://leetcode.cn/problems/flip-equivalent-binary-trees)
 
 [English Version](/solution/0900-0999/0951.Flip%20Equivalent%20Binary%20Trees/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>我们可以为二叉树 <strong>T</strong> 定义一个&nbsp;<strong>翻转操作&nbsp;</strong>，如下所示：选择任意节点，然后交换它的左子树和右子树。</p>
 
@@ -47,17 +59,17 @@
 	<li>每棵树中的每个值都是唯一的、在 <code>[0, 99]</code>&nbsp;范围内的整数</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-DFS。
+<!-- solution:start -->
 
-<!-- 这里可写通用的实现逻辑 -->
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -73,14 +85,14 @@ class Solution:
                 return True
             if root1 is None or root2 is None or root1.val != root2.val:
                 return False
-            return (dfs(root1.left, root2.left) and dfs(root1.right, root2.right)) or (dfs(root1.left, root2.right) and dfs(root1.right, root2.left))
+            return (dfs(root1.left, root2.left) and dfs(root1.right, root2.right)) or (
+                dfs(root1.left, root2.right) and dfs(root1.right, root2.left)
+            )
 
         return dfs(root1, root2)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -110,12 +122,13 @@ class Solution {
         if (root1 == null || root2 == null || root1.val != root2.val) {
             return false;
         }
-        return (dfs(root1.left, root2.left) && dfs(root1.right, root2.right)) || (dfs(root1.left, root2.right) && dfs(root1.right, root2.left));
+        return (dfs(root1.left, root2.left) && dfs(root1.right, root2.right))
+            || (dfs(root1.left, root2.right) && dfs(root1.right, root2.left));
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -143,7 +156,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -169,10 +182,8 @@ func flipEquiv(root1 *TreeNode, root2 *TreeNode) bool {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,20 +1,15 @@
 class Solution {
     public int[] arrayChange(int[] nums, int[][] operations) {
         int n = nums.length;
-        Map<Integer, Integer> d = new HashMap<>();
+        Map<Integer, Integer> d = new HashMap<>(n);
         for (int i = 0; i < n; ++i) {
             d.put(nums[i], i);
         }
-        for (int[] op : operations) {
-            int a = op[0], b = op[1];
-            int idx = d.get(a);
-            d.remove(a);
-            d.put(b, idx);
+        for (var op : operations) {
+            int x = op[0], y = op[1];
+            nums[d.get(x)] = y;
+            d.put(y, d.get(x));
         }
-        int[] ans = new int[n];
-        d.forEach((v, i) -> {
-            ans[i] = v;
-        });
-        return ans;
+        return nums;
     }
 }

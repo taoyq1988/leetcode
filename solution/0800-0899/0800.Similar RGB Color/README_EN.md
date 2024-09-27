@@ -1,8 +1,22 @@
-# [800. Similar RGB Color](https://leetcode.com/problems/similar-rgb-color)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0800.Similar%20RGB%20Color/README_EN.md
+tags:
+    - Math
+    - String
+    - Enumeration
+---
+
+<!-- problem:start -->
+
+# [800. Similar RGB Color 🔒](https://leetcode.com/problems/similar-rgb-color)
 
 [中文文档](/solution/0800-0899/0800.Similar%20RGB%20Color/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>The red-green-blue color <code>&quot;#AABBCC&quot;</code> can be written as <code>&quot;#ABC&quot;</code> in shorthand.</p>
 
@@ -17,7 +31,7 @@
 <p><strong>Any answer</strong> which has the same highest similarity as the best answer will be accepted.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> color = &quot;#09f166&quot;
@@ -27,7 +41,7 @@ The similarity is -(0x09 - 0x11)<sup>2</sup> -(0xf1 - 0xee)<sup>2</sup> - (0x66 
 This is the highest among any shorthand color.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> color = &quot;#4e3fe1&quot;
@@ -43,11 +57,17 @@ This is the highest among any shorthand color.
 	<li><code>color[i]</code> is either digit or character in the range <code>[&#39;a&#39;, &#39;f&#39;]</code> for <code>i &gt; 0</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -62,7 +82,7 @@ class Solution:
         return f'#{f(a)}{f(b)}{f(c)}'
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -79,7 +99,7 @@ class Solution {
 }
 ```
 
-### **Go**
+#### Go
 
 ```go
 func similarRGB(color string) string {
@@ -98,10 +118,8 @@ func similarRGB(color string) string {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

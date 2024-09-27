@@ -3,15 +3,14 @@ class Solution:
         self, locations: List[int], start: int, finish: int, fuel: int
     ) -> int:
         @cache
-        def dfs(i, t):
-            if abs(locations[i] - locations[finish]) > t:
+        def dfs(i: int, k: int) -> int:
+            if k < abs(locations[i] - locations[finish]):
                 return 0
-            res = int(i == finish)
-            for j, v in enumerate(locations):
+            ans = int(i == finish)
+            for j, x in enumerate(locations):
                 if j != i:
-                    if (cost := abs(locations[i] - v)) <= t:
-                        res += dfs(j, t - cost)
-            return res % mod
+                    ans = (ans + dfs(j, k - abs(locations[i] - x))) % mod
+            return ans
 
         mod = 10**9 + 7
         return dfs(start, fuel)

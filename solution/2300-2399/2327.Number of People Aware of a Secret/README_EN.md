@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2327.Number%20of%20People%20Aware%20of%20a%20Secret/README_EN.md
+rating: 1893
+source: Weekly Contest 300 Q3
+tags:
+    - Queue
+    - Dynamic Programming
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2327. Number of People Aware of a Secret](https://leetcode.com/problems/number-of-people-aware-of-a-secret)
 
 [中文文档](/solution/2300-2399/2327.Number%20of%20People%20Aware%20of%20a%20Secret/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>On day <code>1</code>, one person discovers a secret.</p>
 
@@ -11,7 +27,7 @@
 <p>Given an integer <code>n</code>, return<em> the number of people who know the secret at the end of day </em><code>n</code>. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 6, delay = 2, forget = 4
@@ -25,7 +41,7 @@ Day 5: A forgets the secret, and B shares the secret with a new person, D. (3 pe
 Day 6: B shares the secret with E, and C shares the secret with F. (5 people)
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 4, delay = 1, forget = 3
@@ -45,11 +61,17 @@ Day 4: A forgets the secret. B, C, and D share the secret with 3 new people. (6 
 	<li><code>1 &lt;= delay &lt; forget &lt;= n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -70,7 +92,7 @@ class Solution:
         return sum(d[: n + 1]) % mod
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +123,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -114,14 +136,12 @@ public:
         vector<ll> d(m);
         vector<ll> cnt(m);
         cnt[1] = 1;
-        for (int i = 1; i <= n; ++i)
-        {
+        for (int i = 1; i <= n; ++i) {
             if (!cnt[i]) continue;
             d[i] = (d[i] + cnt[i]) % mod;
             d[i + forget] = (d[i + forget] - cnt[i] + mod) % mod;
             int nxt = i + delay;
-            while (nxt < i + forget)
-            {
+            while (nxt < i + forget) {
                 cnt[nxt] = (cnt[nxt] + cnt[i]) % mod;
                 ++nxt;
             }
@@ -133,7 +153,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func peopleAwareOfSecret(n int, delay int, forget int) int {
@@ -162,7 +182,7 @@ func peopleAwareOfSecret(n int, delay int, forget int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function peopleAwareOfSecret(n: number, delay: number, forget: number): number {
@@ -188,10 +208,8 @@ function peopleAwareOfSecret(n: number, delay: number, forget: number): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

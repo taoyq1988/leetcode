@@ -1,10 +1,25 @@
-# [1628. 设计带解析函数的表达式树](https://leetcode.cn/problems/design-an-expression-tree-with-evaluate-function)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1628.Design%20an%20Expression%20Tree%20With%20Evaluate%20Function/README.md
+tags:
+    - 栈
+    - 树
+    - 设计
+    - 数组
+    - 数学
+    - 二叉树
+---
+
+<!-- problem:start -->
+
+# [1628. 设计带解析函数的表达式树 🔒](https://leetcode.cn/problems/design-an-expression-tree-with-evaluate-function)
 
 [English Version](/solution/1600-1699/1628.Design%20an%20Expression%20Tree%20With%20Evaluate%20Function/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个算术表达式的后缀表示法的标记（token）&nbsp;<code>postfix</code>&nbsp;，构造并返回该表达式对应的二叉表达式树。</p>
 
@@ -54,23 +69,27 @@
 	<li>保证表达式不包含除以零的操作。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 import abc
 from abc import ABC, abstractmethod
+
 """
 This is the interface for the expression tree Node.
 You should not remove it, and you can define some classes to implement it.
 """
+
 
 class Node(ABC):
     @abstractmethod
@@ -78,8 +97,8 @@ class Node(ABC):
     def evaluate(self) -> int:
         pass
 
-class MyNode(Node):
 
+class MyNode(Node):
     def __init__(self, val):
         self.val = val
         self.left = None
@@ -107,6 +126,7 @@ You can treat it as the driver code that takes the postinfix input
 and returns the expression tree represnting it as a Node.
 """
 
+
 class TreeBuilder(object):
     def buildTree(self, postfix: List[str]) -> 'Node':
         stk = []
@@ -118,6 +138,7 @@ class TreeBuilder(object):
             stk.append(node)
         return stk[-1]
 
+
 """
 Your TreeBuilder object will be instantiated and called as such:
 obj = TreeBuilder();
@@ -126,9 +147,7 @@ ans = expTree.evaluate();
 """
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -180,7 +199,6 @@ class MyNode extends Node {
     }
 }
 
-
 /**
  * This is the TreeBuilder class.
  * You can treat it as the driver code that takes the postinfix input
@@ -202,7 +220,6 @@ class TreeBuilder {
     }
 };
 
-
 /**
  * Your TreeBuilder object will be instantiated and called as such:
  * TreeBuilder obj = new TreeBuilder();
@@ -211,7 +228,7 @@ class TreeBuilder {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -221,8 +238,9 @@ class TreeBuilder {
 
 class Node {
 public:
-    virtual ~Node () {};
+    virtual ~Node(){};
     virtual int evaluate() const = 0;
+
 protected:
     // define your fields here
     string val;
@@ -253,7 +271,6 @@ public:
     }
 };
 
-
 /**
  * This is the TreeBuilder class.
  * You can treat it as the driver code that takes the postinfix input
@@ -264,19 +281,15 @@ class TreeBuilder {
 public:
     Node* buildTree(vector<string>& postfix) {
         stack<MyNode*> stk;
-        for (auto s : postfix)
-        {
+        for (auto s : postfix) {
             MyNode* node;
-            if (s == "+" || s == "-" || s == "*" || s == "/")
-            {
+            if (s == "+" || s == "-" || s == "*" || s == "/") {
                 auto right = stk.top();
                 stk.pop();
                 auto left = stk.top();
                 stk.pop();
                 node = new MyNode(s, left, right);
-            }
-            else
-            {
+            } else {
                 node = new MyNode(s);
             }
             stk.push(node);
@@ -284,7 +297,6 @@ public:
         return stk.top();
     }
 };
-
 
 /**
  * Your TreeBuilder object will be instantiated and called as such:
@@ -294,10 +306,8 @@ public:
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

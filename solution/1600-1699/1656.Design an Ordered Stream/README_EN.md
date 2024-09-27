@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1656.Design%20an%20Ordered%20Stream/README_EN.md
+rating: 1418
+source: Weekly Contest 215 Q1
+tags:
+    - Design
+    - Array
+    - Hash Table
+    - Data Stream
+---
+
+<!-- problem:start -->
+
 # [1656. Design an Ordered Stream](https://leetcode.com/problems/design-an-ordered-stream)
 
 [中文文档](/solution/1600-1699/1656.Design%20an%20Ordered%20Stream/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a stream of <code>n</code> <code>(idKey, value)</code> pairs arriving in an <strong>arbitrary</strong> order, where <code>idKey</code> is an integer between <code>1</code> and <code>n</code> and <code>value</code> is a string. No two pairs have the same <code>id</code>.</p>
 
@@ -16,7 +33,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example:</strong></p>
+<p><strong class="example">Example:</strong></p>
 
 <p><strong><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1600-1699/1656.Design%20an%20Ordered%20Stream/images/q1.gif" style="width: 682px; height: 240px;" /></strong></p>
 
@@ -52,15 +69,20 @@ os.insert(4, &quot;ddddd&quot;); // Inserts (4, &quot;ddddd&quot;), returns [&qu
 	<li>Exactly <code>n</code> calls will be made to <code>insert</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class OrderedStream:
-
     def __init__(self, n: int):
         self.data = [None] * n
         self.ptr = 0
@@ -79,7 +101,7 @@ class OrderedStream:
 # param_1 = obj.insert(idKey,value)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class OrderedStream {
@@ -108,7 +130,7 @@ class OrderedStream {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class OrderedStream {
@@ -135,7 +157,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type OrderedStream struct {
@@ -165,10 +187,74 @@ func (this *OrderedStream) Insert(idKey int, value string) []string {
  */
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+class OrderedStream {
+    private ptr: number;
+    private vals: string[];
+
+    constructor(n: number) {
+        this.ptr = 0;
+        this.vals = new Array(n);
+    }
+
+    insert(idKey: number, value: string): string[] {
+        this.vals[idKey - 1] = value;
+        const res = [];
+        while (this.vals[this.ptr] != null) {
+            res.push(this.vals[this.ptr]);
+            this.ptr++;
+        }
+        return res;
+    }
+}
+
+/**
+ * Your OrderedStream object will be instantiated and called as such:
+ * var obj = new OrderedStream(n)
+ * var param_1 = obj.insert(idKey,value)
+ */
 ```
 
+#### Rust
+
+```rust
+struct OrderedStream {
+    ptr: usize,
+    vals: Vec<Option<String>>,
+}
+
+/**
+ * `&self` means the method takes an immutable reference.
+ * If you need a mutable reference, change it to `&mut self` instead.
+ */
+impl OrderedStream {
+    fn new(n: i32) -> Self {
+        Self {
+            ptr: 0,
+            vals: vec![None; n as usize],
+        }
+    }
+
+    fn insert(&mut self, id_key: i32, value: String) -> Vec<String> {
+        self.vals[(id_key - 1) as usize] = Some(value);
+        let mut res = Vec::new();
+        while self.ptr < self.vals.len() {
+            if let Some(s) = &self.vals[self.ptr] {
+                res.push(s.clone());
+                self.ptr += 1;
+            } else {
+                break;
+            }
+        }
+        res
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

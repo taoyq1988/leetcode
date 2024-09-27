@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2220.Minimum%20Bit%20Flips%20to%20Convert%20Number/README_EN.md
+rating: 1282
+source: Biweekly Contest 75 Q1
+tags:
+    - Bit Manipulation
+---
+
+<!-- problem:start -->
+
 # [2220. Minimum Bit Flips to Convert Number](https://leetcode.com/problems/minimum-bit-flips-to-convert-number)
 
 [中文文档](/solution/2200-2299/2220.Minimum%20Bit%20Flips%20to%20Convert%20Number/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A <strong>bit flip</strong> of a number <code>x</code> is choosing a bit in the binary representation of <code>x</code> and <strong>flipping</strong> it from either <code>0</code> to <code>1</code> or <code>1</code> to <code>0</code>.</p>
 
@@ -13,7 +27,7 @@
 <p>Given two integers <code>start</code> and <code>goal</code>, return<em> the <strong>minimum</strong> number of <strong>bit flips</strong> to convert </em><code>start</code><em> to </em><code>goal</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> start = 10, goal = 7
@@ -24,7 +38,7 @@
 - Flip the fourth bit from the right: <u>1</u>111 -&gt; <u>0</u>111.
 It can be shown we cannot convert 10 to 7 in less than 3 steps. Hence, we return 3.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> start = 3, goal = 4
@@ -43,11 +57,20 @@ It can be shown we cannot convert 3 to 4 in less than 3 steps. Hence, we return 
 	<li><code>0 &lt;= start, goal &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<p>&nbsp;</p>
+<p><strong>Note:</strong> This question is the same as <a href="https://leetcode.com/problems/hamming-distance/description/" target="_blank">461: Hamming Distance.</a></p>
+
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -60,7 +83,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -76,7 +99,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -84,8 +107,7 @@ public:
     int minBitFlips(int start, int goal) {
         int t = start ^ goal;
         int ans = 0;
-        while (t)
-        {
+        while (t) {
             ans += t & 1;
             t >>= 1;
         }
@@ -94,7 +116,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minBitFlips(start int, goal int) int {
@@ -108,16 +130,78 @@ func minBitFlips(start int, goal int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function minBitFlips(start: number, goal: number): number {
+    let tmp = start ^ goal;
+    let ans = 0;
+    while (tmp !== 0) {
+        ans += tmp & 1;
+        tmp >>= 1;
+    }
+    return ans;
+}
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn min_bit_flips(start: i32, goal: i32) -> i32 {
+        let mut tmp = start ^ goal;
+        let mut ans = 0;
+        while tmp != 0 {
+            ans += tmp & 1;
+            tmp >>= 1;
+        }
+        ans
+    }
+}
 ```
 
+#### C
+
+```c
+int minBitFlips(int start, int goal) {
+    int tmp = start ^ goal;
+    int ans = 0;
+    while (tmp) {
+        ans += tmp & 1;
+        tmp >>= 1;
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### TypeScript
+
+```ts
+function minBitFlips(start: number, goal: number): number {
+    return (start ^ goal).toString(2).replace(/0/g, '').length;
+}
+```
+
+#### JavaScript
+
+```js
+function minBitFlips(start, goal) {
+    return (start ^ goal).toString(2).replace(/0/g, '').length;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

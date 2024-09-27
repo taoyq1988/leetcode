@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0736.Parse%20Lisp%20Expression/README_EN.md
+tags:
+    - Stack
+    - Recursion
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [736. Parse Lisp Expression](https://leetcode.com/problems/parse-lisp-expression)
 
 [中文文档](/solution/0700-0799/0736.Parse%20Lisp%20Expression/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a string expression representing a Lisp-like expression to return the integer value of.</p>
 
@@ -19,7 +34,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;(let x 2 (mult x (let x 3 y 4 (add x y))))&quot;
@@ -29,7 +44,7 @@ we check from the innermost scope to the outermost in the context of the variabl
 Since x = 3 is found first, the value of x is 3.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;(let x 3 x 2 x)&quot;
@@ -37,7 +52,7 @@ Since x = 3 is found first, the value of x is 3.
 <strong>Explanation:</strong> Assignment in let statements is processed sequentially.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;(let x 1 y 2 x (add x y) (add x y))&quot;
@@ -57,11 +72,17 @@ The second (add x y) evaluates as 3+2 = 5.
 	<li>The expression is guaranteed to be legal and evaluate to an integer.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -121,7 +142,7 @@ class Solution:
         return eval()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -199,7 +220,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -217,15 +238,12 @@ public:
         if (expr[i] != '(') return islower(expr[i]) ? scope[parseVar()].back() : parseInt();
         int ans = 0;
         ++i;
-        if (expr[i] == 'l')
-        {
+        if (expr[i] == 'l') {
             i += 4;
             vector<string> vars;
-            while (1)
-            {
+            while (1) {
                 string var = parseVar();
-                if (expr[i] == ')')
-                {
+                if (expr[i] == ')') {
                     ans = scope[var].back();
                     break;
                 }
@@ -233,16 +251,13 @@ public:
                 vars.push_back(var);
                 scope[var].push_back(eval());
                 ++i;
-                if (!islower(expr[i]))
-                {
+                if (!islower(expr[i])) {
                     ans = eval();
                     break;
                 }
             }
             for (string v : vars) scope[v].pop_back();
-        }
-        else
-        {
+        } else {
             bool add = expr[i] == 'a';
             i += add ? 4 : 5;
             int a = eval();
@@ -262,13 +277,11 @@ public:
 
     int parseInt() {
         int sign = 1, v = 0;
-        if (expr[i] == '-')
-        {
+        if (expr[i] == '-') {
             sign = -1;
             ++i;
         }
-        while (i < expr.size() && expr[i] >= '0' && expr[i] <= '9')
-        {
+        while (i < expr.size() && expr[i] >= '0' && expr[i] <= '9') {
             v = v * 10 + (expr[i] - '0');
             ++i;
         }
@@ -277,7 +290,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func evaluate(expression string) int {
@@ -359,10 +372,8 @@ func evaluate(expression string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

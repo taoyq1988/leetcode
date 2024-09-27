@@ -1,10 +1,20 @@
-# [1474. 删除链表 M 个节点之后的 N 个节点](https://leetcode.cn/problems/delete-n-nodes-after-m-nodes-of-a-linked-list)
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/README.md
+tags:
+    - 链表
+---
+
+<!-- problem:start -->
+
+# [1474. 删除链表 M 个节点之后的 N 个节点 🔒](https://leetcode.cn/problems/delete-n-nodes-after-m-nodes-of-a-linked-list)
 
 [English Version](/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定链表&nbsp;<code>head</code>&nbsp;和两个整数&nbsp;<code>m</code>&nbsp;和&nbsp;<code>n</code>. 遍历该链表并按照如下方式删除节点:</p>
 
@@ -68,17 +78,21 @@
 
 <p><strong>进阶:</strong> 你能通过<strong> 就地 </strong>修改链表的方式解决这个问题吗?</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-遍历链表，修改指针指向即可。
+### 方法一：模拟
+
+按照题意模拟，遍历链表，每次遍历 $m$ 个节点，然后删除 $n$ 个节点，直到链表尾部。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -90,13 +104,13 @@ class Solution:
     def deleteNodes(self, head: ListNode, m: int, n: int) -> ListNode:
         pre = head
         while pre:
-            for i in range(m - 1):
+            for _ in range(m - 1):
                 if pre:
                     pre = pre.next
             if pre is None:
                 return head
             cur = pre
-            for i in range(n):
+            for _ in range(n):
                 if cur:
                     cur = cur.next
             pre.next = None if cur is None else cur.next
@@ -104,9 +118,7 @@ class Solution:
         return head
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -141,10 +153,77 @@ class Solution {
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteNodes(ListNode* head, int m, int n) {
+        auto pre = head;
+        while (pre) {
+            for (int i = 0; i < m - 1 && pre; ++i) {
+                pre = pre->next;
+            }
+            if (!pre) {
+                return head;
+            }
+            auto cur = pre;
+            for (int i = 0; i < n && cur; ++i) {
+                cur = cur->next;
+            }
+            pre->next = cur ? cur->next : nullptr;
+            pre = pre->next;
+        }
+        return head;
+    }
+};
 ```
 
+#### Go
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func deleteNodes(head *ListNode, m int, n int) *ListNode {
+	pre := head
+	for pre != nil {
+		for i := 0; i < m-1 && pre != nil; i++ {
+			pre = pre.Next
+		}
+		if pre == nil {
+			return head
+		}
+		cur := pre
+		for i := 0; i < n && cur != nil; i++ {
+			cur = cur.Next
+		}
+		pre.Next = nil
+		if cur != nil {
+			pre.Next = cur.Next
+		}
+		pre = pre.Next
+	}
+	return head
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1309.Decrypt%20String%20from%20Alphabet%20to%20Integer%20Mapping/README.md
+rating: 1257
+source: 第 170 场周赛 Q1
+tags:
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [1309. 解码字母到整数映射](https://leetcode.cn/problems/decrypt-string-from-alphabet-to-integer-mapping)
 
 [English Version](/solution/1300-1399/1309.Decrypt%20String%20from%20Alphabet%20to%20Integer%20Mapping/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个字符串&nbsp;<code>s</code>，它由数字（<code>'0'</code> - <code>'9'</code>）和&nbsp;<code>'#'</code>&nbsp;组成。我们希望按下述规则将&nbsp;<code>s</code>&nbsp;映射为一些小写英文字符：</p>
 
@@ -44,15 +56,17 @@
 	<li><code>s</code>&nbsp;是映射始终存在的有效字符串。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +78,7 @@ class Solution:
         res = []
         while i < n:
             if i + 2 < n and s[i + 2] == '#':
-                res.append(get(s[i: i + 2]))
+                res.append(get(s[i : i + 2]))
                 i += 3
             else:
                 res.append(get(s[i]))
@@ -72,9 +86,7 @@ class Solution:
         return ''.join(res)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -99,29 +111,27 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function freqAlphabets(s: string): string {
     const n = s.length;
-    const res = [];
+    const ans = [];
     let i = 0;
     while (i < n) {
-        let code: string;
-        if (s[i + 2] === '#') {
-            code = s.slice(i, i + 2);
+        if (s[i + 2] == '#') {
+            ans.push(s.slice(i, i + 2));
             i += 3;
         } else {
-            code = s[i];
+            ans.push(s[i]);
             i += 1;
         }
-        res.push(code);
     }
-    return res.map(v => String.fromCharCode(96 + Number(v))).join('');
+    return ans.map(c => String.fromCharCode('a'.charCodeAt(0) + Number(c) - 1)).join('');
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -139,17 +149,39 @@ impl Solution {
                 code = s[i];
                 i += 1;
             }
-            res.push(char::from(97 + code - b'1'));
+            res.push(char::from(('a' as u8) + code - b'1'));
         }
         res
     }
 }
 ```
 
-### **...**
+#### C
 
-```
-
+```c
+char* freqAlphabets(char* s) {
+    int n = strlen(s);
+    int i = 0;
+    int j = 0;
+    char* ans = malloc(sizeof(s) * n);
+    while (i < n) {
+        int t;
+        if (i + 2 < n && s[i + 2] == '#') {
+            t = (s[i] - '0') * 10 + s[i + 1];
+            i += 3;
+        } else {
+            t = s[i];
+            i += 1;
+        }
+        ans[j++] = 'a' + t - '1';
+    }
+    ans[j] = '\0';
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

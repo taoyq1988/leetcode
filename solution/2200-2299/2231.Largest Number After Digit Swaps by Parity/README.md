@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2231.Largest%20Number%20After%20Digit%20Swaps%20by%20Parity/README.md
+rating: 1365
+source: 第 288 场周赛 Q1
+tags:
+    - 排序
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [2231. 按奇偶性交换后的最大数字](https://leetcode.cn/problems/largest-number-after-digit-swaps-by-parity)
 
 [English Version](/solution/2200-2299/2231.Largest%20Number%20After%20Digit%20Swaps%20by%20Parity/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个正整数 <code>num</code> 。你可以交换 <code>num</code> 中 <strong>奇偶性</strong> 相同的任意两位数字（即，都是奇数或者偶数）。</p>
 
@@ -39,19 +52,17 @@
 	<li><code>1 &lt;= num &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：计数**
-
-**方法二：分组 + 排序**
+### 方法一：计数
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -75,9 +86,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -108,7 +117,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -116,22 +125,18 @@ public:
     int largestInteger(int num) {
         vector<int> cnt(10);
         int x = num;
-        while (x)
-        {
+        while (x) {
             cnt[x % 10]++;
             x /= 10;
         }
         x = num;
         int ans = 0;
         long t = 1;
-        while (x)
-        {
+        while (x) {
             int v = x % 10;
             x /= 10;
-            for (int y = 0; y < 10; ++y)
-            {
-                if (((v ^ y) & 1) == 0 && cnt[y] > 0)
-                {
+            for (int y = 0; y < 10; ++y) {
+                if (((v ^ y) & 1) == 0 && cnt[y] > 0) {
                     cnt[y]--;
                     ans += y * t;
                     t *= 10;
@@ -144,7 +149,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func largestInteger(num int) int {
@@ -172,14 +177,14 @@ func largestInteger(num int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function largestInteger(num: number): number {
-    let arrs = String(num).split('').map(Number);
-    let odds = []; // 奇数
-    let evens = [];
-    for (let i of arrs) {
+    const arrs: number[] = String(num).split('').map(Number);
+    const odds: number[] = []; // 奇数
+    const evens: number[] = [];
+    for (const i of arrs) {
         if ((i & 1) == 1) {
             odds.push(i);
         } else {
@@ -188,18 +193,22 @@ function largestInteger(num: number): number {
     }
     odds.sort((a, b) => a - b);
     evens.sort((a, b) => a - b);
-    let ans = [];
-    for (let i of arrs) {
-        ans.push((i & 1) == 1 ? odds.pop() : evens.pop());
+    const ans: number[] = [];
+    for (const i of arrs) {
+        ans.push((i & 1) === 1 ? odds.pop() : evens.pop());
     }
     return Number(ans.join(''));
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：分组 + 排序
+
+<!-- solution:end -->
+
+<!-- problem:end -->

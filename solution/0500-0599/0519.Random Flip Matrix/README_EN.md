@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0519.Random%20Flip%20Matrix/README_EN.md
+tags:
+    - Reservoir Sampling
+    - Hash Table
+    - Math
+    - Randomized
+---
+
+<!-- problem:start -->
+
 # [519. Random Flip Matrix](https://leetcode.com/problems/random-flip-matrix)
 
 [中文文档](/solution/0500-0599/0519.Random%20Flip%20Matrix/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an <code>m x n</code> binary grid <code>matrix</code> with all the values set <code>0</code> initially. Design an algorithm to randomly pick an index <code>(i, j)</code> where <code>matrix[i][j] == 0</code> and flips it to <code>1</code>. All the indices <code>(i, j)</code> where <code>matrix[i][j] == 0</code> should be equally likely to be returned.</p>
 
@@ -17,7 +32,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -44,15 +59,20 @@ solution.flip();  // return [2, 0], [0,0], [1,0], and [2,0] should be equally li
 	<li>At most <code>1000</code> calls will be made to <code>flip</code> and <code>reset</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-
     def __init__(self, m: int, n: int):
         self.m = m
         self.n = n
@@ -70,13 +90,14 @@ class Solution:
         self.total = self.m * self.n
         self.mp.clear()
 
+
 # Your Solution object will be instantiated and called as such:
 # obj = Solution(m, n)
 # param_1 = obj.flip()
 # obj.reset()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -96,7 +117,7 @@ class Solution {
         int x = rand.nextInt(total--);
         int idx = mp.getOrDefault(x, x);
         mp.put(x, mp.getOrDefault(total, total));
-        return new int[]{idx / n, idx % n};
+        return new int[] {idx / n, idx % n};
     }
 
     public void reset() {
@@ -113,10 +134,8 @@ class Solution {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

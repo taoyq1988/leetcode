@@ -1,33 +1,41 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0110.Balanced%20Binary%20Tree/README_EN.md
+tags:
+    - Tree
+    - Depth-First Search
+    - Binary Tree
+---
+
+<!-- problem:start -->
+
 # [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree)
 
 [中文文档](/solution/0100-0199/0110.Balanced%20Binary%20Tree/README.md)
 
 ## Description
 
-<p>Given a binary tree, determine if it is height-balanced.</p>
+<!-- description:start -->
 
-<p>For this problem, a height-balanced binary tree is defined as:</p>
-
-<blockquote>
-<p>a binary tree in which the left and right subtrees of <em>every</em> node differ in height by no more than 1.</p>
-</blockquote>
+<p>Given a binary tree, determine if it is <span data-keyword="height-balanced"><strong>height-balanced</strong></span>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0100-0199/0110.Balanced%20Binary%20Tree/images/balance_1.jpg" style="width: 342px; height: 221px;" />
 <pre>
 <strong>Input:</strong> root = [3,9,20,null,null,15,7]
 <strong>Output:</strong> true
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0100-0199/0110.Balanced%20Binary%20Tree/images/balance_2.jpg" style="width: 452px; height: 301px;" />
 <pre>
 <strong>Input:</strong> root = [1,2,2,3,3,null,null,4,4]
 <strong>Output:</strong> false
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> root = []
@@ -42,11 +50,26 @@
 	<li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Bottom-Up Recursion
+
+We define a function $height(root)$ to calculate the height of a binary tree, with the following logic:
+
+-   If the binary tree $root$ is null, return $0$.
+-   Otherwise, recursively calculate the heights of the left and right subtrees, denoted as $l$ and $r$ respectively. If either $l$ or $r$ is $-1$, or the absolute difference between $l$ and $r$ is greater than $1$, then return $-1$. Otherwise, return $max(l, r) + 1$.
+
+Therefore, if the function $height(root)$ returns $-1$, it means the binary tree $root$ is not balanced. Otherwise, it is balanced.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$. Here, $n$ is the number of nodes in the binary tree.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -56,7 +79,7 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def isBalanced(self, root: TreeNode) -> bool:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
         def height(root):
             if root is None:
                 return 0
@@ -68,7 +91,7 @@ class Solution:
         return height(root) >= 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -105,39 +128,7 @@ class Solution {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {boolean}
- */
-var isBalanced = function (root) {
-    let height = function (root) {
-        if (root == null) {
-            return 0;
-        }
-        const l = height(root.left);
-        const r = height(root.right);
-        if (l == -1 || r == -1 || Math.abs(l - r) > 1) {
-            return -1;
-        }
-        return 1 + Math.max(l, r);
-    };
-
-    return height(root) >= 0;
-};
-```
-
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -154,19 +145,23 @@ var isBalanced = function (root) {
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
+        function<int(TreeNode*)> height = [&](TreeNode* root) {
+            if (!root) {
+                return 0;
+            }
+            int l = height(root->left);
+            int r = height(root->right);
+            if (l == -1 || r == -1 || abs(l - r) > 1) {
+                return -1;
+            }
+            return 1 + max(l, r);
+        };
         return height(root) >= 0;
-    }
-
-    int height(TreeNode* root) {
-        if (!root) return 0;
-        int l = height(root->left), r = height(root->right);
-        if (l == -1 || r == -1 || abs(l - r) > 1) return -1;
-        return 1 + max(l, r);
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -178,36 +173,32 @@ public:
  * }
  */
 func isBalanced(root *TreeNode) bool {
+	var height func(*TreeNode) int
+	height = func(root *TreeNode) int {
+		if root == nil {
+			return 0
+		}
+		l, r := height(root.Left), height(root.Right)
+		if l == -1 || r == -1 || abs(l-r) > 1 {
+			return -1
+		}
+		if l > r {
+			return 1 + l
+		}
+		return 1 + r
+	}
 	return height(root) >= 0
 }
 
-func height(root *TreeNode) int {
-	if root == nil {
-		return 0
-	}
-	l, r := height(root.Left), height(root.Right)
-	if l == -1 || r == -1 || abs(l-r) > 1 {
-		return -1
-	}
-	return 1 + max(l, r)
-}
-
 func abs(x int) int {
-	if x >= 0 {
-		return x
+	if x < 0 {
+		return -x
 	}
-	return -x
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return x
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -240,7 +231,7 @@ function isBalanced(root: TreeNode | null): boolean {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -261,8 +252,8 @@ function isBalanced(root: TreeNode | null): boolean {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 impl Solution {
     pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         Self::dfs(&root) > -1
@@ -283,10 +274,39 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isBalanced = function (root) {
+    const height = root => {
+        if (!root) {
+            return 0;
+        }
+        const l = height(root.left);
+        const r = height(root.right);
+        if (l == -1 || r == -1 || Math.abs(l - r) > 1) {
+            return -1;
+        }
+        return 1 + Math.max(l, r);
+    };
+    return height(root) >= 0;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

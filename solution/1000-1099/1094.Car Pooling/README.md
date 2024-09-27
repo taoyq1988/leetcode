@@ -1,10 +1,26 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1094.Car%20Pooling/README.md
+rating: 1441
+source: 第 142 场周赛 Q2
+tags:
+    - 数组
+    - 前缀和
+    - 排序
+    - 模拟
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [1094. 拼车](https://leetcode.cn/problems/car-pooling)
 
 [English Version](/solution/1000-1099/1094.Car%20Pooling/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>车上最初有&nbsp;<code>capacity</code>&nbsp;个空座位。车&nbsp;<strong>只能&nbsp;</strong>向一个方向行驶（也就是说，<strong>不允许掉头或改变方向</strong>）</p>
 
@@ -40,45 +56,48 @@
 	<li><code>1 &lt;= capacity &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-差分数组。
+### 方法一：差分数组
+
+我们可以利用差分数组的思想，将每个行程的乘客数加到起点，减去终点，最后我们只需要判断差分数组的前缀和是否都不大于车的最大载客量即可。
+
+时间复杂度 $O(n)$，空间复杂度 $O(M)$。其中 $n$ 是行程数，而 $M$ 是行程中最大的终点，本题中 $M \le 1000$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
-        delta = [0] * 1001
-        for num, start, end in trips:
-            delta[start] += num
-            delta[end] -= num
-        return all(s <= capacity for s in accumulate(delta))
+        mx = max(e[2] for e in trips)
+        d = [0] * (mx + 1)
+        for x, f, t in trips:
+            d[f] += x
+            d[t] -= x
+        return all(s <= capacity for s in accumulate(d))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public boolean carPooling(int[][] trips, int capacity) {
-        int[] delta = new int[1001];
-        for (int[] trip : trips) {
-            int num = trip[0], start = trip[1], end = trip[2];
-            delta[start] += num;
-            delta[end] -= num;
+        int[] d = new int[1001];
+        for (var trip : trips) {
+            int x = trip[0], f = trip[1], t = trip[2];
+            d[f] += x;
+            d[t] -= x;
         }
-        int cur = 0;
-        for (int num : delta) {
-            cur += num;
-            if (cur > capacity) {
+        int s = 0;
+        for (int x : d) {
+            s += x;
+            if (s > capacity) {
                 return false;
             }
         }
@@ -87,7 +106,95 @@ class Solution {
 }
 ```
 
-### **JavaScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        int d[1001]{};
+        for (auto& trip : trips) {
+            int x = trip[0], f = trip[1], t = trip[2];
+            d[f] += x;
+            d[t] -= x;
+        }
+        int s = 0;
+        for (int x : d) {
+            s += x;
+            if (s > capacity) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
+#### Go
+
+```go
+func carPooling(trips [][]int, capacity int) bool {
+	d := [1001]int{}
+	for _, trip := range trips {
+		x, f, t := trip[0], trip[1], trip[2]
+		d[f] += x
+		d[t] -= x
+	}
+	s := 0
+	for _, x := range d {
+		s += x
+		if s > capacity {
+			return false
+		}
+	}
+	return true
+}
+```
+
+#### TypeScript
+
+```ts
+function carPooling(trips: number[][], capacity: number): boolean {
+    const mx = Math.max(...trips.map(([, , t]) => t));
+    const d = Array(mx + 1).fill(0);
+    for (const [x, f, t] of trips) {
+        d[f] += x;
+        d[t] -= x;
+    }
+    let s = 0;
+    for (const x of d) {
+        s += x;
+        if (s > capacity) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn car_pooling(trips: Vec<Vec<i32>>, capacity: i32) -> bool {
+        let mx = trips.iter().map(|e| e[2]).max().unwrap_or(0) as usize;
+        let mut d = vec![0; mx + 1];
+        for trip in &trips {
+            let (x, f, t) = (trip[0], trip[1] as usize, trip[2] as usize);
+            d[f] += x;
+            d[t] -= x;
+        }
+        d.iter()
+            .scan(0, |acc, &x| {
+                *acc += x;
+                Some(*acc)
+            })
+            .all(|s| s <= capacity)
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -96,14 +203,15 @@ class Solution {
  * @return {boolean}
  */
 var carPooling = function (trips, capacity) {
-    let delta = new Array(1001).fill(0);
-    for (let [num, start, end] of trips) {
-        delta[start] += num;
-        delta[end] -= num;
+    const mx = Math.max(...trips.map(([, , t]) => t));
+    const d = Array(mx + 1).fill(0);
+    for (const [x, f, t] of trips) {
+        d[f] += x;
+        d[t] -= x;
     }
     let s = 0;
-    for (let num of delta) {
-        s += num;
+    for (const x of d) {
+        s += x;
         if (s > capacity) {
             return false;
         }
@@ -112,55 +220,32 @@ var carPooling = function (trips, capacity) {
 };
 ```
 
-### **C++**
+#### C#
 
-```cpp
-class Solution {
-public:
-    bool carPooling(vector<vector<int>>& trips, int capacity) {
-        vector<int> delta(1001);
-        for (auto &trip : trips) {
-            int num = trip[0], start = trip[1], end = trip[2];
-            delta[start] += num;
-            delta[end] -= num;
+```cs
+public class Solution {
+    public bool CarPooling(int[][] trips, int capacity) {
+        int mx = trips.Max(x => x[2]);
+        int[] d = new int[mx + 1];
+        foreach (var trip in trips) {
+            int x = trip[0], f = trip[1], t = trip[2];
+            d[f] += x;
+            d[t] -= x;
         }
-        int cur = 0;
-        for (auto &num : delta) {
-            cur += num;
-            if (cur > capacity) {
+        int s = 0;
+        foreach (var x in d) {
+            s += x;
+            if (s > capacity) {
                 return false;
             }
         }
         return true;
     }
-};
-```
-
-### **Go**
-
-```go
-func carPooling(trips [][]int, capacity int) bool {
-	delta := make([]int, 1010)
-	for _, trip := range trips {
-		num, start, end := trip[0], trip[1], trip[2]
-		delta[start] += num
-		delta[end] -= num
-	}
-	cur := 0
-	for _, num := range delta {
-		cur += num
-		if cur > capacity {
-			return false
-		}
-	}
-	return true
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

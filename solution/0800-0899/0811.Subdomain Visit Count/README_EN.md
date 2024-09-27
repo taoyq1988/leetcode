@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0811.Subdomain%20Visit%20Count/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [811. Subdomain Visit Count](https://leetcode.com/problems/subdomain-visit-count)
 
 [中文文档](/solution/0800-0899/0811.Subdomain%20Visit%20Count/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A website domain <code>&quot;discuss.leetcode.com&quot;</code> consists of various subdomains. At the top level, we have <code>&quot;com&quot;</code>, at the next level, we have <code>&quot;leetcode.com&quot;</code>&nbsp;and at the lowest level, <code>&quot;discuss.leetcode.com&quot;</code>. When we visit a domain like <code>&quot;discuss.leetcode.com&quot;</code>, we will also visit the parent domains <code>&quot;leetcode.com&quot;</code> and <code>&quot;com&quot;</code> implicitly.</p>
 
@@ -15,7 +30,7 @@
 <p>Given an array of <strong>count-paired domains</strong> <code>cpdomains</code>, return <em>an array of the <strong>count-paired domains</strong> of each subdomain in the input</em>. You may return the answer in <strong>any order</strong>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> cpdomains = [&quot;9001 discuss.leetcode.com&quot;]
@@ -24,7 +39,7 @@
 As discussed above, the subdomain &quot;leetcode.com&quot; and &quot;com&quot; will also be visited. So they will all be visited 9001 times.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> cpdomains = [&quot;900 google.mail.com&quot;, &quot;50 yahoo.com&quot;, &quot;1 intel.mail.com&quot;, &quot;5 wiki.org&quot;]
@@ -44,55 +59,104 @@ For the subdomains, we will visit &quot;mail.com&quot; 900 + 1 = 901 times, &quo
 	<li><code>d1<sub>i</sub></code>, <code>d2<sub>i</sub></code>, and <code>d3<sub>i</sub></code> consist of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def subdomainVisits(self, cpdomains: List[str]) -> List[str]:
-        domains = Counter()
-        for item in cpdomains:
-            count, domain = item.split()
-            count = int(count)
-            subs = domain.split('.')
-            for i in range(len(subs)):
-                key = '.'.join(subs[i:])
-                domains[key] += count
-        return [f'{cnt} {domain}' for domain, cnt in domains.items()]
+        cnt = Counter()
+        for s in cpdomains:
+            v = int(s[: s.index(' ')])
+            for i, c in enumerate(s):
+                if c in ' .':
+                    cnt[s[i + 1 :]] += v
+        return [f'{v} {s}' for s, v in cnt.items()]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public List<String> subdomainVisits(String[] cpdomains) {
-        Map<String, Integer> domains = new HashMap<>();
-        for (String domain : cpdomains) {
-            String[] t = domain.split(" ");
-            int count = Integer.parseInt(t[0]);
-            String[] subs = t[1].split("\\.");
-            String cur = "";
-            for (int i = subs.length - 1; i >= 0; --i) {
-                cur = subs[i] + (i == subs.length - 1 ? "" : ".") + cur;
-                domains.put(cur, domains.getOrDefault(cur, 0) + count);
+        Map<String, Integer> cnt = new HashMap<>();
+        for (String s : cpdomains) {
+            int i = s.indexOf(" ");
+            int v = Integer.parseInt(s.substring(0, i));
+            for (; i < s.length(); ++i) {
+                if (s.charAt(i) == ' ' || s.charAt(i) == '.') {
+                    String t = s.substring(i + 1);
+                    cnt.put(t, cnt.getOrDefault(t, 0) + v);
+                }
             }
         }
-        List<String> res = new ArrayList<>();
-        domains.forEach((domain, count) -> {
-            res.add(count + " " + domain);
-        });
-        return res;
+        List<String> ans = new ArrayList<>();
+        for (var e : cnt.entrySet()) {
+            ans.add(e.getValue() + " " + e.getKey());
+        }
+        return ans;
     }
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<string> subdomainVisits(vector<string>& cpdomains) {
+        unordered_map<string, int> cnt;
+        for (auto& s : cpdomains) {
+            int i = s.find(' ');
+            int v = stoi(s.substr(0, i));
+            for (; i < s.size(); ++i) {
+                if (s[i] == ' ' || s[i] == '.') {
+                    cnt[s.substr(i + 1)] += v;
+                }
+            }
+        }
+        vector<string> ans;
+        for (auto& [s, v] : cnt) {
+            ans.push_back(to_string(v) + " " + s);
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func subdomainVisits(cpdomains []string) []string {
+	cnt := map[string]int{}
+	for _, s := range cpdomains {
+		i := strings.IndexByte(s, ' ')
+		v, _ := strconv.Atoi(s[:i])
+		for ; i < len(s); i++ {
+			if s[i] == ' ' || s[i] == '.' {
+				cnt[s[i+1:]] += v
+			}
+		}
+	}
+	ans := make([]string, 0, len(cnt))
+	for s, v := range cnt {
+		ans = append(ans, strconv.Itoa(v)+" "+s)
+	}
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

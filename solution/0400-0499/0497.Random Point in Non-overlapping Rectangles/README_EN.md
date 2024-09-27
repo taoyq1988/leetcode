@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0497.Random%20Point%20in%20Non-overlapping%20Rectangles/README_EN.md
+tags:
+    - Reservoir Sampling
+    - Array
+    - Math
+    - Binary Search
+    - Ordered Set
+    - Prefix Sum
+    - Randomized
+---
+
+<!-- problem:start -->
+
 # [497. Random Point in Non-overlapping Rectangles](https://leetcode.com/problems/random-point-in-non-overlapping-rectangles)
 
 [中文文档](/solution/0400-0499/0497.Random%20Point%20in%20Non-overlapping%20Rectangles/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of non-overlapping axis-aligned rectangles <code>rects</code> where <code>rects[i] = [a<sub>i</sub>, b<sub>i</sub>, x<sub>i</sub>, y<sub>i</sub>]</code> indicates that <code>(a<sub>i</sub>, b<sub>i</sub>)</code> is the bottom-left corner point of the <code>i<sup>th</sup></code> rectangle and <code>(x<sub>i</sub>, y<sub>i</sub>)</code> is the top-right corner point of the <code>i<sup>th</sup></code> rectangle. Design an algorithm to pick a random integer point inside the space covered by one of the given rectangles. A point on the perimeter of a rectangle is included in the space covered by the rectangle.</p>
 
@@ -18,7 +36,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0400-0499/0497.Random%20Point%20in%20Non-overlapping%20Rectangles/images/lc-pickrandomrec.jpg" style="width: 419px; height: 539px;" />
 <pre>
 <strong>Input</strong>
@@ -51,15 +69,20 @@ solution.pick(); // return [0, 0]
 	<li>At most <code>10<sup>4</sup></code> calls will be made to <code>pick</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-
     def __init__(self, rects: List[List[int]]):
         self.rects = rects
         self.s = [0] * len(rects)
@@ -78,7 +101,7 @@ class Solution:
 # param_1 = obj.pick()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -108,7 +131,8 @@ class Solution {
             }
         }
         int[] rect = rects[left - 1];
-        return new int[]{rect[0] + random.nextInt(rect[2] - rect[0] + 1), rect[1] + random.nextInt(rect[3] - rect[1] + 1)};
+        return new int[] {rect[0] + random.nextInt(rect[2] - rect[0] + 1),
+            rect[1] + random.nextInt(rect[3] - rect[1] + 1)};
     }
 }
 
@@ -119,7 +143,7 @@ class Solution {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -153,7 +177,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Solution struct {
@@ -188,10 +212,8 @@ func (this *Solution) Pick() []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

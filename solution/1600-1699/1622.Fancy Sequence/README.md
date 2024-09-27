@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1622.Fancy%20Sequence/README.md
+rating: 2476
+source: 第 37 场双周赛 Q4
+tags:
+    - 设计
+    - 线段树
+    - 数学
+---
+
+<!-- problem:start -->
+
 # [1622. 奇妙序列](https://leetcode.cn/problems/fancy-sequence)
 
 [English Version](/solution/1600-1699/1622.Fancy%20Sequence/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>请你实现三个 API <code>append</code>，<code>addAll</code> 和 <code>multAll</code> 来实现奇妙序列。</p>
 
@@ -54,11 +68,13 @@ fancy.getIndex(2); // 返回 20
 	<li>总共最多会有 <code>10<sup>5</sup></code> 次对 <code>append</code>，<code>addAll</code>，<code>multAll</code> 和 <code>getIndex</code> 的调用。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：线段树**
+### 方法一：线段树
 
 线段树将整个区间分割为多个不连续的子区间，子区间的数量不超过 `log(width)`。更新某个元素的值，只需要更新 `log(width)` 个区间，并且这些区间都包含在一个包含该元素的大区间内。区间修改时，需要使用**懒标记**保证效率。
 
@@ -69,9 +85,7 @@ fancy.getIndex(2); // 返回 20
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 MOD = int(1e9 + 7)
@@ -151,10 +165,8 @@ class SegmentTree:
             node.right = Node(node.mid + 1, node.r)
         left, right = node.left, node.right
         if node.add != 0 or node.mul != 1:
-            left.v = (left.v * node.mul +
-                      (left.r - left.l + 1) * node.add) % MOD
-            right.v = (right.v * node.mul +
-                       (right.r - right.l + 1) * node.add) % MOD
+            left.v = (left.v * node.mul + (left.r - left.l + 1) * node.add) % MOD
+            right.v = (right.v * node.mul + (right.r - right.l + 1) * node.add) % MOD
             left.add = (left.add * node.mul + node.add) % MOD
             right.add = (right.add * node.mul + node.add) % MOD
             left.mul = (left.mul * node.mul) % MOD
@@ -164,7 +176,6 @@ class SegmentTree:
 
 
 class Fancy:
-
     def __init__(self):
         self.n = 0
         self.tree = SegmentTree()
@@ -191,9 +202,7 @@ class Fancy:
 # param_4 = obj.getIndex(idx)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Node {
@@ -218,7 +227,6 @@ class SegmentTree {
     private static final int MOD = (int) 1e9 + 7;
 
     public SegmentTree() {
-
     }
 
     public void modifyAdd(int l, int r, int inc) {
@@ -320,7 +328,6 @@ class Fancy {
     private SegmentTree tree = new SegmentTree();
 
     public Fancy() {
-
     }
 
     public void append(int val) {
@@ -351,7 +358,7 @@ class Fancy {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 const int MOD = 1e9 + 7;
@@ -392,8 +399,7 @@ public:
 
     void modifyAdd(int l, int r, int inc, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v = (node->v + (node->r - node->l + 1) * inc) % MOD;
             node->add = (node->add + inc) % MOD;
             return;
@@ -410,8 +416,7 @@ public:
 
     void modifyMul(int l, int r, int m, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v = (node->v * m) % MOD;
             node->add = (node->add * m) % MOD;
             node->mul = (node->mul * m) % MOD;
@@ -444,8 +449,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node(node->l, node->mid);
         if (!node->right) node->right = new Node(node->mid + 1, node->r);
-        if (node->add || node->mul != 1)
-        {
+        if (node->add || node->mul != 1) {
             long add = node->add, mul = node->mul;
             Node* left = node->left;
             Node* right = node->right;
@@ -460,7 +464,6 @@ public:
         }
     }
 };
-
 
 class Fancy {
 public:
@@ -500,10 +503,8 @@ public:
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

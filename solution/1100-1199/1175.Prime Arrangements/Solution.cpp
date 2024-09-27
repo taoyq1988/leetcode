@@ -18,10 +18,8 @@ public:
     int count(int n) {
         vector<bool> primes(n + 1, true);
         int cnt = 0;
-        for (int i = 2; i <= n; ++i)
-        {
-            if (primes[i])
-            {
+        for (int i = 2; i <= n; ++i) {
+            if (primes[i]) {
                 ++cnt;
                 for (int j = i + i; j <= n; j += i) primes[j] = false;
             }

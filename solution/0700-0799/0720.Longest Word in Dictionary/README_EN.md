@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0720.Longest%20Word%20in%20Dictionary/README_EN.md
+tags:
+    - Trie
+    - Array
+    - Hash Table
+    - String
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [720. Longest Word in Dictionary](https://leetcode.com/problems/longest-word-in-dictionary)
 
 [中文文档](/solution/0700-0799/0720.Longest%20Word%20in%20Dictionary/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of strings <code>words</code> representing an English Dictionary, return <em>the longest word in</em> <code>words</code> <em>that can be built one character at a time by other words in</em> <code>words</code>.</p>
 
@@ -11,7 +27,7 @@
 <p>Note that the word should be built from left to right with each additional character being added to the end of a previous word.&nbsp;</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;w&quot;,&quot;wo&quot;,&quot;wor&quot;,&quot;worl&quot;,&quot;world&quot;]
@@ -19,7 +35,7 @@
 <strong>Explanation:</strong> The word &quot;world&quot; can be built one character at a time by &quot;w&quot;, &quot;wo&quot;, &quot;wor&quot;, and &quot;worl&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;a&quot;,&quot;banana&quot;,&quot;app&quot;,&quot;appl&quot;,&quot;ap&quot;,&quot;apply&quot;,&quot;apple&quot;]
@@ -36,11 +52,17 @@
 	<li><code>words[i]</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -57,7 +79,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -92,58 +114,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function longestWord(words: string[]): string {
-    words.sort((a, b) => {
-        const n = a.length;
-        const m = b.length;
-        if (n === m) {
-            return a < b ? -1 : 1;
-        }
-        return m - n;
-    });
-    for (const word of words) {
-        let isPass = true;
-        for (let i = 1; i <= word.length; i++) {
-            if (!words.includes(word.slice(0, i))) {
-                isPass = false;
-                break;
-            }
-        }
-        if (isPass) {
-            return word;
-        }
-    }
-    return '';
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn longest_word(mut words: Vec<String>) -> String {
-        words.sort_unstable_by(|a, b| (b.len(), a).cmp(&(a.len(), b)));
-        for word in words.iter() {
-            let mut is_pass = true;
-            for i in 1..=word.len() {
-                if !words.contains(&word[..i].to_string()) {
-                    is_pass = false;
-                    break;
-                }
-            }
-            if is_pass {
-                return word.clone();
-            }
-        }
-        String::new()
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -152,17 +123,14 @@ public:
         unordered_set<string> s(words.begin(), words.end());
         int cnt = 0;
         string ans = "";
-        for (auto w : s)
-        {
+        for (auto w : s) {
             int n = w.size();
-            if (check(w, s))
-            {
-                if (cnt < n)
-                {
+            if (check(w, s)) {
+                if (cnt < n) {
                     cnt = n;
                     ans = w;
-                }
-                else if (cnt == n && w < ans) ans = w;
+                } else if (cnt == n && w < ans)
+                    ans = w;
             }
         }
         return ans;
@@ -177,7 +145,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func longestWord(words []string) string {
@@ -209,10 +177,59 @@ func longestWord(words []string) string {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function longestWord(words: string[]): string {
+    words.sort((a, b) => {
+        const n = a.length;
+        const m = b.length;
+        if (n === m) {
+            return a < b ? -1 : 1;
+        }
+        return m - n;
+    });
+    for (const word of words) {
+        let isPass = true;
+        for (let i = 1; i <= word.length; i++) {
+            if (!words.includes(word.slice(0, i))) {
+                isPass = false;
+                break;
+            }
+        }
+        if (isPass) {
+            return word;
+        }
+    }
+    return '';
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn longest_word(mut words: Vec<String>) -> String {
+        words.sort_unstable_by(|a, b| (b.len(), a).cmp(&(a.len(), b)));
+        for word in words.iter() {
+            let mut is_pass = true;
+            for i in 1..=word.len() {
+                if !words.contains(&word[..i].to_string()) {
+                    is_pass = false;
+                    break;
+                }
+            }
+            if is_pass {
+                return word.clone();
+            }
+        }
+        String::new()
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

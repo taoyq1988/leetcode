@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2299.Strong%20Password%20Checker%20II/README.md
+rating: 1241
+source: 第 80 场双周赛 Q1
+tags:
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2299. 强密码检验器 II](https://leetcode.cn/problems/strong-password-checker-ii)
 
 [English Version](/solution/2200-2299/2299.Strong%20Password%20Checker%20II/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>如果一个密码满足以下所有条件，我们称它是一个 <strong>强</strong>&nbsp;密码：</p>
 
@@ -50,41 +62,47 @@
 	<li><code>password</code>&nbsp;包含字母，数字和&nbsp;<code>"!@#$%^&amp;*()-+"</code>&nbsp;这些特殊字符。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：直接遍历判断**
+### 方法一：模拟 + 位运算
+
+根据题目描述，我们可以模拟检查密码是否满足题目要求的过程。
+
+首先，我们检查密码的长度是否小于 $8$，如果是，则返回 `false`。
+
+接下来，我们用一个掩码 `mask` 来记录密码是否包含小写字母、大写字母、数字和特殊字符。我们遍历密码，每次遍历到一个字符，先判断它是否和前一个字符相同，如果是，则返回 `false`。然后，根据字符的类型更新掩码 `mask`。最后，我们检查掩码 `mask` 是否为 $15$，如果是，则返回 `true`，否则返回 `false`。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为密码的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def strongPasswordCheckerII(self, password: str) -> bool:
         if len(password) < 8:
             return False
-        ans = 0
+        mask = 0
         for i, c in enumerate(password):
-            if i and password[i - 1] == c:
+            if i and c == password[i - 1]:
                 return False
             if c.islower():
-                ans |= 1
+                mask |= 1
             elif c.isupper():
-                ans |= 2
+                mask |= 2
             elif c.isdigit():
-                ans |= 4
+                mask |= 4
             else:
-                ans |= 8
-        return ans == 15
+                mask |= 8
+        return mask == 15
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -92,98 +110,173 @@ class Solution {
         if (password.length() < 8) {
             return false;
         }
-        int ans = 0;
-        char prev = '.';
-        for (char c : password.toCharArray()) {
-            if (prev == c) {
+        int mask = 0;
+        for (int i = 0; i < password.length(); ++i) {
+            char c = password.charAt(i);
+            if (i > 0 && c == password.charAt(i - 1)) {
                 return false;
             }
-            prev = c;
             if (Character.isLowerCase(c)) {
-                ans |= 1;
+                mask |= 1;
             } else if (Character.isUpperCase(c)) {
-                ans |= 2;
+                mask |= 2;
             } else if (Character.isDigit(c)) {
-                ans |= 4;
+                mask |= 4;
             } else {
-                ans |= 8;
+                mask |= 8;
             }
         }
-        return ans == 15;
+        return mask == 15;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool strongPasswordCheckerII(string password) {
-        if (password.size() < 8) return false;
-        int ans = 0;
-        char prev = '.';
-        for (char& c : password)
-        {
-            if (c == prev) return false;
-            prev = c;
-            if (c >= 'a' && c <= 'z') ans |= 1;
-            else if (c >= 'A' && c <= 'Z') ans |= 2;
-            else if (c >= '0' && c <= '9') ans |= 4;
-            else ans |= 8;
+        if (password.size() < 8) {
+            return false;
         }
-        return ans == 15;
+        int mask = 0;
+        for (int i = 0; i < password.size(); ++i) {
+            char c = password[i];
+            if (i && c == password[i - 1]) {
+                return false;
+            }
+            if (c >= 'a' && c <= 'z') {
+                mask |= 1;
+            } else if (c >= 'A' && c <= 'Z') {
+                mask |= 2;
+            } else if (c >= '0' && c <= '9') {
+                mask |= 4;
+            } else {
+                mask |= 8;
+            }
+        }
+        return mask == 15;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func strongPasswordCheckerII(password string) bool {
 	if len(password) < 8 {
 		return false
 	}
-	ans := 0
+	mask := 0
 	for i, c := range password {
-		if i > 0 && password[i] == password[i-1] {
+		if i > 0 && byte(c) == password[i-1] {
 			return false
 		}
 		if unicode.IsLower(c) {
-			ans |= 1
+			mask |= 1
 		} else if unicode.IsUpper(c) {
-			ans |= 2
+			mask |= 2
 		} else if unicode.IsDigit(c) {
-			ans |= 4
+			mask |= 4
 		} else {
-			ans |= 8
+			mask |= 8
 		}
 	}
-	return ans == 15
+	return mask == 15
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function strongPasswordCheckerII(password: string): boolean {
-    if (password.length < 8) return false;
-    if (!/[a-z]+/g.test(password)) return false;
-    if (!/[A-Z]+/g.test(password)) return false;
-    if (!/[0-9]+/g.test(password)) return false;
-    if (!/[\!\@\#\$\%\^\&\*\(\)\-\+]+/g.test(password)) return false;
-    const n = password.length;
-    for (let i = 1; i < n; i++) {
-        if (password.charAt(i) == password.charAt(i - 1)) return false;
+    if (password.length < 8) {
+        return false;
     }
-    return true;
+    let mask = 0;
+    for (let i = 0; i < password.length; ++i) {
+        const c = password[i];
+        if (i && c == password[i - 1]) {
+            return false;
+        }
+        if (c >= 'a' && c <= 'z') {
+            mask |= 1;
+        } else if (c >= 'A' && c <= 'Z') {
+            mask |= 2;
+        } else if (c >= '0' && c <= '9') {
+            mask |= 4;
+        } else {
+            mask |= 8;
+        }
+    }
+    return mask == 15;
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn strong_password_checker_ii(password: String) -> bool {
+        let s = password.as_bytes();
+        let n = password.len();
+        if n < 8 {
+            return false;
+        }
+        let mut mask = 0;
+        let mut prev = b' ';
+        for &c in s.iter() {
+            if c == prev {
+                return false;
+            }
+            mask |= if c.is_ascii_uppercase() {
+                0b1000
+            } else if c.is_ascii_lowercase() {
+                0b100
+            } else if c.is_ascii_digit() {
+                0b10
+            } else {
+                0b1
+            };
+            prev = c;
+        }
+        mask == 0b1111
+    }
+}
 ```
 
+#### C
+
+```c
+bool strongPasswordCheckerII(char* password) {
+    int n = strlen(password);
+    if (n < 8) {
+        return false;
+    }
+    int mask = 0;
+    char prev = ' ';
+    for (int i = 0; i < n; i++) {
+        if (prev == password[i]) {
+            return false;
+        }
+        if (islower(password[i])) {
+            mask |= 0b1000;
+        } else if (isupper(password[i])) {
+            mask |= 0b100;
+        } else if (isdigit(password[i])) {
+            mask |= 0b10;
+        } else {
+            mask |= 0b1;
+        }
+        prev = password[i];
+    }
+    return mask == 0b1111;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

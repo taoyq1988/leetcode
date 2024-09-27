@@ -1,21 +1,34 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0442.Find%20All%20Duplicates%20in%20an%20Array/README_EN.md
+tags:
+    - Array
+    - Hash Table
+---
+
+<!-- problem:start -->
+
 # [442. Find All Duplicates in an Array](https://leetcode.com/problems/find-all-duplicates-in-an-array)
 
 [中文文档](/solution/0400-0499/0442.Find%20All%20Duplicates%20in%20an%20Array/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an integer array <code>nums</code> of length <code>n</code> where all the integers of <code>nums</code> are in the range <code>[1, n]</code> and each integer appears <strong>once</strong> or <strong>twice</strong>, return <em>an array of all the integers that appears <strong>twice</strong></em>.</p>
 
-<p>You must write an algorithm that runs in&nbsp;<code>O(n)&nbsp;</code>time and uses only constant extra space.</p>
+<p>You must write an algorithm that runs in <code>O(n)</code> time and uses only <em>constant</em> auxiliary space, excluding the space needed to store the output</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <pre><strong>Input:</strong> nums = [4,3,2,7,8,2,3,1]
 <strong>Output:</strong> [2,3]
-</pre><p><strong>Example 2:</strong></p>
+</pre><p><strong class="example">Example 2:</strong></p>
 <pre><strong>Input:</strong> nums = [1,1,2]
 <strong>Output:</strong> [1]
-</pre><p><strong>Example 3:</strong></p>
+</pre><p><strong class="example">Example 3:</strong></p>
 <pre><strong>Input:</strong> nums = [1]
 <strong>Output:</strong> []
 </pre>
@@ -29,11 +42,17 @@
 	<li>Each element in <code>nums</code> appears <strong>once</strong> or <strong>twice</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -44,7 +63,7 @@ class Solution:
         return [v for i, v in enumerate(nums) if v != i + 1]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -72,25 +91,21 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) {
         int n = nums.size();
-        for (int i = 0; i < n; ++i)
-        {
-            while (nums[i] != nums[nums[i] - 1])
-            {
+        for (int i = 0; i < n; ++i) {
+            while (nums[i] != nums[nums[i] - 1]) {
                 swap(nums[i], nums[nums[i] - 1]);
             }
         }
         vector<int> ans;
-        for (int i = 0; i < n; ++i)
-        {
-            if (nums[i] != i + 1)
-            {
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] != i + 1) {
                 ans.push_back(nums[i]);
             }
         }
@@ -99,7 +114,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findDuplicates(nums []int) []int {
@@ -118,10 +133,8 @@ func findDuplicates(nums []int) []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

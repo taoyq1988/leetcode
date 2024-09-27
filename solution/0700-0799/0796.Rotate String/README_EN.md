@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0796.Rotate%20String/README_EN.md
+tags:
+    - String
+    - String Matching
+---
+
+<!-- problem:start -->
+
 # [796. Rotate String](https://leetcode.com/problems/rotate-string)
 
 [中文文档](/solution/0700-0799/0796.Rotate%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two strings <code>s</code> and <code>goal</code>, return <code>true</code> <em>if and only if</em> <code>s</code> <em>can become</em> <code>goal</code> <em>after some number of <strong>shifts</strong> on</em> <code>s</code>.</p>
 
@@ -13,10 +26,10 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <pre><strong>Input:</strong> s = "abcde", goal = "cdeab"
 <strong>Output:</strong> true
-</pre><p><strong>Example 2:</strong></p>
+</pre><p><strong class="example">Example 2:</strong></p>
 <pre><strong>Input:</strong> s = "abcde", goal = "abced"
 <strong>Output:</strong> false
 </pre>
@@ -28,11 +41,17 @@
 	<li><code>s</code> and <code>goal</code> consist of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -40,7 +59,7 @@ class Solution:
         return len(s) == len(goal) and goal in s + s
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -50,7 +69,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -61,7 +80,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func rotateString(s string, goal string) bool {
@@ -69,7 +88,7 @@ func rotateString(s string, goal string) bool {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function rotateString(s: string, goal: string): boolean {
@@ -77,7 +96,7 @@ function rotateString(s: string, goal: string): boolean {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -87,10 +106,23 @@ impl Solution {
 }
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param String $s
+     * @param String $goal
+     * @return Boolean
+     */
+    function rotateString($s, $goal) {
+        return strlen($goal) === strlen($s) && strpos($s . $s, $goal) !== false;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

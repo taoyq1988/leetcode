@@ -1,15 +1,19 @@
 impl Solution {
     pub fn is_anagram(s: String, t: String) -> bool {
-        if s.len() != t.len() {
+        let n = s.len();
+        let m = t.len();
+        if n != m {
             return false;
         }
-        let (s, t) = (s.as_bytes(), t.as_bytes());
-        let mut record = [0; 26];
-        let n = s.len();
+        let mut s = s.chars().collect::<Vec<char>>();
+        let mut t = t.chars().collect::<Vec<char>>();
+        s.sort();
+        t.sort();
         for i in 0..n {
-            record[(s[i] - b'a') as usize] += 1;
-            record[(t[i] - b'a') as usize] -= 1;
+            if s[i] != t[i] {
+                return false;
+            }
         }
-        record.iter().all(|&c| c == 0)
+        true
     }
 }

@@ -1,8 +1,22 @@
-# [359. Logger Rate Limiter](https://leetcode.com/problems/logger-rate-limiter)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0359.Logger%20Rate%20Limiter/README_EN.md
+tags:
+    - Design
+    - Hash Table
+    - Data Stream
+---
+
+<!-- problem:start -->
+
+# [359. Logger Rate Limiter 🔒](https://leetcode.com/problems/logger-rate-limiter)
 
 [中文文档](/solution/0300-0399/0359.Logger%20Rate%20Limiter/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a logger system that receives a stream of messages along with their timestamps. Each <strong>unique</strong> message should only be printed <strong>at most every 10 seconds</strong> (i.e. a message printed at timestamp <code>t</code> will prevent other identical messages from being printed until timestamp <code>t + 10</code>).</p>
 
@@ -16,7 +30,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -45,15 +59,20 @@ logger.shouldPrintMessage(11, &quot;foo&quot;); // 11 &gt;= 11, return true, nex
 	<li>At most <code>10<sup>4</sup></code> calls will be made to <code>shouldPrintMessage</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Logger:
-
     def __init__(self):
         """
         Initialize your data structure here.
@@ -78,7 +97,7 @@ class Logger:
 # param_1 = obj.shouldPrintMessage(timestamp,message)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Logger {
@@ -90,9 +109,11 @@ class Logger {
         limiter = new HashMap<>();
     }
 
-    /** Returns true if the message should be printed in the given timestamp, otherwise returns false.
-        If this method returns false, the message will not be printed.
-        The timestamp is in seconds granularity. */
+    /**
+       Returns true if the message should be printed in the given timestamp, otherwise returns
+       false. If this method returns false, the message will not be printed. The timestamp is in
+       seconds granularity.
+     */
     public boolean shouldPrintMessage(int timestamp, String message) {
         int t = limiter.getOrDefault(message, 0);
         if (t > timestamp) {
@@ -110,7 +131,7 @@ class Logger {
  */
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -144,10 +165,8 @@ Logger.prototype.shouldPrintMessage = function (timestamp, message) {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

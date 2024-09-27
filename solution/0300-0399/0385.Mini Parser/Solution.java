@@ -28,14 +28,11 @@
  */
 class Solution {
     public NestedInteger deserialize(String s) {
-        if ("".equals(s)) {
+        if ("".equals(s) || "[]".equals(s)) {
             return new NestedInteger();
         }
         if (s.charAt(0) != '[') {
             return new NestedInteger(Integer.parseInt(s));
-        }
-        if (s.length() <= 2) {
-            return new NestedInteger();
         }
         NestedInteger ans = new NestedInteger();
         int depth = 0;

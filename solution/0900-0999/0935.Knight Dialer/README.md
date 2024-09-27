@@ -1,10 +1,20 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0935.Knight%20Dialer/README.md
+tags:
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [935. 骑士拨号器](https://leetcode.cn/problems/knight-dialer)
 
 [English Version](/solution/0900-0999/0935.Knight%20Dialer/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>象棋骑士有一个<strong>独特的移动方式</strong>，它可以垂直移动两个方格，水平移动一个方格，或者水平移动两个方格，垂直移动一个方格(两者都形成一个&nbsp;<strong>L&nbsp;</strong>的形状)。</p>
 
@@ -59,17 +69,17 @@
 	<li><code>1 &lt;= n &lt;= 5000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：递推**
+### 方法一：递推
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -92,9 +102,7 @@ class Solution:
         return sum(t) % (10**9 + 7)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -130,7 +138,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -141,8 +149,7 @@ public:
         if (n == 1) return 10;
         int mod = 1e9 + 7;
         vector<ll> f(10, 1ll);
-        while (--n)
-        {
+        while (--n) {
             vector<ll> t(10);
             t[0] = f[4] + f[6];
             t[1] = f[6] + f[8];
@@ -161,7 +168,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func knightDialer(n int) int {
@@ -196,10 +203,76 @@ func knightDialer(n int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function knightDialer(n: number): number {
+    const MOD: number = 1e9 + 7;
+
+    if (n === 1) {
+        return 10;
+    }
+
+    const f: number[] = new Array(10).fill(1);
+
+    while (--n > 0) {
+        const t: number[] = new Array(10).fill(0);
+
+        t[0] = f[4] + f[6];
+        t[1] = f[6] + f[8];
+        t[2] = f[7] + f[9];
+        t[3] = f[4] + f[8];
+        t[4] = f[0] + f[3] + f[9];
+        t[6] = f[0] + f[1] + f[7];
+        t[7] = f[2] + f[6];
+        t[8] = f[1] + f[3];
+        t[9] = f[2] + f[4];
+
+        for (let i = 0; i < 10; ++i) {
+            f[i] = t[i] % MOD;
+        }
+    }
+
+    let ans: number = 0;
+    for (const v of f) {
+        ans = (ans + v) % MOD;
+    }
+
+    return ans;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        int A = 4;
+        int B = 2;
+        int C = 2;
+        int D = 1;
+        int MOD = (int)1e9 + 7;
+        for (int i = 0; i < n - 1; i++) {
+            int tempA = A;
+            int tempB = B;
+            int tempC = C;
+            int tempD = D;
+            A = ((2 * tempB) % MOD + (2 * tempC) % MOD) % MOD;
+            B = tempA;
+            C = (tempA + (2 * tempD) % MOD) % MOD;
+            D = tempC;
+        }
+
+        int ans = (A + B) % MOD;
+        ans = (ans + C) % MOD;
+        return (ans + D) % MOD;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

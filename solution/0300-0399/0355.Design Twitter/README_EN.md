@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0355.Design%20Twitter/README_EN.md
+tags:
+    - Design
+    - Hash Table
+    - Linked List
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [355. Design Twitter](https://leetcode.com/problems/design-twitter)
 
 [中文文档](/solution/0300-0399/0355.Design%20Twitter/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the <code>10</code> most recent tweets in the user&#39;s news feed.</p>
 
@@ -17,7 +32,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -47,15 +62,20 @@ twitter.getNewsFeed(1);  // User 1&#39;s news feed should return a list with 1 t
 	<li>At most <code>3 * 10<sup>4</sup></code> calls will be made to <code>postTweet</code>, <code>getNewsFeed</code>, <code>follow</code>, and <code>unfollow</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Twitter:
-
     def __init__(self):
         """
         Initialize your data structure here.
@@ -99,7 +119,6 @@ class Twitter:
             following.remove(followeeId)
 
 
-
 # Your Twitter object will be instantiated and called as such:
 # obj = Twitter()
 # obj.postTweet(userId,tweetId)
@@ -108,7 +127,7 @@ class Twitter:
 # obj.unfollow(followerId,followeeId)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Twitter {
@@ -131,12 +150,17 @@ class Twitter {
         tweets.put(tweetId, ++time);
     }
 
-    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    /**
+     * Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed
+     * must be posted by users who the user followed or by the user herself. Tweets must be ordered
+     * from most recent to least recent.
+     */
     public List<Integer> getNewsFeed(int userId) {
         Set<Integer> following = userFollowing.getOrDefault(userId, new HashSet<>());
         Set<Integer> users = new HashSet<>(following);
         users.add(userId);
-        PriorityQueue<Integer> pq = new PriorityQueue<>(10, (a, b) -> (tweets.get(b) - tweets.get(a)));
+        PriorityQueue<Integer> pq
+            = new PriorityQueue<>(10, (a, b) -> (tweets.get(b) - tweets.get(a)));
         for (Integer u : users) {
             List<Integer> userTweet = userTweets.get(u);
             if (userTweet != null && !userTweet.isEmpty()) {
@@ -173,10 +197,8 @@ class Twitter {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

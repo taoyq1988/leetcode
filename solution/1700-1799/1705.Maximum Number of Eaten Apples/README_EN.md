@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1705.Maximum%20Number%20of%20Eaten%20Apples/README_EN.md
+rating: 1929
+source: Weekly Contest 221 Q2
+tags:
+    - Greedy
+    - Array
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1705. Maximum Number of Eaten Apples](https://leetcode.com/problems/maximum-number-of-eaten-apples)
 
 [中文文档](/solution/1700-1799/1705.Maximum%20Number%20of%20Eaten%20Apples/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a special kind of apple tree that grows apples every day for <code>n</code> days. On the <code>i<sup>th</sup></code> day, the tree grows <code>apples[i]</code> apples that will rot after <code>days[i]</code> days, that is on day <code>i + days[i]</code> the apples will be rotten and cannot be eaten. On some days, the apple tree does not grow any apples, which are denoted by <code>apples[i] == 0</code> and <code>days[i] == 0</code>.</p>
 
@@ -11,7 +27,7 @@
 <p>Given two integer arrays <code>days</code> and <code>apples</code> of length <code>n</code>, return <em>the maximum number of apples you can eat.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> apples = [1,2,3,5,2], days = [3,2,1,4,2]
@@ -23,7 +39,7 @@
 - On the fourth to the seventh days, you eat apples that grew on the fourth day.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> apples = [3,0,0,0,0,2], days = [3,0,0,0,0,2]
@@ -44,53 +60,66 @@
 	<li><code>days[i] = 0</code> if and only if <code>apples[i] = 0</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy + Priority Queue
+
+We can greedily choose the apple that is most likely to rot among the unrotten apples, so that we can eat as many apples as possible.
+
+Therefore, we can use a priority queue (min heap) to store the rotting time of the apples and the corresponding number of apples. Each time we take out the apple with the smallest rotting time from the priority queue, then reduce its quantity by one. If the quantity of the apple is not zero after reduction, we put it back into the priority queue. If the apple has rotted, we pop it out from the priority queue.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Here, $n$ is the length of the array `apples` or `days`.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def eatenApples(self, apples: List[int], days: List[int]) -> int:
-        q = []
-        n = len(apples)
+        n = len(days)
         i = ans = 0
+        q = []
         while i < n or q:
-            if i < n and apples[i] > 0:
-                heappush(q, [i + days[i] - 1, apples[i]])
+            if i < n and apples[i]:
+                heappush(q, (i + days[i] - 1, apples[i]))
             while q and q[0][0] < i:
                 heappop(q)
             if q:
-                end, num = heappop(q)
-                num -= 1
+                t, v = heappop(q)
+                v -= 1
                 ans += 1
-                if num > 0 and end > i:
-                    heappush(q, [end, num])
+                if v and t > i:
+                    heappush(q, (t, v))
             i += 1
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int eatenApples(int[] apples, int[] days) {
         PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
-        int ans = 0, i = 0, n = apples.length;
+        int n = days.length;
+        int ans = 0, i = 0;
         while (i < n || !q.isEmpty()) {
             if (i < n && apples[i] > 0) {
-                q.offer(new int[]{i + days[i] - 1, apples[i]});
+                q.offer(new int[] {i + days[i] - 1, apples[i]});
             }
             while (!q.isEmpty() && q.peek()[0] < i) {
                 q.poll();
             }
             if (!q.isEmpty()) {
-                int[] t = q.poll();
-                if (--t[1] > 0 && t[0] > i) {
-                    q.offer(t);
-                }
+                var p = q.poll();
                 ++ans;
+                if (--p[1] > 0 && p[0] > i) {
+                    q.offer(p);
+                }
             }
             ++i;
         }
@@ -99,27 +128,26 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
-typedef pair<int, int> PII;
+using pii = pair<int, int>;
 
 class Solution {
 public:
     int eatenApples(vector<int>& apples, vector<int>& days) {
-        priority_queue<PII, vector<PII>, greater<PII>> q;
-        int i = 0, n = apples.size(), ans = 0;
-        while (i < n || !q.empty())
-        {
-            if (i < n && apples[i] > 0) q.emplace(i + days[i] - 1, apples[i]);
+        priority_queue<pii, vector<pii>, greater<pii>> q;
+        int n = days.size();
+        int ans = 0, i = 0;
+        while (i < n || !q.empty()) {
+            if (i < n && apples[i]) q.emplace(i + days[i] - 1, apples[i]);
             while (!q.empty() && q.top().first < i) q.pop();
-            if (!q.empty())
-            {
-                PII t = q.top();
+            if (!q.empty()) {
+                auto [t, v] = q.top();
                 q.pop();
-                --t.second;
+                --v;
                 ++ans;
-                if (t.second > 0 && t.first > i) q.emplace(t);
+                if (v && t > i) q.emplace(t, v);
             }
             ++i;
         }
@@ -128,7 +156,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func eatenApples(apples []int, days []int) int {
@@ -159,17 +187,15 @@ type pair struct {
 
 type hp []pair
 
-func (a hp) Len() int            { return len(a) }
-func (a hp) Swap(i, j int)       { a[i], a[j] = a[j], a[i] }
-func (a hp) Less(i, j int) bool  { return a[i].first < a[j].first }
-func (a *hp) Push(x interface{}) { *a = append(*a, x.(pair)) }
-func (a *hp) Pop() interface{}   { l := len(*a); t := (*a)[l-1]; *a = (*a)[:l-1]; return t }
-```
-
-### **...**
-
-```
-
+func (a hp) Len() int           { return len(a) }
+func (a hp) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a hp) Less(i, j int) bool { return a[i].first < a[j].first }
+func (a *hp) Push(x any)        { *a = append(*a, x.(pair)) }
+func (a *hp) Pop() any          { l := len(*a); t := (*a)[l-1]; *a = (*a)[:l-1]; return t }
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

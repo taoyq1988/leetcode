@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2321.Maximum%20Score%20Of%20Spliced%20Array/README.md
+rating: 1790
+source: 第 299 场周赛 Q3
+tags:
+    - 数组
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [2321. 拼接数组的最大分数](https://leetcode.cn/problems/maximum-score-of-spliced-array)
 
 [English Version](/solution/2300-2399/2321.Maximum%20Score%20Of%20Spliced%20Array/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个下标从 <strong>0</strong> 开始的整数数组 <code>nums1</code> 和 <code>nums2</code> ，长度都是 <code>n</code> 。</p>
 
@@ -60,15 +73,17 @@
 	<li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -88,9 +103,7 @@ class Solution:
         return max(s2 + f(nums1, nums2), s1 + f(nums2, nums1))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -120,15 +133,14 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maximumsSplicedArray(vector<int>& nums1, vector<int>& nums2) {
         int s1 = 0, s2 = 0, n = nums1.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             s1 += nums1[i];
             s2 += nums2[i];
         }
@@ -138,11 +150,12 @@ public:
     int f(vector<int>& nums1, vector<int>& nums2) {
         int t = nums1[0] - nums2[0];
         int mx = t;
-        for (int i = 1; i < nums1.size(); ++i)
-        {
+        for (int i = 1; i < nums1.size(); ++i) {
             int v = nums1[i] - nums2[i];
-            if (t > 0) t += v;
-            else t = v;
+            if (t > 0)
+                t += v;
+            else
+                t = v;
             mx = max(mx, t);
         }
         return mx;
@@ -150,7 +163,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumsSplicedArray(nums1 []int, nums2 []int) int {
@@ -176,25 +189,10 @@ func maximumsSplicedArray(nums1 []int, nums2 []int) int {
 	}
 	return max(s2+f(nums1, nums2), s1+f(nums2, nums1))
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

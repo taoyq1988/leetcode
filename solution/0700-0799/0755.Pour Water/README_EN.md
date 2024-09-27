@@ -1,8 +1,21 @@
-# [755. Pour Water](https://leetcode.com/problems/pour-water)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0755.Pour%20Water/README_EN.md
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
+# [755. Pour Water 🔒](https://leetcode.com/problems/pour-water)
 
 [中文文档](/solution/0700-0799/0755.Pour%20Water/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an elevation map represents as an integer array <code>heights</code> where <code>heights[i]</code> representing the height of the terrain at index <code>i</code>. The width at each index is <code>1</code>. You are also given two integers <code>volume</code> and <code>k</code>. <code>volume</code> units of water will fall at index <code>k</code>.</p>
 
@@ -19,7 +32,7 @@
 <p>We can assume there is infinitely high terrain on the two sides out of bounds of the array. Also, there could not be partial water being spread out evenly on more than one grid block, and each unit of water has to be in exactly one block.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0755.Pour%20Water/images/pour11-grid.jpg" style="width: 450px; height: 303px;" />
 <pre>
 <strong>Input:</strong> heights = [2,1,1,2,1,2,2], volume = 4, k = 3
@@ -36,7 +49,7 @@ Finally, the fourth droplet falls at index k = 3. Since moving left would not ev
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0755.Pour%20Water/images/pour15-grid.jpg" style="width: 400px; height: 269px;" />
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> heights = [1,2,3,4], volume = 2, k = 2
@@ -44,7 +57,7 @@ Finally, the fourth droplet falls at index k = 3. Since moving left would not ev
 <strong>Explanation:</strong> The last droplet settles at index 1, since moving further left would not cause it to eventually fall to a lower height.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> heights = [3,1,3], volume = 5, k = 1
@@ -61,26 +74,125 @@ Finally, the fourth droplet falls at index k = 3. Since moving left would not ev
 	<li><code>0 &lt;= k &lt; heights.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def pourWater(self, heights: List[int], volume: int, k: int) -> List[int]:
+        for _ in range(volume):
+            for d in (-1, 1):
+                i = j = k
+                while 0 <= i + d < len(heights) and heights[i + d] <= heights[i]:
+                    if heights[i + d] < heights[i]:
+                        j = i + d
+                    i += d
+                if j != k:
+                    heights[j] += 1
+                    break
+            else:
+                heights[k] += 1
+        return heights
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int[] pourWater(int[] heights, int volume, int k) {
+        while (volume-- > 0) {
+            boolean find = false;
+            for (int d = -1; d < 2 && !find; d += 2) {
+                int i = k, j = k;
+                while (i + d >= 0 && i + d < heights.length && heights[i + d] <= heights[i]) {
+                    if (heights[i + d] < heights[i]) {
+                        j = i + d;
+                    }
+                    i += d;
+                }
+                if (j != k) {
+                    find = true;
+                    ++heights[j];
+                }
+            }
+            if (!find) {
+                ++heights[k];
+            }
+        }
+        return heights;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<int> pourWater(vector<int>& heights, int volume, int k) {
+        while (volume--) {
+            bool find = false;
+            for (int d = -1; d < 2 && !find; d += 2) {
+                int i = k, j = k;
+                while (i + d >= 0 && i + d < heights.size() && heights[i + d] <= heights[i]) {
+                    if (heights[i + d] < heights[i]) {
+                        j = i + d;
+                    }
+                    i += d;
+                }
+                if (j != k) {
+                    find = true;
+                    ++heights[j];
+                }
+            }
+            if (!find) {
+                ++heights[k];
+            }
+        }
+        return heights;
+    }
+};
 ```
 
+#### Go
+
+```go
+func pourWater(heights []int, volume int, k int) []int {
+	for ; volume > 0; volume-- {
+		find := false
+		for _, d := range [2]int{-1, 1} {
+			i, j := k, k
+			for i+d >= 0 && i+d < len(heights) && heights[i+d] <= heights[i] {
+				if heights[i+d] < heights[i] {
+					j = i + d
+				}
+				i += d
+			}
+			if j != k {
+				find = true
+				heights[j]++
+				break
+			}
+		}
+		if !find {
+			heights[k]++
+		}
+	}
+	return heights
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

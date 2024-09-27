@@ -1,8 +1,24 @@
-# [1810. Minimum Path Cost in a Hidden Grid](https://leetcode.com/problems/minimum-path-cost-in-a-hidden-grid)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1810.Minimum%20Path%20Cost%20in%20a%20Hidden%20Grid/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Graph
+    - Interactive
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
+# [1810. Minimum Path Cost in a Hidden Grid 🔒](https://leetcode.com/problems/minimum-path-cost-in-a-hidden-grid)
 
 [中文文档](/solution/1800-1899/1810.Minimum%20Path%20Cost%20in%20a%20Hidden%20Grid/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>This is an <strong>interactive problem</strong>.</p>
 
@@ -38,7 +54,7 @@
 <p>Remember that you will <strong>not</strong> have this information in your code.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[2,3],[1,1]], r1 = 0, c1 = 1, r2 = 1, c2 = 0
@@ -61,7 +77,7 @@ The robot is initially standing on cell (0, 1), denoted by the 3.
 - master.move(&#39;R&#39;) moves the robot to the cell (1, 1) and returns 1.
 We now know that the target is the cell (1, 0), and the minimum total cost to reach it is 2. </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[0,3,1],[3,4,2],[1,2,0]], r1 = 2, c1 = 0, r2 = 0, c2 = 2
@@ -69,7 +85,7 @@ We now know that the target is the cell (1, 0), and the minimum total cost to re
 <strong>Explanation:</strong> The minimum cost path is (2,0) -&gt; (2,1) -&gt; (1,1) -&gt; (1,2) -&gt; (0,2).
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[1,0],[0,1]], r1 = 0, c1 = 0, r2 = 1, c2 = 1
@@ -87,11 +103,17 @@ We now know that the target is the cell (1, 0), and the minimum total cost to re
 	<li><code>0 &lt;= grid[i][j] &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # """
@@ -109,6 +131,7 @@ We now know that the target is the cell (1, 0), and the minimum total cost to re
 #
 #
 
+
 class Solution(object):
     def findShortestPath(self, master: 'GridMaster') -> int:
         def dfs(i, j):
@@ -124,13 +147,13 @@ class Solution(object):
 
         target = (-1, -1)
         N = 200
-        INF = 0x3f3f3f3f
+        INF = 0x3F3F3F3F
         g = [[-1] * N for _ in range(N)]
         dirs = {
             'U': (-1, 0, 'D'),
             'D': (1, 0, 'U'),
             'L': (0, -1, 'R'),
-            'R': (0, 1, 'L')
+            'R': (0, 1, 'L'),
         }
         dfs(100, 100)
         if target == (-1, -1):
@@ -144,13 +167,18 @@ class Solution(object):
                 return w
             for a, b, _ in dirs.values():
                 x, y = i + a, j + b
-                if 0 <= x < N and 0 <= y < N and g[x][y] != -1 and dist[x][y] > w + g[x][y]:
+                if (
+                    0 <= x < N
+                    and 0 <= y < N
+                    and g[x][y] != -1
+                    and dist[x][y] > w + g[x][y]
+                ):
                     dist[x][y] = w + g[x][y]
                     heappush(q, (dist[x][y], x, y))
         return 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -174,7 +202,7 @@ class Solution {
     private int[] target;
 
     public int findShortestPath(GridMaster master) {
-        target = new int[]{-1, -1};
+        target = new int[] {-1, -1};
         for (int i = 0; i < N; ++i) {
             Arrays.fill(g[i], -1);
             Arrays.fill(dist[i], INF);
@@ -184,7 +212,7 @@ class Solution {
             return -1;
         }
         PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
-        q.offer(new int[]{0, 100, 100});
+        q.offer(new int[] {0, 100, 100});
         dist[100][100] = 0;
         while (!q.isEmpty()) {
             int[] p = q.poll();
@@ -194,9 +222,10 @@ class Solution {
             }
             for (int k = 0; k < 4; ++k) {
                 int x = i + dirs[k], y = j + dirs[k + 1];
-                if (x >= 0 && x < N && y >= 0 && y < N && g[x][y] != -1 && dist[x][y] > w + g[x][y]) {
+                if (x >= 0 && x < N && y >= 0 && y < N && g[x][y] != -1
+                    && dist[x][y] > w + g[x][y]) {
                     dist[x][y] = w + g[x][y];
-                    q.offer(new int[]{dist[x][y], x, y});
+                    q.offer(new int[] {dist[x][y], x, y});
                 }
             }
         }
@@ -205,7 +234,7 @@ class Solution {
 
     private void dfs(int i, int j, GridMaster master) {
         if (master.isTarget()) {
-            target = new int[]{i, j};
+            target = new int[] {i, j};
         }
         for (int k = 0; k < 4; ++k) {
             char d = dir[k], nd = ndir[k];
@@ -220,10 +249,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

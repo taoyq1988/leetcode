@@ -1,14 +1,12 @@
-﻿class Solution {
+class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
-        int left = 1, right = numbers.size();
-        while (left < right)
-        {
-            int x = numbers[left - 1] + numbers[right - 1];
-            if (x == target) return {left, right};
-            if (x < target) ++left;
-            else --right;
+        for (int i = 0, n = numbers.size();; ++i) {
+            int x = target - numbers[i];
+            int j = lower_bound(numbers.begin() + i + 1, numbers.end(), x) - numbers.begin();
+            if (j < n && numbers[j] == x) {
+                return {i + 1, j + 1};
+            }
         }
-        return {-1, -1};
     }
 };

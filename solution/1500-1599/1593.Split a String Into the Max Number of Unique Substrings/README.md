@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1593.Split%20a%20String%20Into%20the%20Max%20Number%20of%20Unique%20Substrings/README.md
+rating: 1739
+source: 第 207 场周赛 Q2
+tags:
+    - 哈希表
+    - 字符串
+    - 回溯
+---
+
+<!-- problem:start -->
+
 # [1593. 拆分字符串使唯一子字符串的数目最大](https://leetcode.cn/problems/split-a-string-into-the-max-number-of-unique-substrings)
 
 [English Version](/solution/1500-1599/1593.Split%20a%20String%20Into%20the%20Max%20Number%20of%20Unique%20Substrings/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个字符串 <code>s</code> ，请你拆分该字符串，并返回拆分后唯一子字符串的最大数目。</p>
 
@@ -48,32 +62,131 @@
 	</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：DFS
+
+经典 DFS 回溯问题。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
+class Solution:
+    def maxUniqueSplit(self, s: str) -> int:
+        def dfs(i, t):
+            if i >= len(s):
+                nonlocal ans
+                ans = max(ans, t)
+                return
+            for j in range(i + 1, len(s) + 1):
+                if s[i:j] not in vis:
+                    vis.add(s[i:j])
+                    dfs(j, t + 1)
+                    vis.remove(s[i:j])
 
+        vis = set()
+        ans = 1
+        dfs(0, 0)
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
+class Solution {
+    private Set<String> vis = new HashSet<>();
+    private int ans = 1;
+    private String s;
 
+    public int maxUniqueSplit(String s) {
+        this.s = s;
+        dfs(0, 0);
+        return ans;
+    }
+
+    private void dfs(int i, int t) {
+        if (i >= s.length()) {
+            ans = Math.max(ans, t);
+            return;
+        }
+        for (int j = i + 1; j <= s.length(); ++j) {
+            String x = s.substring(i, j);
+            if (vis.add(x)) {
+                dfs(j, t + 1);
+                vis.remove(x);
+            }
+        }
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    unordered_set<string> vis;
+    string s;
+    int ans = 1;
+
+    int maxUniqueSplit(string s) {
+        this->s = s;
+        dfs(0, 0);
+        return ans;
+    }
+
+    void dfs(int i, int t) {
+        if (i >= s.size()) {
+            ans = max(ans, t);
+            return;
+        }
+        for (int j = i + 1; j <= s.size(); ++j) {
+            string x = s.substr(i, j - i);
+            if (!vis.count(x)) {
+                vis.insert(x);
+                dfs(j, t + 1);
+                vis.erase(x);
+            }
+        }
+    }
+};
 ```
 
+#### Go
+
+```go
+func maxUniqueSplit(s string) int {
+	ans := 1
+	vis := map[string]bool{}
+
+	var dfs func(i, t int)
+	dfs = func(i, t int) {
+		if i >= len(s) {
+			ans = max(ans, t)
+			return
+		}
+		for j := i + 1; j <= len(s); j++ {
+			x := s[i:j]
+			if !vis[x] {
+				vis[x] = true
+				dfs(j, t+1)
+				vis[x] = false
+			}
+		}
+	}
+	dfs(0, 0)
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

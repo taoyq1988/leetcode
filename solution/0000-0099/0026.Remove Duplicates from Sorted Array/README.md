@@ -1,18 +1,30 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0026.Remove%20Duplicates%20from%20Sorted%20Array/README.md
+tags:
+    - 数组
+    - 双指针
+---
+
+<!-- problem:start -->
+
 # [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array)
 
 [English Version](/solution/0000-0099/0026.Remove%20Duplicates%20from%20Sorted%20Array/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>给你一个 <strong>升序排列</strong> 的数组 <code>nums</code> ，请你<strong><a href="http://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95" target="_blank"> 原地</a></strong> 删除重复出现的元素，使每个元素 <strong>只出现一次</strong> ，返回删除后数组的新长度。元素的 <strong>相对顺序</strong> 应该保持 <strong>一致</strong> 。</p>
+<p>给你一个 <strong>非严格递增排列</strong> 的数组 <code>nums</code> ，请你<strong><a href="http://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95" target="_blank"> 原地</a></strong> 删除重复出现的元素，使每个元素 <strong>只出现一次</strong> ，返回删除后数组的新长度。元素的 <strong>相对顺序</strong> 应该保持 <strong>一致</strong> 。然后返回 <code>nums</code> 中唯一元素的个数。</p>
 
-<p>由于在某些语言中不能改变数组的长度，所以必须将结果放在数组nums的第一部分。更规范地说，如果在删除重复项之后有 <code>k</code> 个元素，那么&nbsp;<code>nums</code>&nbsp;的前 <code>k</code> 个元素应该保存最终结果。</p>
+<p>考虑 <code>nums</code> 的唯一元素的数量为 <code>k</code> ，你需要做以下事情确保你的题解可以被通过：</p>
 
-<p>将最终结果插入&nbsp;<code>nums</code> 的前 <code>k</code> 个位置后返回 <code>k</code> 。</p>
-
-<p>不要使用额外的空间，你必须在 <strong><a href="https://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95" target="_blank">原地 </a>修改输入数组 </strong>并在使用 O(1) 额外空间的条件下完成。</p>
+<ul>
+	<li>更改数组 <code>nums</code> ，使 <code>nums</code> 的前 <code>k</code> 个元素包含唯一元素，并按照它们最初在 <code>nums</code> 中出现的顺序排列。<code>nums</code>&nbsp;的其余元素与 <code>nums</code> 的大小不重要。</li>
+	<li>返回 <code>k</code>&nbsp;。</li>
+</ul>
 
 <p><strong>判题标准:</strong></p>
 
@@ -33,7 +45,7 @@ for (int i = 0; i &lt; k; i++) {
 
 <p>&nbsp;</p>
 
-<p><strong>示例 1：</strong></p>
+<p><strong class="example">示例 1：</strong></p>
 
 <pre>
 <strong>输入：</strong>nums = [1,1,2]
@@ -41,7 +53,7 @@ for (int i = 0; i &lt; k; i++) {
 <strong>解释：</strong>函数应该返回新的长度 <strong><code>2</code></strong> ，并且原数组 <em>nums </em>的前两个元素被修改为 <strong><code>1</code></strong>, <strong><code>2 </code></strong><code>。</code>不需要考虑数组中超出新长度后面的元素。
 </pre>
 
-<p><strong>示例 2：</strong></p>
+<p><strong class="example">示例 2：</strong></p>
 
 <pre>
 <strong>输入：</strong>nums = [0,0,1,1,1,2,2,3,3,4]
@@ -56,69 +68,195 @@ for (int i = 0; i &lt; k; i++) {
 <ul>
 	<li><code>1 &lt;= nums.length &lt;= 3 * 10<sup>4</sup></code></li>
 	<li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>
-	<li><code>nums</code> 已按 <strong>升序</strong> 排列</li>
+	<li><code>nums</code> 已按 <strong>非严格递增</strong>&nbsp;排列</li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-原问题要求最多相同的数字最多出现 1 次，我们可以扩展至相同的数字最多保留 k 个。
+### 方法一：一次遍历
 
--   由于相同的数字最多保留 k 个，那么原数组的前 k 个元素我们可以直接保留；
--   对于后面的数字，能够保留的前提是：当前数字 num 与前面已保留的数字的倒数第 k 个元素比较，不同则保留，相同则跳过。
+我们用一个变量 $k$ 记录当前已经处理好的数组的长度，初始时 $k=0$，表示空数组。
 
-相似题目：[80. 删除有序数组中的重复项 II](/solution/0000-0099/0080.Remove%20Duplicates%20from%20Sorted%20Array%20II/README.md)
+然后我们从左到右遍历数组，对于遍历到的每个元素 $x$，如果 $k=0$ 或者 $x \neq nums[k-1]$，我们就将 $x$ 放到 $nums[k]$ 的位置，然后 $k$ 自增 $1$。否则，$x$ 与 $nums[k-1]$ 相同，我们直接跳过这个元素。继续遍历，直到遍历完整个数组。
+
+这样，当遍历结束时，$nums$ 中前 $k$ 个元素就是我们要求的答案，且 $k$ 就是答案的长度。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为数组的长度。
+
+补充：
+
+原问题要求最多相同的数字最多出现 $1$ 次，我们可以扩展至相同的数字最多保留 $k$ 个。
+
+-   由于相同的数字最多保留 $k$ 个，那么原数组的前 $k$ 个元素我们可以直接保留；
+-   对于后面的数字，能够保留的前提是：当前数字 $x$ 与前面已保留的数字的倒数第 $k$ 个元素比较，不同则保留，相同则跳过。
+
+相似题目：
+
+-   [80. 删除有序数组中的重复项 II](https://github.com/doocs/leetcode/blob/main/solution/0000-0099/0080.Remove%20Duplicates%20from%20Sorted%20Array%20II/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
-        i = 0
-        for num in nums:
-            if i < 1 or num != nums[i - 1]:
-                nums[i] = num
-                i += 1
-        return i
+        k = 0
+        for x in nums:
+            if k == 0 or x != nums[k - 1]:
+                nums[k] = x
+                k += 1
+        return k
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int removeDuplicates(int[] nums) {
-        int i = 0;
-        for (int num : nums) {
-            if (i < 1 || num != nums[i - 1]) {
-                nums[i++] = num;
+        int k = 0;
+        for (int x : nums) {
+            if (k == 0 || x != nums[k - 1]) {
+                nums[k++] = x;
             }
         }
-        return i;
+        return k;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        int i = 0;
-        for (int& num : nums)
-            if (i < 1 || num != nums[i - 1])
-                nums[i++] = num;
-        return i;
+        int k = 0;
+        for (int x : nums) {
+            if (k == 0 || x != nums[k - 1]) {
+                nums[k++] = x;
+            }
+        }
+        return k;
     }
 };
 ```
+
+#### Go
+
+```go
+func removeDuplicates(nums []int) int {
+	k := 0
+	for _, x := range nums {
+		if k == 0 || x != nums[k-1] {
+			nums[k] = x
+			k++
+		}
+	}
+	return k
+}
+```
+
+#### TypeScript
+
+```ts
+function removeDuplicates(nums: number[]): number {
+    let k: number = 0;
+    for (const x of nums) {
+        if (k === 0 || x !== nums[k - 1]) {
+            nums[k++] = x;
+        }
+    }
+    return k;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut k = 0;
+        for i in 0..nums.len() {
+            if k == 0 || nums[i] != nums[k - 1] {
+                nums[k] = nums[i];
+                k += 1;
+            }
+        }
+        k as i32
+    }
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var removeDuplicates = function (nums) {
+    let k = 0;
+    for (const x of nums) {
+        if (k === 0 || x !== nums[k - 1]) {
+            nums[k++] = x;
+        }
+    }
+    return k;
+};
+```
+
+#### C#
+
+```cs
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int k = 0;
+        foreach (int x in nums) {
+            if (k == 0 || x != nums[k - 1]) {
+                nums[k++] = x;
+            }
+        }
+        return k;
+    }
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param Integer[] $nums
+     * @return Integer
+     */
+    function removeDuplicates(&$nums) {
+        $k = 0;
+        foreach ($nums as $x) {
+            if ($k == 0 || $x != $nums[$k - 1]) {
+                $nums[$k++] = $x;
+            }
+        }
+        return $k;
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二
+
+<!-- tabs:start -->
+
+#### C++
 
 ```cpp
 class Solution {
@@ -130,78 +268,8 @@ public:
 };
 ```
 
-### **Go**
-
-```go
-func removeDuplicates(nums []int) int {
-    i := 0
-	for _, num := range nums {
-		if i < 1 || num != nums[i-1] {
-			nums[i] = num
-			i++
-		}
-	}
-	return i
-}
-```
-
-### **JavaScript**
-
-```js
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var removeDuplicates = function (nums) {
-    let i = 0;
-    for (const num of nums) {
-        if (i < 1 || num != nums[i - 1]) {
-            nums[i++] = num;
-        }
-    }
-    return i;
-};
-```
-
-### **C#**
-
-```cs
-public class Solution {
-    public int RemoveDuplicates(int[] nums) {
-        int i = 0;
-        foreach(int num in nums)
-        {
-            if (i < 1 || num != nums[i - 1])
-            {
-                nums[i++] = num;
-            }
-        }
-        return i;
-    }
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
-        let mut len = 0;
-        for i in 0..nums.len() {
-            if i == 0 || nums[i] != nums[len - 1] {
-                nums[len] = nums[i];
-                len += 1;
-            }
-        }
-        len as i32
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

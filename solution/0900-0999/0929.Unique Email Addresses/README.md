@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0929.Unique%20Email%20Addresses/README.md
+tags:
+    - 数组
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [929. 独特的电子邮件地址](https://leetcode.cn/problems/unique-email-addresses)
 
 [English Version](/solution/0900-0999/0929.Unique%20Email%20Addresses/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>每个 <strong>有效电子邮件地址</strong> 都由一个 <strong>本地名</strong> 和一个 <strong>域名</strong> 组成，以 <code>'@'</code> 符号分隔。除小写字母之外，电子邮件地址还可以含有一个或多个&nbsp;<code>'.'</code> 或 <code>'+'</code> 。</p>
 
@@ -55,21 +67,23 @@
 	<li>每个 <code>emails[i]</code> 都包含有且仅有一个 <code>'@'</code> 字符</li>
 	<li>所有本地名和域名都不为空</li>
 	<li>本地名不会以 <code>'+'</code> 字符作为开头</li>
+	<li>域名以&nbsp;<code>".com"</code> 后缀结尾。</li>
+	<li>域名在&nbsp;<code>".com"</code> 后缀前至少包含一个字符</li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表**
+### 方法一：哈希表
 
 利用哈希表存放转换后的电子邮件，最后返回哈希表的 size 即可。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -84,9 +98,7 @@ class Solution:
         return len(s)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -107,15 +119,14 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
         unordered_set<string> s;
-        for (auto& email : emails)
-        {
+        for (auto& email : emails) {
             int i = email.find('@');
             string local = email.substr(0, i);
             string domain = email.substr(i + 1);
@@ -130,7 +141,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numUniqueEmails(emails []string) int {
@@ -146,7 +157,47 @@ func numUniqueEmails(emails []string) int {
 }
 ```
 
-### **JavaScript**
+#### TypeScript
+
+```ts
+function numUniqueEmails(emails: string[]): number {
+    return new Set(
+        emails
+            .map(email => email.split('@'))
+            .map(([start, end]) => start.replace(/\+.*|\./g, '') + '@' + end),
+    ).size;
+}
+```
+
+#### Rust
+
+```rust
+use std::collections::HashSet;
+impl Solution {
+    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
+        let mut set = HashSet::new();
+        for email in emails.iter() {
+            let res: Vec<&str> = email.split('@').collect();
+            let mut s = String::new();
+            for &c in res[0].as_bytes().iter() {
+                if c == b'.' {
+                    continue;
+                }
+                if c == b'+' {
+                    break;
+                }
+                s.push(c as char);
+            }
+            s.push('@');
+            s.push_str(res[1]);
+            set.insert(s);
+        }
+        set.len() as i32
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 const numUniqueEmails2 = function (emails) {
@@ -191,50 +242,8 @@ const numUniqueEmails = function (emails) {
 };
 ```
 
-### **TypeScript**
-
-```ts
-function numUniqueEmails(emails: string[]): number {
-    return new Set(
-        emails
-            .map(email => email.split('@'))
-            .map(([start, end]) => start.replace(/\+.*|\./g, '') + '@' + end),
-    ).size;
-}
-```
-
-### **Rust**
-
-```rust
-use std::collections::HashSet;
-impl Solution {
-    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
-        let mut set = HashSet::new();
-        for email in emails.iter() {
-            let res: Vec<&str> = email.split('@').collect();
-            let mut s = String::new();
-            for &c in res[0].as_bytes().iter() {
-                if c == b'.' {
-                    continue;
-                }
-                if c == b'+' {
-                    break;
-                }
-                s.push(c as char)
-            }
-            s.push('@');
-            s.push_str(res[1]);
-            set.insert(s);
-        }
-        set.len() as i32
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

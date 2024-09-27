@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1489.Find%20Critical%20and%20Pseudo-Critical%20Edges%20in%20Minimum%20Spanning%20Tree/README_EN.md
+rating: 2571
+source: Weekly Contest 194 Q4
+tags:
+    - Union Find
+    - Graph
+    - Minimum Spanning Tree
+    - Sorting
+    - Strongly Connected Component
+---
+
+<!-- problem:start -->
+
 # [1489. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree](https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree)
 
 [中文文档](/solution/1400-1499/1489.Find%20Critical%20and%20Pseudo-Critical%20Edges%20in%20Minimum%20Spanning%20Tree/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a weighted undirected connected graph with <code>n</code>&nbsp;vertices numbered from <code>0</code> to <code>n - 1</code>,&nbsp;and an array <code>edges</code>&nbsp;where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>, weight<sub>i</sub>]</code> represents a bidirectional and weighted edge between nodes&nbsp;<code>a<sub>i</sub></code>&nbsp;and <code>b<sub>i</sub></code>. A minimum spanning tree (MST) is a subset of the graph&#39;s edges that connects all vertices without cycles&nbsp;and with the minimum possible total edge weight.</p>
 
@@ -11,7 +29,7 @@
 <p>Note that you can return the indices of the edges in any order.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1400-1499/1489.Find%20Critical%20and%20Pseudo-Critical%20Edges%20in%20Minimum%20Spanning%20Tree/images/ex1.png" style="width: 259px; height: 262px;" /></p>
 
@@ -25,7 +43,7 @@ Notice that the two edges 0 and 1 appear in all MSTs, therefore they are critica
 The edges 2, 3, 4, and 5 are only part of some MSTs, therefore they are considered pseudo-critical edges. We add them to the second list of the output.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1400-1499/1489.Find%20Critical%20and%20Pseudo-Critical%20Edges%20in%20Minimum%20Spanning%20Tree/images/ex2.png" style="width: 247px; height: 253px;" /></p>
 
@@ -47,11 +65,17 @@ The edges 2, 3, 4, and 5 are only part of some MSTs, therefore they are consider
 	<li>All pairs <code>(a<sub>i</sub>, b<sub>i</sub>)</code> are <strong>distinct</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class UnionFind:
@@ -73,7 +97,9 @@ class UnionFind:
 
 
 class Solution:
-    def findCriticalAndPseudoCriticalEdges(self, n: int, edges: List[List[int]]) -> List[List[int]]:
+    def findCriticalAndPseudoCriticalEdges(
+        self, n: int, edges: List[List[int]]
+    ) -> List[List[int]]:
         for i, e in enumerate(edges):
             e.append(i)
         edges.sort(key=lambda x: x[2])
@@ -95,7 +121,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -185,7 +211,7 @@ class UnionFind {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class UnionFind {
@@ -193,7 +219,9 @@ public:
     vector<int> p;
     int n;
 
-    UnionFind(int _n): n(_n), p(_n) {
+    UnionFind(int _n)
+        : n(_n)
+        , p(_n) {
         iota(p.begin(), p.end(), 0);
     }
 
@@ -214,27 +242,23 @@ class Solution {
 public:
     vector<vector<int>> findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
         for (int i = 0; i < edges.size(); ++i) edges[i].push_back(i);
-        sort(edges.begin(), edges.end(), [](auto& a, auto& b) {return a[2] < b[2];});
+        sort(edges.begin(), edges.end(), [](auto& a, auto& b) { return a[2] < b[2]; });
         int v = 0;
         UnionFind uf(n);
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int f = e[0], t = e[1], w = e[2];
             if (uf.unite(f, t)) v += w;
         }
         vector<vector<int>> ans(2);
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int f = e[0], t = e[1], w = e[2], i = e[3];
             UnionFind ufa(n);
             int k = 0;
-            for (auto& ne : edges)
-            {
+            for (auto& ne : edges) {
                 int x = ne[0], y = ne[1], z = ne[2], j = ne[3];
                 if (j != i && ufa.unite(x, y)) k += z;
             }
-            if (ufa.n > 1 || (ufa.n == 1 && k > v))
-            {
+            if (ufa.n > 1 || (ufa.n == 1 && k > v)) {
                 ans[0].push_back(i);
                 continue;
             }
@@ -242,8 +266,7 @@ public:
             UnionFind ufb(n);
             ufb.unite(f, t);
             k = w;
-            for (auto& ne : edges)
-            {
+            for (auto& ne : edges) {
                 int x = ne[0], y = ne[1], z = ne[2], j = ne[3];
                 if (j != i && ufb.unite(x, y)) k += z;
             }
@@ -254,7 +277,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 type unionFind struct {
@@ -333,10 +356,8 @@ func findCriticalAndPseudoCriticalEdges(n int, edges [][]int) [][]int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

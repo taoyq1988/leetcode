@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1075.Project%20Employees%20I/README_EN.md
+tags:
+    - Database
+---
+
+<!-- problem:start -->
+
 # [1075. Project Employees I](https://leetcode.com/problems/project-employees-i)
 
 [中文文档](/solution/1000-1099/1075.Project%20Employees%20I/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Table: <code>Project</code></p>
 
@@ -30,7 +42,7 @@ Each row of this table indicates that the employee with employee_id is working o
 | name             | varchar |
 | experience_years | int     |
 +------------------+---------+
-employee_id is the primary key of this table.
+employee_id is the primary key of this table. It&#39;s guaranteed that experience_years is not NULL.
 Each row of this table contains information about one employee.
 </pre>
 
@@ -43,7 +55,7 @@ Each row of this table contains information about one employee.
 <p>The query result format is in the following example.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> 
@@ -76,14 +88,29 @@ Employee table:
 <strong>Explanation:</strong> The average experience years for the first project is (3 + 2 + 1) / 3 = 2.00 and for the second project is (3 + 2) / 2 = 2.50
 </pre>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **SQL**
+#### MySQL
 
 ```sql
-
+# Write your MySQL query statement
+SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
+FROM
+    Project
+    JOIN Employee USING (employee_id)
+GROUP BY 1;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

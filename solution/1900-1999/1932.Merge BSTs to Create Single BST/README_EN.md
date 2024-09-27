@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/README_EN.md
+rating: 2483
+source: Weekly Contest 249 Q4
+tags:
+    - Tree
+    - Depth-First Search
+    - Hash Table
+    - Binary Search
+    - Binary Tree
+---
+
+<!-- problem:start -->
+
 # [1932. Merge BSTs to Create Single BST](https://leetcode.com/problems/merge-bsts-to-create-single-bst)
 
 [中文文档](/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given <code>n</code> <strong>BST (binary search tree) root nodes</strong> for <code>n</code> separate BSTs stored in an array <code>trees</code> (<strong>0-indexed</strong>). Each BST in <code>trees</code> has <strong>at most 3 nodes</strong>, and no two roots have the same value. In one operation, you can:</p>
 
@@ -24,7 +42,7 @@
 <p>A leaf is a node that has no children.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/images/d1.png" style="width: 450px; height: 163px;" />
 <pre>
 <strong>Input:</strong> trees = [[2,1],[3,2,5],[5,4]]
@@ -38,7 +56,7 @@ Delete trees[1], so trees = [[3,2,5,1,null,4]].
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/images/diagram-2.png" style="width: 220px; height: 165px;" />
 The resulting tree, shown above, is a valid BST, so return its root.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/images/d2.png" style="width: 450px; height: 171px;" />
 <pre>
 <strong>Input:</strong> trees = [[5,3,8],[3,2,6]]
@@ -50,7 +68,7 @@ Delete trees[1], so trees = [[5,3,8,2,6]].
 The resulting tree is shown above. This is the only valid operation that can be performed, but the resulting tree is not a valid BST, so return null.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1932.Merge%20BSTs%20to%20Create%20Single%20BST/images/d3.png" style="width: 430px; height: 168px;" />
 <pre>
 <strong>Input:</strong> trees = [[5,4],[3]]
@@ -71,26 +89,42 @@ The resulting tree is shown above. This is the only valid operation that can be 
 	<li><code>1 &lt;= TreeNode.val &lt;= 5 * 10<sup>4</sup></code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

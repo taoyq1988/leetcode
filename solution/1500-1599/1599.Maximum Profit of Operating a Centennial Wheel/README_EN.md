@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1599.Maximum%20Profit%20of%20Operating%20a%20Centennial%20Wheel/README_EN.md
+rating: 1548
+source: Weekly Contest 208 Q2
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [1599. Maximum Profit of Operating a Centennial Wheel](https://leetcode.com/problems/maximum-profit-of-operating-a-centennial-wheel)
 
 [中文文档](/solution/1500-1599/1599.Maximum%20Profit%20of%20Operating%20a%20Centennial%20Wheel/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are the operator of a Centennial Wheel that has <strong>four gondolas</strong>, and each gondola has room for <strong>up</strong> <strong>to</strong> <strong>four people</strong>. You have the ability to rotate the gondolas <strong>counterclockwise</strong>, which costs you <code>runningCost</code> dollars.</p>
 
@@ -13,7 +28,7 @@
 <p>Return<em> the minimum number of rotations you need to perform to maximize your profit.</em> If there is <strong>no scenario</strong> where the profit is positive, return <code>-1</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1500-1599/1599.Maximum%20Profit%20of%20Operating%20a%20Centennial%20Wheel/images/wheeldiagram12.png" style="width: 700px; height: 225px;" />
 <pre>
 <strong>Input:</strong> customers = [8,3], boardingCost = 5, runningCost = 6
@@ -25,7 +40,7 @@
 The highest profit was $37 after rotating the wheel 3 times.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> customers = [10,9,6], boardingCost = 6, runningCost = 4
@@ -41,7 +56,7 @@ The highest profit was $37 after rotating the wheel 3 times.
 The highest profit was $122 after rotating the wheel 7 times.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> customers = [3,4,0,5,1], boardingCost = 1, runningCost = 92
@@ -65,26 +80,178 @@ The profit was never positive, so return -1.
 	<li><code>1 &lt;= boardingCost, runningCost &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+We directly simulate the rotation process of the Ferris wheel. Each time it rotates, we add up the waiting customers and the newly arrived customers, then at most $4$ people get on the ride, update the number of waiting customers and profit, and record the maximum profit and its corresponding number of rotations.
+
+The time complexity is $O(n)$, where $n$ is the length of the `customers` array. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def minOperationsMaxProfit(
+        self, customers: List[int], boardingCost: int, runningCost: int
+    ) -> int:
+        ans = -1
+        mx = t = 0
+        wait = 0
+        i = 0
+        while wait or i < len(customers):
+            wait += customers[i] if i < len(customers) else 0
+            up = wait if wait < 4 else 4
+            wait -= up
+            t += up * boardingCost - runningCost
+            i += 1
+            if t > mx:
+                mx = t
+                ans = i
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int minOperationsMaxProfit(int[] customers, int boardingCost, int runningCost) {
+        int ans = -1;
+        int mx = 0, t = 0;
+        int wait = 0, i = 0;
+        while (wait > 0 || i < customers.length) {
+            wait += i < customers.length ? customers[i] : 0;
+            int up = Math.min(4, wait);
+            wait -= up;
+            ++i;
+            t += up * boardingCost - runningCost;
+            if (t > mx) {
+                mx = t;
+                ans = i;
+            }
+        }
+        return ans;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int minOperationsMaxProfit(vector<int>& customers, int boardingCost, int runningCost) {
+        int ans = -1;
+        int mx = 0, t = 0;
+        int wait = 0, i = 0;
+        while (wait || i < customers.size()) {
+            wait += i < customers.size() ? customers[i] : 0;
+            int up = min(4, wait);
+            wait -= up;
+            ++i;
+            t += up * boardingCost - runningCost;
+            if (t > mx) {
+                mx = t;
+                ans = i;
+            }
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func minOperationsMaxProfit(customers []int, boardingCost int, runningCost int) int {
+	ans := -1
+	t, mx := 0, 0
+	wait, i := 0, 0
+	for wait > 0 || i < len(customers) {
+		if i < len(customers) {
+			wait += customers[i]
+		}
+		up := min(4, wait)
+		wait -= up
+		t += up*boardingCost - runningCost
+		i++
+		if t > mx {
+			mx = t
+			ans = i
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+function minOperationsMaxProfit(
+    customers: number[],
+    boardingCost: number,
+    runningCost: number,
+): number {
+    let ans: number = -1;
+    let [mx, t, wait, i] = [0, 0, 0, 0];
+    while (wait > 0 || i < customers.length) {
+        wait += i < customers.length ? customers[i] : 0;
+        let up: number = Math.min(4, wait);
+        wait -= up;
+        ++i;
+        t += up * boardingCost - runningCost;
+
+        if (t > mx) {
+            mx = t;
+            ans = i;
+        }
+    }
+
+    return ans;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn min_operations_max_profit(
+        customers: Vec<i32>,
+        boarding_cost: i32,
+        running_cost: i32,
+    ) -> i32 {
+        let mut ans = -1;
+        let mut mx = 0;
+        let mut t = 0;
+        let mut wait = 0;
+        let mut i = 0;
+
+        while wait > 0 || i < customers.len() {
+            wait += if i < customers.len() { customers[i] } else { 0 };
+            let up = std::cmp::min(4, wait);
+            wait -= up;
+            i += 1;
+            t += up * boarding_cost - running_cost;
+
+            if t > mx {
+                mx = t;
+                ans = i as i32;
+            }
+        }
+
+        ans
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

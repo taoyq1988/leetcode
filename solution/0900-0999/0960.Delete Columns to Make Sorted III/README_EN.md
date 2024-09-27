@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0960.Delete%20Columns%20to%20Make%20Sorted%20III/README_EN.md
+tags:
+    - Array
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [960. Delete Columns to Make Sorted III](https://leetcode.com/problems/delete-columns-to-make-sorted-iii)
 
 [中文文档](/solution/0900-0999/0960.Delete%20Columns%20to%20Make%20Sorted%20III/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of <code>n</code> strings <code>strs</code>, all of the same length.</p>
 
@@ -13,7 +27,7 @@
 <p>Suppose we chose a set of deletion indices <code>answer</code> such that after deletions, the final array has <strong>every string (row) in lexicographic</strong> order. (i.e., <code>(strs[0][0] &lt;= strs[0][1] &lt;= ... &lt;= strs[0][strs[0].length - 1])</code>, and <code>(strs[1][0] &lt;= strs[1][1] &lt;= ... &lt;= strs[1][strs[1].length - 1])</code>, and so on). Return <em>the minimum possible value of</em> <code>answer.length</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> strs = [&quot;babca&quot;,&quot;bbazb&quot;]
@@ -22,7 +36,7 @@
 Both these rows are individually in lexicographic order (ie. strs[0][0] &lt;= strs[0][1] and strs[1][0] &lt;= strs[1][1]).
 Note that strs[0] &gt; strs[1] - the array strs is not necessarily in lexicographic order.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> strs = [&quot;edcba&quot;]
@@ -30,7 +44,7 @@ Note that strs[0] &gt; strs[1] - the array strs is not necessarily in lexicograp
 <strong>Explanation:</strong> If we delete less than 4 columns, the only row will not be lexicographically sorted.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> strs = [&quot;ghi&quot;,&quot;def&quot;,&quot;abc&quot;]
@@ -52,11 +66,17 @@ Note that strs[0] &gt; strs[1] - the array strs is not necessarily in lexicograp
 	<li>&nbsp;</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -70,7 +90,7 @@ class Solution:
         return n - max(dp)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +121,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -110,12 +130,9 @@ public:
         int n = strs[0].size();
         vector<int> dp(n, 1);
         int mx = 1;
-        for (int i = 1; i < n; ++i)
-        {
-            for (int j = 0; j < i; ++j)
-            {
-                if (check(i, j, strs))
-                {
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (check(i, j, strs)) {
                     dp[i] = max(dp[i], dp[j] + 1);
                 }
             }
@@ -133,7 +150,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minDeletionSize(strs []string) int {
@@ -160,19 +177,10 @@ func minDeletionSize(strs []string) int {
 	}
 	return n - mx
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

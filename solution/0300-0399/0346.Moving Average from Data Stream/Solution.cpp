@@ -3,7 +3,7 @@ public:
     MovingAverage(int size) {
         arr.resize(size);
     }
-    
+
     double next(int val) {
         int idx = cnt % arr.size();
         s += val - arr[idx];

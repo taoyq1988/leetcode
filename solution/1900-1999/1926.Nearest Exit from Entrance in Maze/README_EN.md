@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/README_EN.md
+rating: 1638
+source: Biweekly Contest 56 Q2
+tags:
+    - Breadth-First Search
+    - Array
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [1926. Nearest Exit from Entrance in Maze](https://leetcode.com/problems/nearest-exit-from-entrance-in-maze)
 
 [中文文档](/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> matrix <code>maze</code> (<strong>0-indexed</strong>) with empty cells (represented as <code>&#39;.&#39;</code>) and walls (represented as <code>&#39;+&#39;</code>). You are also given the <code>entrance</code> of the maze, where <code>entrance = [entrance<sub>row</sub>, entrance<sub>col</sub>]</code> denotes the row and column of the cell you are initially standing at.</p>
 
@@ -11,7 +27,7 @@
 <p>Return <em>the <strong>number of steps</strong> in the shortest path from the </em><code>entrance</code><em> to the nearest exit, or </em><code>-1</code><em> if no such path exists</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/images/nearest1-grid.jpg" style="width: 333px; height: 253px;" />
 <pre>
 <strong>Input:</strong> maze = [[&quot;+&quot;,&quot;+&quot;,&quot;.&quot;,&quot;+&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;+&quot;],[&quot;+&quot;,&quot;+&quot;,&quot;+&quot;,&quot;.&quot;]], entrance = [1,2]
@@ -24,7 +40,7 @@ It is impossible to reach [2,3] from the entrance.
 Thus, the nearest exit is [0,2], which is 1 step away.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/images/nearesr2-grid.jpg" style="width: 253px; height: 253px;" />
 <pre>
 <strong>Input:</strong> maze = [[&quot;+&quot;,&quot;+&quot;,&quot;+&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],[&quot;+&quot;,&quot;+&quot;,&quot;+&quot;]], entrance = [1,0]
@@ -36,7 +52,7 @@ Initially, you are at the entrance cell [1,0].
 Thus, the nearest exit is [1,2], which is 2 steps away.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1900-1999/1926.Nearest%20Exit%20from%20Entrance%20in%20Maze/images/nearest3-grid.jpg" style="width: 173px; height: 93px;" />
 <pre>
 <strong>Input:</strong> maze = [[&quot;.&quot;,&quot;+&quot;]], entrance = [0,0]
@@ -58,13 +74,17 @@ Thus, the nearest exit is [1,2], which is 2 steps away.
 	<li><code>entrance</code> will always be an empty cell.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-BFS.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -88,7 +108,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -111,7 +131,7 @@ class Solution {
                         if (x == 0 || x == m - 1 || y == 0 || y == n - 1) {
                             return ans;
                         }
-                        q.offer(new int[]{x, y});
+                        q.offer(new int[] {x, y});
                         maze[x][y] = '+';
                     }
                 }
@@ -122,7 +142,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -133,18 +153,14 @@ public:
         maze[entrance[0]][entrance[1]] = '+';
         int ans = 0;
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             ++ans;
-            for (int k = q.size(); k > 0; --k)
-            {
+            for (int k = q.size(); k > 0; --k) {
                 auto p = q.front();
                 q.pop();
-                for (int l = 0; l < 4; ++l)
-                {
+                for (int l = 0; l < 4; ++l) {
                     int x = p[0] + dirs[l], y = p[1] + dirs[l + 1];
-                    if (x >= 0 && x < m && y >= 0 && y < n && maze[x][y] == '.')
-                    {
+                    if (x >= 0 && x < m && y >= 0 && y < n && maze[x][y] == '.') {
                         if (x == 0 || x == m - 1 || y == 0 || y == n - 1) return ans;
                         q.push({x, y});
                         maze[x][y] = '+';
@@ -157,7 +173,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func nearestExit(maze [][]byte, entrance []int) int {
@@ -187,10 +203,34 @@ func nearestExit(maze [][]byte, entrance []int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function nearestExit(maze: string[][], entrance: number[]): number {
+    const m = maze.length;
+    const n = maze[0].length;
+    const dir = [0, 1, 0, -1, 0];
+    const q = [[...entrance, 0]];
+    maze[entrance[0]][entrance[1]] = '+';
+    for (const [i, j, ans] of q) {
+        for (let d = 0; d < 4; d++) {
+            const [x, y] = [i + dir[d], j + dir[d + 1]];
+            const v = maze[x]?.[y];
+            if (!v && ans) {
+                return ans;
+            }
+            if (v === '.') {
+                q.push([x, y, ans + 1]);
+                maze[x][y] = '+';
+            }
+        }
+    }
+    return -1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

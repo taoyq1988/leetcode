@@ -1,8 +1,21 @@
-# [651. 4 Keys Keyboard](https://leetcode.com/problems/4-keys-keyboard)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0651.4%20Keys%20Keyboard/README_EN.md
+tags:
+    - Math
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
+# [651. 4 Keys Keyboard 🔒](https://leetcode.com/problems/4-keys-keyboard)
 
 [中文文档](/solution/0600-0699/0651.4%20Keys%20Keyboard/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Imagine you have a special keyboard with the following keys:</p>
 
@@ -16,7 +29,7 @@
 <p>Given an integer n, return <em>the maximum number of </em><code>&#39;A&#39;</code><em> you can print on the screen with <strong>at most</strong> </em><code>n</code><em> presses on the keys</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3
@@ -25,7 +38,7 @@
 A, A, A
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 7
@@ -41,26 +54,84 @@ A, A, A, Ctrl A, Ctrl C, Ctrl V, Ctrl V
 	<li><code>1 &lt;= n &lt;= 50</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def maxA(self, n: int) -> int:
+        dp = list(range(n + 1))
+        for i in range(3, n + 1):
+            for j in range(2, i - 1):
+                dp[i] = max(dp[i], dp[j - 1] * (i - j))
+        return dp[-1]
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int maxA(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 0; i < n + 1; ++i) {
+            dp[i] = i;
+        }
+        for (int i = 3; i < n + 1; ++i) {
+            for (int j = 2; j < i - 1; ++j) {
+                dp[i] = Math.max(dp[i], dp[j - 1] * (i - j));
+            }
+        }
+        return dp[n];
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int maxA(int n) {
+        vector<int> dp(n + 1);
+        iota(dp.begin(), dp.end(), 0);
+        for (int i = 3; i < n + 1; ++i) {
+            for (int j = 2; j < i - 1; ++j) {
+                dp[i] = max(dp[i], dp[j - 1] * (i - j));
+            }
+        }
+        return dp[n];
+    }
+};
 ```
 
+#### Go
+
+```go
+func maxA(n int) int {
+	dp := make([]int, n+1)
+	for i := range dp {
+		dp[i] = i
+	}
+	for i := 3; i < n+1; i++ {
+		for j := 2; j < i-1; j++ {
+			dp[i] = max(dp[i], dp[j-1]*(i-j))
+		}
+	}
+	return dp[n]
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0864.Shortest%20Path%20to%20Get%20All%20Keys/README_EN.md
+tags:
+    - Bit Manipulation
+    - Breadth-First Search
+    - Array
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [864. Shortest Path to Get All Keys](https://leetcode.com/problems/shortest-path-to-get-all-keys)
 
 [中文文档](/solution/0800-0899/0864.Shortest%20Path%20to%20Get%20All%20Keys/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> grid <code>grid</code> where:</p>
 
@@ -23,7 +38,7 @@
 <p>Return <em>the lowest number of moves to acquire all keys</em>. If it is impossible, return <code>-1</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0864.Shortest%20Path%20to%20Get%20All%20Keys/images/lc-keys2.jpg" style="width: 404px; height: 245px;" />
 <pre>
 <strong>Input:</strong> grid = [&quot;@.a..&quot;,&quot;###.#&quot;,&quot;b.A.B&quot;]
@@ -31,14 +46,14 @@
 <strong>Explanation:</strong> Note that the goal is to obtain all the keys not to open all the locks.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0864.Shortest%20Path%20to%20Get%20All%20Keys/images/lc-key2.jpg" style="width: 404px; height: 245px;" />
 <pre>
 <strong>Input:</strong> grid = [&quot;@..aA&quot;,&quot;..B#.&quot;,&quot;....b&quot;]
 <strong>Output:</strong> 6
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0864.Shortest%20Path%20to%20Get%20All%20Keys/images/lc-keys3.jpg" style="width: 244px; height: 85px;" />
 <pre>
 <strong>Input:</strong> grid = [&quot;@Aa&quot;]
@@ -52,104 +67,133 @@
 	<li><code>m == grid.length</code></li>
 	<li><code>n == grid[i].length</code></li>
 	<li><code>1 &lt;= m, n &lt;= 30</code></li>
-	<li><code>grid[i][j]</code> is either an English letter, <code>&#39;.&#39;</code>, <code>&#39;#&#39;</code>, or <code>&#39;@&#39;</code>.</li>
+	<li><code>grid[i][j]</code> is either an English letter, <code>&#39;.&#39;</code>, <code>&#39;#&#39;</code>, or <code>&#39;@&#39;</code>.&nbsp;</li>
+	<li>There is exactly one&nbsp;<code>&#39;@&#39;</code>&nbsp;in the grid.</li>
 	<li>The number of keys in the grid is in the range <code>[1, 6]</code>.</li>
 	<li>Each key in the grid is <strong>unique</strong>.</li>
 	<li>Each key in the grid has a matching lock.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def shortestPathAllKeys(self, grid: List[str]) -> int:
         m, n = len(grid), len(grid[0])
-        cnt, start = 0, None
-        for i, row in enumerate(grid):
-            for j, v in enumerate(row):
-                cnt += v.islower()
-                if v == '@':
-                    start = (i, j)
-        q = deque([(start[0], start[1], 0)])
-        dirs = [-1, 0, 1, 0, -1]
+        # 找起点 (si, sj)
+        si, sj = next((i, j) for i in range(m) for j in range(n) if grid[i][j] == '@')
+        # 统计钥匙数量
+        k = sum(v.islower() for row in grid for v in row)
+        dirs = (-1, 0, 1, 0, -1)
+        q = deque([(si, sj, 0)])
+        vis = {(si, sj, 0)}
         ans = 0
-        mask = (1 << cnt) - 1
-        vis = {(*start, 0)}
         while q:
             for _ in range(len(q)):
                 i, j, state = q.popleft()
-                if state == mask:
+                # 找到所有钥匙，返回当前步数
+                if state == (1 << k) - 1:
                     return ans
-                for k in range(4):
+
+                # 往四个方向搜索
+                for a, b in pairwise(dirs):
+                    x, y = i + a, j + b
                     nxt = state
-                    x, y = i + dirs[k], j + dirs[k + 1]
-                    if 0 <= x < m and 0 <= y < n and grid[x][y] != '#':
-                        if grid[x][y].isupper() and (nxt & (1 << (ord(grid[x][y]) - ord('A')))) == 0:
+                    # 在边界范围内
+                    if 0 <= x < m and 0 <= y < n:
+                        c = grid[x][y]
+                        # 是墙，或者是锁，但此时没有对应的钥匙，无法通过
+                        if (
+                            c == '#'
+                            or c.isupper()
+                            and (state & (1 << (ord(c) - ord('A')))) == 0
+                        ):
                             continue
-                        if grid[x][y].islower():
-                            nxt |= 1 << (ord(grid[x][y]) - ord('a'))
+                        # 是钥匙
+                        if c.islower():
+                            # 更新状态
+                            nxt |= 1 << (ord(c) - ord('a'))
+                        # 此状态未访问过，入队
                         if (x, y, nxt) not in vis:
-                            q.append((x, y, nxt))
                             vis.add((x, y, nxt))
+                            q.append((x, y, nxt))
+            # 步数加一
             ans += 1
         return -1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
+    private int[] dirs = {-1, 0, 1, 0, -1};
+
     public int shortestPathAllKeys(String[] grid) {
         int m = grid.length, n = grid[0].length();
-        int cnt = 0;
-        int sx = 0, sy = 0;
+        int k = 0;
+        int si = 0, sj = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 char c = grid[i].charAt(j);
                 if (Character.isLowerCase(c)) {
-                    ++cnt;
+                    // 累加钥匙数量
+                    ++k;
                 } else if (c == '@') {
-                    sx = i;
-                    sy = j;
+                    // 起点
+                    si = i;
+                    sj = j;
                 }
             }
         }
         Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{sx, sy, 0});
-        int[] dirs = {-1, 0, 1, 0, -1};
+        q.offer(new int[] {si, sj, 0});
+        boolean[][][] vis = new boolean[m][n][1 << k];
+        vis[si][sj][0] = true;
         int ans = 0;
-        int mask = (1 << cnt) - 1;
-        boolean[][][] vis = new boolean[m][n][1 << cnt];
-        vis[sx][sy][0] = true;
         while (!q.isEmpty()) {
             for (int t = q.size(); t > 0; --t) {
-                int[] p = q.poll();
+                var p = q.poll();
                 int i = p[0], j = p[1], state = p[2];
-                if (state == mask) {
+                // 找到所有钥匙，返回当前步数
+                if (state == (1 << k) - 1) {
                     return ans;
                 }
-                for (int k = 0; k < 4; ++k) {
-                    int nxt = state;
-                    int x = i + dirs[k], y = j + dirs[k + 1];
+                // 往四个方向搜索
+                for (int h = 0; h < 4; ++h) {
+                    int x = i + dirs[h], y = j + dirs[h + 1];
+                    // 在边界范围内
                     if (x >= 0 && x < m && y >= 0 && y < n) {
                         char c = grid[x].charAt(y);
-                        if (c == '#' || (Character.isUpperCase(c) && (nxt & (1 << (c - 'A'))) == 0)) {
+                        // 是墙，或者是锁，但此时没有对应的钥匙，无法通过
+                        if (c == '#'
+                            || (Character.isUpperCase(c) && ((state >> (c - 'A')) & 1) == 0)) {
                             continue;
                         }
+                        int nxt = state;
+                        // 是钥匙
                         if (Character.isLowerCase(c)) {
+                            // 更新状态
                             nxt |= 1 << (c - 'a');
                         }
+                        // 此状态未访问过，入队
                         if (!vis[x][y][nxt]) {
                             vis[x][y][nxt] = true;
-                            q.offer(new int[]{x, y, nxt});
+                            q.offer(new int[] {x, y, nxt});
                         }
                     }
                 }
             }
+            // 步数加一
             ++ans;
         }
         return -1;
@@ -157,60 +201,57 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
+    const static inline vector<int> dirs = {-1, 0, 1, 0, -1};
+
     int shortestPathAllKeys(vector<string>& grid) {
         int m = grid.size(), n = grid[0].size();
-        int cnt = 0;
-        int sx = 0, sy = 0;
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        int k = 0;
+        int si = 0, sj = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 char c = grid[i][j];
-                if (islower(c)) ++cnt;
+                // 累加钥匙数量
+                if (islower(c)) ++k;
+                // 起点
                 else if (c == '@')
-                {
-                    sx = i;
-                    sy = j;
-                }
+                    si = i, sj = j;
             }
         }
-        queue<vector<int>> q;
-        q.push({sx, sy, 0});
-        int mask = (1 << cnt) - 1;
-        vector<vector<vector<bool>>> vis(m, vector<vector<bool>>(n, vector<bool>(1 << cnt)));
-        vis[sx][sy][0] = true;
+        queue<tuple<int, int, int>> q{{{si, sj, 0}}};
+        vector<vector<vector<bool>>> vis(m, vector<vector<bool>>(n, vector<bool>(1 << k)));
+        vis[si][sj][0] = true;
         int ans = 0;
-        vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
-            for (int t = q.size(); t; --t)
-            {
-                auto p = q.front();
+        while (!q.empty()) {
+            for (int t = q.size(); t; --t) {
+                auto [i, j, state] = q.front();
                 q.pop();
-                int i = p[0], j = p[1], state = p[2];
-                if (state == mask) return ans;
-                for (int k = 0; k < 4; ++k)
-                {
-                    int nxt = state;
-                    int x = i + dirs[k], y = j + dirs[k + 1];
-                    if (x >= 0 && x < m && y >= 0 && y < n)
-                    {
+                // 找到所有钥匙，返回当前步数
+                if (state == (1 << k) - 1) return ans;
+                // 往四个方向搜索
+                for (int h = 0; h < 4; ++h) {
+                    int x = i + dirs[h], y = j + dirs[h + 1];
+                    // 在边界范围内
+                    if (x >= 0 && x < m && y >= 0 && y < n) {
                         char c = grid[x][y];
-                        if (c == '#' || (isupper(c) && (nxt & (1 << (c - 'A'))) == 0)) continue;
+                        // 是墙，或者是锁，但此时没有对应的钥匙，无法通过
+                        if (c == '#' || (isupper(c) && (state >> (c - 'A') & 1) == 0)) continue;
+                        int nxt = state;
+                        // 是钥匙，更新状态
                         if (islower(c)) nxt |= 1 << (c - 'a');
-                        if (!vis[x][y][nxt])
-                        {
+                        // 此状态未访问过，入队
+                        if (!vis[x][y][nxt]) {
                             vis[x][y][nxt] = true;
                             q.push({x, y, nxt});
                         }
                     }
                 }
             }
+            // 步数加一
             ++ans;
         }
         return -1;
@@ -218,73 +259,69 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func shortestPathAllKeys(grid []string) int {
 	m, n := len(grid), len(grid[0])
-	cnt := 0
-	sx, sy := 0, 0
+	var k, si, sj int
 	for i, row := range grid {
 		for j, c := range row {
-			if 'a' <= c && c <= 'z' {
-				cnt++
+			if c >= 'a' && c <= 'z' {
+				// 累加钥匙数量
+				k++
 			} else if c == '@' {
-				sx, sy = i, j
+				// 起点
+				si, sj = i, j
 			}
 		}
 	}
-	q := [][]int{{sx, sy, 0}}
-	vis := make([][][]bool, m)
-	for i := range vis {
-		vis[i] = make([][]bool, n)
-		for j := range vis[i] {
-			vis[i][j] = make([]bool, 1<<cnt)
-		}
-	}
-	vis[sx][sy][0] = true
+	type tuple struct{ i, j, state int }
+	q := []tuple{tuple{si, sj, 0}}
+	vis := map[tuple]bool{tuple{si, sj, 0}: true}
 	dirs := []int{-1, 0, 1, 0, -1}
 	ans := 0
-	mask := (1 << cnt) - 1
 	for len(q) > 0 {
 		for t := len(q); t > 0; t-- {
 			p := q[0]
 			q = q[1:]
-			i, j, state := p[0], p[1], p[2]
-			if state == mask {
+			i, j, state := p.i, p.j, p.state
+			// 找到所有钥匙，返回当前步数
+			if state == 1<<k-1 {
 				return ans
 			}
-			for k := 0; k < 4; k++ {
-				nxt := state
-				x, y := i+dirs[k], j+dirs[k+1]
+			// 往四个方向搜索
+			for h := 0; h < 4; h++ {
+				x, y := i+dirs[h], j+dirs[h+1]
+				// 在边界范围内
 				if x >= 0 && x < m && y >= 0 && y < n {
 					c := grid[x][y]
-					if c == '#' {
+					// 是墙，或者是锁，但此时没有对应的钥匙，无法通过
+					if c == '#' || (c >= 'A' && c <= 'Z' && (state>>(c-'A')&1 == 0)) {
 						continue
 					}
-					if 'A' <= c && c <= 'Z' && (nxt&(1<<(c-'A'))) == 0 {
-						continue
-					}
-					if 'a' <= c && c <= 'z' {
+					nxt := state
+					// 是钥匙，更新状态
+					if c >= 'a' && c <= 'z' {
 						nxt |= 1 << (c - 'a')
 					}
-					if !vis[x][y][nxt] {
-						vis[x][y][nxt] = true
-						q = append(q, []int{x, y, nxt})
+					// 此状态未访问过，入队
+					if !vis[tuple{x, y, nxt}] {
+						vis[tuple{x, y, nxt}] = true
+						q = append(q, tuple{x, y, nxt})
 					}
 				}
 			}
 		}
+		// 步数加一
 		ans++
 	}
 	return -1
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

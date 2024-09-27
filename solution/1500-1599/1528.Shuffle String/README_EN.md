@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1528.Shuffle%20String/README_EN.md
+rating: 1193
+source: Weekly Contest 199 Q1
+tags:
+    - Array
+    - String
+---
+
+<!-- problem:start -->
+
 # [1528. Shuffle String](https://leetcode.com/problems/shuffle-string)
 
 [中文文档](/solution/1500-1599/1528.Shuffle%20String/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You are given a string <code>s</code> and an integer array <code>indices</code> of the <strong>same length</strong>. The string <code>s</code> will be shuffled such that the character at the <code>i<sup>th</sup></code> position moves to <code>indices[i]</code> in the shuffled string.</p>
 
 <p>Return <em>the shuffled string</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1500-1599/1528.Shuffle%20String/images/q1.jpg" style="width: 321px; height: 243px;" />
 <pre>
 <strong>Input:</strong> s = &quot;codeleet&quot;, <code>indices</code> = [4,5,6,7,0,2,1,3]
@@ -17,7 +32,7 @@
 <strong>Explanation:</strong> As shown, &quot;codeleet&quot; becomes &quot;leetcode&quot; after shuffling.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abc&quot;, <code>indices</code> = [0,1,2]
@@ -36,11 +51,17 @@
 	<li>All values of <code>indices</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -51,7 +72,7 @@ class Solution:
         return ''.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -66,7 +87,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -74,13 +95,15 @@ public:
     string restoreString(string s, vector<int>& indices) {
         int n = s.size();
         string ans(n, 0);
-        for (int i = 0; i < n; ++i) ans[indices[i]] = s[i];
+        for (int i = 0; i < n; ++i) {
+            ans[indices[i]] = s[i];
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func restoreString(s string, indices []int) string {
@@ -92,10 +115,25 @@ func restoreString(s string, indices []int) string {
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * @param {string} s
+ * @param {number[]} indices
+ * @return {string}
+ */
+var restoreString = function (s, indices) {
+    let rs = [];
+    for (let i = 0; i < s.length; i++) {
+        rs[indices[i]] = s[i];
+    }
+    return rs.join('');
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

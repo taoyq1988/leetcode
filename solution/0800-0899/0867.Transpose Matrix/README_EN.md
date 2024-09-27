@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0867.Transpose%20Matrix/README_EN.md
+tags:
+    - Array
+    - Matrix
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [867. Transpose Matrix](https://leetcode.com/problems/transpose-matrix)
 
 [中文文档](/solution/0800-0899/0867.Transpose%20Matrix/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a 2D integer array <code>matrix</code>, return <em>the <strong>transpose</strong> of</em> <code>matrix</code>.</p>
 
@@ -11,14 +25,14 @@
 <p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0867.Transpose%20Matrix/images/hint_transpose.png" style="width: 600px; height: 197px;" /></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = [[1,2,3],[4,5,6],[7,8,9]]
 <strong>Output:</strong> [[1,4,7],[2,5,8],[3,6,9]]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = [[1,2,3],[4,5,6]]
@@ -36,11 +50,17 @@
 	<li><code>-10<sup>9</sup> &lt;= matrix[i][j] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -48,7 +68,7 @@ class Solution:
         return list(zip(*matrix))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -65,7 +85,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -81,7 +101,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func transpose(matrix [][]int) [][]int {
@@ -97,7 +117,7 @@ func transpose(matrix [][]int) [][]int {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -117,10 +137,8 @@ var transpose = function (matrix) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

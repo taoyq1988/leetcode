@@ -1,40 +1,36 @@
 class Solution {
 public:
     int minStickers(vector<string>& stickers, string target) {
-        queue<int> q{{0}};
-        int ans = 0;
         int n = target.size();
+        queue<int> q{{0}};
         vector<bool> vis(1 << n);
         vis[0] = true;
-        while (!q.empty())
-        {
-            for (int t = q.size(); t; --t)
-            {
-                int state = q.front();
-                if (state == (1 << n) - 1) return ans;
+        for (int ans = 0; q.size(); ++ans) {
+            for (int m = q.size(); m; --m) {
+                int cur = q.front();
                 q.pop();
-                for (auto& s : stickers)
-                {
-                    int nxt = state;
-                    vector<int> cnt(26);
-                    for (char& c : s) ++cnt[c - 'a'];
-                    for (int i = 0; i < n; ++i)
-                    {
-                        int idx = target[i] - 'a';
-                        if (!(nxt & (1 << i)) && cnt[idx])
-                        {
+                if (cur == (1 << n) - 1) {
+                    return ans;
+                }
+                for (auto& s : stickers) {
+                    int cnt[26]{};
+                    int nxt = cur;
+                    for (char& c : s) {
+                        ++cnt[c - 'a'];
+                    }
+                    for (int i = 0; i < n; ++i) {
+                        int j = target[i] - 'a';
+                        if ((cur >> i & 1) == 0 && cnt[j] > 0) {
                             nxt |= 1 << i;
-                            --cnt[idx];
+                            --cnt[j];
                         }
                     }
-                    if (!vis[nxt])
-                    {
+                    if (!vis[nxt]) {
                         vis[nxt] = true;
                         q.push(nxt);
                     }
                 }
             }
-            ++ans;
         }
         return -1;
     }

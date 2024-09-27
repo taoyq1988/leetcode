@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0706.Design%20HashMap/README_EN.md
+tags:
+    - Design
+    - Array
+    - Hash Table
+    - Linked List
+    - Hash Function
+---
+
+<!-- problem:start -->
+
 # [706. Design HashMap](https://leetcode.com/problems/design-hashmap)
 
 [中文文档](/solution/0700-0799/0706.Design%20HashMap/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a HashMap without using any built-in hash table libraries.</p>
 
@@ -16,7 +32,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -45,15 +61,20 @@ myHashMap.get(2);    // return -1 (i.e., not found), The map is now [[1,1]]
 	<li>At most <code>10<sup>4</sup></code> calls will be made to <code>put</code>, <code>get</code>, and <code>remove</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class MyHashMap:
-
     def __init__(self):
         self.data = [-1] * 1000001
 
@@ -74,7 +95,7 @@ class MyHashMap:
 # obj.remove(key)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class MyHashMap {
@@ -106,7 +127,76 @@ class MyHashMap {
  */
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class MyHashMap {
+public:
+    int data[1000001];
+
+    MyHashMap() {
+        memset(data, -1, sizeof data);
+    }
+
+    void put(int key, int value) {
+        data[key] = value;
+    }
+
+    int get(int key) {
+        return data[key];
+    }
+
+    void remove(int key) {
+        data[key] = -1;
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
+```
+
+#### Go
+
+```go
+type MyHashMap struct {
+	data []int
+}
+
+func Constructor() MyHashMap {
+	data := make([]int, 1000010)
+	for i := range data {
+		data[i] = -1
+	}
+	return MyHashMap{data}
+}
+
+func (this *MyHashMap) Put(key int, value int) {
+	this.data[key] = value
+}
+
+func (this *MyHashMap) Get(key int) int {
+	return this.data[key]
+}
+
+func (this *MyHashMap) Remove(key int) {
+	this.data[key] = -1
+}
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Put(key,value);
+ * param_2 := obj.Get(key);
+ * obj.Remove(key);
+ */
+```
+
+#### TypeScript
 
 ```ts
 class MyHashMap {
@@ -137,37 +227,8 @@ class MyHashMap {
  */
 ```
 
-### **C++**
-
-```cpp
-class MyHashMap {
-public:
-    int hash[1000010];
-
-    MyHashMap() {
-        memset(hash, -1, sizeof hash);
-    }
-
-    void put(int key, int value) {
-        hash[key] = value;
-    }
-
-    int get(int key) {
-        return hash[key];
-    }
-
-    void remove(int key) {
-        hash[key] = -1;
-    }
-};
-
-/**
- * Your MyHashMap object will be instantiated and called as such:
- * MyHashMap* obj = new MyHashMap();
- * obj->put(key,value);
- * int param_2 = obj->get(key);
- * obj->remove(key);
- */
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

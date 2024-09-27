@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0396.Rotate%20Function/README_EN.md
+tags:
+    - Array
+    - Math
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [396. Rotate Function](https://leetcode.com/problems/rotate-function)
 
 [中文文档](/solution/0300-0399/0396.Rotate%20Function/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code> of length <code>n</code>.</p>
 
@@ -17,7 +31,7 @@
 <p>The test cases are generated so that the answer fits in a <strong>32-bit</strong> integer.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [4,3,2,6]
@@ -30,7 +44,7 @@ F(3) = (0 * 3) + (1 * 2) + (2 * 6) + (3 * 4) = 0 + 2 + 12 + 12 = 26
 So the maximum value of F(0), F(1), F(2), F(3) is F(3) = 26.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [100]
@@ -46,11 +60,17 @@ So the maximum value of F(0), F(1), F(2), F(3) is F(3) = 26.
 	<li><code>-100 &lt;= nums[i] &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +84,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -86,21 +106,19 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxRotateFunction(vector<int>& nums) {
         int f = 0, s = 0, n = nums.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             f += i * nums[i];
             s += nums[i];
         }
         int ans = f;
-        for (int i = 1; i < n; ++i)
-        {
+        for (int i = 1; i < n; ++i) {
             f = f + s - n * nums[n - i];
             ans = max(ans, f);
         }
@@ -109,7 +127,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxRotateFunction(nums []int) int {
@@ -129,7 +147,7 @@ func maxRotateFunction(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxRotateFunction(nums: number[]): number {
@@ -145,18 +163,18 @@ function maxRotateFunction(nums: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
     pub fn max_rotate_function(nums: Vec<i32>) -> i32 {
         let n = nums.len();
         let sum: i32 = nums.iter().sum();
-        let mut pre: i32 = nums.iter().enumerate().map(|(i, &v)| i as i32 * v).sum();
+        let mut pre: i32 = nums.iter().enumerate().map(|(i, &v)| (i as i32) * v).sum();
         (0..n)
             .map(|i| {
                 let res = pre;
-                pre = pre - (sum - nums[i]) + nums[i] * (n - 1) as i32;
+                pre = pre - (sum - nums[i]) + nums[i] * ((n - 1) as i32);
                 res
             })
             .max()
@@ -165,10 +183,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

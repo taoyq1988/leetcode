@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2306.Naming%20a%20Company/README_EN.md
+rating: 2305
+source: Weekly Contest 297 Q4
+tags:
+    - Bit Manipulation
+    - Array
+    - Hash Table
+    - String
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2306. Naming a Company](https://leetcode.com/problems/naming-a-company)
 
 [中文文档](/solution/2300-2399/2306.Naming%20a%20Company/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of strings <code>ideas</code> that represents a list of names to be used in the process of naming a company. The process of naming a company is as follows:</p>
 
@@ -16,7 +34,7 @@
 <p>Return <em>the number of <strong>distinct</strong> valid names for the company</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> ideas = [&quot;coffee&quot;,&quot;donuts&quot;,&quot;time&quot;,&quot;toffee&quot;]
@@ -36,7 +54,7 @@ The following are some examples of invalid selections:
 - (&quot;coffee&quot;, &quot;toffee&quot;): Both names formed after swapping already exist in the original array.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> ideas = [&quot;lack&quot;,&quot;back&quot;]
@@ -54,11 +72,27 @@ The following are some examples of invalid selections:
 	<li>All the strings in <code>ideas</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Enumeration and Counting
+
+We define $f[i][j]$ to represent the number of strings in $\textit{ideas}$ that start with the $i$-th letter and, when replaced with the $j$-th letter, do not exist in $\textit{ideas}$. Initially, $f[i][j] = 0$. Additionally, we use a hash table $s$ to record the strings in $\textit{ideas}$, allowing us to quickly determine whether a string is in $\textit{ideas}$.
+
+Next, we traverse the strings in $\textit{ideas}$. For the current string $v$, we enumerate the first letter $j$ after replacement. If the string obtained by replacing $v$ is not in $\textit{ideas}$, we update $f[i][j] = f[i][j] + 1$.
+
+Finally, we traverse the strings in $\textit{ideas}$ again. For the current string $v$, we enumerate the first letter $j$ after replacement. If the string obtained by replacing $v$ is not in $\textit{ideas}$, we update the answer $\textit{ans} = \textit{ans} + f[j][i]$.
+
+The final answer is $\textit{ans}$.
+
+The time complexity is $O(n \times m \times |\Sigma|)$, and the space complexity is $O(|\Sigma|^2)$. Here, $n$ and $m$ are the number of strings in $\textit{ideas}$ and the maximum length of the strings, respectively, and $|\Sigma|$ is the character set of the strings, with $|\Sigma| \leq 26$ in this problem.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -83,7 +117,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -119,35 +153,29 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     long long distinctNames(vector<string>& ideas) {
         unordered_set<string> s(ideas.begin(), ideas.end());
-        vector<vector<int>> f(26, vector<int>(26));
-        for (auto v : ideas)
-        {
+        int f[26][26]{};
+        for (auto v : ideas) {
             int i = v[0] - 'a';
-            for (int j = 0; j < 26; ++j)
-            {
+            for (int j = 0; j < 26; ++j) {
                 v[0] = j + 'a';
-                if (!s.count(v))
-                {
+                if (!s.count(v)) {
                     ++f[i][j];
                 }
             }
         }
         long long ans = 0;
-        for (auto v : ideas)
-        {
+        for (auto& v : ideas) {
             int i = v[0] - 'a';
-            for (int j = 0; j < 26; ++j)
-            {
+            for (int j = 0; j < 26; ++j) {
                 v[0] = j + 'a';
-                if (!s.count(v))
-                {
+                if (!s.count(v)) {
                     ans += f[j][i];
                 }
             }
@@ -157,18 +185,15 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func distinctNames(ideas []string) int64 {
+func distinctNames(ideas []string) (ans int64) {
 	s := map[string]bool{}
 	for _, v := range ideas {
 		s[v] = true
 	}
-	f := make([][]int, 26)
-	for i := range f {
-		f[i] = make([]int, 26)
-	}
+	f := [26][26]int{}
 	for _, v := range ideas {
 		i := int(v[0] - 'a')
 		t := []byte(v)
@@ -179,7 +204,7 @@ func distinctNames(ideas []string) int64 {
 			}
 		}
 	}
-	var ans int64
+
 	for _, v := range ideas {
 		i := int(v[0] - 'a')
 		t := []byte(v)
@@ -190,20 +215,12 @@ func distinctNames(ideas []string) int64 {
 			}
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,15 +1,31 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1588.Sum%20of%20All%20Odd%20Length%20Subarrays/README_EN.md
+rating: 1408
+source: Biweekly Contest 35 Q1
+tags:
+    - Array
+    - Math
+    - Prefix Sum
+---
+
+<!-- problem:start -->
+
 # [1588. Sum of All Odd Length Subarrays](https://leetcode.com/problems/sum-of-all-odd-length-subarrays)
 
 [中文文档](/solution/1500-1599/1588.Sum%20of%20All%20Odd%20Length%20Subarrays/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an array of positive integers <code>arr</code>, return <em>the sum of all possible <strong>odd-length subarrays</strong> of </em><code>arr</code>.</p>
 
 <p>A <strong>subarray</strong> is a contiguous subsequence of the array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,4,2,5,3]
@@ -26,14 +42,14 @@
 [1,4,2,5,3] = 15
 If we add all these together we get 1 + 4 + 2 + 5 + 3 + 7 + 11 + 10 + 15 = 58</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,2]
 <strong>Output:</strong> 3
 <b>Explanation: </b>There are only 2 subarrays of odd length, [1] and [2]. Their sum is 3.</pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [10,11,12]
@@ -53,139 +69,152 @@ If we add all these together we get 1 + 4 + 2 + 5 + 3 + 7 + 11 + 10 + 15 = 58</p
 
 <p>Could you solve this problem in O(n) time complexity?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def sumOddLengthSubarrays(self, arr: List[int]) -> int:
-        n = len(arr)
-        presum = [0] * (n + 1)
+        ans, n = 0, len(arr)
         for i in range(n):
-            presum[i + 1] = presum[i] + arr[i]
-
-        res = 0
-        for i in range(n):
-            for j in range(0, n, 2):
-                if i + j < n:
-                    res += presum[i + j + 1] - presum[i]
-        return res
+            s = 0
+            for j in range(i, n):
+                s += arr[j]
+                if (j - i + 1) & 1:
+                    ans += s
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int sumOddLengthSubarrays(int[] arr) {
         int n = arr.length;
-        int[] presum = new int[n + 1];
+        int ans = 0;
         for (int i = 0; i < n; ++i) {
-            presum[i + 1] = presum[i] + arr[i];
-        }
-        int res = 0;
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; i + j < n; j += 2) {
-                res += presum[i + j + 1] - presum[i];
+            int s = 0;
+            for (int j = i; j < n; ++j) {
+                s += arr[j];
+                if ((j - i + 1) % 2 == 1) {
+                    ans += s;
+                }
             }
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int sumOddLengthSubarrays(vector<int>& arr) {
         int n = arr.size();
-        int presum[n + 1];
-        for (int i = 0; i < n; ++i) presum[i + 1] = presum[i] + arr[i];
-        int res = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            for (int j = 0; i + j < n; j += 2)
-            {
-                res += presum[i + j + 1] - presum[i];
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            int s = 0;
+            for (int j = i; j < n; ++j) {
+                s += arr[j];
+                if ((j - i + 1) & 1) {
+                    ans += s;
+                }
             }
         }
-        return res;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func sumOddLengthSubarrays(arr []int) int {
+func sumOddLengthSubarrays(arr []int) (ans int) {
 	n := len(arr)
-	presum := make([]int, n+1)
 	for i := range arr {
-		presum[i+1] = presum[i] + arr[i]
-	}
-	res := 0
-	for i := 0; i < n; i++ {
-		for j := 0; i+j < n; j += 2 {
-			res += presum[i+j+1] - presum[i]
+		s := 0
+		for j := i; j < n; j++ {
+			s += arr[j]
+			if (j-i+1)%2 == 1 {
+				ans += s
+			}
 		}
 	}
-	return res
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function sumOddLengthSubarrays(arr: number[]): number {
     const n = arr.length;
-    let res = 0;
-    for (let i = 1; i <= n; i += 2) {
-        let sum = 0;
-        for (let j = 0; j < i; j++) {
-            sum += arr[j];
-        }
-        res += sum;
-        for (let j = i; j < n; j++) {
-            sum -= arr[j - i];
-            sum += arr[j];
-            res += sum;
+    let ans = 0;
+    for (let i = 0; i < n; ++i) {
+        let s = 0;
+        for (let j = i; j < n; ++j) {
+            s += arr[j];
+            if ((j - i + 1) % 2 === 1) {
+                ans += s;
+            }
         }
     }
-    return res;
+    return ans;
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
     pub fn sum_odd_length_subarrays(arr: Vec<i32>) -> i32 {
         let n = arr.len();
-        let mut res = 0;
-        let mut i = 1;
-        while i <= n {
-            let mut sum: i32 = arr[0..i].iter().sum();
-            res += sum;
+        let mut ans = 0;
+        for i in 0..n {
+            let mut s = 0;
             for j in i..n {
-                sum -= arr[j - i];
-                sum += arr[j];
-                res += sum;
+                s += arr[j];
+                if (j - i + 1) % 2 == 1 {
+                    ans += s;
+                }
             }
-            i += 2;
         }
-        res
+        ans
     }
 }
 ```
 
-### **...**
+#### C
 
-```
-
+```c
+int sumOddLengthSubarrays(int* arr, int arrSize) {
+    int ans = 0;
+    for (int i = 0; i < arrSize; ++i) {
+        int s = 0;
+        for (int j = i; j < arrSize; ++j) {
+            s += arr[j];
+            if ((j - i + 1) % 2 == 1) {
+                ans += s;
+            }
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

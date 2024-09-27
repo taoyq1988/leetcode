@@ -1,16 +1,30 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0027.Remove%20Element/README_EN.md
+tags:
+    - Array
+    - Two Pointers
+---
+
+<!-- problem:start -->
+
 # [27. Remove Element](https://leetcode.com/problems/remove-element)
 
 [中文文档](/solution/0000-0099/0027.Remove%20Element/README.md)
 
 ## Description
 
-<p>Given an integer array <code>nums</code> and an integer <code>val</code>, remove all occurrences of <code>val</code> in <code>nums</code> <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank"><strong>in-place</strong></a>. The relative order of the elements may be changed.</p>
+<!-- description:start -->
 
-<p>Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the <strong>first part</strong> of the array <code>nums</code>. More formally, if there are <code>k</code> elements after removing the duplicates, then the first <code>k</code> elements of <code>nums</code> should hold the final result. It does not matter what you leave beyond the first <code>k</code> elements.</p>
+<p>Given an integer array <code>nums</code> and an integer <code>val</code>, remove all occurrences of <code>val</code> in <code>nums</code> <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank"><strong>in-place</strong></a>. The order of the elements may be changed. Then return <em>the number of elements in </em><code>nums</code><em> which are not equal to </em><code>val</code>.</p>
 
-<p>Return <code>k</code><em> after placing the final result in the first </em><code>k</code><em> slots of </em><code>nums</code>.</p>
+<p>Consider the number of elements in <code>nums</code> which are not equal to <code>val</code> be <code>k</code>, to get accepted, you need to do the following things:</p>
 
-<p>Do <strong>not</strong> allocate extra space for another array. You must do this by <strong>modifying the input array <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank">in-place</a></strong> with O(1) extra memory.</p>
+<ul>
+	<li>Change the array <code>nums</code> such that the first <code>k</code> elements of <code>nums</code> contain the elements which are not equal to <code>val</code>. The remaining elements of <code>nums</code> are not important as well as the size of <code>nums</code>.</li>
+	<li>Return <code>k</code>.</li>
+</ul>
 
 <p><strong>Custom Judge:</strong></p>
 
@@ -34,7 +48,7 @@ for (int i = 0; i &lt; actualLength; i++) {
 <p>If all assertions pass, then your solution will be <strong>accepted</strong>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,2,2,3], val = 3
@@ -43,7 +57,7 @@ for (int i = 0; i &lt; actualLength; i++) {
 It does not matter what you leave beyond the returned k (hence they are underscores).
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [0,1,2,2,3,0,4,2], val = 2
@@ -62,56 +76,117 @@ It does not matter what you leave beyond the returned k (hence they are undersco
 	<li><code>0 &lt;= val &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: One Pass
+
+We use the variable $k$ to record the number of elements that are not equal to $val$.
+
+Traverse the array $nums$, if the current element $x$ is not equal to $val$, then assign $x$ to $nums[k]$, and increment $k$ by $1$.
+
+Finally, return $k$.
+
+The time complexity is $O(n)$ and the space complexity is $O(1)$, where $n$ is the length of the array $nums$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
-        cnt, n = 0, len(nums)
-        for i in range(n):
-            if nums[i] == val:
-                cnt += 1
-            else:
-                nums[i - cnt] = nums[i]
-        return n - cnt
+        k = 0
+        for x in nums:
+            if x != val:
+                nums[k] = x
+                k += 1
+        return k
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int removeElement(int[] nums, int val) {
-        int cnt = 0, n = nums.length;
-        for (int i = 0; i < n; ++i) {
-            if (nums[i] == val) ++cnt;
-            else nums[i - cnt] = nums[i];
+        int k = 0;
+        for (int x : nums) {
+            if (x != val) {
+                nums[k++] = x;
+            }
         }
-        return n - cnt;
+        return k;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int removeElement(vector<int>& nums, int val) {
-        int cnt = 0, n = nums.size();
-        for (int i = 0; i < n; ++i) {
-            if (nums[i] == val) ++cnt;
-            else nums[i - cnt] = nums[i];
+        int k = 0;
+        for (int x : nums) {
+            if (x != val) {
+                nums[k++] = x;
+            }
         }
-        return n - cnt;
+        return k;
     }
 };
 ```
 
-### **JavaScript**
+#### Go
+
+```go
+func removeElement(nums []int, val int) int {
+	k := 0
+	for _, x := range nums {
+		if x != val {
+			nums[k] = x
+			k++
+		}
+	}
+	return k
+}
+```
+
+#### TypeScript
+
+```ts
+function removeElement(nums: number[], val: number): number {
+    let k: number = 0;
+    for (const x of nums) {
+        if (x !== val) {
+            nums[k++] = x;
+        }
+    }
+    return k;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+        let mut k = 0;
+        for i in 0..nums.len() {
+            if nums[i] != val {
+                nums[k] = nums[i];
+                k += 1;
+            }
+        }
+        k as i32
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -120,53 +195,37 @@ public:
  * @return {number}
  */
 var removeElement = function (nums, val) {
-    let cnt = 0;
-    const n = nums.length;
-    for (let i = 0; i < n; ++i) {
-        if (nums[i] == val) ++cnt;
-        else nums[i - cnt] = nums[i];
+    let k = 0;
+    for (const x of nums) {
+        if (x !== val) {
+            nums[k++] = x;
+        }
     }
-    return n - cnt;
+    return k;
 };
 ```
 
-### **Go**
+#### PHP
 
-```go
-func removeElement(nums []int, val int) int {
-    cnt, n := 0, len(nums)
-    for i := 0; i < n; i++ {
-        if (nums[i] == val) {
-            cnt++
-        } else {
-            nums[i - cnt] = nums[i]
-        }
-    }
-    return n - cnt
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
-        let mut len = 0;
-        for i in 0..nums.len() {
-            if nums[i] != val {
-                nums[len] = nums[i];
-                len += 1;
+```php
+class Solution {
+    /**
+     * @param Integer[] $nums
+     * @param Integer $val
+     * @return Integer
+     */
+    function removeElement(&$nums, $val) {
+        for ($i = count($nums) - 1; $i >= 0; $i--) {
+            if ($nums[$i] == $val) {
+                array_splice($nums, $i, 1);
             }
         }
-        len as i32
     }
 }
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

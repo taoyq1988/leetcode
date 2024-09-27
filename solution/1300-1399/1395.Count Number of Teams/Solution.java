@@ -2,26 +2,20 @@ class Solution {
     public int numTeams(int[] rating) {
         int n = rating.length;
         int ans = 0;
-        for (int j = 1; j < n - 1; ++j) {
-            int ia = 0;
-            int ib = 0;
-            int ka = 0;
-            int kb = 0;
-            for (int i = 0; i < j; ++i) {
-                if (rating[i] < rating[j]) {
-                    ++ia;
-                } else if (rating[i] > rating[j]) {
-                    ++ib;
+        for (int i = 0; i < n; ++i) {
+            int l = 0, r = 0;
+            for (int j = 0; j < i; ++j) {
+                if (rating[j] < rating[i]) {
+                    ++l;
                 }
             }
-            for (int k = j + 1; k < n; ++k) {
-                if (rating[j] < rating[k]) {
-                    ++ka;
-                } else if (rating[j] > rating[k]) {
-                    ++kb;
+            for (int j = i + 1; j < n; ++j) {
+                if (rating[j] > rating[i]) {
+                    ++r;
                 }
             }
-            ans += ia * ka + ib * kb;
+            ans += l * r;
+            ans += (i - l) * (n - i - 1 - r);
         }
         return ans;
     }

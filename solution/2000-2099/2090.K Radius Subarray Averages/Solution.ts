@@ -1,17 +1,16 @@
 function getAverages(nums: number[], k: number): number[] {
+    k = (k << 1) | 1;
     const n = nums.length;
-    const l = 2 * k + 1;
-    let sum = 0;
-    let ans = new Array(n).fill(-1);
-    for (let i = 0; i < n; i++) {
-        sum += nums[i];
-        let shiftIndex = i - l;
-        if (shiftIndex > -1) {
-            sum -= nums[shiftIndex];
-        }
-        if (i + 1 >= l) {
-            ans[i - k] = Math.floor(sum / l);
-        }
+    const ans: number[] = Array(n).fill(-1);
+    if (k > n) {
+        return ans;
+    }
+    let s = nums.slice(0, k).reduce((acc, cur) => acc + cur, 0);
+    let j = k >> 1;
+    ans[j] = Math.floor(s / k);
+    for (let i = k; i < n; ++i) {
+        s += nums[i] - nums[i - k];
+        ans[++j] = Math.floor(s / k);
     }
     return ans;
 }

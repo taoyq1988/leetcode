@@ -1,13 +1,30 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1371.Find%20the%20Longest%20Substring%20Containing%20Vowels%20in%20Even%20Counts/README_EN.md
+rating: 2040
+source: Biweekly Contest 21 Q2
+tags:
+    - Bit Manipulation
+    - Hash Table
+    - String
+    - Prefix Sum
+---
+
+<!-- problem:start -->
+
 # [1371. Find the Longest Substring Containing Vowels in Even Counts](https://leetcode.com/problems/find-the-longest-substring-containing-vowels-in-even-counts)
 
 [中文文档](/solution/1300-1399/1371.Find%20the%20Longest%20Substring%20Containing%20Vowels%20in%20Even%20Counts/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given the string <code>s</code>, return the size of the longest substring containing each vowel an even number of times. That is, &#39;a&#39;, &#39;e&#39;, &#39;i&#39;, &#39;o&#39;, and &#39;u&#39; must appear an even number of times.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;eleetminicoworoep&quot;
@@ -15,7 +32,7 @@
 <strong>Explanation: </strong>The longest substring is &quot;leetminicowor&quot; which contains two each of the vowels: <strong>e</strong>, <strong>i</strong> and <strong>o</strong> and zero of the vowels: <strong>a</strong> and <strong>u</strong>.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;leetcodeisgreat&quot;
@@ -23,7 +40,7 @@
 <strong>Explanation:</strong> The longest substring is &quot;leetc&quot; which contains two e&#39;s.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;bcbcbc&quot;
@@ -39,29 +56,35 @@
 	<li><code>s</code>&nbsp;contains only lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def findTheLongestSubstring(self, s: str) -> int:
-        pos = [float('inf')] * 32
+        pos = [inf] * 32
         pos[0] = -1
         vowels = 'aeiou'
         state = ans = 0
         for i, c in enumerate(s):
             for j, v in enumerate(vowels):
                 if c == v:
-                    state ^= (1 << j)
+                    state ^= 1 << j
             ans = max(ans, i - pos[state])
             pos[state] = min(pos[state], i)
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -86,10 +109,9 @@ class Solution {
         return ans;
     }
 }
-
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -99,8 +121,7 @@ public:
         pos[0] = -1;
         string vowels = "aeiou";
         int state = 0, ans = 0;
-        for (int i = 0; i < s.size(); ++i)
-        {
+        for (int i = 0; i < s.size(); ++i) {
             for (int j = 0; j < 5; ++j)
                 if (s[i] == vowels[j])
                     state ^= (1 << j);
@@ -112,7 +133,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findTheLongestSubstring(s string) int {
@@ -134,26 +155,10 @@ func findTheLongestSubstring(s string) int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

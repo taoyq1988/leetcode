@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1898.Maximum%20Number%20of%20Removable%20Characters/README.md
+rating: 1912
+source: 第 245 场周赛 Q2
+tags:
+    - 数组
+    - 双指针
+    - 字符串
+    - 二分查找
+---
+
+<!-- problem:start -->
+
 # [1898. 可移除字符的最大数目](https://leetcode.cn/problems/maximum-number-of-removable-characters)
 
 [English Version](/solution/1800-1899/1898.Maximum%20Number%20of%20Removable%20Characters/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个字符串 <code>s</code> 和 <code>p</code> ，其中 <code>p</code> 是 <code>s</code> 的一个 <strong>子序列</strong> 。同时，给你一个元素 <strong>互不相同</strong> 且下标 <strong>从 0 开始</strong> 计数的整数数组 <code>removable</code> ，该数组是 <code>s</code> 中下标的一个子集（<code>s</code> 的下标也 <strong>从 0 开始</strong> 计数）。</p>
 
@@ -57,11 +72,13 @@
 	<li><code>removable</code> 中的元素 <strong>互不相同</strong></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：二分查找 + 判断子序列**
+### 方法一：二分查找 + 判断子序列
 
 二分枚举整数 k，找到满足要求的最大 k 即可。
 
@@ -70,7 +87,8 @@
 模板 1：
 
 ```java
-boolean check(int x) {}
+boolean check(int x) {
+}
 
 int search(int left, int right) {
     while (left < right) {
@@ -88,7 +106,8 @@ int search(int left, int right) {
 模板 2：
 
 ```java
-boolean check(int x) {}
+boolean check(int x) {
+}
 
 int search(int left, int right) {
     while (left < right) {
@@ -103,22 +122,20 @@ int search(int left, int right) {
 }
 ```
 
-做二分题目时，可以按照以下步骤：
+做二分题目时，可以按照以下套路：
 
-1. 写出循环条件：`while (left < right)`，注意是 `left < right`，而非 `left <= right`；
-1. 循环体内，先无脑写出 `mid = (left + right) >> 1`；
-1. 根据具体题目，实现 `check()` 函数（有时很简单的逻辑，可以不定义 `check`），想一下究竟要用 `right = mid`（模板 1） 还是 `left = mid`（模板 2）；
-    - 如果 `right = mid`，那么无脑写出 else 语句 `left = mid + 1`，并且不需要更改 mid 的计算，即保持 `mid = (left + right) >> 1`；
-    - 如果 `left = mid`，那么无脑写出 else 语句 `right = mid - 1`，并且在 mid 计算时补充 +1，即 `mid = (left + right + 1) >> 1`。
-1. 循环结束时，left 与 right 相等。
+1. 写出循环条件 $left < right$；
+1. 循环体内，不妨先写 $mid = \lfloor \frac{left + right}{2} \rfloor$；
+1. 根据具体题目，实现 $check()$ 函数（有时很简单的逻辑，可以不定义 $check$），想一下究竟要用 $right = mid$（模板 $1$） 还是 $left = mid$（模板 $2$）；
+       - 如果 $right = mid$，那么写出 else 语句 $left = mid + 1$，并且不需要更改 mid 的计算，即保持 $mid = \lfloor \frac{left + right}{2} \rfloor$；
+       - 如果 $left = mid$，那么写出 else 语句 $right = mid - 1$，并且在 $mid$ 计算时补充 +1，即 $mid = \lfloor \frac{left + right + 1}{2} \rfloor$；
+1. 循环结束时，$left$ 与 $right$ 相等。
 
-注意，这两个模板的优点是始终保持答案位于二分区间内，二分结束条件对应的值恰好在答案所处的位置。 对于可能无解的情况，只要判断二分结束后的 left 或者 right 是否满足题意即可。
+注意，这两个模板的优点是始终保持答案位于二分区间内，二分结束条件对应的值恰好在答案所处的位置。 对于可能无解的情况，只要判断二分结束后的 $left$ 或者 $right$ 是否满足题意即可。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -143,9 +160,7 @@ class Solution:
         return left
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -179,39 +194,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function maximumRemovals(s: string, p: string, removable: number[]): number {
-    let left = 0,
-        right = removable.length;
-    while (left < right) {
-        let mid = (left + right + 1) >> 1;
-        if (isSub(s, p, new Set(removable.slice(0, mid)))) {
-            left = mid;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return left;
-}
-
-function isSub(str: string, sub: string, idxes: Set<number>): boolean {
-    let m = str.length,
-        n = sub.length;
-    let i = 0,
-        j = 0;
-    while (i < m && j < n) {
-        if (!idxes.has(i) && str.charAt(i) == sub.charAt(j)) {
-            ++j;
-        }
-        ++i;
-    }
-    return j == n;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -246,7 +229,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumRemovals(s string, p string, removable []int) int {
@@ -278,7 +261,39 @@ func maximumRemovals(s string, p string, removable []int) int {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function maximumRemovals(s: string, p: string, removable: number[]): number {
+    let left = 0,
+        right = removable.length;
+    while (left < right) {
+        let mid = (left + right + 1) >> 1;
+        if (isSub(s, p, new Set(removable.slice(0, mid)))) {
+            left = mid;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return left;
+}
+
+function isSub(str: string, sub: string, idxes: Set<number>): boolean {
+    let m = str.length,
+        n = sub.length;
+    let i = 0,
+        j = 0;
+    while (i < m && j < n) {
+        if (!idxes.has(i) && str.charAt(i) == sub.charAt(j)) {
+            ++j;
+        }
+        ++i;
+    }
+    return j == n;
+}
+```
+
+#### Rust
 
 ```rust
 use std::collections::HashSet;
@@ -322,10 +337,95 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * @param {string} s
+ * @param {string} p
+ * @param {number[]} removable
+ * @return {number}
+ */
+function maximumRemovals(s, p, removable) {
+    const str_len = s.length;
+    const sub_len = p.length;
+
+    /**
+     * @param {number} k
+     * @return {boolean}
+     */
+    function isSub(k) {
+        const removed = new Set(removable.slice(0, k));
+
+        let sub_i = 0;
+        for (let str_i = 0; str_i < str_len; ++str_i) {
+            if (s.charAt(str_i) === p.charAt(sub_i) && !removed.has(str_i)) {
+                ++sub_i;
+                if (sub_i >= sub_len) {
+                    break;
+                }
+            }
+        }
+        return sub_i === sub_len;
+    }
+
+    let left = 0;
+    let right = removable.length;
+
+    while (left < right) {
+        const middle = (left + right) >> 1;
+        if (isSub(middle + 1)) {
+            left = middle + 1;
+        } else {
+            right = middle;
+        }
+    }
+    return left;
+}
 ```
 
+#### Kotlin
+
+```kotlin
+class Solution {
+  fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+      val strLen = s.length
+      val subLen = p.length
+
+      fun isSub(k: Int): Boolean {
+          val removed = removable.sliceArray(0 ..< k).toHashSet()
+
+          var subIndex = 0
+          for (strIndex in 0 ..< strLen) {
+              if (s[strIndex] == p[subIndex] && !removed.contains(strIndex)) {
+                  ++subIndex
+                  if (subIndex >= subLen) {
+                      break
+                  }
+              }
+          }
+
+          return subIndex == subLen
+      }
+
+      var left = 0
+      var right = removable.size
+
+      while (left < right) {
+          val middle = (left + right) / 2
+          if (isSub(middle + 1)) {
+              left = middle + 1
+          } else {
+              right = middle
+          }
+      }
+      return left
+  }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,12 +1,27 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1377.Frog%20Position%20After%20T%20Seconds/README.md
+rating: 1823
+source: 第 179 场周赛 Q4
+tags:
+    - 树
+    - 深度优先搜索
+    - 广度优先搜索
+    - 图
+---
+
+<!-- problem:start -->
+
 # [1377. T 秒后青蛙的位置](https://leetcode.cn/problems/frog-position-after-t-seconds)
 
 [English Version](/solution/1300-1399/1377.Frog%20Position%20After%20T%20Seconds/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>给你一棵由 n 个顶点组成的无向树，顶点编号从 1 到 <code>n</code>。青蛙从 <strong>顶点 1</strong> 开始起跳。规则如下：</p>
+<p>给你一棵由 <code>n</code> 个顶点组成的无向树，顶点编号从 <code>1</code> 到 <code>n</code>。青蛙从 <strong>顶点 1</strong> 开始起跳。规则如下：</p>
 
 <ul>
 	<li>在一秒内，青蛙从它所在的当前顶点跳到另一个 <strong>未访问</strong> 过的顶点（如果它们直接相连）。</li>
@@ -15,9 +30,9 @@
 	<li>如果青蛙不能跳到任何未访问过的顶点上，那么它每次跳跃都会停留在原地。</li>
 </ul>
 
-<p>无向树的边用数组 <code>edges</code> 描述，其中 <code>edges[i] = [from<sub>i</sub>, to<sub>i</sub>]</code> 意味着存在一条直接连通 <code>from<sub>i</sub></code> 和 <code>to<sub>i</sub></code> 两个顶点的边。</p>
+<p>无向树的边用数组 <code>edges</code> 描述，其中 <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> 意味着存在一条直接连通 <code>a<sub>i</sub></code> 和 <code>b<sub>i</sub></code> 两个顶点的边。</p>
 
-<p>返回青蛙在 <em><code>t</code></em> 秒后位于目标顶点 <em><code>target</code> </em>上的概率。</p>
+<p>返回青蛙在 <em><code>t</code></em> 秒后位于目标顶点 <em><code>target</code> </em>上的概率。与实际答案相差不超过 <code>10<sup>-5</sup></code> 的结果将被视为正确答案。</p>
 
 <p>&nbsp;</p>
 
@@ -56,21 +71,43 @@
 	<li><code>1 &lt;= target &lt;= n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：BFS**
+### 方法一：BFS
+
+我们先根据题目给出的无向树的边，建立一个邻接表 $g$，其中 $g[u]$ 表示顶点 $u$ 的所有相邻顶点。
+
+然后，我们定义以下数据结构：
+
+-   队列 $q$，用于存储每一轮搜索的顶点及其概率，初始时 $q = [(1, 1.0)]$，表示青蛙在顶点 $1$ 的概率为 $1.0$；
+-   数组 $vis$，用于记录每个顶点是否被访问过，初始时 $vis[1] = true$，其余元素均为 $false$。
+
+接下来，我们开始进行广度优先搜索。
+
+在每一轮搜索中，我们每次取出队首元素 $(u, p)$，其中 $u$ 和 $p$ 分别表示当前顶点及其概率。当前顶点 $u$ 的相邻顶点中未被访问过的顶点的个数记为 $cnt$。
+
+-   如果 $u = target$，说明青蛙已经到达目标顶点，此时我们判断青蛙是否在 $t$ 秒到达目标顶点，或者不到 $t$ 秒到达目标顶点但是无法再跳跃到其它顶点（即 $t=0$ 或者 $cnt=0$）。如果是，则返回 $p$，否则返回 $0$。
+-   如果 $u \neq target$，那么我们将概率 $p$ 均分给 $u$ 的所有未被访问过的相邻顶点，然后将这些顶点加入队列 $q$ 中，并且将这些顶点标记为已访问。
+
+在一轮搜索结束后，我们将 $t$ 减少 $1$，然后继续进行下一轮搜索，直到队列为空或者 $t \lt 0$。
+
+最后，若青蛙仍然没有到达目标顶点，那么我们返回 $0$。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是无向树的顶点数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def frogPosition(self, n: int, edges: List[List[int]], t: int, target: int) -> float:
+    def frogPosition(
+        self, n: int, edges: List[List[int]], t: int, target: int
+    ) -> float:
         g = defaultdict(list)
         for u, v in edges:
             g[u].append(v)
@@ -81,28 +118,25 @@ class Solution:
         while q and t >= 0:
             for _ in range(len(q)):
                 u, p = q.popleft()
-                nxt = [v for v in g[u] if not vis[v]]
-                if u == target and (not nxt or t == 0):
-                    return p
-                for v in nxt:
-                    vis[v] = True
-                    q.append((v, p / len(nxt)))
+                cnt = len(g[u]) - int(u != 1)
+                if u == target:
+                    return p if cnt * t == 0 else 0
+                for v in g[u]:
+                    if not vis[v]:
+                        vis[v] = True
+                        q.append((v, p / cnt))
             t -= 1
         return 0
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public double frogPosition(int n, int[][] edges, int t, int target) {
         List<Integer>[] g = new List[n + 1];
-        for (int i = 0; i <= n; ++i) {
-            g[i] = new ArrayList<>();
-        }
-        for (int[] e : edges) {
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for (var e : edges) {
             int u = e[0], v = e[1];
             g[u].add(v);
             g[v].add(u);
@@ -111,85 +145,68 @@ class Solution {
         q.offer(new Pair<>(1, 1.0));
         boolean[] vis = new boolean[n + 1];
         vis[1] = true;
-        while (!q.isEmpty() && t >= 0) {
+        for (; !q.isEmpty() && t >= 0; --t) {
             for (int k = q.size(); k > 0; --k) {
-                Pair<Integer, Double> x = q.poll();
+                var x = q.poll();
                 int u = x.getKey();
                 double p = x.getValue();
-                List<Integer> nxt = new ArrayList<>();
+                int cnt = g[u].size() - (u == 1 ? 0 : 1);
+                if (u == target) {
+                    return cnt * t == 0 ? p : 0;
+                }
                 for (int v : g[u]) {
                     if (!vis[v]) {
-                        nxt.add(v);
                         vis[v] = true;
+                        q.offer(new Pair<>(v, p / cnt));
                     }
                 }
-                if (u == target && (nxt.isEmpty() || t == 0)) {
-                    return p;
-                }
-                for (int v : nxt) {
-                    q.offer(new Pair<>(v, p / nxt.size()));
-                }
             }
-            --t;
         }
         return 0;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     double frogPosition(int n, vector<vector<int>>& edges, int t, int target) {
         vector<vector<int>> g(n + 1);
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int u = e[0], v = e[1];
             g[u].push_back(v);
             g[v].push_back(u);
         }
-        typedef pair<int, double> pid;
-        queue<pid> q;
-        q.push({1, 1.0});
-        vector<bool> vis(n + 1);
+        queue<pair<int, double>> q{{{1, 1.0}}};
+        bool vis[n + 1];
+        memset(vis, false, sizeof(vis));
         vis[1] = true;
-        while (!q.empty() && t >= 0)
-        {
-            for (int k = q.size(); k; --k)
-            {
-                auto x = q.front();
+        for (; q.size() && t >= 0; --t) {
+            for (int k = q.size(); k; --k) {
+                auto [u, p] = q.front();
                 q.pop();
-                int u = x.first;
-                double p = x.second;
-                vector<int> nxt;
-                for (int v : g[u])
-                {
-                    if (!vis[v])
-                    {
+                int cnt = g[u].size() - (u != 1);
+                if (u == target) {
+                    return cnt * t == 0 ? p : 0;
+                }
+                for (int v : g[u]) {
+                    if (!vis[v]) {
                         vis[v] = true;
-                        nxt.push_back(v);
+                        q.push({v, p / cnt});
                     }
                 }
-                if (u == target && (t == 0 || nxt.empty())) return p;
-                for (int v : nxt) q.push({v, p / nxt.size()});
             }
-            --t;
         }
         return 0;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-type pid struct {
-	x int
-	p float64
-}
-
 func frogPosition(n int, edges [][]int, t int, target int) float64 {
 	g := make([][]int, n+1)
 	for _, e := range edges {
@@ -197,38 +214,110 @@ func frogPosition(n int, edges [][]int, t int, target int) float64 {
 		g[u] = append(g[u], v)
 		g[v] = append(g[v], u)
 	}
-	q := []pid{pid{1, 1.0}}
+	type pair struct {
+		u int
+		p float64
+	}
+	q := []pair{{1, 1}}
 	vis := make([]bool, n+1)
 	vis[1] = true
-	for len(q) > 0 && t >= 0 {
+	for ; len(q) > 0 && t >= 0; t-- {
 		for k := len(q); k > 0; k-- {
-			x := q[0]
+			u, p := q[0].u, q[0].p
 			q = q[1:]
-			u, p := x.x, x.p
-			var nxt []int
+			cnt := len(g[u])
+			if u != 1 {
+				cnt--
+			}
+			if u == target {
+				if cnt*t == 0 {
+					return p
+				}
+				return 0
+			}
 			for _, v := range g[u] {
 				if !vis[v] {
 					vis[v] = true
-					nxt = append(nxt, v)
+					q = append(q, pair{v, p / float64(cnt)})
 				}
 			}
-			if u == target && (len(nxt) == 0 || t == 0) {
-				return p
-			}
-			for _, v := range nxt {
-				q = append(q, pid{v, p / float64(len(nxt))})
-			}
 		}
-		t--
 	}
 	return 0
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function frogPosition(n: number, edges: number[][], t: number, target: number): number {
+    const g: number[][] = Array.from({ length: n + 1 }, () => []);
+    for (const [u, v] of edges) {
+        g[u].push(v);
+        g[v].push(u);
+    }
+    const q: number[][] = [[1, 1]];
+    const vis: boolean[] = Array.from({ length: n + 1 }, () => false);
+    vis[1] = true;
+    for (; q.length > 0 && t >= 0; --t) {
+        for (let k = q.length; k > 0; --k) {
+            const [u, p] = q.shift()!;
+            const cnt = g[u].length - (u === 1 ? 0 : 1);
+            if (u === target) {
+                return cnt * t === 0 ? p : 0;
+            }
+            for (const v of g[u]) {
+                if (!vis[v]) {
+                    vis[v] = true;
+                    q.push([v, p / cnt]);
+                }
+            }
+        }
+    }
+    return 0;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public double FrogPosition(int n, int[][] edges, int t, int target) {
+        List<int>[] g = new List<int>[n + 1];
+        for (int i = 0; i < n + 1; i++) {
+            g[i] = new List<int>();
+        }
+        foreach (int[] e in edges) {
+            int u = e[0], v = e[1];
+            g[u].Add(v);
+            g[v].Add(u);
+        }
+        Queue<Tuple<int, double>> q = new Queue<Tuple<int, double>>();
+        q.Enqueue(new Tuple<int, double>(1, 1.0));
+        bool[] vis = new bool[n + 1];
+        vis[1] = true;
+        for (; q.Count > 0 && t >= 0; --t) {
+            for (int k = q.Count; k > 0; --k) {
+                (var u, var p) = q.Dequeue();
+                int cnt = g[u].Count - (u == 1 ? 0 : 1);
+                if (u == target) {
+                    return cnt * t == 0 ? p : 0;
+                }
+                foreach (int v in g[u]) {
+                    if (!vis[v]) {
+                        vis[v] = true;
+                        q.Enqueue(new Tuple<int, double>(v, p / cnt));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

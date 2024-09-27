@@ -1,32 +1,22 @@
 struct NumArray {
-    nums: Vec<i32>
+    s: Vec<i32>,
 }
-
 
 /**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
  */
 impl NumArray {
-
     fn new(mut nums: Vec<i32>) -> Self {
         let n = nums.len();
-        for i in 1..n {
-            nums[i] += nums[i - 1];
+        let mut s = vec![0; n + 1];
+        for i in 0..n {
+            s[i + 1] = s[i] + nums[i];
         }
-        Self {
-            nums
-        }
+        Self { s }
     }
 
     fn sum_range(&self, left: i32, right: i32) -> i32 {
-        let (left, right) = (left as usize, right as usize);
-        self.nums[right] - if left == 0 { 0 } else { self.nums[left - 1] }
+        self.s[(right + 1) as usize] - self.s[left as usize]
     }
 }
-
-/**
- * Your NumArray object will be instantiated and called as such:
- * let obj = NumArray::new(nums);
- * let ret_1: i32 = obj.sum_range(left, right);
- */

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2190.Most%20Frequent%20Number%20Following%20Key%20In%20an%20Array/README_EN.md
+rating: 1289
+source: Biweekly Contest 73 Q1
+tags:
+    - Array
+    - Hash Table
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [2190. Most Frequent Number Following Key In an Array](https://leetcode.com/problems/most-frequent-number-following-key-in-an-array)
 
 [中文文档](/solution/2100-2199/2190.Most%20Frequent%20Number%20Following%20Key%20In%20an%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>.<strong> </strong>You are also given an integer <code>key</code>, which is present in <code>nums</code>.</p>
 
@@ -17,7 +33,7 @@
 <p>Return <em>the </em><code>target</code><em> with the <strong>maximum</strong> count</em>. The test cases will be generated such that the <code>target</code> with maximum count is unique.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,100,200,1,100], key = 1
@@ -26,7 +42,7 @@
 No other integers follow an occurrence of key, so we return 100.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,2,2,2,3], key = 2
@@ -45,40 +61,43 @@ target = 2 has the maximum number of occurrences following an occurrence of key,
 	<li>The test cases will be generated such that the answer is unique.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def mostFrequent(self, nums: List[int], key: int) -> int:
         cnt = Counter()
-        mx = ans = 0
-        for i, v in enumerate(nums[:-1]):
-            if v == key:
-                target = nums[i + 1]
-                cnt[target] += 1
-                if mx < cnt[target]:
-                    mx = cnt[target]
-                    ans = nums[i + 1]
+        ans = mx = 0
+        for a, b in pairwise(nums):
+            if a == key:
+                cnt[b] += 1
+                if mx < cnt[b]:
+                    mx = cnt[b]
+                    ans = b
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int mostFrequent(int[] nums, int key) {
-        int[] cnt = new int[1010];
-        int mx = 0, ans = 0;
+        int[] cnt = new int[1001];
+        int ans = 0, mx = 0;
         for (int i = 0; i < nums.length - 1; ++i) {
             if (nums[i] == key) {
-                int target = nums[i + 1];
-                ++cnt[target];
-                if (mx < cnt[target]) {
-                    mx = cnt[target];
+                if (mx < ++cnt[nums[i + 1]]) {
+                    mx = cnt[nums[i + 1]];
                     ans = nums[i + 1];
                 }
             }
@@ -88,23 +107,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int mostFrequent(vector<int>& nums, int key) {
-        vector<int> cnt(1010);
-        int mx = 0, ans = 0;
-        for (int i = 0; i < nums.size() - 1; ++i)
-        {
-            if (nums[i] == key)
-            {
-                int target = nums[i + 1];
-                ++cnt[target];
-                if (mx < cnt[target])
-                {
-                    mx = cnt[target];
+        int cnt[1001]{};
+        int ans = 0, mx = 0;
+        for (int i = 0; i < nums.size() - 1; ++i) {
+            if (nums[i] == key) {
+                if (mx < ++cnt[nums[i + 1]]) {
+                    mx = cnt[nums[i + 1]];
                     ans = nums[i + 1];
                 }
             }
@@ -114,36 +128,72 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func mostFrequent(nums []int, key int) int {
-	cnt := make([]int, 1010)
-	mx, ans := 0, 0
-	for i, v := range nums[:len(nums)-1] {
-		if v == key {
-			target := nums[i+1]
-			cnt[target]++
-			if mx < cnt[target] {
-				mx = cnt[target]
-				ans = nums[i+1]
+func mostFrequent(nums []int, key int) (ans int) {
+	cnt := [1001]int{}
+	mx := 0
+	for i, x := range nums[1:] {
+		if nums[i] == key {
+			cnt[x]++
+			if mx < cnt[x] {
+				mx = cnt[x]
+				ans = x
 			}
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function mostFrequent(nums: number[], key: number): number {
+    const cnt: number[] = new Array(1001).fill(0);
+    let ans = 0;
+    let mx = 0;
+    for (let i = 0; i < nums.length - 1; ++i) {
+        if (nums[i] === key) {
+            if (mx < ++cnt[nums[i + 1]]) {
+                mx = cnt[nums[i + 1]];
+                ans = nums[i + 1];
+            }
+        }
+    }
+    return ans;
+}
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param Integer[] $nums
+     * @param Integer $key
+     * @return Integer
+     */
+    function mostFrequent($nums, $key) {
+        $max = $maxNum = 0;
+        for ($i = 0; $i < count($nums) - 1; $i++) {
+            if ($nums[$i] == $key) {
+                $hashtable[$nums[$i + 1]] += 1;
+                $tmp = $hashtable[$nums[$i + 1]];
+                if ($tmp > $max) {
+                    $max = $tmp;
+                    $maxNum = $nums[$i + 1];
+                }
+            }
+        }
+        return $maxNum;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

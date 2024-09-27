@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2224.Minimum%20Number%20of%20Operations%20to%20Convert%20Time/README_EN.md
+rating: 1295
+source: Weekly Contest 287 Q1
+tags:
+    - Greedy
+    - String
+---
+
+<!-- problem:start -->
+
 # [2224. Minimum Number of Operations to Convert Time](https://leetcode.com/problems/minimum-number-of-operations-to-convert-time)
 
 [中文文档](/solution/2200-2299/2224.Minimum%20Number%20of%20Operations%20to%20Convert%20Time/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two strings <code>current</code> and <code>correct</code> representing two <strong>24-hour times</strong>.</p>
 
@@ -13,7 +28,7 @@
 <p>Return <em>the <strong>minimum number of operations</strong> needed to convert </em><code>current</code><em> to </em><code>correct</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> current = &quot;02:30&quot;, correct = &quot;04:35&quot;
@@ -25,7 +40,7 @@
 - Add 5 minutes to current. current becomes &quot;04:35&quot;.
 It can be proven that it is not possible to convert current to correct in fewer than 3 operations.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> current = &quot;11:00&quot;, correct = &quot;11:01&quot;
@@ -41,11 +56,17 @@ It can be proven that it is not possible to convert current to correct in fewer 
 	<li><code>current &lt;= correct</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -59,13 +80,15 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int convertTime(String current, String correct) {
-        int a = Integer.parseInt(current.substring(0, 2)) * 60 + Integer.parseInt(current.substring(3));
-        int b = Integer.parseInt(correct.substring(0, 2)) * 60 + Integer.parseInt(correct.substring(3));
+        int a = Integer.parseInt(current.substring(0, 2)) * 60
+            + Integer.parseInt(current.substring(3));
+        int b = Integer.parseInt(correct.substring(0, 2)) * 60
+            + Integer.parseInt(correct.substring(3));
         int ans = 0, d = b - a;
         for (int i : Arrays.asList(60, 15, 5, 1)) {
             ans += d / i;
@@ -76,7 +99,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -86,8 +109,7 @@ public:
         int b = stoi(correct.substr(0, 2)) * 60 + stoi(correct.substr(3, 2));
         int ans = 0, d = b - a;
         vector<int> inc = {60, 15, 5, 1};
-        for (int i : inc)
-        {
+        for (int i : inc) {
             ans += d / i;
             d %= i;
         }
@@ -96,35 +118,27 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func convertTime(current string, correct string) int {
-    parse := func(s string) int {
-        h := int(s[0] - '0') * 10 + int(s[1] - '0')
-        m := int(s[3] - '0') * 10 + int(s[4] - '0')
-        return h * 60 + m
-    }
-    a, b := parse(current), parse(correct)
-    ans, d := 0, b - a
-    for _, i := range []int{60, 15, 5, 1} {
-        ans += d / i
-        d %= i
-    }
-    return ans
+	parse := func(s string) int {
+		h := int(s[0]-'0')*10 + int(s[1]-'0')
+		m := int(s[3]-'0')*10 + int(s[4]-'0')
+		return h*60 + m
+	}
+	a, b := parse(current), parse(correct)
+	ans, d := 0, b-a
+	for _, i := range []int{60, 15, 5, 1} {
+		ans += d / i
+		d %= i
+	}
+	return ans
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

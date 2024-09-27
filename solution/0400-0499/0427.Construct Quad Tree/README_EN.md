@@ -1,20 +1,33 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0427.Construct%20Quad%20Tree/README_EN.md
+tags:
+    - Tree
+    - Array
+    - Divide and Conquer
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [427. Construct Quad Tree](https://leetcode.com/problems/construct-quad-tree)
 
 [中文文档](/solution/0400-0499/0427.Construct%20Quad%20Tree/README.md)
 
 ## Description
 
-<p>Given a <code>n * n</code> matrix <code>grid</code> of <code>0&#39;s</code> and <code>1&#39;s</code> only. We want to represent the <code>grid</code> with a Quad-Tree.</p>
+<!-- description:start -->
 
-<p>Return <em>the root of the Quad-Tree</em> representing the <code>grid</code>.</p>
+<p>Given a <code>n * n</code> matrix <code>grid</code> of <code>0&#39;s</code> and <code>1&#39;s</code> only. We want to represent <code>grid</code> with a Quad-Tree.</p>
 
-<p>Notice that you can assign the value of a node to <strong>True</strong> or <strong>False</strong> when <code>isLeaf</code> is <strong>False</strong>, and both are <strong>accepted</strong> in the answer.</p>
+<p>Return <em>the root of the Quad-Tree representing </em><code>grid</code>.</p>
 
 <p>A Quad-Tree is a tree data structure in which each internal node has exactly four children. Besides, each node has two attributes:</p>
 
 <ul>
-	<li><code>val</code>: True if the node represents a grid of 1&#39;s or False if the node represents a grid of 0&#39;s.</li>
-	<li><code>isLeaf</code>: True if the node is leaf node on the tree or False if the node has the four children.</li>
+	<li><code>val</code>: True if the node represents a grid of 1&#39;s or False if the node represents a grid of 0&#39;s. Notice that you can assign the <code>val</code> to True or False when <code>isLeaf</code> is False, and both are accepted in the answer.</li>
+	<li><code>isLeaf</code>: True if the node is a leaf node on the tree or False if the node has four children.</li>
 </ul>
 
 <pre>
@@ -39,24 +52,24 @@ class Node {
 
 <p><strong>Quad-Tree format:</strong></p>
 
-<p>The output represents the serialized format of a Quad-Tree using level order traversal, where <code>null</code> signifies a path terminator where no node exists below.</p>
+<p>You don&#39;t need to read this section for solving the problem. This is only if you want to understand the output format here. The output represents the serialized format of a Quad-Tree using level order traversal, where <code>null</code> signifies a path terminator where no node exists below.</p>
 
 <p>It is very similar to the serialization of the binary tree. The only difference is that the node is represented as a list <code>[isLeaf, val]</code>.</p>
 
 <p>If the value of <code>isLeaf</code> or <code>val</code> is True we represent it as <strong>1</strong> in the list <code>[isLeaf, val]</code> and if the value of <code>isLeaf</code> or <code>val</code> is False we represent it as <strong>0</strong>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0400-0499/0427.Construct%20Quad%20Tree/images/grid1.png" style="width: 777px; height: 99px;" />
 <pre>
 <strong>Input:</strong> grid = [[0,1],[1,0]]
 <strong>Output:</strong> [[0,1],[1,0],[1,1],[1,1],[1,0]]
 <strong>Explanation:</strong> The explanation of this example is shown below:
-Notice that 0 represnts False and 1 represents True in the photo representing the Quad-Tree.
+Notice that 0 represents False and 1 represents True in the photo representing the Quad-Tree.
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0400-0499/0427.Construct%20Quad%20Tree/images/e1tree.png" style="width: 777px; height: 186px;" />
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0400-0499/0427.Construct%20Quad%20Tree/images/e2mat.png" style="width: 777px; height: 343px;" /></p>
 
@@ -78,11 +91,17 @@ Explanation is shown in the photo below:
 	<li><code>n == 2<sup>x</sup></code> where <code>0 &lt;= x &lt;= 6</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 """
@@ -121,7 +140,7 @@ class Solution:
         return dfs(0, 0, len(grid) - 1, len(grid[0]) - 1)
 ```
 
-### **Java**
+#### Java
 
 ```java
 /*
@@ -153,13 +172,9 @@ class Node {
         this.bottomRight = null;
     }
 
-    public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
-        this.val = val;
-        this.isLeaf = isLeaf;
-        this.topLeft = topLeft;
-        this.topRight = topRight;
-        this.bottomLeft = bottomLeft;
-        this.bottomRight = bottomRight;
+    public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node
+bottomRight) { this.val = val; this.isLeaf = isLeaf; this.topLeft = topLeft; this.topRight =
+topRight; this.bottomLeft = bottomLeft; this.bottomRight = bottomRight;
     }
 };
 */
@@ -195,7 +210,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /*
@@ -246,12 +261,12 @@ public:
 
     Node* dfs(int a, int b, int c, int d, vector<vector<int>>& grid) {
         int zero = 0, one = 0;
-        for (int i = a; i <= c; ++i)
-        {
-            for (int j = b; j <= d; ++j)
-            {
-                if (grid[i][j]) one = 1;
-                else zero = 1;
+        for (int i = a; i <= c; ++i) {
+            for (int j = b; j <= d; ++j) {
+                if (grid[i][j])
+                    one = 1;
+                else
+                    zero = 1;
             }
         }
         bool isLeaf = zero + one == 1;
@@ -267,7 +282,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -311,10 +326,8 @@ func construct(grid [][]int) *Node {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

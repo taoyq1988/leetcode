@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0762.Prime%20Number%20of%20Set%20Bits%20in%20Binary%20Representation/README_EN.md
+tags:
+    - Bit Manipulation
+    - Math
+---
+
+<!-- problem:start -->
+
 # [762. Prime Number of Set Bits in Binary Representation](https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation)
 
 [中文文档](/solution/0700-0799/0762.Prime%20Number%20of%20Set%20Bits%20in%20Binary%20Representation/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two integers <code>left</code> and <code>right</code>, return <em>the <strong>count</strong> of numbers in the <strong>inclusive</strong> range </em><code>[left, right]</code><em> having a <strong>prime number of set bits</strong> in their binary representation</em>.</p>
 
@@ -13,7 +26,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> left = 6, right = 10
@@ -27,7 +40,7 @@
 4 numbers have a prime number of set bits.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> left = 10, right = 15
@@ -50,11 +63,17 @@
 	<li><code>0 &lt;= right - left &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,11 +82,11 @@ class Solution:
         return sum(i.bit_count() in primes for i in range(left, right + 1))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
-    private static Set<Integer> primes = new HashSet<>(Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19));
+    private static Set<Integer> primes = Set.of(2, 3, 5, 7, 11, 13, 17, 19);
 
     public int countPrimeSetBits(int left, int right) {
         int ans = 0;
@@ -81,42 +100,37 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    unordered_set<int> primes{2, 3, 5, 7, 11, 13, 17, 19};
-
     int countPrimeSetBits(int left, int right) {
+        unordered_set<int> primes{2, 3, 5, 7, 11, 13, 17, 19};
         int ans = 0;
-        for (int i = left; i <= right; ++i)
-            if (primes.count(__builtin_popcount(i)))
-                ++ans;
+        for (int i = left; i <= right; ++i) ans += primes.count(__builtin_popcount(i));
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func countPrimeSetBits(left int, right int) int {
-	primes := map[int]bool{2: true, 3: true, 5: true, 7: true, 11: true, 13: true, 17: true, 19: true}
-	ans := 0
-	for i := left; i <= right; i++ {
-		if primes[bits.OnesCount(uint(i))] {
-			ans++
-		}
+func countPrimeSetBits(left int, right int) (ans int) {
+	primes := map[int]int{}
+	for _, v := range []int{2, 3, 5, 7, 11, 13, 17, 19} {
+		primes[v] = 1
 	}
-	return ans
+	for i := left; i <= right; i++ {
+		ans += primes[bits.OnesCount(uint(i))]
+	}
+	return
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

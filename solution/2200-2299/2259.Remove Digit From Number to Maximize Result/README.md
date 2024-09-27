@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2259.Remove%20Digit%20From%20Number%20to%20Maximize%20Result/README.md
+rating: 1331
+source: 第 291 场周赛 Q1
+tags:
+    - 贪心
+    - 字符串
+    - 枚举
+---
+
+<!-- problem:start -->
+
 # [2259. 移除指定数字得到的最大结果](https://leetcode.cn/problems/remove-digit-from-number-to-maximize-result)
 
 [English Version](/solution/2200-2299/2259.Remove%20Digit%20From%20Number%20to%20Maximize%20Result/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个表示某个正整数的字符串 <code>number</code> 和一个字符 <code>digit</code> 。</p>
 
@@ -49,25 +63,31 @@
 	<li><code>digit</code> 在 <code>number</code> 中出现至少一次</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：暴力枚举
+
+我们可以枚举字符串 $number$ 的所有位置 $i$，如果 $number[i] = digit$，那么我们取 $number$ 的前缀 $number[0:i]$ 和后缀 $number[i+1:]$ 拼接起来，即为移除 $number[i]$ 后的结果。我们取所有可能的结果中最大的即可。
+
+时间复杂度 $O(n^2)$，空间复杂度 $O(n)$。其中 $n$ 为字符串 $number$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def removeDigit(self, number: str, digit: str) -> str:
-        return max(number[:i] + number[i + 1:] for i, d in enumerate(number) if d == digit)
+        return max(
+            number[:i] + number[i + 1 :] for i, d in enumerate(number) if d == digit
+        )
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -87,20 +107,20 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string removeDigit(string number, char digit) {
         string ans = "0";
-        for (int i = 0, n = number.size(); i < n; ++i)
-        {
+        for (int i = 0, n = number.size(); i < n; ++i) {
             char d = number[i];
-            if (d == digit)
-            {
+            if (d == digit) {
                 string t = number.substr(0, i) + number.substr(i + 1, n - i);
-                if (ans < t) ans = t;
+                if (ans < t) {
+                    ans = t;
+                }
             }
         }
         return ans;
@@ -108,7 +128,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func removeDigit(number string, digit byte) string {
@@ -125,27 +145,142 @@ func removeDigit(number string, digit byte) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function removeDigit(number: string, digit: string): string {
-    let nums = number.split('');
-    const n = nums.length;
-    let ans = 0;
-    for (let i = 0; i < n; i++) {
-        if (nums[i] != digit) continue;
-        ans = i;
-        if (i + 1 < n && nums[i + 1] > nums[i]) break;
+    const n = number.length;
+    let last = -1;
+    for (let i = 0; i < n; ++i) {
+        if (number[i] === digit) {
+            last = i;
+            if (i + 1 < n && number[i] < number[i + 1]) {
+                break;
+            }
+        }
     }
-    nums.splice(ans, 1);
-    return nums.join('');
+    return number.substring(0, last) + number.substring(last + 1);
 }
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param String $number
+     * @param String $digit
+     * @return String
+     */
+    function removeDigit($number, $digit) {
+        $max = 0;
+        for ($i = 0; $i < strlen($number); $i++) {
+            if ($number[$i] == $digit) {
+                $tmp = substr($number, 0, $i) . substr($number, $i + 1);
+                if ($tmp > $max) {
+                    $max = $tmp;
+                }
+            }
+        }
+        return $max;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：贪心
+
+我们可以枚举字符串 $number$ 的所有位置 $i$，如果 $number[i] = digit$，记录 $digit$ 最后一次出现的位置 $last$，并且如果 $i + 1 \lt n$ 且 $number[i] \lt number[i + 1]$，那么我们可以直接返回 $number[0:i] + number[i+1:]$，即为移除 $number[i]$ 后的结果。这是因为如果 $number[i] < number[i + 1]$，那么移除 $number[i]$ 后，结果一定会更大。
+
+遍历结束，我们返回 $number[0:last] + number[last+1:]$ 即可。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为字符串 $number$ 的长度。
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def removeDigit(self, number: str, digit: str) -> str:
+        last = -1
+        n = len(number)
+        for i, d in enumerate(number):
+            if d == digit:
+                last = i
+                if i + 1 < n and d < number[i + 1]:
+                    break
+        return number[:last] + number[last + 1 :]
+```
+
+#### Java
+
+```java
+class Solution {
+    public String removeDigit(String number, char digit) {
+        int last = -1;
+        int n = number.length();
+        for (int i = 0; i < n; ++i) {
+            char d = number.charAt(i);
+            if (d == digit) {
+                last = i;
+                if (i + 1 < n && d < number.charAt(i + 1)) {
+                    break;
+                }
+            }
+        }
+        return number.substring(0, last) + number.substring(last + 1);
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    string removeDigit(string number, char digit) {
+        int n = number.size();
+        int last = -1;
+        for (int i = 0; i < n; ++i) {
+            char d = number[i];
+            if (d == digit) {
+                last = i;
+                if (i + 1 < n && number[i] < number[i + 1]) {
+                    break;
+                }
+            }
+        }
+        return number.substr(0, last) + number.substr(last + 1);
+    }
+};
+```
+
+#### Go
+
+```go
+func removeDigit(number string, digit byte) string {
+	last := -1
+	n := len(number)
+	for i := range number {
+		if number[i] == digit {
+			last = i
+			if i+1 < n && number[i] < number[i+1] {
+				break
+			}
+		}
+	}
+	return number[:last] + number[last+1:]
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

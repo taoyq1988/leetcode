@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1470.Shuffle%20the%20Array/README_EN.md
+rating: 1120
+source: Weekly Contest 192 Q1
+tags:
+    - Array
+---
+
+<!-- problem:start -->
+
 # [1470. Shuffle the Array](https://leetcode.com/problems/shuffle-the-array)
 
 [中文文档](/solution/1400-1499/1470.Shuffle%20the%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given the array <code>nums</code> consisting of <code>2n</code> elements in the form <code>[x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>,y<sub>1</sub>,y<sub>2</sub>,...,y<sub>n</sub>]</code>.</p>
 
@@ -10,7 +24,7 @@
 
 <p>&nbsp;</p>
 
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 
@@ -22,7 +36,7 @@
 
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 
@@ -32,7 +46,7 @@
 
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 
@@ -47,16 +61,26 @@
 <p><strong>Constraints:</strong></p>
 
 <ul>
+
     <li><code>1 &lt;= n &lt;= 500</code></li>
+
     <li><code>nums.length == 2n</code></li>
+
     <li><code>1 &lt;= nums[i] &lt;= 10^3</code></li>
+
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,7 +92,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -83,19 +107,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function shuffle(nums: number[], n: number): number[] {
-    let ans = [];
-    for (let i = 0; i < n; i++) {
-        ans.push(nums[i], nums[n + i]);
-    }
-    return ans;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -111,7 +123,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func shuffle(nums []int, n int) []int {
@@ -124,10 +136,94 @@ func shuffle(nums []int, n int) []int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function shuffle(nums: number[], n: number): number[] {
+    let ans = [];
+    for (let i = 0; i < n; i++) {
+        ans.push(nums[i], nums[n + i]);
+    }
+    return ans;
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn shuffle(nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        let mut res = Vec::new();
+        for i in 0..n {
+            res.push(nums[i]);
+            res.push(nums[n + i]);
+        }
+        res
+    }
+}
+```
+
+#### C
+
+```c
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* shuffle(int* nums, int numsSize, int n, int* returnSize) {
+    int* res = (int*) malloc(sizeof(int) * n * 2);
+    for (int i = 0; i < n; i++) {
+        res[2 * i] = nums[i];
+        res[2 * i + 1] = nums[i + n];
+    }
+    *returnSize = n * 2;
+    return res;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def shuffle(self, nums: List[int], n: int) -> List[int]:
+        nums[::2], nums[1::2] = nums[:n], nums[n:]
+        return nums
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn shuffle(mut nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        for i in 0..n * 2 {
+            let mut j = i;
+            while nums[i] > 0 {
+                j = if j < n { 2 * j } else { 2 * (j - n) + 1 };
+                nums.swap(i, j);
+                nums[j] *= -1;
+            }
+        }
+        for i in 0..n * 2 {
+            nums[i] *= -1;
+        }
+        nums
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

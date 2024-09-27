@@ -1,10 +1,26 @@
-# [1198. 找出所有行中最小公共元素](https://leetcode.cn/problems/find-smallest-common-element-in-all-rows)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1198.Find%20Smallest%20Common%20Element%20in%20All%20Rows/README.md
+rating: 1401
+source: 第 9 场双周赛 Q3
+tags:
+    - 数组
+    - 哈希表
+    - 二分查找
+    - 计数
+    - 矩阵
+---
+
+<!-- problem:start -->
+
+# [1198. 找出所有行中最小公共元素 🔒](https://leetcode.cn/problems/find-smallest-common-element-in-all-rows)
 
 [English Version](/solution/1100-1199/1198.Find%20Smallest%20Common%20Element%20in%20All%20Rows/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个&nbsp;<code>m x n</code>&nbsp;的矩阵&nbsp;<code>mat</code>，其中每一行的元素均符合&nbsp;<strong>严格递增</strong> 。请返回 <em>所有行中的&nbsp;<strong>最小公共元素</strong>&nbsp;</em>。</p>
 
@@ -38,43 +54,46 @@
 	<li><code>mat[i]</code>&nbsp;已按严格递增顺序排列。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-“计数器”实现。
+### 方法一：计数
+
+我们用一个长度为 $10001$ 的数组 $cnt$ 统计每个数出现的次数。顺序遍历矩阵中的每个数，将其出现次数加一。当某个数的出现次数等于矩阵的行数时，说明该数在每一行都出现过，即为最小公共元素，返回该数即可。
+
+若遍历结束后没有找到最小公共元素，则返回 $-1$。
+
+时间复杂度 $O(m \times n)$，空间复杂度 $O(10^4)$。其中 $m$ 和 $n$ 分别是矩阵的行数和列数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def smallestCommonElement(self, mat: List[List[int]]) -> int:
-        counter = Counter()
+        cnt = Counter()
         for row in mat:
-            for num in row:
-                counter[num] += 1
-                if counter[num] == len(mat):
-                    return num
+            for x in row:
+                cnt[x] += 1
+                if cnt[x] == len(mat):
+                    return x
         return -1
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int smallestCommonElement(int[][] mat) {
-        int[] counter = new int[10001];
-        for (int[] row : mat) {
-            for (int num : row) {
-                ++counter[num];
-                if (counter[num] == mat.length) {
-                    return num;
+        int[] cnt = new int[10001];
+        for (var row : mat) {
+            for (int x : row) {
+                if (++cnt[x] == mat.length) {
+                    return x;
                 }
             }
         }
@@ -83,10 +102,60 @@ class Solution {
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int smallestCommonElement(vector<vector<int>>& mat) {
+        int cnt[10001]{};
+        for (auto& row : mat) {
+            for (int x : row) {
+                if (++cnt[x] == mat.size()) {
+                    return x;
+                }
+            }
+        }
+        return -1;
+    }
+};
 ```
 
+#### Go
+
+```go
+func smallestCommonElement(mat [][]int) int {
+	cnt := [10001]int{}
+	for _, row := range mat {
+		for _, x := range row {
+			cnt[x]++
+			if cnt[x] == len(mat) {
+				return x
+			}
+		}
+	}
+	return -1
+}
+```
+
+#### TypeScript
+
+```ts
+function smallestCommonElement(mat: number[][]): number {
+    const cnt: number[] = new Array(10001).fill(0);
+    for (const row of mat) {
+        for (const x of row) {
+            if (++cnt[x] == mat.length) {
+                return x;
+            }
+        }
+    }
+    return -1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

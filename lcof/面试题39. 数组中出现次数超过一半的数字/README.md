@@ -1,6 +1,16 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/lcof/%E9%9D%A2%E8%AF%95%E9%A2%9839.%20%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E8%B6%85%E8%BF%87%E4%B8%80%E5%8D%8A%E7%9A%84%E6%95%B0%E5%AD%97/README.md
+---
+
+<!-- problem:start -->
+
 # [面试题 39. 数组中出现次数超过一半的数字](https://leetcode.cn/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/)
 
 ## 题目描述
+
+<!-- description:start -->
 
 <p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。</p>
 
@@ -27,11 +37,13 @@
 
 <p>&nbsp;</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：摩尔投票法**
+### 方法一：摩尔投票法
 
 摩尔投票法的基本步骤如下：
 
@@ -43,13 +55,11 @@
 
 一般而言，摩尔投票法需要对输入的列表进行**两次遍历**。在第一次遍历中，我们生成候选值 $m$，如果存在多数，那么该候选值就是多数值。在第二次遍历中，只需要简单地计算候选值的频率，以确认是否是多数值。由于本题已经明确说明存在多数值，所以第一次遍历结束后，直接返回 m 即可，无需二次遍历确认是否是多数值。
 
-时间复杂度 $O(n)$，空间复杂度 $O(1)$。
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为数组长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -59,13 +69,11 @@ class Solution:
             if cnt == 0:
                 m, cnt = v, 1
             else:
-                cnt += (1 if m == v else -1)
+                cnt += 1 if m == v else -1
         return m
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -84,7 +92,66 @@ class Solution {
 }
 ```
 
-### **JavaScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int cnt = 0, m = 0;
+        for (int& v : nums) {
+            if (cnt == 0) {
+                m = v;
+                cnt = 1;
+            } else
+                cnt += (m == v ? 1 : -1);
+        }
+        return m;
+    }
+};
+```
+
+#### Go
+
+```go
+func majorityElement(nums []int) int {
+	cnt, m := 0, 0
+	for _, v := range nums {
+		if cnt == 0 {
+			m, cnt = v, 1
+		} else {
+			if m == v {
+				cnt++
+			} else {
+				cnt--
+			}
+		}
+	}
+	return m
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let mut m = 0;
+        let mut cnt = 0;
+        for &v in nums.iter() {
+            if cnt == 0 {
+                m = v;
+                cnt = 1;
+            } else {
+                cnt += if m == v { 1 } else { -1 };
+            }
+        }
+        m
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -106,28 +173,7 @@ var majorityElement = function (nums) {
 };
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int majorityElement(vector<int>& nums) {
-        int cnt = 0, m = 0;
-        for (int& v : nums)
-        {
-            if (cnt == 0)
-            {
-                m = v;
-                cnt = 1;
-            }
-            else cnt += (m == v ? 1 : -1);
-        }
-        return m;
-    }
-};
-```
-
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -150,50 +196,29 @@ public class Solution {
 }
 ```
 
-### **Go**
+#### Swift
 
-```go
-func majorityElement(nums []int) int {
-	cnt, m := 0, 0
-	for _, v := range nums {
-		if cnt == 0 {
-			m, cnt = v, 1
-		} else {
-			if m == v {
-				cnt++
-			} else {
-				cnt--
-			}
-		}
-	}
-	return m
-}
-```
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> Int {
+        var cnt = 0
+        var m = 0
 
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn majority_element(nums: Vec<i32>) -> i32 {
-        let mut m = 0;
-        let mut cnt = 0;
-        for &v in nums.iter() {
+        for v in nums {
             if cnt == 0 {
-                m = v;
-                cnt = 1;
+                m = v
+                cnt = 1
             } else {
-                cnt += if m == v { 1 } else { -1 };
+                cnt += (m == v ? 1 : -1)
             }
         }
-        m
+        return m
     }
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

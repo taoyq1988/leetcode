@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2241.Design%20an%20ATM%20Machine/README_EN.md
+rating: 1616
+source: Biweekly Contest 76 Q3
+tags:
+    - Greedy
+    - Design
+    - Array
+---
+
+<!-- problem:start -->
+
 # [2241. Design an ATM Machine](https://leetcode.com/problems/design-an-atm-machine)
 
 [中文文档](/solution/2200-2299/2241.Design%20an%20ATM%20Machine/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an ATM machine that stores banknotes of <code>5</code> denominations: <code>20</code>, <code>50</code>, <code>100</code>, <code>200</code>, and <code>500</code> dollars. Initially the ATM is empty. The user can use the machine to deposit or withdraw any amount of money.</p>
 
@@ -22,7 +38,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -57,35 +73,47 @@ atm.withdraw(550);        // Returns [0,1,0,0,1]. The machine uses 1 $50 banknot
 	<li><code>1 &lt;= amount &lt;= 10<sup>9</sup></code></li>
 	<li>At most <code>5000</code> calls <strong>in total</strong> will be made to <code>withdraw</code> and <code>deposit</code>.</li>
 	<li>At least <strong>one</strong> call will be made to each function <code>withdraw</code> and <code>deposit</code>.</li>
+	<li>Sum of <code>banknotesCount[i]</code> in all deposits doesn&#39;t exceed <code>10<sup>9</sup></code></li>
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+We use an array $d$ to record the denominations of the bills and an array $cnt$ to record the number of bills for each denomination.
+
+For the `deposit` operation, we only need to add the number of bills for the corresponding denomination. The time complexity is $O(1)$.
+
+For the `withdraw` operation, we enumerate the bills from largest to smallest denomination, taking out as many bills as possible without exceeding the $amount$. Then, we subtract the total value of the withdrawn bills from $amount$. If $amount$ is still greater than $0$ at the end, it means it's not possible to withdraw the $amount$ with the available bills, and we return $-1$. Otherwise, we return the number of bills withdrawn. The time complexity is $O(1)$.
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class ATM:
-
     def __init__(self):
         self.cnt = [0] * 5
-        self.m = [500, 200, 100, 50, 20]
+        self.d = [20, 50, 100, 200, 500]
 
     def deposit(self, banknotesCount: List[int]) -> None:
-        for i, v in enumerate(banknotesCount[::-1]):
+        for i, v in enumerate(banknotesCount):
             self.cnt[i] += v
 
     def withdraw(self, amount: int) -> List[int]:
         ans = [0] * 5
-        for i, n in enumerate(self.cnt):
-            ans[i] = min(amount // self.m[i], n)
-            amount -= self.m[i] * ans[i]
+        for i in range(4, -1, -1):
+            ans[i] = min(amount // self.d[i], self.cnt[i])
+            amount -= ans[i] * self.d[i]
         if amount > 0:
             return [-1]
         for i, v in enumerate(ans):
             self.cnt[i] -= v
-        return ans[::-1]
+        return ans
 
 
 # Your ATM object will be instantiated and called as such:
@@ -94,22 +122,173 @@ class ATM:
 # param_2 = obj.withdraw(amount)
 ```
 
-### **Java**
+#### Java
 
 ```java
+class ATM {
+    private long[] cnt = new long[5];
+    private int[] d = {20, 50, 100, 200, 500};
 
+    public ATM() {
+    }
+
+    public void deposit(int[] banknotesCount) {
+        for (int i = 0; i < banknotesCount.length; ++i) {
+            cnt[i] += banknotesCount[i];
+        }
+    }
+
+    public int[] withdraw(int amount) {
+        int[] ans = new int[5];
+        for (int i = 4; i >= 0; --i) {
+            ans[i] = (int) Math.min(amount / d[i], cnt[i]);
+            amount -= ans[i] * d[i];
+        }
+        if (amount > 0) {
+            return new int[] {-1};
+        }
+        for (int i = 0; i < 5; ++i) {
+            cnt[i] -= ans[i];
+        }
+        return ans;
+    }
+}
+
+/**
+ * Your ATM object will be instantiated and called as such:
+ * ATM obj = new ATM();
+ * obj.deposit(banknotesCount);
+ * int[] param_2 = obj.withdraw(amount);
+ */
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class ATM {
+public:
+    ATM() {
+    }
+
+    void deposit(vector<int> banknotesCount) {
+        for (int i = 0; i < banknotesCount.size(); ++i) {
+            cnt[i] += banknotesCount[i];
+        }
+    }
+
+    vector<int> withdraw(int amount) {
+        vector<int> ans(5);
+        for (int i = 4; ~i; --i) {
+            ans[i] = min(1ll * amount / d[i], cnt[i]);
+            amount -= ans[i] * d[i];
+        }
+        if (amount > 0) {
+            return {-1};
+        }
+        for (int i = 0; i < 5; ++i) {
+            cnt[i] -= ans[i];
+        }
+        return ans;
+    }
+
+private:
+    long long cnt[5] = {0};
+    int d[5] = {20, 50, 100, 200, 500};
+};
+
+/**
+ * Your ATM object will be instantiated and called as such:
+ * ATM* obj = new ATM();
+ * obj->deposit(banknotesCount);
+ * vector<int> param_2 = obj->withdraw(amount);
+ */
+```
+
+#### Go
+
+```go
+type ATM struct {
+	d   [5]int
+	cnt [5]int
+}
+
+func Constructor() ATM {
+	return ATM{[5]int{20, 50, 100, 200, 500}, [5]int{}}
+}
+
+func (this *ATM) Deposit(banknotesCount []int) {
+	for i, v := range banknotesCount {
+		this.cnt[i] += v
+	}
+}
+
+func (this *ATM) Withdraw(amount int) []int {
+	ans := make([]int, 5)
+	for i := 4; i >= 0; i-- {
+		ans[i] = min(amount/this.d[i], this.cnt[i])
+		amount -= ans[i] * this.d[i]
+	}
+	if amount > 0 {
+		return []int{-1}
+	}
+	for i, v := range ans {
+		this.cnt[i] -= v
+	}
+	return ans
+}
+
+/**
+ * Your ATM object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Deposit(banknotesCount);
+ * param_2 := obj.Withdraw(amount);
+ */
+```
+
+#### TypeScript
 
 ```ts
+class ATM {
+    private cnt: number[];
+    private d: number[];
 
-```
+    constructor() {
+        this.cnt = [0, 0, 0, 0, 0];
+        this.d = [20, 50, 100, 200, 500];
+    }
 
-### **...**
+    deposit(banknotesCount: number[]): void {
+        for (let i = 0; i < banknotesCount.length; i++) {
+            this.cnt[i] += banknotesCount[i];
+        }
+    }
 
-```
+    withdraw(amount: number): number[] {
+        let ans = [0, 0, 0, 0, 0];
+        for (let i = 4; i >= 0; i--) {
+            ans[i] = Math.min(Math.floor(amount / this.d[i]), this.cnt[i]);
+            amount -= ans[i] * this.d[i];
+        }
+        if (amount > 0) {
+            return [-1];
+        }
+        for (let i = 0; i < ans.length; i++) {
+            this.cnt[i] -= ans[i];
+        }
+        return ans;
+    }
+}
 
+/**
+ * Your ATM object will be instantiated and called as such:
+ * var obj = new ATM()
+ * obj.deposit(banknotesCount)
+ * var param_2 = obj.withdraw(amount)
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1191.K-Concatenation%20Maximum%20Sum/README.md
+rating: 1747
+source: 第 154 场周赛 Q3
+tags:
+    - 数组
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [1191. K 次串联后最大子数组之和](https://leetcode.cn/problems/k-concatenation-maximum-sum)
 
 [English Version](/solution/1100-1199/1191.K-Concatenation%20Maximum%20Sum/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个整数数组&nbsp;<code>arr</code>&nbsp;和一个整数&nbsp;<code>k</code>&nbsp;，通过重复&nbsp;<code>k</code>&nbsp;次来修改数组。</p>
 
@@ -48,32 +61,134 @@
 	<li><code>-10<sup>4</sup>&nbsp;&lt;= arr[i] &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：前缀和 + 分类讨论
+
+我们记数组 $arr$ 所有元素之和为 $s$，最大前缀和为 $mxPre$，最小前缀和为 $miPre$，最大子数组和为 $mxSub$。
+
+遍历数组 $arr$，对于每个元素 $x$，我们更新 $s = s + x$, $mxPre = \max(mxPre, s)$, $miPre = \min(miPre, s)$, $mxSub = \max(mxSub, s - miPre)$。
+
+接下来，我们考虑 $k$ 的取值情况：
+
+-   当 $k = 1$ 时，答案为 $mxSub$。
+-   当 $k \ge 2$ 时，如果最大子数组横跨两个 $arr$，那么答案为 $mxPre + mxSuf$，其中 $mxSuf = s - miPre$。
+-   当 $k \ge 2$ 且 $s > 0$ 时，如果最大子数组横跨三个 $arr$，那么答案为 $(k - 2) \times s + mxPre + mxSuf$。
+
+最后，我们返回答案对 $10^9 + 7$ 取模的结果。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为数组 $arr$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def kConcatenationMaxSum(self, arr: List[int], k: int) -> int:
+        s = mx_pre = mi_pre = mx_sub = 0
+        for x in arr:
+            s += x
+            mx_pre = max(mx_pre, s)
+            mi_pre = min(mi_pre, s)
+            mx_sub = max(mx_sub, s - mi_pre)
+        ans = mx_sub
+        mod = 10**9 + 7
+        if k == 1:
+            return ans % mod
+        mx_suf = s - mi_pre
+        ans = max(ans, mx_pre + mx_suf)
+        if s > 0:
+            ans = max(ans, (k - 2) * s + mx_pre + mx_suf)
+        return ans % mod
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public int kConcatenationMaxSum(int[] arr, int k) {
+        long s = 0, mxPre = 0, miPre = 0, mxSub = 0;
+        for (int x : arr) {
+            s += x;
+            mxPre = Math.max(mxPre, s);
+            miPre = Math.min(miPre, s);
+            mxSub = Math.max(mxSub, s - miPre);
+        }
+        long ans = mxSub;
+        final int mod = (int) 1e9 + 7;
+        if (k == 1) {
+            return (int) (ans % mod);
+        }
+        long mxSuf = s - miPre;
+        ans = Math.max(ans, mxPre + mxSuf);
+        if (s > 0) {
+            ans = Math.max(ans, (k - 2) * s + mxPre + mxSuf);
+        }
+        return (int) (ans % mod);
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int kConcatenationMaxSum(vector<int>& arr, int k) {
+        long s = 0, mxPre = 0, miPre = 0, mxSub = 0;
+        for (int x : arr) {
+            s += x;
+            mxPre = max(mxPre, s);
+            miPre = min(miPre, s);
+            mxSub = max(mxSub, s - miPre);
+        }
+        long ans = mxSub;
+        const int mod = 1e9 + 7;
+        if (k == 1) {
+            return ans % mod;
+        }
+        long mxSuf = s - miPre;
+        ans = max(ans, mxPre + mxSuf);
+        if (s > 0) {
+            ans = max(ans, mxPre + (k - 2) * s + mxSuf);
+        }
+        return ans % mod;
+    }
+};
 ```
 
+#### Go
+
+```go
+func kConcatenationMaxSum(arr []int, k int) int {
+	var s, mxPre, miPre, mxSub int
+	for _, x := range arr {
+		s += x
+		mxPre = max(mxPre, s)
+		miPre = min(miPre, s)
+		mxSub = max(mxSub, s-miPre)
+	}
+	const mod = 1e9 + 7
+	ans := mxSub
+	if k == 1 {
+		return ans % mod
+	}
+	mxSuf := s - miPre
+	ans = max(ans, mxSuf+mxPre)
+	if s > 0 {
+		ans = max(ans, mxSuf+(k-2)*s+mxPre)
+	}
+	return ans % mod
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

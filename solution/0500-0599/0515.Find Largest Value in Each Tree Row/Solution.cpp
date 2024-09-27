@@ -15,11 +15,9 @@ public:
         if (!root) return {};
         queue<TreeNode*> q{{root}};
         vector<int> ans;
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int t = q.front()->val;
-            for (int i = q.size(); i; --i)
-            {
+            for (int i = q.size(); i; --i) {
                 TreeNode* node = q.front();
                 t = max(t, node->val);
                 q.pop();

@@ -1,10 +1,22 @@
-# [1272. 删除区间](https://leetcode.cn/problems/remove-interval)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1272.Remove%20Interval/README.md
+rating: 1524
+source: 第 14 场双周赛 Q2
+tags:
+    - 数组
+---
+
+<!-- problem:start -->
+
+# [1272. 删除区间 🔒](https://leetcode.cn/problems/remove-interval)
 
 [English Version](/solution/1200-1299/1272.Remove%20Interval/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>实数集合可以表示为若干不相交区间的并集，其中每个区间的形式为 <code>[a, b)</code>（左闭右开），表示满足&nbsp;<code>a &lt;= x &lt; b</code> 的所有实数&nbsp; <code>x</code>&nbsp;的集合。如果某个区间&nbsp;<code>[a, b)</code> 中包含实数 <code>x</code> ，则称实数 <code>x</code> 在集合中。</p>
 
@@ -46,32 +58,119 @@
 	<li><code>-10<sup>9</sup> &lt;= a<sub>i</sub> &lt; b<sub>i</sub> &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：分类讨论
+
+我们记要删除的区间为 $[x, y)$，遍历区间列表，对于每个区间 $[a, b)$，有以下三种情况：
+
+-   $a \geq y$ 或 $b \leq x$，表示该区间与要删除的区间没有交集，直接将该区间加入答案；
+-   $a \lt x$, $b \gt y$，表示该区间与要删除的区间有交集，将该区间分成两个区间加入答案；
+-   $a \geq x$, $b \leq y$，表示该区间被要删除的区间完全覆盖，不加入答案。
+
+时间复杂度 $O(n)$，其中 $n$ 为区间列表的长度。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def removeInterval(
+        self, intervals: List[List[int]], toBeRemoved: List[int]
+    ) -> List[List[int]]:
+        x, y = toBeRemoved
+        ans = []
+        for a, b in intervals:
+            if a >= y or b <= x:
+                ans.append([a, b])
+            else:
+                if a < x:
+                    ans.append([a, x])
+                if b > y:
+                    ans.append([y, b])
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public List<List<Integer>> removeInterval(int[][] intervals, int[] toBeRemoved) {
+        int x = toBeRemoved[0], y = toBeRemoved[1];
+        List<List<Integer>> ans = new ArrayList<>();
+        for (var e : intervals) {
+            int a = e[0], b = e[1];
+            if (a >= y || b <= x) {
+                ans.add(Arrays.asList(a, b));
+            } else {
+                if (a < x) {
+                    ans.add(Arrays.asList(a, x));
+                }
+                if (b > y) {
+                    ans.add(Arrays.asList(y, b));
+                }
+            }
+        }
+        return ans;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<vector<int>> removeInterval(vector<vector<int>>& intervals, vector<int>& toBeRemoved) {
+        int x = toBeRemoved[0], y = toBeRemoved[1];
+        vector<vector<int>> ans;
+        for (auto& e : intervals) {
+            int a = e[0], b = e[1];
+            if (a >= y || b <= x) {
+                ans.push_back(e);
+            } else {
+                if (a < x) {
+                    ans.push_back({a, x});
+                }
+                if (b > y) {
+                    ans.push_back({y, b});
+                }
+            }
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func removeInterval(intervals [][]int, toBeRemoved []int) (ans [][]int) {
+	x, y := toBeRemoved[0], toBeRemoved[1]
+	for _, e := range intervals {
+		a, b := e[0], e[1]
+		if a >= y || b <= x {
+			ans = append(ans, e)
+		} else {
+			if a < x {
+				ans = append(ans, []int{a, x})
+			}
+			if b > y {
+				ans = append(ans, []int{y, b})
+			}
+		}
+	}
+	return
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

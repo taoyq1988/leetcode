@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2063.Vowels%20of%20All%20Substrings/README_EN.md
+rating: 1663
+source: Weekly Contest 266 Q2
+tags:
+    - Math
+    - String
+    - Dynamic Programming
+    - Combinatorics
+---
+
+<!-- problem:start -->
+
 # [2063. Vowels of All Substrings](https://leetcode.com/problems/vowels-of-all-substrings)
 
 [中文文档](/solution/2000-2099/2063.Vowels%20of%20All%20Substrings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string <code>word</code>, return <em>the <strong>sum of the number of vowels</strong> (</em><code>&#39;a&#39;</code>, <code>&#39;e&#39;</code><em>,</em> <code>&#39;i&#39;</code><em>,</em> <code>&#39;o&#39;</code><em>, and</em> <code>&#39;u&#39;</code><em>)</em> <em>in every substring of </em><code>word</code>.</p>
 
@@ -11,7 +28,7 @@
 <p><strong>Note:</strong> Due to the large constraints, the answer may not fit in a signed 32-bit integer. Please be careful during the calculations.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;aba&quot;
@@ -24,7 +41,7 @@ All possible substrings are: &quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &qu
 Hence, the total sum of vowels = 0 + 1 + 1 + 1 + 1 + 2 = 6. 
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;abc&quot;
@@ -36,7 +53,7 @@ All possible substrings are: &quot;a&quot;, &quot;ab&quot;, &quot;abc&quot;, &qu
 Hence, the total sum of vowels = 1 + 1 + 1 + 0 + 0 + 0 = 3.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> word = &quot;ltcd&quot;
@@ -52,11 +69,17 @@ Hence, the total sum of vowels = 1 + 1 + 1 + 0 + 0 + 0 = 3.
 	<li><code>word</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -65,7 +88,7 @@ class Solution:
         return sum((i + 1) * (n - i) for i, c in enumerate(word) if c in 'aeiou')
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -74,7 +97,7 @@ class Solution {
         for (int i = 0, n = word.length(); i < n; ++i) {
             char c = word.charAt(i);
             if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
-                ans += (long) (i + 1) * (n - i);
+                ans += (i + 1L) * (n - i);
             }
         }
         return ans;
@@ -82,15 +105,45 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    long long countVowels(string word) {
+        long long ans = 0;
+        for (int i = 0, n = word.size(); i < n; ++i) {
+            char c = word[i];
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                ans += (i + 1LL) * (n - i);
+            }
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func countVowels(word string) (ans int64) {
+	for i, c := range word {
+		if c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' {
+			ans += int64((i + 1) * (len(word) - i))
+		}
+	}
+	return
+}
+```
+
+#### TypeScript
 
 ```ts
 function countVowels(word: string): number {
     const n = word.length;
     let ans = 0;
-    for (let i = 0; i < n; i++) {
-        let char = word.charAt(i);
-        if (['a', 'e', 'i', 'o', 'u'].includes(char)) {
+    for (let i = 0; i < n; ++i) {
+        if (['a', 'e', 'i', 'o', 'u'].includes(word[i])) {
             ans += (i + 1) * (n - i);
         }
     }
@@ -98,42 +151,8 @@ function countVowels(word: string): number {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    long long countVowels(string word) {
-        long long ans = 0;
-        for (int i = 0, n = word.size(); i < n; ++i)
-        {
-            char c = word[i];
-            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') ans += (long long) (i + 1) * (n - i);
-        }
-        return ans;
-    }
-};
-```
-
-### **Go**
-
-```go
-func countVowels(word string) int64 {
-	var ans int64
-	n := len(word)
-	for i, c := range word {
-		if c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' {
-			ans += int64((i + 1) * (n - i))
-		}
-	}
-	return ans
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

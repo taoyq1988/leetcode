@@ -1,11 +1,12 @@
 function longestSubsequence(s: string, k: number): number {
-    let numStr = '';
-    const n = s.length,
-        m = s.split('').reduce((a, c) => a + Number(c), 0);
-    for (let i = n - 1; i >= 0; i--) {
-        const cur = s.charAt(i).concat(numStr);
-        if (parseInt(cur, 2) > k) break;
-        numStr = cur;
+    let ans = 0;
+    for (let i = s.length - 1, v = 0; ~i; --i) {
+        if (s[i] == '0') {
+            ++ans;
+        } else if (ans < 30 && (v | (1 << ans)) <= k) {
+            v |= 1 << ans;
+            ++ans;
+        }
     }
-    return n - m + numStr.split('').reduce((a, c) => a + Number(c), 0);
+    return ans;
 }

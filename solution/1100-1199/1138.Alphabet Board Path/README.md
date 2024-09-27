@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1138.Alphabet%20Board%20Path/README.md
+rating: 1410
+source: 第 147 场周赛 Q2
+tags:
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [1138. 字母板上的路径](https://leetcode.cn/problems/alphabet-board-path)
 
 [English Version](/solution/1100-1199/1138.Alphabet%20Board%20Path/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>我们从一块字母板上的位置&nbsp;<code>(0, 0)</code>&nbsp;出发，该坐标对应的字符为&nbsp;<code>board[0][0]</code>。</p>
 
@@ -51,32 +64,146 @@
 	<li><code>target</code>&nbsp;仅含有小写英文字母。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+从起点 $(0, 0)$ 出发，模拟每一步的移动，将每一步的移动结果拼接到答案中。注意移动的方向遵循“左、上、右、下”的顺序。
+
+时间复杂度 $O(n)$，其中 $n$ 是字符串 $target$ 的长度，需要遍历字符串 $target$ 中的每一个字符。忽略答案的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def alphabetBoardPath(self, target: str) -> str:
+        i = j = 0
+        ans = []
+        for c in target:
+            v = ord(c) - ord("a")
+            x, y = v // 5, v % 5
+            while j > y:
+                j -= 1
+                ans.append("L")
+            while i > x:
+                i -= 1
+                ans.append("U")
+            while j < y:
+                j += 1
+                ans.append("R")
+            while i < x:
+                i += 1
+                ans.append("D")
+            ans.append("!")
+        return "".join(ans)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public String alphabetBoardPath(String target) {
+        StringBuilder ans = new StringBuilder();
+        int i = 0, j = 0;
+        for (int k = 0; k < target.length(); ++k) {
+            int v = target.charAt(k) - 'a';
+            int x = v / 5, y = v % 5;
+            while (j > y) {
+                --j;
+                ans.append('L');
+            }
+            while (i > x) {
+                --i;
+                ans.append('U');
+            }
+            while (j < y) {
+                ++j;
+                ans.append('R');
+            }
+            while (i < x) {
+                ++i;
+                ans.append('D');
+            }
+            ans.append("!");
+        }
+        return ans.toString();
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    string alphabetBoardPath(string target) {
+        string ans;
+        int i = 0, j = 0;
+        for (char& c : target) {
+            int v = c - 'a';
+            int x = v / 5, y = v % 5;
+            while (j > y) {
+                --j;
+                ans += 'L';
+            }
+            while (i > x) {
+                --i;
+                ans += 'U';
+            }
+            while (j < y) {
+                ++j;
+                ans += 'R';
+            }
+            while (i < x) {
+                ++i;
+                ans += 'D';
+            }
+            ans += '!';
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func alphabetBoardPath(target string) string {
+	ans := []byte{}
+	var i, j int
+	for _, c := range target {
+		v := int(c - 'a')
+		x, y := v/5, v%5
+		for j > y {
+			j--
+			ans = append(ans, 'L')
+		}
+		for i > x {
+			i--
+			ans = append(ans, 'U')
+		}
+		for j < y {
+			j++
+			ans = append(ans, 'R')
+		}
+		for i < x {
+			i++
+			ans = append(ans, 'D')
+		}
+		ans = append(ans, '!')
+	}
+	return string(ans)
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

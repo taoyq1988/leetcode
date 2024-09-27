@@ -1,8 +1,15 @@
+---
+comments: true
+edit_url: https://github.com/doocs/leetcode/edit/main/lcp/LCP%2018.%20%E6%97%A9%E9%A4%90%E7%BB%84%E5%90%88/README.md
+---
+
+<!-- problem:start -->
+
 # [LCP 18. 早餐组合](https://leetcode.cn/problems/2vYnGI)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 小扣在秋日市集选择了一家早餐摊位，一维整型数组 `staple` 中记录了每种主食的价格，一维整型数组 `drinks` 中记录了每种饮料的价格。小扣的计划选择一份主食和一款饮料，且花费不超过 `x` 元。请返回小扣共有多少种购买方案。
 
@@ -70,17 +77,17 @@
 
 -   `1 <= x <= 2*10^5`
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-二分查找。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -101,9 +108,7 @@ class Solution:
         return res
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -130,7 +135,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -138,17 +143,16 @@ public:
     int breakfastNumber(vector<int>& staple, vector<int>& drinks, int x) {
         int res = 0, n = drinks.size();
         sort(drinks.begin(), drinks.end());
-        for (int s : staple)
-        {
+        for (int s : staple) {
             int remain = x - s;
-            if (remain >= drinks[0])
-            {
+            if (remain >= drinks[0]) {
                 int left = 0, right = n - 1;
-                while (left < right)
-                {
+                while (left < right) {
                     int mid = left + right + 1 >> 1;
-                    if (drinks[mid] <= remain) left = mid;
-                    else right = mid - 1;
+                    if (drinks[mid] <= remain)
+                        left = mid;
+                    else
+                        right = mid - 1;
                 }
                 res = (res + left + 1) % 1000000007;
             }
@@ -158,7 +162,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func breakfastNumber(staple []int, drinks []int, x int) int {
@@ -183,10 +187,8 @@ func breakfastNumber(staple []int, drinks []int, x int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,15 +1,29 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0420.Strong%20Password%20Checker/README_EN.md
+tags:
+    - Greedy
+    - String
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [420. Strong Password Checker](https://leetcode.com/problems/strong-password-checker)
 
 [中文文档](/solution/0400-0499/0420.Strong%20Password%20Checker/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>A password is considered strong if the below conditions are all met:</p>
 
 <ul>
 	<li>It has at least <code>6</code> characters and at most <code>20</code> characters.</li>
 	<li>It contains at least <strong>one lowercase</strong> letter, at least <strong>one uppercase</strong> letter, and at least <strong>one digit</strong>.</li>
-	<li>It does&nbsp;not contain three repeating characters in a row (i.e.,&nbsp;<code>&quot;...aaa...&quot;</code> is weak, but <code>&quot;...aa...a...&quot;</code> is strong, assuming other conditions are met).</li>
+	<li>It does not contain three repeating characters in a row (i.e., <code>&quot;B<u><strong>aaa</strong></u>bb0&quot;</code> is weak, but <code>&quot;B<strong><u>aa</u></strong>b<u><strong>a</strong></u>0&quot;</code> is strong).</li>
 </ul>
 
 <p>Given a string <code>password</code>, return <em>the minimum number of steps required to make <code>password</code> strong. if <code>password</code> is already strong, return <code>0</code>.</em></p>
@@ -19,17 +33,17 @@
 <ul>
 	<li>Insert one character to <code>password</code>,</li>
 	<li>Delete one character from <code>password</code>, or</li>
-	<li>Replace&nbsp;one character of <code>password</code> with another character.</li>
+	<li>Replace one character of <code>password</code> with another character.</li>
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <pre><strong>Input:</strong> password = "a"
 <strong>Output:</strong> 5
-</pre><p><strong>Example 2:</strong></p>
+</pre><p><strong class="example">Example 2:</strong></p>
 <pre><strong>Input:</strong> password = "aA1"
 <strong>Output:</strong> 3
-</pre><p><strong>Example 3:</strong></p>
+</pre><p><strong class="example">Example 3:</strong></p>
 <pre><strong>Input:</strong> password = "1337C0d3"
 <strong>Output:</strong> 0
 </pre>
@@ -41,11 +55,17 @@
 	<li><code>password</code> consists of letters, digits, dot&nbsp;<code>&#39;.&#39;</code> or exclamation mark <code>&#39;!&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -110,7 +130,7 @@ class Solution:
         return n - 20 + max(replace, 3 - types)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -194,7 +214,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -203,15 +223,13 @@ public:
         int types = countTypes(password);
         int n = password.size();
         if (n < 6) return max(6 - n, 3 - types);
-        if (n <= 20)
-        {
+        if (n <= 20) {
             int replace = 0, cnt = 0;
             char prev = '~';
-            for (char& curr : password)
-            {
-                if (curr == prev) ++cnt;
-                else
-                {
+            for (char& curr : password) {
+                if (curr == prev)
+                    ++cnt;
+                else {
                     replace += cnt / 3;
                     cnt = 1;
                     prev = curr;
@@ -224,33 +242,28 @@ public:
         int remove2 = 0;
         int cnt = 0;
         char prev = '~';
-        for (char& curr : password)
-        {
-            if (curr == prev) ++cnt;
-            else
-            {
-                if (remove > 0 && cnt >= 3)
-                {
-                    if (cnt % 3 == 0)
-                    {
+        for (char& curr : password) {
+            if (curr == prev)
+                ++cnt;
+            else {
+                if (remove > 0 && cnt >= 3) {
+                    if (cnt % 3 == 0) {
                         --remove;
                         --replace;
-                    }
-                    else if (cnt % 3 == 1) ++remove2;
+                    } else if (cnt % 3 == 1)
+                        ++remove2;
                 }
                 replace += cnt / 3;
                 cnt = 1;
                 prev = curr;
             }
         }
-        if (remove > 0 && cnt >= 3)
-        {
-            if (cnt % 3 == 0)
-            {
+        if (remove > 0 && cnt >= 3) {
+            if (cnt % 3 == 0) {
                 --remove;
                 --replace;
-            }
-            else if (cnt % 3 == 1) ++remove2;
+            } else if (cnt % 3 == 1)
+                ++remove2;
         }
         replace += cnt / 3;
 
@@ -266,21 +279,21 @@ public:
 
     int countTypes(string& s) {
         int a = 0, b = 0, c = 0;
-        for (char& ch : s)
-        {
-            if (islower(ch)) a = 1;
-            else if (isupper(ch)) b = 1;
-            else if (isdigit(ch)) c = 1;
+        for (char& ch : s) {
+            if (islower(ch))
+                a = 1;
+            else if (isupper(ch))
+                b = 1;
+            else if (isdigit(ch))
+                c = 1;
         }
         return a + b + c;
     }
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

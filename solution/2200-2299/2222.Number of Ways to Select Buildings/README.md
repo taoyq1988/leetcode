@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2222.Number%20of%20Ways%20to%20Select%20Buildings/README.md
+rating: 1656
+source: 第 75 场双周赛 Q3
+tags:
+    - 字符串
+    - 动态规划
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [2222. 选择建筑的方案数](https://leetcode.cn/problems/number-of-ways-to-select-buildings)
 
 [English Version](/solution/2200-2299/2222.Number%20of%20Ways%20to%20Select%20Buildings/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从 <strong>0</strong>&nbsp;开始的二进制字符串&nbsp;<code>s</code>&nbsp;，它表示一条街沿途的建筑类型，其中：</p>
 
@@ -54,11 +68,13 @@
 	<li><code>s[i]</code>&nbsp;要么是&nbsp;<code>'0'</code>&nbsp;，要么是&nbsp;<code>'1'</code>&nbsp;。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：统计 010 和 101 的出现次数**
+### 方法一：统计 010 和 101 的出现次数
 
 有效方案只有两种情况：$010$ 和 $101$。枚举中间数字，累计方案数。
 
@@ -66,9 +82,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -88,9 +102,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -119,7 +131,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -131,15 +143,11 @@ public:
         int cnt1 = n - cnt0;
         int c0 = 0, c1 = 0;
         long long ans = 0;
-        for (char& c : s)
-        {
-            if (c == '0')
-            {
+        for (char& c : s) {
+            if (c == '0') {
                 ans += c1 * (cnt1 - c1);
                 ++c0;
-            }
-            else
-            {
+            } else {
                 ans += c0 * (cnt0 - c0);
                 ++c1;
             }
@@ -149,7 +157,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numberOfWays(s string) int64 {
@@ -171,16 +179,8 @@ func numberOfWays(s string) int64 {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

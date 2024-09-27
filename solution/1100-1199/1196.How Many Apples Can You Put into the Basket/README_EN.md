@@ -1,15 +1,31 @@
-# [1196. How Many Apples Can You Put into the Basket](https://leetcode.com/problems/how-many-apples-can-you-put-into-the-basket)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1196.How%20Many%20Apples%20Can%20You%20Put%20into%20the%20Basket/README_EN.md
+rating: 1248
+source: Biweekly Contest 9 Q1
+tags:
+    - Greedy
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
+# [1196. How Many Apples Can You Put into the Basket 🔒](https://leetcode.com/problems/how-many-apples-can-you-put-into-the-basket)
 
 [中文文档](/solution/1100-1199/1196.How%20Many%20Apples%20Can%20You%20Put%20into%20the%20Basket/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You have some apples and a basket that can carry up to <code>5000</code> units of weight.</p>
 
 <p>Given an integer array <code>weight</code> where <code>weight[i]</code> is the weight of the <code>i<sup>th</sup></code> apple, return <em>the maximum number of apples you can put in the basket</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> weight = [100,200,150,1000]
@@ -17,7 +33,7 @@
 <strong>Explanation:</strong> All 4 apples can be carried by the basket since their sum of weights is 1450.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> weight = [900,950,800,1000,700,800]
@@ -33,85 +49,107 @@
 	<li><code>1 &lt;= weight[i] &lt;= 10<sup>3</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy Algorithm
+
+To maximize the number of apples, we should try to minimize the weight of the apples. Therefore, we can sort the weights of the apples, and then put them into the basket in ascending order until the weight of the basket exceeds $5000$. We then return the number of apples in the basket at this point.
+
+If all the apples can be put into the basket, then we return the total number of apples.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(\log n)$. Here, $n$ is the number of apples.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def maxNumberOfApples(self, weight: List[int]) -> int:
         weight.sort()
-        ans = 0
-        t = 0
-        for v in weight:
-            if t + v > 5000:
-                break
-            t += v
-            ans += 1
-        return ans
+        s = 0
+        for i, x in enumerate(weight):
+            s += x
+            if s > 5000:
+                return i
+        return len(weight)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int maxNumberOfApples(int[] weight) {
         Arrays.sort(weight);
-        int ans = 0, t = 0;
-        for (int v : weight) {
-            if (t + v > 5000) {
-                break;
+        int s = 0;
+        for (int i = 0; i < weight.length; ++i) {
+            s += weight[i];
+            if (s > 5000) {
+                return i;
             }
-            t += v;
-            ++ans;
         }
-        return ans;
+        return weight.length;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxNumberOfApples(vector<int>& weight) {
         sort(weight.begin(), weight.end());
-        int ans = 0, t = 0;
-        for (int v : weight)
-        {
-            if (t + v > 5000) break;
-            t += v;
-            ++ans;
+        int s = 0;
+        for (int i = 0; i < weight.size(); ++i) {
+            s += weight[i];
+            if (s > 5000) {
+                return i;
+            }
         }
-        return ans;
+        return weight.size();
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxNumberOfApples(weight []int) int {
 	sort.Ints(weight)
-	ans, t := 0, 0
-	for _, v := range weight {
-		if t+v > 5000 {
-			break
+	s := 0
+	for i, x := range weight {
+		s += x
+		if s > 5000 {
+			return i
 		}
-		t += v
-		ans++
 	}
-	return ans
+	return len(weight)
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function maxNumberOfApples(weight: number[]): number {
+    weight.sort((a, b) => a - b);
+    let s = 0;
+    for (let i = 0; i < weight.length; ++i) {
+        s += weight[i];
+        if (s > 5000) {
+            return i;
+        }
+    }
+    return weight.length;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

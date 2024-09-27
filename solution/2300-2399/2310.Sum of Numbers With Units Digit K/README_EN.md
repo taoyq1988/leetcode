@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2310.Sum%20of%20Numbers%20With%20Units%20Digit%20K/README_EN.md
+rating: 1558
+source: Weekly Contest 298 Q2
+tags:
+    - Greedy
+    - Math
+    - Dynamic Programming
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2310. Sum of Numbers With Units Digit K](https://leetcode.com/problems/sum-of-numbers-with-units-digit-k)
 
 [中文文档](/solution/2300-2399/2310.Sum%20of%20Numbers%20With%20Units%20Digit%20K/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two integers <code>num</code> and <code>k</code>, consider a set of positive integers with the following properties:</p>
 
@@ -21,7 +38,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> num = 58, k = 9
@@ -32,7 +49,7 @@ Another valid set is [19,39].
 It can be shown that 2 is the minimum possible size of a valid set.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> num = 37, k = 2
@@ -40,7 +57,7 @@ It can be shown that 2 is the minimum possible size of a valid set.
 <strong>Explanation:</strong> It is not possible to obtain a sum of 37 using only integers that have a units digit of 2.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> num = 0, k = 7
@@ -56,11 +73,17 @@ It can be shown that 2 is the minimum possible size of a valid set.
 	<li><code>0 &lt;= k &lt;= 9</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -73,6 +96,84 @@ class Solution:
         return -1
 ```
 
+#### Java
+
+```java
+class Solution {
+    public int minimumNumbers(int num, int k) {
+        if (num == 0) {
+            return 0;
+        }
+        for (int i = 1; i <= num; ++i) {
+            int t = num - k * i;
+            if (t >= 0 && t % 10 == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minimumNumbers(int num, int k) {
+        if (num == 0) return 0;
+        for (int i = 1; i <= num; ++i) {
+            int t = num - k * i;
+            if (t >= 0 && t % 10 == 0) return i;
+        }
+        return -1;
+    }
+};
+```
+
+#### Go
+
+```go
+func minimumNumbers(num int, k int) int {
+	if num == 0 {
+		return 0
+	}
+	for i := 1; i <= num; i++ {
+		t := num - k*i
+		if t >= 0 && t%10 == 0 {
+			return i
+		}
+	}
+	return -1
+}
+```
+
+#### TypeScript
+
+```ts
+function minimumNumbers(num: number, k: number): number {
+    if (!num) return 0;
+    let digit = num % 10;
+    for (let i = 1; i < 11; i++) {
+        let target = i * k;
+        if (target <= num && target % 10 == digit) return i;
+    }
+    return -1;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
 ```python
 class Solution:
     def minimumNumbers(self, num: int, k: int) -> int:
@@ -83,6 +184,67 @@ class Solution:
                 return i
         return -1
 ```
+
+#### Java
+
+```java
+class Solution {
+    public int minimumNumbers(int num, int k) {
+        if (num == 0) {
+            return 0;
+        }
+        for (int i = 1; i <= 10; ++i) {
+            if ((k * i) % 10 == num % 10 && k * i <= num) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minimumNumbers(int num, int k) {
+        if (!num) return 0;
+        for (int i = 1; i <= 10; ++i)
+            if ((k * i) % 10 == num % 10 && k * i <= num)
+                return i;
+        return -1;
+    }
+};
+```
+
+#### Go
+
+```go
+func minimumNumbers(num int, k int) int {
+	if num == 0 {
+		return 0
+	}
+	for i := 1; i <= 10; i++ {
+		if (k*i)%10 == num%10 && k*i <= num {
+			return i
+		}
+	}
+	return -1
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 3
+
+<!-- tabs:start -->
+
+#### Python3
 
 ```python
 class Solution:
@@ -108,120 +270,8 @@ class Solution:
         return -1 if ans >= inf else ans
 ```
 
-### **Java**
-
-```java
-class Solution {
-    public int minimumNumbers(int num, int k) {
-        if (num == 0) {
-            return 0;
-        }
-        for (int i = 1; i <= num; ++i) {
-            int t = num - k * i;
-            if (t >= 0 && t % 10 == 0) {
-                return i;
-            }
-        }
-        return -1;
-    }
-}
-```
-
-```java
-class Solution {
-    public int minimumNumbers(int num, int k) {
-        if (num == 0) {
-            return 0;
-        }
-        for (int i = 1; i <= 10; ++i) {
-            if ((k * i) % 10 ==  num % 10 && k * i <= num) {
-                return i;
-            }
-        }
-        return -1;
-    }
-}
-```
-
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int minimumNumbers(int num, int k) {
-        if (num == 0) return 0;
-        for (int i = 1; i <= num; ++i)
-        {
-            int t = num - k * i;
-            if (t >= 0 && t % 10 == 0) return i;
-        }
-        return -1;
-    }
-};
-```
-
-```cpp
-class Solution {
-public:
-    int minimumNumbers(int num, int k) {
-        if (!num) return 0;
-        for (int i = 1; i <= 10; ++i)
-            if ((k * i) % 10 == num % 10 && k * i <= num)
-                return i;
-        return -1;
-    }
-};
-```
-
-### **Go**
-
-```go
-func minimumNumbers(num int, k int) int {
-	if num == 0 {
-		return 0
-	}
-	for i := 1; i <= num; i++ {
-		t := num - k*i
-		if t >= 0 && t%10 == 0 {
-			return i
-		}
-	}
-	return -1
-}
-```
-
-```go
-func minimumNumbers(num int, k int) int {
-	if num == 0 {
-		return 0
-	}
-	for i := 1; i <= 10; i++ {
-		if (k*i)%10 == num%10 && k*i <= num {
-			return i
-		}
-	}
-	return -1
-}
-```
-
-### **TypeScript**
-
-```ts
-function minimumNumbers(num: number, k: number): number {
-    if (!num) return 0;
-    let digit = num % 10;
-    for (let i = 1; i < 11; i++) {
-        let target = i * k;
-        if (target <= num && target % 10 == digit) return i;
-    }
-    return -1;
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

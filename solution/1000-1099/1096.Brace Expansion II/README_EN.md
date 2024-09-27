@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1096.Brace%20Expansion%20II/README_EN.md
+rating: 2348
+source: Weekly Contest 142 Q4
+tags:
+    - Stack
+    - Breadth-First Search
+    - String
+    - Backtracking
+---
+
+<!-- problem:start -->
+
 # [1096. Brace Expansion II](https://leetcode.com/problems/brace-expansion-ii)
 
 [中文文档](/solution/1000-1099/1096.Brace%20Expansion%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Under the grammar given below, strings can represent a set of lowercase words. Let&nbsp;<code>R(expr)</code>&nbsp;denote the set of words the expression represents.</p>
 
@@ -40,14 +57,14 @@
 <p>Given an expression representing a set of words under the given grammar, return <em>the sorted list of words that the expression represents</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;{a,b}{c,{d,e}}&quot;
 <strong>Output:</strong> [&quot;ac&quot;,&quot;ad&quot;,&quot;ae&quot;,&quot;bc&quot;,&quot;bd&quot;,&quot;be&quot;]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;{{a,z},a{b,c},{ab,z}}&quot;
@@ -64,26 +81,147 @@
 	<li>The given&nbsp;<code>expression</code>&nbsp;represents a set of words based on the grammar given in the description.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+class Solution:
+    def braceExpansionII(self, expression: str) -> List[str]:
+        def dfs(exp):
+            j = exp.find('}')
+            if j == -1:
+                s.add(exp)
+                return
+            i = exp.rfind('{', 0, j - 1)
+            a, c = exp[:i], exp[j + 1 :]
+            for b in exp[i + 1 : j].split(','):
+                dfs(a + b + c)
 
+        s = set()
+        dfs(expression)
+        return sorted(s)
 ```
 
-### **Java**
+#### Java
 
 ```java
+class Solution {
+    private TreeSet<String> s = new TreeSet<>();
 
+    public List<String> braceExpansionII(String expression) {
+        dfs(expression);
+        return new ArrayList<>(s);
+    }
+
+    private void dfs(String exp) {
+        int j = exp.indexOf('}');
+        if (j == -1) {
+            s.add(exp);
+            return;
+        }
+        int i = exp.lastIndexOf('{', j);
+        String a = exp.substring(0, i);
+        String c = exp.substring(j + 1);
+        for (String b : exp.substring(i + 1, j).split(",")) {
+            dfs(a + b + c);
+        }
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<string> braceExpansionII(string expression) {
+        dfs(expression);
+        return vector<string>(s.begin(), s.end());
+    }
+
+private:
+    set<string> s;
+
+    void dfs(string exp) {
+        int j = exp.find_first_of('}');
+        if (j == string::npos) {
+            s.insert(exp);
+            return;
+        }
+        int i = exp.rfind('{', j);
+        string a = exp.substr(0, i);
+        string c = exp.substr(j + 1);
+        stringstream ss(exp.substr(i + 1, j - i - 1));
+        string b;
+        while (getline(ss, b, ',')) {
+            dfs(a + b + c);
+        }
+    }
+};
 ```
 
+#### Go
+
+```go
+func braceExpansionII(expression string) []string {
+	s := map[string]struct{}{}
+	var dfs func(string)
+	dfs = func(exp string) {
+		j := strings.Index(exp, "}")
+		if j == -1 {
+			s[exp] = struct{}{}
+			return
+		}
+		i := strings.LastIndex(exp[:j], "{")
+		a, c := exp[:i], exp[j+1:]
+		for _, b := range strings.Split(exp[i+1:j], ",") {
+			dfs(a + b + c)
+		}
+	}
+	dfs(expression)
+	ans := make([]string, 0, len(s))
+	for k := range s {
+		ans = append(ans, k)
+	}
+	sort.Strings(ans)
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+function braceExpansionII(expression: string): string[] {
+    const dfs = (exp: string) => {
+        const j = exp.indexOf('}');
+        if (j === -1) {
+            s.add(exp);
+            return;
+        }
+        const i = exp.lastIndexOf('{', j);
+        const a = exp.substring(0, i);
+        const c = exp.substring(j + 1);
+        for (const b of exp.substring(i + 1, j).split(',')) {
+            dfs(a + b + c);
+        }
+    };
+    const s: Set<string> = new Set();
+    dfs(expression);
+    return Array.from(s).sort();
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

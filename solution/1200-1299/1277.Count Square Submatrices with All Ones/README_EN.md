@@ -1,13 +1,29 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1277.Count%20Square%20Submatrices%20with%20All%20Ones/README_EN.md
+rating: 1613
+source: Weekly Contest 165 Q3
+tags:
+    - Array
+    - Dynamic Programming
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [1277. Count Square Submatrices with All Ones](https://leetcode.com/problems/count-square-submatrices-with-all-ones)
 
 [中文文档](/solution/1200-1299/1277.Count%20Square%20Submatrices%20with%20All%20Ones/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a <code>m * n</code> matrix of ones and zeros, return how many <strong>square</strong> submatrices have all ones.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix =
@@ -24,7 +40,7 @@ There is  <strong>1</strong> square of side 3.
 Total number of squares = 10 + 4 + 1 = <strong>15</strong>.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = 
@@ -49,11 +65,17 @@ Total number of squares = 6 + 1 = <b>7</b>.
 	<li><code>0 &lt;= arr[i][j] &lt;= 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,13 +90,12 @@ class Solution:
                 if i == 0 or j == 0:
                     f[i][j] = 1
                 else:
-                    f[i][j] = min(f[i - 1][j - 1], f[i - 1]
-                                  [j], f[i][j - 1]) + 1
+                    f[i][j] = min(f[i - 1][j - 1], f[i - 1][j], f[i][j - 1]) + 1
                 ans += f[i][j]
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +122,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -110,13 +131,13 @@ public:
         int m = matrix.size(), n = matrix[0].size();
         int ans = 0;
         vector<vector<int>> f(m, vector<int>(n));
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (matrix[i][j] == 0) continue;
-                if (i == 0 || j == 0) f[i][j] = 1;
-                else f[i][j] = min(f[i - 1][j - 1], min(f[i - 1][j], f[i][j - 1])) + 1;
+                if (i == 0 || j == 0)
+                    f[i][j] = 1;
+                else
+                    f[i][j] = min(f[i - 1][j - 1], min(f[i - 1][j], f[i][j - 1])) + 1;
                 ans += f[i][j];
             }
         }
@@ -125,7 +146,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countSquares(matrix [][]int) int {
@@ -149,19 +170,10 @@ func countSquares(matrix [][]int) int {
 	}
 	return ans
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

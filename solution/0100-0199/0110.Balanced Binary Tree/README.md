@@ -1,20 +1,26 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0110.Balanced%20Binary%20Tree/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
 # [110. 平衡二叉树](https://leetcode.cn/problems/balanced-binary-tree)
 
 [English Version](/solution/0100-0199/0110.Balanced%20Binary%20Tree/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>给定一个二叉树，判断它是否是高度平衡的二叉树。</p>
+<p>给定一个二叉树，判断它是否是 <span data-keyword="height-balanced">平衡二叉树</span> &nbsp;</p>
 
-<p>本题中，一棵高度平衡二叉树定义为：</p>
-
-<blockquote>
-<p>一个二叉树<em>每个节点 </em>的左右两个子树的高度差的绝对值不超过 1 。</p>
-</blockquote>
-
-<p> </p>
+<p>&nbsp;</p>
 
 <p><strong>示例 1：</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0100-0199/0110.Balanced%20Binary%20Tree/images/balance_1.jpg" style="width: 342px; height: 221px;" />
@@ -37,24 +43,35 @@
 <strong>输出：</strong>true
 </pre>
 
-<p> </p>
+<p>&nbsp;</p>
 
 <p><strong>提示：</strong></p>
 
 <ul>
 	<li>树中的节点数在范围 <code>[0, 5000]</code> 内</li>
-	<li><code>-10<sup>4</sup> <= Node.val <= 10<sup>4</sup></code></li>
+	<li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：自底向上的递归
+
+定义函数 $height(root)$ 计算二叉树的高度，处理逻辑如下：
+
+-   如果二叉树 $root$ 为空，返回 $0$。
+-   否则，递归计算左右子树的高度，分别为 $l$ 和 $r$。如果 $l$ 或 $r$ 为 $-1$，或者 $l$ 和 $r$ 的差的绝对值大于 $1$，则返回 $-1$，否则返回 $max(l, r) + 1$。
+
+那么，如果函数 $height(root)$ 返回的是 $-1$，则说明二叉树 $root$ 不是平衡二叉树，否则是平衡二叉树。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是二叉树的节点数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -64,7 +81,7 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def isBalanced(self, root: TreeNode) -> bool:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
         def height(root):
             if root is None:
                 return 0
@@ -76,9 +93,7 @@ class Solution:
         return height(root) >= 0
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -115,39 +130,7 @@ class Solution {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {boolean}
- */
-var isBalanced = function (root) {
-    let height = function (root) {
-        if (root == null) {
-            return 0;
-        }
-        const l = height(root.left);
-        const r = height(root.right);
-        if (l == -1 || r == -1 || Math.abs(l - r) > 1) {
-            return -1;
-        }
-        return 1 + Math.max(l, r);
-    };
-
-    return height(root) >= 0;
-};
-```
-
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -164,19 +147,23 @@ var isBalanced = function (root) {
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
+        function<int(TreeNode*)> height = [&](TreeNode* root) {
+            if (!root) {
+                return 0;
+            }
+            int l = height(root->left);
+            int r = height(root->right);
+            if (l == -1 || r == -1 || abs(l - r) > 1) {
+                return -1;
+            }
+            return 1 + max(l, r);
+        };
         return height(root) >= 0;
-    }
-
-    int height(TreeNode* root) {
-        if (!root) return 0;
-        int l = height(root->left), r = height(root->right);
-        if (l == -1 || r == -1 || abs(l - r) > 1) return -1;
-        return 1 + max(l, r);
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -188,36 +175,32 @@ public:
  * }
  */
 func isBalanced(root *TreeNode) bool {
+	var height func(*TreeNode) int
+	height = func(root *TreeNode) int {
+		if root == nil {
+			return 0
+		}
+		l, r := height(root.Left), height(root.Right)
+		if l == -1 || r == -1 || abs(l-r) > 1 {
+			return -1
+		}
+		if l > r {
+			return 1 + l
+		}
+		return 1 + r
+	}
 	return height(root) >= 0
 }
 
-func height(root *TreeNode) int {
-	if root == nil {
-		return 0
-	}
-	l, r := height(root.Left), height(root.Right)
-	if l == -1 || r == -1 || abs(l-r) > 1 {
-		return -1
-	}
-	return 1 + max(l, r)
-}
-
 func abs(x int) int {
-	if x >= 0 {
-		return x
+	if x < 0 {
+		return -x
 	}
-	return -x
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return x
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -250,7 +233,7 @@ function isBalanced(root: TreeNode | null): boolean {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -271,8 +254,8 @@ function isBalanced(root: TreeNode | null): boolean {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 impl Solution {
     pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         Self::dfs(&root) > -1
@@ -293,10 +276,39 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isBalanced = function (root) {
+    const height = root => {
+        if (!root) {
+            return 0;
+        }
+        const l = height(root.left);
+        const r = height(root.right);
+        if (l == -1 || r == -1 || Math.abs(l - r) > 1) {
+            return -1;
+        }
+        return 1 + Math.max(l, r);
+    };
+    return height(root) >= 0;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

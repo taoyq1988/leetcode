@@ -1,23 +1,37 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0732.My%20Calendar%20III/README.md
+tags:
+    - 设计
+    - 线段树
+    - 二分查找
+    - 有序集合
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii)
 
 [English Version](/solution/0700-0799/0732.My%20Calendar%20III/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>当 <code>k</code> 个日程安排有一些时间上的交叉时（例如 <code>k</code> 个日程安排都在同一时间内），就会产生 <code>k</code> 次预订。</p>
+<p>当 <code>k</code> 个日程存在一些非空交集时（即, <code>k</code> 个日程包含了一些相同时间），就会产生 <code>k</code> 次预订。</p>
 
-<p>给你一些日程安排 <code>[start, end)</code> ，请你在每个日程安排添加后，返回一个整数 <code>k</code> ，表示所有先前日程安排会产生的最大 <code>k</code> 次预订。</p>
+<p>给你一些日程安排 <code>[startTime, endTime)</code> ，请你在每个日程安排添加后，返回一个整数 <code>k</code> ，表示所有先前日程安排会产生的最大 <code>k</code> 次预订。</p>
 
 <p>实现一个 <code>MyCalendarThree</code> 类来存放你的日程安排，你可以一直添加新的日程安排。</p>
 
 <ul>
 	<li><code>MyCalendarThree()</code> 初始化对象。</li>
-	<li><code>int book(int start, int end)</code> 返回一个整数 <code>k</code> ，表示日历中存在的 <code>k</code> 次预订的最大值。</li>
+	<li><code>int book(int startTime, int endTime)</code> 返回一个整数 <code>k</code> ，表示日历中存在的 <code>k</code> 次预订的最大值。</li>
 </ul>
 
-<p> </p>
+<p>&nbsp;</p>
 
 <p><strong>示例：</strong></p>
 
@@ -38,20 +52,22 @@ myCalendarThree.book(5, 10); // 返回 3
 myCalendarThree.book(25, 55); // 返回 3
 </pre>
 
-<p> </p>
+<p>&nbsp;</p>
 
 <p><strong>提示：</strong></p>
 
 <ul>
-	<li><code>0 <= start < end <= 10<sup>9</sup></code></li>
-	<li>每个测试用例，调用 <code>book</code> 函数最多不超过 <code>400</code>次</li>
+	<li><code>0 &lt;= startTime &lt; endTime &lt;= 10<sup>9</sup></code></li>
+	<li>每个测试用例，调用 <code>book</code>&nbsp;函数最多不超过&nbsp;<code>400</code>次</li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：线段树**
+### 方法一：线段树
 
 线段树将整个区间分割为多个不连续的子区间，子区间的数量不超过 $log(width)$。更新某个元素的值，只需要更新 $log(width)$ 个区间，并且这些区间都包含在一个包含该元素的大区间内。区间修改时，需要使用**懒标记**保证效率。
 
@@ -71,9 +87,7 @@ myCalendarThree.book(25, 55); // 返回 3
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Node:
@@ -139,7 +153,6 @@ class SegmentTree:
 
 
 class MyCalendarThree:
-
     def __init__(self):
         self.tree = SegmentTree()
 
@@ -153,9 +166,7 @@ class MyCalendarThree:
 # param_1 = obj.book(start,end)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Node {
@@ -177,7 +188,6 @@ class SegmentTree {
     private Node root = new Node(1, (int) 1e9 + 1);
 
     public SegmentTree() {
-
     }
 
     public void modify(int l, int r, int v) {
@@ -251,12 +261,11 @@ class MyCalendarThree {
     private SegmentTree tree = new SegmentTree();
 
     public MyCalendarThree() {
-
     }
 
     public int book(int start, int end) {
         tree.modify(start + 1, end, 1);
-        return tree.query(1, (int) 1e9 +1);
+        return tree.query(1, (int) 1e9 + 1);
     }
 }
 
@@ -267,7 +276,7 @@ class MyCalendarThree {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Node {
@@ -302,10 +311,9 @@ public:
         modify(l, r, v, root);
     }
 
-    void modify(int l, int r,int v, Node* node) {
+    void modify(int l, int r, int v, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v += v;
             node->add += v;
             return;
@@ -322,7 +330,7 @@ public:
 
     int query(int l, int r, Node* node) {
         if (l > r) return 0;
-        if (node->l >= l && node-> r <= r) return node->v;
+        if (node->l >= l && node->r <= r) return node->v;
         pushdown(node);
         int v = 0;
         if (l <= node->mid) v = max(v, query(l, r, node->left));
@@ -337,8 +345,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node(node->l, node->mid);
         if (!node->right) node->right = new Node(node->mid + 1, node->r);
-        if (node->add)
-        {
+        if (node->add) {
             Node* left = node->left;
             Node* right = node->right;
             left->v += node->add;
@@ -371,7 +378,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type node struct {
@@ -387,13 +394,6 @@ func newNode(l, r int) *node {
 		r:   r,
 		mid: int(uint(l+r) >> 1),
 	}
-}
-
-func max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
 }
 
 type segmentTree struct {
@@ -483,10 +483,8 @@ func (this *MyCalendarThree) Book(start int, end int) int {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

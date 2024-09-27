@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/README.md
+rating: 1979
+source: 第 277 场周赛 Q4
+tags:
+    - 位运算
+    - 数组
+    - 回溯
+    - 枚举
+---
+
+<!-- problem:start -->
+
 # [2151. 基于陈述统计最多好人数](https://leetcode.cn/problems/maximum-good-people-based-on-statements)
 
 [English Version](/solution/2100-2199/2151.Maximum%20Good%20People%20Based%20on%20Statements/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>游戏中存在两种角色：</p>
 
@@ -86,11 +101,13 @@
 	<li><code>statements[i][i] == 2</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：二进制枚举**
+### 方法一：二进制枚举
 
 二进制枚举好人的状态 $mask$，由于“好人只说真话”，我们借此判断 $statements$ 与 $mask$ 是否存在矛盾，不存在则获取 $mask$ 中好人的数量 $cnt$。迭代获取最大的合法 $cnt$。
 
@@ -98,9 +115,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -118,9 +133,7 @@ class Solution:
         return max(check(mask) for mask in range(1, 1 << len(statements)))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -151,7 +164,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -165,12 +178,9 @@ public:
     int check(int mask, vector<vector<int>>& statements) {
         int cnt = 0;
         int n = statements.size();
-        for (int i = 0; i < n; ++i)
-        {
-            if ((mask >> i) & 1)
-            {
-                for (int j = 0; j < n; ++j)
-                {
+        for (int i = 0; i < n; ++i) {
+            if ((mask >> i) & 1) {
+                for (int j = 0; j < n; ++j) {
                     int v = statements[i][j];
                     if (v < 2 && ((mask >> j) & 1) != v) return 0;
                 }
@@ -182,7 +192,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumGood(statements [][]int) int {
@@ -207,16 +217,9 @@ func maximumGood(statements [][]int) int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maximumGood(statements: number[][]): number {
@@ -244,10 +247,8 @@ function maximumGood(statements: number[][]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0885.Spiral%20Matrix%20III/README_EN.md
+tags:
+    - Array
+    - Matrix
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [885. Spiral Matrix III](https://leetcode.com/problems/spiral-matrix-iii)
 
 [中文文档](/solution/0800-0899/0885.Spiral%20Matrix%20III/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You start at the cell <code>(rStart, cStart)</code> of an <code>rows x cols</code> grid facing east. The northwest corner is at the first row and column in the grid, and the southeast corner is at the last row and column.</p>
 
@@ -11,14 +25,14 @@
 <p>Return <em>an array of coordinates representing the positions of the grid in the order you visited them</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0885.Spiral%20Matrix%20III/images/example_1.png" style="width: 174px; height: 99px;" />
 <pre>
 <strong>Input:</strong> rows = 1, cols = 4, rStart = 0, cStart = 0
 <strong>Output:</strong> [[0,0],[0,1],[0,2],[0,3]]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0885.Spiral%20Matrix%20III/images/example_2.png" style="width: 202px; height: 142px;" />
 <pre>
 <strong>Input:</strong> rows = 5, cols = 6, rStart = 1, cStart = 4
@@ -34,15 +48,23 @@
 	<li><code>0 &lt;= cStart &lt; cols</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def spiralMatrixIII(self, rows: int, cols: int, rStart: int, cStart: int) -> List[List[int]]:
+    def spiralMatrixIII(
+        self, rows: int, cols: int, rStart: int, cStart: int
+    ) -> List[List[int]]:
         ans = [[rStart, cStart]]
         if rows * cols == 1:
             return ans
@@ -59,26 +81,26 @@ class Solution:
             k += 2
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[][] spiralMatrixIII(int rows, int cols, int rStart, int cStart) {
         int cnt = rows * cols;
         int[][] ans = new int[cnt][2];
-        ans[0] = new int[]{rStart, cStart};
+        ans[0] = new int[] {rStart, cStart};
         if (cnt == 1) {
             return ans;
         }
         for (int k = 1, idx = 1;; k += 2) {
-            int[][] dirs = new int[][]{{0, 1, k}, {1, 0, k}, {0, -1, k + 1}, {-1, 0, k + 1}};
+            int[][] dirs = new int[][] {{0, 1, k}, {1, 0, k}, {0, -1, k + 1}, {-1, 0, k + 1}};
             for (int[] dir : dirs) {
                 int r = dir[0], c = dir[1], dk = dir[2];
                 while (dk-- > 0) {
                     rStart += r;
                     cStart += c;
                     if (rStart >= 0 && rStart < rows && cStart >= 0 && cStart < cols) {
-                        ans[idx++] = new int[]{rStart, cStart};
+                        ans[idx++] = new int[] {rStart, cStart};
                         if (idx == cnt) {
                             return ans;
                         }
@@ -90,7 +112,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -100,18 +122,14 @@ public:
         vector<vector<int>> ans;
         ans.push_back({rStart, cStart});
         if (cnt == 1) return ans;
-        for (int k = 1;; k += 2)
-        {
+        for (int k = 1;; k += 2) {
             vector<vector<int>> dirs = {{0, 1, k}, {1, 0, k}, {0, -1, k + 1}, {-1, 0, k + 1}};
-            for (auto& dir : dirs)
-            {
+            for (auto& dir : dirs) {
                 int r = dir[0], c = dir[1], dk = dir[2];
-                while (dk-- > 0)
-                {
+                while (dk-- > 0) {
                     rStart += r;
                     cStart += c;
-                    if (rStart >= 0 && rStart < rows && cStart >= 0 && cStart < cols)
-                    {
+                    if (rStart >= 0 && rStart < rows && cStart >= 0 && cStart < cols) {
                         ans.push_back({rStart, cStart});
                         if (ans.size() == cnt) return ans;
                     }
@@ -122,7 +140,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func spiralMatrixIII(rows int, cols int, rStart int, cStart int) [][]int {
@@ -151,10 +169,73 @@ func spiralMatrixIII(rows int, cols int, rStart int, cStart int) [][]int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function spiralMatrixIII(rows: number, cols: number, rStart: number, cStart: number): number[][] {
+    // prettier-ignore
+    const dir = [[1,0],[0,1],[-1,0],[0,-1]]
+    let [x, y, i, size] = [cStart, rStart, 0, 0];
+    const ans: number[][] = [[y, x]];
+    const total = rows * cols;
+
+    while (ans.length < total) {
+        if (i % 2 === 0) size++;
+
+        for (let j = 0; ans.length < total && j < size; j++) {
+            x += dir[i][0];
+            y += dir[i][1];
+
+            if (0 <= x && x < cols && 0 <= y && y < rows) {
+                ans.push([y, x]);
+            }
+        }
+
+        i = (i + 1) % 4;
+    }
+
+    return ans;
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number} rows
+ * @param {number} cols
+ * @param {number} rStart
+ * @param {number} cStart
+ * @return {number[][]}
+ */
+var spiralMatrixIII = function (rows, cols, rStart, cStart) {
+    // prettier-ignore
+    const dir = [[1,0],[0,1],[-1,0],[0,-1]]
+    let [x, y, i, size] = [cStart, rStart, 0, 0];
+    const ans = [[y, x]];
+    const total = rows * cols;
+
+    while (ans.length < total) {
+        if (i % 2 === 0) size++;
+
+        for (let j = 0; ans.length < total && j < size; j++) {
+            x += dir[i][0];
+            y += dir[i][1];
+
+            if (0 <= x && x < cols && 0 <= y && y < rows) {
+                ans.push([y, x]);
+            }
+        }
+
+        i = (i + 1) % 4;
+    }
+
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

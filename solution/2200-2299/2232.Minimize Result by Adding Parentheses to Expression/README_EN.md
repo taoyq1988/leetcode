@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2232.Minimize%20Result%20by%20Adding%20Parentheses%20to%20Expression/README_EN.md
+rating: 1611
+source: Weekly Contest 288 Q2
+tags:
+    - String
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2232. Minimize Result by Adding Parentheses to Expression](https://leetcode.com/problems/minimize-result-by-adding-parentheses-to-expression)
 
 [中文文档](/solution/2200-2299/2232.Minimize%20Result%20by%20Adding%20Parentheses%20to%20Expression/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> string <code>expression</code> of the form <code>&quot;&lt;num1&gt;+&lt;num2&gt;&quot;</code> where <code>&lt;num1&gt;</code> and <code>&lt;num2&gt;</code> represent positive integers.</p>
 
@@ -13,7 +28,7 @@
 <p>The input has been generated such that the original value of <code>expression</code>, and the value of <code>expression</code> after adding any pair of parentheses that meets the requirements fits within a signed 32-bit integer.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;247+38&quot;
@@ -23,7 +38,7 @@ Note that &quot;2(4)7+38&quot; is invalid because the right parenthesis must be 
 It can be shown that 170 is the smallest possible value.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;12+34&quot;
@@ -31,7 +46,7 @@ It can be shown that 170 is the smallest possible value.
 <strong>Explanation:</strong> The expression evaluates to 1 * (2 + 3) * 4 = 1 * 5 * 4 = 20.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> expression = &quot;999+999&quot;
@@ -50,11 +65,17 @@ It can be shown that 170 is the smallest possible value.
 	<li>The original value of <code>expression</code>, and the value of <code>expression</code> after adding any pair of parentheses that meets the requirements fits within a signed 32-bit integer.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -74,7 +95,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -93,7 +114,8 @@ class Solution {
                 int t = a * b * c;
                 if (t < mi) {
                     mi = t;
-                    ans = String.format("%s(%s+%s)%s", l.substring(0, i), l.substring(i), r.substring(0, j + 1), r.substring(j + 1));
+                    ans = String.format("%s(%s+%s)%s", l.substring(0, i), l.substring(i),
+                        r.substring(0, j + 1), r.substring(j + 1));
                 }
             }
         }
@@ -102,7 +124,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minimizeResult(expression: string): string {
@@ -116,13 +138,10 @@ function minimizeResult(expression: string): string {
     while (arr2.length) {
         (arr3 = n2.split('')), (arr4 = []);
         while (arr3.length) {
-            let cur =
-                (getNum(arr2) + getNum(arr3)) * getNum(arr1) * getNum(arr4);
+            let cur = (getNum(arr2) + getNum(arr3)) * getNum(arr1) * getNum(arr4);
             if (cur < minSum) {
                 minSum = cur;
-                ans = `${arr1.join('')}(${arr2.join('')}+${arr3.join(
-                    '',
-                )})${arr4.join('')}`;
+                ans = `${arr1.join('')}(${arr2.join('')}+${arr3.join('')})${arr4.join('')}`;
             }
             arr4.unshift(arr3.pop());
         }
@@ -136,10 +155,8 @@ function getNum(arr: Array<string>): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

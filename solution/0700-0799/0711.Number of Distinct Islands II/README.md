@@ -1,10 +1,24 @@
-# [711. 不同岛屿的数量 II](https://leetcode.cn/problems/number-of-distinct-islands-ii)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/README.md
+tags:
+    - 深度优先搜索
+    - 广度优先搜索
+    - 并查集
+    - 哈希表
+    - 哈希函数
+---
+
+<!-- problem:start -->
+
+# [711. 不同岛屿的数量 II 🔒](https://leetcode.cn/problems/number-of-distinct-islands-ii)
 
 [English Version](/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个&nbsp;<code>m x n</code>&nbsp;二进制数组表示的网格&nbsp;<code>grid</code> ，一个岛屿由 <strong>四连通</strong> （上、下、左、右四个方向）的 <code>1</code> 组成（代表陆地）。你可以认为网格的四周被海水包围。</p>
 
@@ -44,30 +58,17 @@
 	<li><code>grid[i][j]</code>&nbsp;不是&nbsp;<code>0</code>&nbsp;就是&nbsp;<code>1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-先利用 DFS 找出每个岛屿，随后对岛屿进行翻转、旋转等操作，得到以下 8 种不同的情况，并对这些情况进行标准化 `normalize` 处理，得到该岛屿的特征值，放到哈希表中。最后返回哈希表的元素数量即可。
-
-```
-原坐标: (i, j)
-上下翻转: (i, -j)
-左右翻转: (-i, j)
-90°旋转: (j, -i)
-180°旋转: (-i, -j)
-270°旋转: (-j, -i)
-90°旋转+左右翻转: (-j, -i)
-90°旋转+上下翻转: (j, i)
-```
-
-标准化 `normalize` 的思路是：对于岛屿的每一种情况，先按照横、纵坐标升序排列坐标点，得到的第一个点 `(a, b)` 是最小的点，将其化为 `(0, 0)`，对于其他点 `(x, y)`，则化为 `(x - a, y - b)`。然后排序这 8 种情况，获取最小的一种，作为该岛屿的标准化值。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -110,9 +111,7 @@ class Solution:
         return len(s)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -145,14 +144,14 @@ class Solution {
         for (int e : shape) {
             int i = e / n;
             int j = e % n;
-            shapes[0].add(new int[]{i, j});
-            shapes[1].add(new int[]{i, -j});
-            shapes[2].add(new int[]{-i, j});
-            shapes[3].add(new int[]{-i, -j});
-            shapes[4].add(new int[]{j, i});
-            shapes[5].add(new int[]{j, -i});
-            shapes[6].add(new int[]{-j, i});
-            shapes[7].add(new int[]{-j, -i});
+            shapes[0].add(new int[] {i, j});
+            shapes[1].add(new int[] {i, -j});
+            shapes[2].add(new int[] {-i, j});
+            shapes[3].add(new int[] {-i, -j});
+            shapes[4].add(new int[] {j, i});
+            shapes[5].add(new int[] {j, -i});
+            shapes[6].add(new int[] {-j, i});
+            shapes[7].add(new int[] {-j, -i});
         }
         for (List<int[]> e : shapes) {
             e.sort((a, b) -> {
@@ -170,7 +169,7 @@ class Solution {
             for (int k = e.size() - 1; k >= 0; --k) {
                 int i = e.get(k)[0];
                 int j = e.get(k)[1];
-                e.set(k, new int[]{i - a, j - b});
+                e.set(k, new int[] {i - a, j - b});
             }
         }
         Arrays.sort(shapes, (a, b) -> {
@@ -210,21 +209,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
-typedef pair<int,int> PII;
+typedef pair<int, int> PII;
 
 class Solution {
 public:
     int numDistinctIslands2(vector<vector<int>>& grid) {
         set<vector<PII>> s;
-        for (int i = 0; i < grid.size(); ++i)
-        {
-            for (int j = 0; j < grid[0].size(); ++j)
-            {
-                if (grid[i][j])
-                {
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j]) {
                     vector<PII> shape;
                     dfs(i, j, grid, shape);
                     s.insert(normalize(shape));
@@ -236,8 +232,7 @@ public:
 
     vector<PII> normalize(vector<PII>& shape) {
         vector<vector<PII>> shapes(8);
-        for (auto& e : shape)
-        {
+        for (auto& e : shape) {
             int i = e.first, j = e.second;
             shapes[0].push_back({i, j});
             shapes[1].push_back({i, -j});
@@ -248,11 +243,9 @@ public:
             shapes[6].push_back({-j, -i});
             shapes[7].push_back({-j, i});
         }
-        for (auto& e : shapes)
-        {
+        for (auto& e : shapes) {
             sort(e.begin(), e.end());
-            for (int k = e.size() - 1; k >= 0; --k)
-            {
+            for (int k = e.size() - 1; k >= 0; --k) {
                 e[k].first -= e[0].first;
                 e[k].second -= e[0].second;
             }
@@ -265,8 +258,7 @@ public:
         shape.push_back({i, j});
         grid[i][j] = 0;
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        for (int k = 0; k < 4; ++k)
-        {
+        for (int k = 0; k < 4; ++k) {
             int x = i + dirs[k], y = j + dirs[k + 1];
             if (x >= 0 && x < grid.size() && y >= 0 && y < grid[0].size() && grid[x][y] == 1)
                 dfs(x, y, grid, shape);
@@ -275,10 +267,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

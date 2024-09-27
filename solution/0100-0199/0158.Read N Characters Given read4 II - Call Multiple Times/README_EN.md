@@ -1,8 +1,22 @@
-# [158. Read N Characters Given read4 II - Call Multiple Times](https://leetcode.com/problems/read-n-characters-given-read4-ii-call-multiple-times)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0158.Read%20N%20Characters%20Given%20read4%20II%20-%20Call%20Multiple%20Times/README_EN.md
+tags:
+    - Array
+    - Interactive
+    - Simulation
+---
+
+<!-- problem:start -->
+
+# [158. Read N Characters Given read4 II - Call Multiple Times 🔒](https://leetcode.com/problems/read-n-characters-given-read4-ii-call-multiple-times)
 
 [中文文档](/solution/0100-0199/0158.Read%20N%20Characters%20Given%20read4%20II%20-%20Call%20Multiple%20Times/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a <code>file</code> and assume that you can only read the file using a given method <code>read4</code>, implement a method <code>read</code> to read <code>n</code> characters. Your method <code>read</code> may be <strong>called multiple times</strong>.</p>
 
@@ -61,7 +75,7 @@ buf[] is a destination, not a source. You will need to write the results to buf[
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> file = &quot;abc&quot;, queries = [1,2,1]
@@ -75,7 +89,7 @@ sol.read(buf, 1); // We have reached the end of file, no more characters can be 
 Assume buf is allocated and guaranteed to have enough space for storing all characters from the file.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> file = &quot;abc&quot;, queries = [4,1]
@@ -97,32 +111,157 @@ sol.read(buf, 1); // We have reached the end of file, no more characters can be 
 	<li><code>1 &lt;= queries[i] &lt;= 500</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+# The read4 API is already defined for you.
+# def read4(buf4: List[str]) -> int:
 
+
+class Solution:
+    def __init__(self):
+        self.buf4 = [None] * 4
+        self.i = self.size = 0
+
+    def read(self, buf: List[str], n: int) -> int:
+        j = 0
+        while j < n:
+            if self.i == self.size:
+                self.size = read4(self.buf4)
+                self.i = 0
+                if self.size == 0:
+                    break
+            while j < n and self.i < self.size:
+                buf[j] = self.buf4[self.i]
+                self.i += 1
+                j += 1
+        return j
 ```
 
-### **Java**
+#### Java
 
 ```java
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char[] buf4);
+ */
 
+public class Solution extends Reader4 {
+    private char[] buf4 = new char[4];
+    private int i;
+    private int size;
+
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    public int read(char[] buf, int n) {
+        int j = 0;
+        while (j < n) {
+            if (i == size) {
+                size = read4(buf4);
+                i = 0;
+                if (size == 0) {
+                    break;
+                }
+            }
+            while (j < n && i < size) {
+                buf[j++] = buf4[i++];
+            }
+        }
+        return j;
+    }
+}
 ```
 
-### **TypeScript**
+#### C++
 
-```ts
+```cpp
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char *buf4);
+ */
 
+class Solution {
+public:
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    int read(char* buf, int n) {
+        int j = 0;
+        while (j < n) {
+            if (i == size) {
+                size = read4(buf4);
+                i = 0;
+                if (size == 0) break;
+            }
+            while (j < n && i < size) buf[j++] = buf4[i++];
+        }
+        return j;
+    }
+
+private:
+    char* buf4 = new char[4];
+    int i = 0;
+    int size = 0;
+};
 ```
 
-### **...**
+#### Go
 
-```
+```go
+/**
+ * The read4 API is already defined for you.
+ *
+ *     read4 := func(buf4 []byte) int
+ *
+ * // Below is an example of how the read4 API can be called.
+ * file := File("abcdefghijk") // File is "abcdefghijk", initially file pointer (fp) points to 'a'
+ * buf4 := make([]byte, 4) // Create buffer with enough space to store characters
+ * read4(buf4) // read4 returns 4. Now buf = ['a','b','c','d'], fp points to 'e'
+ * read4(buf4) // read4 returns 4. Now buf = ['e','f','g','h'], fp points to 'i'
+ * read4(buf4) // read4 returns 3. Now buf = ['i','j','k',...], fp points to end of file
+ */
 
+var solution = func(read4 func([]byte) int) func([]byte, int) int {
+	buf4 := make([]byte, 4)
+	i, size := 0, 0
+	// implement read below.
+	return func(buf []byte, n int) int {
+		j := 0
+		for j < n {
+			if i == size {
+				size = read4(buf4)
+				i = 0
+				if size == 0 {
+					break
+				}
+			}
+			for j < n && i < size {
+				buf[j] = buf4[i]
+				i, j = i+1, j+1
+			}
+		}
+		return j
+	}
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,29 +1,41 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0007.Reverse%20Integer/README_EN.md
+tags:
+    - Math
+---
+
+<!-- problem:start -->
+
 # [7. Reverse Integer](https://leetcode.com/problems/reverse-integer)
 
 [中文文档](/solution/0000-0099/0007.Reverse%20Integer/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a signed 32-bit integer <code>x</code>, return <code>x</code><em> with its digits reversed</em>. If reversing <code>x</code> causes the value to go outside the signed 32-bit integer range <code>[-2<sup>31</sup>, 2<sup>31</sup> - 1]</code>, then return <code>0</code>.</p>
 
 <p><strong>Assume the environment does not allow you to store 64-bit integers (signed or unsigned).</strong></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> x = 123
 <strong>Output:</strong> 321
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> x = -123
 <strong>Output:</strong> -321
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> x = 120
@@ -37,85 +49,104 @@
 	<li><code>-2<sup>31</sup> &lt;= x &lt;= 2<sup>31</sup> - 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Mathematics
+
+Let's denote $mi$ and $mx$ as $-2^{31}$ and $2^{31} - 1$ respectively, then the reverse result of $x$, $ans$, needs to satisfy $mi \le ans \le mx$.
+
+We can continuously take the remainder of $x$ to get the last digit $y$ of $x$, and add $y$ to the end of $ans$. Before adding $y$, we need to check if $ans$ overflows. That is, check whether $ans \times 10 + y$ is within the range $[mi, mx]$.
+
+If $x \gt 0$, it needs to satisfy $ans \times 10 + y \leq mx$, that is, $ans \times 10 + y \leq \left \lfloor \frac{mx}{10} \right \rfloor \times 10 + 7$. Rearranging gives $(ans - \left \lfloor \frac{mx}{10} \right \rfloor) \times 10 \leq 7 - y$.
+
+Next, we discuss the conditions for the inequality to hold:
+
+-   When $ans \lt \left \lfloor \frac{mx}{10} \right \rfloor$, the inequality obviously holds;
+-   When $ans = \left \lfloor \frac{mx}{10} \right \rfloor$, the necessary and sufficient condition for the inequality to hold is $y \leq 7$. If $ans = \left \lfloor \frac{mx}{10} \right \rfloor$ and we can still add numbers, it means that the number is at the highest digit, that is, $y$ must not exceed $2$, therefore, the inequality must hold;
+-   When $ans \gt \left \lfloor \frac{mx}{10} \right \rfloor$, the inequality obviously does not hold.
+
+In summary, when $x \gt 0$, the necessary and sufficient condition for the inequality to hold is $ans \leq \left \lfloor \frac{mx}{10} \right \rfloor$.
+
+Similarly, when $x \lt 0$, the necessary and sufficient condition for the inequality to hold is $ans \geq \left \lfloor \frac{mi}{10} \right \rfloor$.
+
+Therefore, we can check whether $ans$ overflows by checking whether $ans$ is within the range $[\left \lfloor \frac{mi}{10} \right \rfloor, \left \lfloor \frac{mx}{10} \right \rfloor]$. If it overflows, return $0$. Otherwise, add $y$ to the end of $ans$, and then remove the last digit of $x$, that is, $x \gets \left \lfloor \frac{x}{10} \right \rfloor$.
+
+The time complexity is $O(\log |x|)$, where $|x|$ is the absolute value of $x$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def reverse(self, x: int) -> int:
-        y = int(str(abs(x))[::-1])
-        res = -y if x < 0 else y
-        return 0 if res < -2**31 or res > 2**31 -1 else res
+        ans = 0
+        mi, mx = -(2**31), 2**31 - 1
+        while x:
+            if ans < mi // 10 + 1 or ans > mx // 10:
+                return 0
+            y = x % 10
+            if x < 0 and y > 0:
+                y -= 10
+            ans = ans * 10 + y
+            x = (x - y) // 10
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int reverse(int x) {
-        long res = 0;
-        while (x != 0) {
-            res = res * 10 + (x % 10);
-            x /= 10;
+        int ans = 0;
+        for (; x != 0; x /= 10) {
+            if (ans < Integer.MIN_VALUE / 10 || ans > Integer.MAX_VALUE / 10) {
+                return 0;
+            }
+            ans = ans * 10 + x % 10;
         }
-        return res < Integer.MIN_VALUE || res > Integer.MAX_VALUE ? 0 : (int) res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int reverse(int x) {
-        long long ans = 0;
-        while (x) {
+        int ans = 0;
+        for (; x; x /= 10) {
+            if (ans < INT_MIN / 10 || ans > INT_MAX / 10) {
+                return 0;
+            }
             ans = ans * 10 + x % 10;
-            x /= 10;
         }
-        return ans < INT_MIN || ans > INT_MAX ? 0 : ans;
+        return ans;
     }
 };
 ```
 
-### **JavaScript**
+#### Go
 
-```js
-/**
- * @param {number} x
- * @return {number}
- */
-var reverse = function (x) {
-    let res = 0;
-    while (x) {
-        res = res * 10 + (x % 10);
-        x = ~~(x / 10);
-    }
-    return res < Math.pow(-2, 31) || res > Math.pow(2, 31) - 1 ? 0 : res;
-};
-```
-
-### **C**
-
-```c
-int reverse(int x){
-    int res = 0;
-    while (x != 0) {
-        if (res > INT_MAX / 10 || res < INT_MIN / 10) {
-            return 0;
-        }
-        res = res * 10 + x % 10;
-        x /= 10;
-    }
-    return res;
+```go
+func reverse(x int) (ans int) {
+	for ; x != 0; x /= 10 {
+		if ans < math.MinInt32/10 || ans > math.MaxInt32/10 {
+			return 0
+		}
+		ans = ans*10 + x%10
+	}
+	return
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -129,91 +160,100 @@ impl Solution {
             .collect::<String>()
             .parse::<i32>()
         {
-            Ok(x) => x * if is_minus { -1 } else { 1 },
+            Ok(x) => x * (if is_minus { -1 } else { 1 }),
             Err(_) => 0,
         }
     }
 }
 ```
 
-### **Go**
+#### JavaScript
 
-```go
-func reverse(x int) int {
-	slot := make([]int, 11)
-	count := 0
-	for x != 0 {
-		n := x % 10
-		slot[count] = n
-		count++
-		x /= 10
-	}
-	result := 0
-	flag := true
-	for i := 0; i < count; i++ {
-		if flag && slot[i] == 0 {
-			continue
-		}
-		flag = false
-		result = 10*result + slot[i]
-	}
-	if result > math.MaxInt32 || result < math.MinInt32 {
-		return 0
-	}
-	return result
-}
+```js
+/**
+ * @param {number} x
+ * @return {number}
+ */
+var reverse = function (x) {
+    const mi = -(2 ** 31);
+    const mx = 2 ** 31 - 1;
+    let ans = 0;
+    for (; x != 0; x = ~~(x / 10)) {
+        if (ans < ~~(mi / 10) || ans > ~~(mx / 10)) {
+            return 0;
+        }
+        ans = ans * 10 + (x % 10);
+    }
+    return ans;
+};
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
     public int Reverse(int x) {
-        var negative = x < 0;
-        if (negative) x = -x;
-        long result = 0;
-        while (x > 0)
-        {
-            result = (result * 10) + x % 10;
-            x /= 10;
+        int ans = 0;
+        for (; x != 0; x /= 10) {
+            if (ans < int.MinValue / 10 || ans > int.MaxValue / 10) {
+                return 0;
+            }
+            ans = ans * 10 + x % 10;
         }
-        if (negative) result = -result;
-        if (result > int.MaxValue || result < int.MinValue) result = 0;
-        return (int) result;
+        return ans;
     }
 }
 ```
 
-### **Ruby**
+#### C
 
-```rb
-# @param {Integer} x
-# @return {Integer}
-def reverse(x)
-  neg = x < 0
-
-  x = x.abs
-  s = ''
-
-  x /= 10 while x > 0 && (x % 10).zero?
-
-  while x > 0
-    s += (x % 10).to_s
-    x /= 10
-  end
-
-  s = neg ? '-' + s : s
-
-  # have to explicitly constraint the int boundary as per the dummy test case
-  res = s.to_i
-  res <= 214_748_364_7 && res >= -214_748_364_8 ? res : 0
-end
+```c
+int reverse(int x) {
+    int ans = 0;
+    for (; x != 0; x /= 10) {
+        if (ans > INT_MAX / 10 || ans < INT_MIN / 10) {
+            return 0;
+        }
+        ans = ans * 10 + x % 10;
+    }
+    return ans;
+}
 ```
 
-### **...**
+#### PHP
 
-```
+```php
+class Solution {
+    /**
+     * @param int $x
+     * @return int
+     */
 
+    function reverse($x) {
+        $isNegative = $x < 0;
+        $x = abs($x);
+
+        $reversed = 0;
+
+        while ($x > 0) {
+            $reversed = $reversed * 10 + ($x % 10);
+            $x = (int) ($x / 10);
+        }
+
+        if ($isNegative) {
+            $reversed *= -1;
+        }
+        if ($reversed < -pow(2, 31) || $reversed > pow(2, 31) - 1) {
+            return 0;
+        }
+
+        return $reversed;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

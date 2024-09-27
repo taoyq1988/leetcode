@@ -1,8 +1,22 @@
-# [2158. Amount of New Area Painted Each Day](https://leetcode.com/problems/amount-of-new-area-painted-each-day)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2158.Amount%20of%20New%20Area%20Painted%20Each%20Day/README_EN.md
+tags:
+    - Segment Tree
+    - Array
+    - Ordered Set
+---
+
+<!-- problem:start -->
+
+# [2158. Amount of New Area Painted Each Day 🔒](https://leetcode.com/problems/amount-of-new-area-painted-each-day)
 
 [中文文档](/solution/2100-2199/2158.Amount%20of%20New%20Area%20Painted%20Each%20Day/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a long and thin painting that can be represented by a number line. You are given a <strong>0-indexed</strong> 2D integer array <code>paint</code> of length <code>n</code>, where <code>paint[i] = [start<sub>i</sub>, end<sub>i</sub>]</code>. This means that on the <code>i<sup>th</sup></code> day you need to paint the area <strong>between</strong> <code>start<sub>i</sub></code> and <code>end<sub>i</sub></code>.</p>
 
@@ -11,7 +25,7 @@
 <p>Return <em>an integer array </em><code>worklog</code><em> of length </em><code>n</code><em>, where </em><code>worklog[i]</code><em> is the amount of <strong>new</strong> area that you painted on the </em><code>i<sup>th</sup></code><em> day.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2158.Amount%20of%20New%20Area%20Painted%20Each%20Day/images/screenshot-2022-02-01-at-17-16-16-diagram-drawio-diagrams-net.png" style="height: 300px; width: 620px;" />
 <pre>
 <strong>Input:</strong> paint = [[1,4],[4,7],[5,8]]
@@ -26,7 +40,7 @@ Everything between 5 and 7 was already painted on day 1.
 The amount of new area painted on day 2 is 8 - 7 = 1. 
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2158.Amount%20of%20New%20Area%20Painted%20Each%20Day/images/screenshot-2022-02-01-at-17-17-45-diagram-drawio-diagrams-net.png" style="width: 604px; height: 300px;" />
 <pre>
 <strong>Input:</strong> paint = [[1,4],[5,8],[4,7]]
@@ -41,7 +55,7 @@ Everything between 5 and 7 was already painted on day 1.
 The amount of new area painted on day 2 is 5 - 4 = 1. 
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2100-2199/2158.Amount%20of%20New%20Area%20Painted%20Each%20Day/images/screenshot-2022-02-01-at-17-19-49-diagram-drawio-diagrams-net.png" style="width: 423px; height: 275px;" />
 <pre>
 <strong>Input:</strong> paint = [[1,5],[2,4]]
@@ -62,13 +76,17 @@ The amount of new area painted on day 1 is 0.
 	<li><code>0 &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 5 * 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Segment Tree.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Node:
@@ -146,7 +164,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Node {
@@ -169,7 +187,6 @@ class SegmentTree {
     private Node root = new Node(1, 100010);
 
     public SegmentTree() {
-
     }
 
     public void modify(int l, int r, int v) {
@@ -256,7 +273,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Node {
@@ -291,10 +308,9 @@ public:
         modify(l, r, v, root);
     }
 
-    void modify(int l, int r,int v, Node* node) {
+    void modify(int l, int r, int v, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v = node->r - node->l + 1;
             node->add = v;
             return;
@@ -311,7 +327,7 @@ public:
 
     int query(int l, int r, Node* node) {
         if (l > r) return 0;
-        if (node->l >= l && node-> r <= r) return node->v;
+        if (node->l >= l && node->r <= r) return node->v;
         pushdown(node);
         int v = 0;
         if (l <= node->mid) v += query(l, r, node->left);
@@ -326,8 +342,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node(node->l, node->mid);
         if (!node->right) node->right = new Node(node->mid + 1, node->r);
-        if (node->add)
-        {
+        if (node->add) {
             Node* left = node->left;
             Node* right = node->right;
             left->v = left->r - left->l + 1;
@@ -345,8 +360,7 @@ public:
         int n = paint.size();
         vector<int> ans(n);
         SegmentTree* tree = new SegmentTree();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             int l = paint[i][0] + 1;
             int r = paint[i][1];
             int v = tree->query(l, r);
@@ -358,16 +372,8 @@ public:
 };
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

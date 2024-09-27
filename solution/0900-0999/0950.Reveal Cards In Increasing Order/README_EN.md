@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0950.Reveal%20Cards%20In%20Increasing%20Order/README_EN.md
+tags:
+    - Queue
+    - Array
+    - Sorting
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [950. Reveal Cards In Increasing Order](https://leetcode.com/problems/reveal-cards-in-increasing-order)
 
 [中文文档](/solution/0900-0999/0950.Reveal%20Cards%20In%20Increasing%20Order/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>deck</code>. There is a deck of cards where every card has a unique integer. The integer on the <code>i<sup>th</sup></code> card is <code>deck[i]</code>.</p>
 
@@ -21,7 +36,7 @@
 <p><strong>Note</strong> that the first entry in the answer is considered to be the top of the deck.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> deck = [17,13,11,2,3,5,7]
@@ -39,7 +54,7 @@ We reveal 17.
 Since all the cards revealed are in increasing order, the answer is correct.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> deck = [1,1000]
@@ -55,26 +70,90 @@ Since all the cards revealed are in increasing order, the answer is correct.
 	<li>All the values of <code>deck</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def deckRevealedIncreasing(self, deck: List[int]) -> List[int]:
+        q = deque()
+        for v in sorted(deck, reverse=True):
+            if q:
+                q.appendleft(q.pop())
+            q.appendleft(v)
+        return list(q)
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int[] deckRevealedIncreasing(int[] deck) {
+        Deque<Integer> q = new ArrayDeque<>();
+        Arrays.sort(deck);
+        int n = deck.length;
+        for (int i = n - 1; i >= 0; --i) {
+            if (!q.isEmpty()) {
+                q.offerFirst(q.pollLast());
+            }
+            q.offerFirst(deck[i]);
+        }
+        int[] ans = new int[n];
+        for (int i = n - 1; i >= 0; --i) {
+            ans[i] = q.pollLast();
+        }
+        return ans;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<int> deckRevealedIncreasing(vector<int>& deck) {
+        sort(deck.rbegin(), deck.rend());
+        deque<int> q;
+        for (int v : deck) {
+            if (!q.empty()) {
+                q.push_front(q.back());
+                q.pop_back();
+            }
+            q.push_front(v);
+        }
+        return vector<int>(q.begin(), q.end());
+    }
+};
 ```
 
+#### Go
+
+```go
+func deckRevealedIncreasing(deck []int) []int {
+	sort.Sort(sort.Reverse(sort.IntSlice(deck)))
+	q := []int{}
+	for _, v := range deck {
+		if len(q) > 0 {
+			q = append([]int{q[len(q)-1]}, q[:len(q)-1]...)
+		}
+		q = append([]int{v}, q...)
+	}
+	return q
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,24 +1,19 @@
 class Solution:
     def countPairs(self, n: int, edges: List[List[int]]) -> int:
-        def dfs(i):
+        def dfs(i: int) -> int:
+            if vis[i]:
+                return 0
             vis[i] = True
-            res = 1
-            for j in g[i]:
-                if not vis[j]:
-                    res += dfs(j)
-            return res
+            return 1 + sum(dfs(j) for j in g[i])
 
-        g = defaultdict(list)
+        g = [[] for _ in range(n)]
         for a, b in edges:
             g[a].append(b)
             g[b].append(a)
         vis = [False] * n
-        arr = []
+        ans = s = 0
         for i in range(n):
-            if not vis[i]:
-                arr.append(dfs(i))
-        ans = t = 0
-        for v in arr:
-            t += v
-            ans += v * (n - t)
+            t = dfs(i)
+            ans += s * t
+            s += t
         return ans

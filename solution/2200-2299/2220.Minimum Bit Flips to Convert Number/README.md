@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2220.Minimum%20Bit%20Flips%20to%20Convert%20Number/README.md
+rating: 1282
+source: 第 75 场双周赛 Q1
+tags:
+    - 位运算
+---
+
+<!-- problem:start -->
+
 # [2220. 转换数字的最少位翻转次数](https://leetcode.cn/problems/minimum-bit-flips-to-convert-number)
 
 [English Version](/solution/2200-2299/2220.Minimum%20Bit%20Flips%20to%20Convert%20Number/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>一次 <strong>位翻转</strong>&nbsp;定义为将数字&nbsp;<code>x</code>&nbsp;二进制中的一个位进行 <strong>翻转</strong>&nbsp;操作，即将&nbsp;<code>0</code>&nbsp;变成&nbsp;<code>1</code>&nbsp;，或者将&nbsp;<code>1</code>&nbsp;变成&nbsp;<code>0</code>&nbsp;。</p>
 
@@ -47,15 +59,21 @@
 	<li><code>0 &lt;= start, goal &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<p>&nbsp;</p>
+
+<p><strong>注意：</strong>本题与&nbsp;<a href="https://leetcode.cn/problems/hamming-distance/">461. 汉明距离</a>&nbsp;相同。</p>
+
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -68,9 +86,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -86,7 +102,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -94,8 +110,7 @@ public:
     int minBitFlips(int start, int goal) {
         int t = start ^ goal;
         int ans = 0;
-        while (t)
-        {
+        while (t) {
             ans += t & 1;
             t >>= 1;
         }
@@ -104,7 +119,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minBitFlips(start int, goal int) int {
@@ -118,16 +133,78 @@ func minBitFlips(start int, goal int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function minBitFlips(start: number, goal: number): number {
+    let tmp = start ^ goal;
+    let ans = 0;
+    while (tmp !== 0) {
+        ans += tmp & 1;
+        tmp >>= 1;
+    }
+    return ans;
+}
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn min_bit_flips(start: i32, goal: i32) -> i32 {
+        let mut tmp = start ^ goal;
+        let mut ans = 0;
+        while tmp != 0 {
+            ans += tmp & 1;
+            tmp >>= 1;
+        }
+        ans
+    }
+}
 ```
 
+#### C
+
+```c
+int minBitFlips(int start, int goal) {
+    int tmp = start ^ goal;
+    int ans = 0;
+    while (tmp) {
+        ans += tmp & 1;
+        tmp >>= 1;
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### TypeScript
+
+```ts
+function minBitFlips(start: number, goal: number): number {
+    return (start ^ goal).toString(2).replace(/0/g, '').length;
+}
+```
+
+#### JavaScript
+
+```js
+function minBitFlips(start, goal) {
+    return (start ^ goal).toString(2).replace(/0/g, '').length;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,15 @@
+---
+comments: true
+edit_url: https://github.com/doocs/leetcode/edit/main/lcof2/%E5%89%91%E6%8C%87%20Offer%20II%20114.%20%E5%A4%96%E6%98%9F%E6%96%87%E5%AD%97%E5%85%B8/README.md
+---
+
+<!-- problem:start -->
+
 # [剑指 Offer II 114. 外星文字典](https://leetcode.cn/problems/Jf1JuT)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>现有一种使用英语字母的外星文语言，这门语言的字母顺序与英语顺序不同。</p>
 
@@ -55,15 +62,17 @@
 
 <p><meta charset="UTF-8" />注意：本题与主站 269&nbsp;题相同：&nbsp;<a href="https://leetcode.cn/problems/alien-dictionary/">https://leetcode.cn/problems/alien-dictionary/</a></p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：拓扑排序 + BFS**
+### 方法一：拓扑排序 + BFS
 
 用数组 $g$ 记录在火星字典中的字母先后关系，$g[i][j] = true$ 表示字母 $i + 'a'$ 在字母 $j + 'a'$ 的前面；用数组 $s$ 记录当前字典出现过的字母，$cnt$ 表示出现过的字母数。
 
-一个很简单的想法是遍历每一个单词，比较该单词和其后的所有单词，把所有的先后关系更新进数组 $g$，这样遍历时间复杂度为 $O(n^3)$；但是我们发现其实比较相邻的两个单词就可以了，比如 $a < b < c$ 则比较 $a < b$ 和 $b < c$， $a$ 和 $c$ 的关系便确定了。因此算法可以优化成比较相邻两个单词，时间复杂度为 $O(n²)$。
+一个很简单的想法是遍历每一个单词，比较该单词和其后的所有单词，把所有的先后关系更新进数组 $g$，这样遍历时间复杂度为 $O(n^3)$；但是我们发现其实比较相邻的两个单词就可以了，比如 $a < b < c$ 则比较 $a < b$ 和 $b < c$， $a$ 和 $c$ 的关系便确定了。因此算法可以优化成比较相邻两个单词，时间复杂度为 $O(n^2)$。
 
 出现矛盾的情况：
 
@@ -80,9 +89,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -140,9 +147,7 @@ class Solution:
         return '' if len(ans) < cnt else ''.join(ans)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -219,10 +224,9 @@ class Solution {
         return ans.length() < cnt ? "" : ans.toString();
     }
 }
-
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -232,21 +236,17 @@ public:
         vector<bool> s(26);
         int cnt = 0;
         int n = words.size();
-        for (int i = 0; i < n - 1; ++i)
-        {
-            for (char c : words[i])
-            {
+        for (int i = 0; i < n - 1; ++i) {
+            for (char c : words[i]) {
                 if (cnt == 26) break;
                 c -= 'a';
-                if (!s[c])
-                {
+                if (!s[c]) {
                     ++cnt;
                     s[c] = true;
                 }
             }
             int m = words[i].size();
-            for (int j = 0; j < m; ++j)
-            {
+            for (int j = 0; j < m; ++j) {
                 if (j >= words[i + 1].size()) return "";
                 char c1 = words[i][j], c2 = words[i + 1][j];
                 if (c1 == c2) continue;
@@ -255,12 +255,10 @@ public:
                 break;
             }
         }
-        for (char c : words[n - 1])
-        {
+        for (char c : words[n - 1]) {
             if (cnt == 26) break;
             c -= 'a';
-            if (!s[c])
-            {
+            if (!s[c]) {
                 ++cnt;
                 s[c] = true;
             }
@@ -275,8 +273,7 @@ public:
             if (s[i] && indegree[i] == 0)
                 q.push(i);
         string ans = "";
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int t = q.front();
             ans += (t + 'a');
             q.pop();
@@ -290,10 +287,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

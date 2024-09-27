@@ -1,8 +1,15 @@
+---
+comments: true
+edit_url: https://github.com/doocs/leetcode/edit/main/lcp/LCP%2005.%20%E5%8F%91%20LeetCoin/README.md
+---
+
+<!-- problem:start -->
+
 # [LCP 05. 发 LeetCoin](https://leetcode.cn/problems/coin-bonus)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>力扣决定给一个刷题团队发<code>LeetCoin</code>作为奖励。同时，为了监控给大家发了多少<code>LeetCoin</code>，力扣有时候也会进行查询。</p>
 
@@ -68,11 +75,13 @@
 	<li><code>operations[i][0] != 3 时，1 &lt;= operations[i][2]&nbsp;&lt;= 5000</code></li>
 </ol>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：线段树**
+### 方法一：线段树
 
 线段树将整个区间分割为多个不连续的子区间，子区间的数量不超过 `log(width)`。更新某个元素的值，只需要更新 `log(width)` 个区间，并且这些区间都包含在一个包含该元素的大区间内。区间修改时，需要使用**懒标记**保证效率。
 
@@ -83,9 +92,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 MOD = int(1e9 + 7)
@@ -155,7 +162,9 @@ class SegmentTree:
 
 
 class Solution:
-    def bonus(self, n: int, leadership: List[List[int]], operations: List[List[int]]) -> List[int]:
+    def bonus(
+        self, n: int, leadership: List[List[int]], operations: List[List[int]]
+    ) -> List[int]:
         def dfs(u):
             nonlocal idx
             begin[u] = idx
@@ -184,9 +193,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Node {
@@ -287,9 +294,7 @@ class Solution {
 
     public int[] bonus(int n, int[][] leadership, int[][] operations) {
         g = new List[n + 1];
-        for (int i = 0; i < g.length; ++i) {
-            g[i] = new ArrayList<>();
-        }
+        Arrays.setAll(g, k -> new ArrayList<>());
         for (int[] l : leadership) {
             int a = l[0], b = l[1];
             g[a].add(b);
@@ -324,7 +329,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 const int MOD = 1e9 + 7;
@@ -361,10 +366,9 @@ public:
         modify(l, r, v, root);
     }
 
-    void modify(int l, int r,int v, Node* node) {
+    void modify(int l, int r, int v, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v = (node->v + (node->r - node->l + 1) * v) % MOD;
             node->add += v;
             return;
@@ -381,7 +385,7 @@ public:
 
     int query(int l, int r, Node* node) {
         if (l > r) return 0;
-        if (node->l >= l && node-> r <= r) return node->v;
+        if (node->l >= l && node->r <= r) return node->v;
         pushdown(node);
         int v = 0;
         if (l <= node->mid) v += query(l, r, node->left);
@@ -396,8 +400,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node(node->l, node->mid);
         if (!node->right) node->right = new Node(node->mid + 1, node->r);
-        if (node->add)
-        {
+        if (node->add) {
             Node* left = node->left;
             Node* right = node->right;
             left->v = (left->v + (left->r - left->l + 1) * node->add) % MOD;
@@ -415,8 +418,7 @@ public:
 
     vector<int> bonus(int n, vector<vector<int>>& leadership, vector<vector<int>>& operations) {
         vector<vector<int>> g(n + 1);
-        for (auto& l : leadership)
-        {
+        for (auto& l : leadership) {
             int a = l[0], b = l[1];
             g[a].push_back(b);
         }
@@ -426,12 +428,14 @@ public:
         dfs(1, begin, end, g);
         vector<int> ans;
         SegmentTree* tree = new SegmentTree(n);
-        for (auto& op : operations)
-        {
+        for (auto& op : operations) {
             int p = op[0], v = op[1];
-            if (p == 1) tree->modify(end[v], end[v], op[2]);
-            else if (p == 2) tree->modify(begin[v], end[v], op[2]);
-            else ans.push_back(tree->query(begin[v], end[v]));
+            if (p == 1)
+                tree->modify(end[v], end[v], op[2]);
+            else if (p == 2)
+                tree->modify(begin[v], end[v], op[2]);
+            else
+                ans.push_back(tree->query(begin[v], end[v]));
         }
         return ans;
     }
@@ -445,10 +449,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

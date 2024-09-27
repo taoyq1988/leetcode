@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0506.Relative%20Ranks/README_EN.md
+tags:
+    - Array
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [506. Relative Ranks](https://leetcode.com/problems/relative-ranks)
 
 [中文文档](/solution/0500-0599/0506.Relative%20Ranks/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>score</code> of size <code>n</code>, where <code>score[i]</code> is the score of the <code>i<sup>th</sup></code> athlete in a competition. All the scores are guaranteed to be <strong>unique</strong>.</p>
 
@@ -18,14 +32,14 @@
 <p>Return an array <code>answer</code> of size <code>n</code> where <code>answer[i]</code> is the <strong>rank</strong> of the <code>i<sup>th</sup></code> athlete.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> score = [5,4,3,2,1]
 <strong>Output:</strong> [&quot;Gold Medal&quot;,&quot;Silver Medal&quot;,&quot;Bronze Medal&quot;,&quot;4&quot;,&quot;5&quot;]
 <strong>Explanation:</strong> The placements are [1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup>, 4<sup>th</sup>, 5<sup>th</sup>].</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> score = [10,3,8,9,4]
@@ -44,11 +58,17 @@
 	<li>All the values in <code>score</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,7 +83,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -75,7 +95,7 @@ class Solution {
         }
         Arrays.sort(idx, (i1, i2) -> score[i2] - score[i1]);
         String[] ans = new String[n];
-        String[] top3 = new String[]{"Gold Medal", "Silver Medal", "Bronze Medal"};
+        String[] top3 = new String[] {"Gold Medal", "Silver Medal", "Bronze Medal"};
         for (int i = 0; i < n; ++i) {
             ans[idx[i]] = i < 3 ? top3[i] : String.valueOf(i + 1);
         }
@@ -84,19 +104,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    vector<string> findRelativeRanks(vector<int> &score) {
+    vector<string> findRelativeRanks(vector<int>& score) {
         int n = score.size();
         vector<pair<int, int>> idx;
         for (int i = 0; i < n; ++i)
             idx.push_back(make_pair(score[i], i));
         sort(idx.begin(), idx.end(),
-             [&](const pair<int, int> &x, const pair<int, int> &y)
-             { return x.first > y.first; });
+            [&](const pair<int, int>& x, const pair<int, int>& y) { return x.first > y.first; });
         vector<string> ans(n);
         vector<string> top3 = {"Gold Medal", "Silver Medal", "Bronze Medal"};
         for (int i = 0; i < n; ++i)
@@ -106,7 +125,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findRelativeRanks(score []int) []string {
@@ -131,10 +150,8 @@ func findRelativeRanks(score []int) []string {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,27 +1,39 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0709.To%20Lower%20Case/README_EN.md
+tags:
+    - String
+---
+
+<!-- problem:start -->
+
 # [709. To Lower Case](https://leetcode.com/problems/to-lower-case)
 
 [中文文档](/solution/0700-0799/0709.To%20Lower%20Case/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a string <code>s</code>, return <em>the string after replacing every uppercase letter with the same lowercase letter</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;Hello&quot;
 <strong>Output:</strong> &quot;hello&quot;
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;here&quot;
 <strong>Output:</strong> &quot;here&quot;
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;LOVELY&quot;
@@ -36,65 +48,79 @@
 	<li><code>s</code> consists of printable ASCII characters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def toLowerCase(self, s: str) -> str:
-        return ''.join([chr(ord(c) | 32) if ord('A') <= ord(c) <= ord('Z') else c for c in s])
+        return "".join([chr(ord(c) | 32) if c.isupper() else c for c in s])
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String toLowerCase(String s) {
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; ++i) {
-            if (chars[i] >= 'A' && chars[i] <= 'Z') {
-                chars[i] |= 32;
+        char[] cs = s.toCharArray();
+        for (int i = 0; i < cs.length; ++i) {
+            if (cs[i] >= 'A' && cs[i] <= 'Z') {
+                cs[i] |= 32;
             }
         }
-        return new String(chars);
+        return String.valueOf(cs);
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string toLowerCase(string s) {
-        for (char& c : s)
-            if (c >= 'A' && c <= 'Z')
+        for (char& c : s) {
+            if (c >= 'A' && c <= 'Z') {
                 c |= 32;
+            }
+        }
         return s;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func toLowerCase(s string) string {
-	sb := &strings.Builder{}
-	sb.Grow(len(s))
-	for _, c := range s {
+	cs := []byte(s)
+	for i, c := range cs {
 		if c >= 'A' && c <= 'Z' {
-			c |= 32
+			cs[i] |= 32
 		}
-		sb.WriteRune(c)
 	}
-	return sb.String()
+	return string(cs)
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function toLowerCase(s: string): string {
+    return s.toLowerCase();
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -104,24 +130,53 @@ impl Solution {
 }
 ```
 
+#### C
+
+```c
+char* toLowerCase(char* s) {
+    int n = strlen(s);
+    for (int i = 0; i < n; i++) {
+        if (s[i] >= 'A' && s[i] <= 'Z') {
+            s[i] |= 32;
+        }
+    }
+    return s;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### TypeScript
+
+```ts
+function toLowerCase(s: string): string {
+    return [...s].map(c => String.fromCharCode(c.charCodeAt(0) | 32)).join('');
+}
+```
+
+#### Rust
+
 ```rust
 impl Solution {
     pub fn to_lower_case(s: String) -> String {
-        String::from_utf8(
-            s.as_bytes()
-                .iter()
-                .map(|&c| c + if c >= b'A' && c <= b'Z' { 32 } else { 0 })
-                .collect(),
-        )
-        .unwrap()
+        s.as_bytes()
+            .iter()
+            .map(|&c| char::from(if c >= b'A' && c <= b'Z' { c | 32 } else { c }))
+            .collect()
     }
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,20 @@
-# [1474. Delete N Nodes After M Nodes of a Linked List](https://leetcode.com/problems/delete-n-nodes-after-m-nodes-of-a-linked-list)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/README_EN.md
+tags:
+    - Linked List
+---
+
+<!-- problem:start -->
+
+# [1474. Delete N Nodes After M Nodes of a Linked List 🔒](https://leetcode.com/problems/delete-n-nodes-after-m-nodes-of-a-linked-list)
 
 [中文文档](/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given the <code>head</code> of a linked list and two integers <code>m</code> and <code>n</code>.</p>
 
@@ -18,7 +30,7 @@
 <p>Return <em>the head of the modified list after removing the mentioned nodes</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/images/sample_1_1848.png" style="width: 600px; height: 95px;" />
 <pre>
 <strong>Input:</strong> head = [1,2,3,4,5,6,7,8,9,10,11,12,13], m = 2, n = 3
@@ -29,7 +41,7 @@ Continue with the same procedure until reaching the tail of the Linked List.
 Head of the linked list after removing nodes is returned.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1400-1499/1474.Delete%20N%20Nodes%20After%20M%20Nodes%20of%20a%20Linked%20List/images/sample_2_1848.png" style="width: 600px; height: 123px;" />
 <pre>
 <strong>Input:</strong> head = [1,2,3,4,5,6,7,8,9,10,11], m = 1, n = 3
@@ -49,11 +61,17 @@ Head of the linked list after removing nodes is returned.
 <p>&nbsp;</p>
 <p><strong>Follow up:</strong> Could you solve this problem by modifying the list in-place?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -65,13 +83,13 @@ class Solution:
     def deleteNodes(self, head: ListNode, m: int, n: int) -> ListNode:
         pre = head
         while pre:
-            for i in range(m - 1):
+            for _ in range(m - 1):
                 if pre:
                     pre = pre.next
             if pre is None:
                 return head
             cur = pre
-            for i in range(n):
+            for _ in range(n):
                 if cur:
                     cur = cur.next
             pre.next = None if cur is None else cur.next
@@ -79,7 +97,7 @@ class Solution:
         return head
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -114,10 +132,77 @@ class Solution {
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteNodes(ListNode* head, int m, int n) {
+        auto pre = head;
+        while (pre) {
+            for (int i = 0; i < m - 1 && pre; ++i) {
+                pre = pre->next;
+            }
+            if (!pre) {
+                return head;
+            }
+            auto cur = pre;
+            for (int i = 0; i < n && cur; ++i) {
+                cur = cur->next;
+            }
+            pre->next = cur ? cur->next : nullptr;
+            pre = pre->next;
+        }
+        return head;
+    }
+};
 ```
 
+#### Go
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func deleteNodes(head *ListNode, m int, n int) *ListNode {
+	pre := head
+	for pre != nil {
+		for i := 0; i < m-1 && pre != nil; i++ {
+			pre = pre.Next
+		}
+		if pre == nil {
+			return head
+		}
+		cur := pre
+		for i := 0; i < n && cur != nil; i++ {
+			cur = cur.Next
+		}
+		pre.Next = nil
+		if cur != nil {
+			pre.Next = cur.Next
+		}
+		pre = pre.Next
+	}
+	return head
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

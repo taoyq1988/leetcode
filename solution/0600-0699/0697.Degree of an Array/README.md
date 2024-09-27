@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0697.Degree%20of%20an%20Array/README.md
+tags:
+    - 数组
+    - 哈希表
+---
+
+<!-- problem:start -->
+
 # [697. 数组的度](https://leetcode.cn/problems/degree-of-an-array)
 
 [English Version](/solution/0600-0699/0697.Degree%20of%20an%20Array/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个非空且只包含非负数的整数数组&nbsp;<code>nums</code>，数组的 <strong>度</strong> 的定义是指数组里任一元素出现频数的最大值。</p>
 
@@ -43,78 +54,206 @@
 	<li><code>nums[i]</code>&nbsp;是一个在 <code>0</code> 到 <code>49,999</code> 范围内的整数。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：哈希表
 
 遍历数组，用哈希表记录数组每个元素出现的次数，以及首次、末次出现的位置。然后遍历哈希表，获取元素出现次数最多（可能有多个）且首末位置差最小的数。
 
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为数组长度。
+
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def findShortestSubArray(self, nums: List[int]) -> int:
-        mapper = {}
+        cnt = Counter(nums)
+        degree = cnt.most_common()[0][1]
+        left, right = {}, {}
         for i, v in enumerate(nums):
-            if v in mapper:
-                arr = mapper[v]
-                arr[0] += 1
-                arr[2] = i
-            else:
-                arr = [1, i, i]
-                mapper[v] = arr
-        max_degree = min_len = 0
-        for arr in mapper.values():
-            if max_degree < arr[0]:
-                max_degree = arr[0]
-                min_len = arr[2] - arr[1] + 1
-            elif max_degree == arr[0]:
-                min_len = min(min_len, arr[2] - arr[1] + 1)
-        return min_len
+            if v not in left:
+                left[v] = i
+            right[v] = i
+        ans = inf
+        for v in nums:
+            if cnt[v] == degree:
+                t = right[v] - left[v] + 1
+                if ans > t:
+                    ans = t
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int findShortestSubArray(int[] nums) {
-        Map<Integer, int[]> mapper = new HashMap<>();
-        for (int i = 0, n = nums.length; i < n; ++i) {
-            if (mapper.containsKey(nums[i])) {
-                int[] arr = mapper.get(nums[i]);
-                ++arr[0];
-                arr[2] = i;
-            } else {
-                int[] arr = new int[]{1, i, i};
-                mapper.put(nums[i], arr);
+        Map<Integer, Integer> cnt = new HashMap<>();
+        Map<Integer, Integer> left = new HashMap<>();
+        Map<Integer, Integer> right = new HashMap<>();
+        int degree = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            int v = nums[i];
+            cnt.put(v, cnt.getOrDefault(v, 0) + 1);
+            degree = Math.max(degree, cnt.get(v));
+            if (!left.containsKey(v)) {
+                left.put(v, i);
+            }
+            right.put(v, i);
+        }
+        int ans = 1000000;
+        for (int v : nums) {
+            if (cnt.get(v) == degree) {
+                int t = right.get(v) - left.get(v) + 1;
+                if (ans > t) {
+                    ans = t;
+                }
             }
         }
-
-        int maxDegree = 0, minLen = 0;
-        for (Map.Entry<Integer, int[]> entry : mapper.entrySet()) {
-            int[] arr = entry.getValue();
-            if (maxDegree < arr[0]) {
-                maxDegree = arr[0];
-                minLen = arr[2] - arr[1] + 1;
-            } else if (maxDegree == arr[0]) {
-                minLen = Math.min(minLen, arr[2] - arr[1] + 1);
-            }
-        }
-        return minLen;
+        return ans;
     }
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        unordered_map<int, int> cnt;
+        unordered_map<int, int> left;
+        unordered_map<int, int> right;
+        int degree = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            int v = nums[i];
+            degree = max(degree, ++cnt[v]);
+            if (!left.count(v)) {
+                left[v] = i;
+            }
+            right[v] = i;
+        }
+        int ans = 1e6;
+        for (int v : nums) {
+            if (cnt[v] == degree) {
+                int t = right[v] - left[v] + 1;
+                if (ans > t) {
+                    ans = t;
+                }
+            }
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func findShortestSubArray(nums []int) int {
+	cnt := map[int]int{}
+	left := map[int]int{}
+	right := map[int]int{}
+	var degree int
+	for i, v := range nums {
+		cnt[v]++
+		if degree < cnt[v] {
+			degree = cnt[v]
+		}
+		if _, ok := left[v]; !ok {
+			left[v] = i
+		}
+		right[v] = i
+	}
+	ans := 100000
+	for v, c := range cnt {
+		if c == degree {
+			t := right[v] - left[v] + 1
+			if ans > t {
+				ans = t
+			}
+		}
+	}
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二
+
+<!-- tabs:start -->
+
+#### Go
+
+```go
+func findShortestSubArray(nums []int) (ans int) {
+	ans = 50000
+	numsMap := make(map[int]int, len(nums))
+	for _, num := range nums {
+		numsMap[num]++
+	}
+	var maxDegree int
+	for _, num := range numsMap {
+		maxDegree = max(num, maxDegree)
+	}
+	degreeNums := getMaxDegreeElem(maxDegree, numsMap)
+	for _, num := range degreeNums {
+		f := findSubArray(num, nums)
+		ans = min(ans, f)
+	}
+	return
+}
+
+func findSubArray(target int, nums []int) int {
+	start := getStartIdx(target, nums)
+	end := getEndIdx(target, nums)
+	return (end - start) + 1
+}
+
+func getStartIdx(target int, nums []int) (start int) {
+	for idx, num := range nums {
+		if num == target {
+			start = idx
+			break
+		}
+	}
+	return start
+}
+
+func getEndIdx(target int, nums []int) (end int) {
+	for i := len(nums) - 1; i > 0; i-- {
+		if nums[i] == target {
+			end = i
+			break
+		}
+	}
+	return
+}
+
+func getMaxDegreeElem(maxDegree int, numsMap map[int]int) []int {
+	var ans []int
+	for key, value := range numsMap {
+		if value == maxDegree {
+			ans = append(ans, key)
+		}
+	}
+	return ans
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

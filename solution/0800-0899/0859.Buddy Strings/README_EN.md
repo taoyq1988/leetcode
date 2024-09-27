@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0859.Buddy%20Strings/README_EN.md
+tags:
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [859. Buddy Strings](https://leetcode.com/problems/buddy-strings)
 
 [中文文档](/solution/0800-0899/0859.Buddy%20Strings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two strings <code>s</code> and <code>goal</code>, return <code>true</code><em> if you can swap two letters in </em><code>s</code><em> so the result is equal to </em><code>goal</code><em>, otherwise, return </em><code>false</code><em>.</em></p>
 
@@ -13,7 +26,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;ab&quot;, goal = &quot;ba&quot;
@@ -21,7 +34,7 @@
 <strong>Explanation:</strong> You can swap s[0] = &#39;a&#39; and s[1] = &#39;b&#39; to get &quot;ba&quot;, which is equal to goal.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;ab&quot;, goal = &quot;ab&quot;
@@ -29,7 +42,7 @@
 <strong>Explanation:</strong> The only letters you can swap are s[0] = &#39;a&#39; and s[1] = &#39;b&#39;, which results in &quot;ba&quot; != goal.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;aa&quot;, goal = &quot;aa&quot;
@@ -45,11 +58,17 @@
 	<li><code>s</code> and <code>goal</code> consist of lowercase letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +83,7 @@ class Solution:
         return diff == 2 or (diff == 0 and any(v > 1 for v in cnt1.values()))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -98,7 +117,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -109,15 +128,13 @@ public:
         int diff = 0;
         vector<int> cnt1(26);
         vector<int> cnt2(26);
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             ++cnt1[s[i] - 'a'];
             ++cnt2[goal[i] - 'a'];
             if (s[i] != goal[i]) ++diff;
         }
         bool f = false;
-        for (int i = 0; i < 26; ++i)
-        {
+        for (int i = 0; i < 26; ++i) {
             if (cnt1[i] != cnt2[i]) return false;
             if (cnt1[i] > 1) f = true;
         }
@@ -126,7 +143,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func buddyStrings(s string, goal string) bool {
@@ -157,10 +174,36 @@ func buddyStrings(s string, goal string) bool {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function buddyStrings(s: string, goal: string): boolean {
+    const m = s.length;
+    const n = goal.length;
+    if (m != n) {
+        return false;
+    }
+    const cnt1 = new Array(26).fill(0);
+    const cnt2 = new Array(26).fill(0);
+    let diff = 0;
+    for (let i = 0; i < n; ++i) {
+        cnt1[s.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+        cnt2[goal.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+        if (s[i] != goal[i]) {
+            ++diff;
+        }
+    }
+    for (let i = 0; i < 26; ++i) {
+        if (cnt1[i] != cnt2[i]) {
+            return false;
+        }
+    }
+    return diff == 2 || (diff == 0 && cnt1.some(v => v > 1));
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

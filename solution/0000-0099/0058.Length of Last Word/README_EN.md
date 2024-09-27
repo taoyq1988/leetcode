@@ -1,15 +1,27 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0058.Length%20of%20Last%20Word/README_EN.md
+tags:
+    - String
+---
+
+<!-- problem:start -->
+
 # [58. Length of Last Word](https://leetcode.com/problems/length-of-last-word)
 
 [中文文档](/solution/0000-0099/0058.Length%20of%20Last%20Word/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a string <code>s</code> consisting of words and spaces, return <em>the length of the <strong>last</strong> word in the string.</em></p>
 
-<p>A <strong>word</strong> is a maximal substring consisting of non-space characters only.</p>
+<p>A <strong>word</strong> is a maximal <span data-keyword="substring-nonempty">substring</span> consisting of non-space characters only.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;Hello World&quot;
@@ -17,7 +29,7 @@
 <strong>Explanation:</strong> The last word is &quot;World&quot; with length 5.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;   fly me   to   the moon  &quot;
@@ -25,7 +37,7 @@
 <strong>Explanation:</strong> The last word is &quot;moon&quot; with length 4.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;luffy is still joyboy&quot;
@@ -42,108 +54,104 @@
 	<li>There will be at least one word in <code>s</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Reverse Traversal + Two Pointers
+
+We start traversing from the end of the string $s$, find the first character that is not a space, which is the last character of the last word, and mark the index as $i$. Then continue to traverse forward, find the first character that is a space, which is the character before the first character of the last word, and mark it as $j$. Then the length of the last word is $i - j$.
+
+The time complexity is $O(n)$, where $n$ is the length of the string $s$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def lengthOfLastWord(self, s: str) -> int:
-        last_word_length = 0
-        meet_word = False
-        for i in range(len(s) - 1, -1, -1):
-            ch = ord(s[i])
-            if ch >= 65 and ch <= 122:
-                meet_word = True
-                last_word_length += 1
-            elif meet_word:
-                break
-        return last_word_length
+        i = len(s) - 1
+        while i >= 0 and s[i] == ' ':
+            i -= 1
+        j = i
+        while j >= 0 and s[j] != ' ':
+            j -= 1
+        return i - j
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int lengthOfLastWord(String s) {
-        int n = s.length();
-        int lastWordLength = 0;
-        boolean meetWord = false;
-        for (int i = n - 1; i >= 0; --i) {
-            char ch = s.charAt(i);
-            if (ch >= 'A' && ch <= 'z') {
-                meetWord = true;
-                ++lastWordLength;
-            } else if (meetWord) {
-                break;
-            }
+        int i = s.length() - 1;
+        while (i >= 0 && s.charAt(i) == ' ') {
+            --i;
         }
-        return lastWordLength;
+        int j = i;
+        while (j >= 0 && s.charAt(j) != ' ') {
+            --j;
+        }
+        return i - j;
     }
 }
 ```
 
-### **Go**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int i = s.size() - 1;
+        while (~i && s[i] == ' ') {
+            --i;
+        }
+        int j = i;
+        while (~j && s[j] != ' ') {
+            --j;
+        }
+        return i - j;
+    }
+};
+```
+
+#### Go
 
 ```go
 func lengthOfLastWord(s string) int {
-	if len(s) == 0 {
-		return 0
+	i := len(s) - 1
+	for i >= 0 && s[i] == ' ' {
+		i--
 	}
-	space := []byte(" ")[0]
-	for len(s) != 0 && s[len(s)-1] == space {
-		s = s[:len(s)-1]
+	j := i
+	for j >= 0 && s[j] != ' ' {
+		j--
 	}
-	ret := 0
-	for i := len(s) - 1; i >= 0; i-- {
-		if s[i] != space {
-			ret++
-		} else {
-			return ret
-		}
-	}
-	return ret
+	return i - j
 }
 ```
 
-### **JavaScript**
-
-```js
-var lengthOfLastWord = function (s) {
-    s = s.trim();
-    return s.length - s.lastIndexOf(' ') - 1;
-};
-
-var lengthOfLastWord2 = function (s) {
-    let res = 0;
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] !== ' ' && (i === 0 || s[i - 1] === ' ')) {
-            res = 1;
-        } else if (s[i] !== ' ') {
-            res++;
-        }
-    }
-    return res;
-};
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function lengthOfLastWord(s: string): number {
-    s = s.trimEnd();
-    const n = s.length;
-    const index = s.lastIndexOf(' ');
-    if (index !== -1) {
-        return n - index - 1;
+    let i = s.length - 1;
+    while (i >= 0 && s[i] === ' ') {
+        --i;
     }
-    return n;
+    let j = i;
+    while (j >= 0 && s[j] !== ' ') {
+        --j;
+    }
+    return i - j;
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -160,10 +168,68 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLastWord = function (s) {
+    let i = s.length - 1;
+    while (i >= 0 && s[i] === ' ') {
+        --i;
+    }
+    let j = i;
+    while (j >= 0 && s[j] !== ' ') {
+        --j;
+    }
+    return i - j;
+};
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int LengthOfLastWord(string s) {
+        int i = s.Length - 1;
+        while (i >= 0 && s[i] == ' ') {
+            --i;
+        }
+        int j = i;
+        while (j >= 0 && s[j] != ' ') {
+            --j;
+        }
+        return i - j;
+    }
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param String $s
+     * @return Integer
+     */
+    function lengthOfLastWord($s) {
+        $count = 0;
+        while ($s[strlen($s) - 1] == ' ') {
+            $s = substr($s, 0, -1);
+        }
+        while (strlen($s) != 0 && $s[strlen($s) - 1] != ' ') {
+            $count++;
+            $s = substr($s, 0, -1);
+        }
+        return $count;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

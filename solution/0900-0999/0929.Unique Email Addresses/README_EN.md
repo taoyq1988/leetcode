@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0929.Unique%20Email%20Addresses/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [929. Unique Email Addresses](https://leetcode.com/problems/unique-email-addresses)
 
 [中文文档](/solution/0900-0999/0929.Unique%20Email%20Addresses/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Every <strong>valid email</strong> consists of a <strong>local name</strong> and a <strong>domain name</strong>, separated by the <code>&#39;@&#39;</code> sign. Besides lowercase letters, the email may contain one or more <code>&#39;.&#39;</code> or <code>&#39;+&#39;</code>.</p>
 
@@ -27,7 +41,7 @@
 <p>Given an array of strings <code>emails</code> where we send one email to each <code>emails[i]</code>, return <em>the number of different addresses that actually receive mails</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> emails = [&quot;test.email+alex@leetcode.com&quot;,&quot;test.e.mail+bob.cathy@leetcode.com&quot;,&quot;testemail+david@lee.tcode.com&quot;]
@@ -35,7 +49,7 @@
 <strong>Explanation:</strong> &quot;testemail@leetcode.com&quot; and &quot;testemail@lee.tcode.com&quot; actually receive mails.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> emails = [&quot;a@leetcode.com&quot;,&quot;b@leetcode.com&quot;,&quot;c@leetcode.com&quot;]
@@ -53,13 +67,20 @@
 	<li>All local and domain names are non-empty.</li>
 	<li>Local names do not start with a <code>&#39;+&#39;</code> character.</li>
 	<li>Domain names end with the <code>&quot;.com&quot;</code> suffix.</li>
+	<li>Domain names must contain at least one character before <code>&quot;.com&quot;</code> suffix.</li>
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -74,7 +95,7 @@ class Solution:
         return len(s)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -95,15 +116,14 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
         unordered_set<string> s;
-        for (auto& email : emails)
-        {
+        for (auto& email : emails) {
             int i = email.find('@');
             string local = email.substr(0, i);
             string domain = email.substr(i + 1);
@@ -118,7 +138,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numUniqueEmails(emails []string) int {
@@ -134,7 +154,47 @@ func numUniqueEmails(emails []string) int {
 }
 ```
 
-### **JavaScript**
+#### TypeScript
+
+```ts
+function numUniqueEmails(emails: string[]): number {
+    return new Set(
+        emails
+            .map(email => email.split('@'))
+            .map(([start, end]) => start.replace(/\+.*|\./g, '') + '@' + end),
+    ).size;
+}
+```
+
+#### Rust
+
+```rust
+use std::collections::HashSet;
+impl Solution {
+    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
+        let mut set = HashSet::new();
+        for email in emails.iter() {
+            let res: Vec<&str> = email.split('@').collect();
+            let mut s = String::new();
+            for &c in res[0].as_bytes().iter() {
+                if c == b'.' {
+                    continue;
+                }
+                if c == b'+' {
+                    break;
+                }
+                s.push(c as char);
+            }
+            s.push('@');
+            s.push_str(res[1]);
+            set.insert(s);
+        }
+        set.len() as i32
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 const numUniqueEmails2 = function (emails) {
@@ -179,50 +239,8 @@ const numUniqueEmails = function (emails) {
 };
 ```
 
-### **TypeScript**
-
-```ts
-function numUniqueEmails(emails: string[]): number {
-    return new Set(
-        emails
-            .map(email => email.split('@'))
-            .map(([start, end]) => start.replace(/\+.*|\./g, '') + '@' + end),
-    ).size;
-}
-```
-
-### **Rust**
-
-```rust
-use std::collections::HashSet;
-impl Solution {
-    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
-        let mut set = HashSet::new();
-        for email in emails.iter() {
-            let res: Vec<&str> = email.split('@').collect();
-            let mut s = String::new();
-            for &c in res[0].as_bytes().iter() {
-                if c == b'.' {
-                    continue;
-                }
-                if c == b'+' {
-                    break;
-                }
-                s.push(c as char)
-            }
-            s.push('@');
-            s.push_str(res[1]);
-            set.insert(s);
-        }
-        set.len() as i32
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

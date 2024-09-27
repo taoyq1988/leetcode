@@ -1,10 +1,26 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1923.Longest%20Common%20Subpath/README.md
+rating: 2661
+source: 第 248 场周赛 Q4
+tags:
+    - 数组
+    - 二分查找
+    - 后缀数组
+    - 哈希函数
+    - 滚动哈希
+---
+
+<!-- problem:start -->
+
 # [1923. 最长公共子路径](https://leetcode.cn/problems/longest-common-subpath)
 
 [English Version](/solution/1900-1999/1923.Longest%20Common%20Subpath/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>一个国家由 <code>n</code> 个编号为 <code>0</code> 到 <code>n - 1</code> 的城市组成。在这个国家里，<strong>每两个</strong> 城市之间都有一条道路连接。</p>
 
@@ -55,11 +71,13 @@
 	<li><code>paths[i]</code> 中同一个城市不会连续重复出现。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：字符串哈希**
+### 方法一：字符串哈希
 
 **字符串哈希**是把一个任意长度的字符串映射成一个非负整数，并且其冲突的概率几乎为 0。字符串哈希用于计算字符串哈希值，快速判断两个字符串是否相等。
 
@@ -71,53 +89,49 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def longestCommonSubpath(self, n: int, paths: List[List[int]]) -> int:
-        def get(l, r, h):
-            return (h[r] - h[l - 1] * p[r - l + 1]) % mod
-
-        def check(l):
+        def check(k: int) -> bool:
             cnt = Counter()
-            for k, path in enumerate(paths):
+            for h in hh:
                 vis = set()
-                for i in range(len(path) - l + 1):
-                    j = i + l - 1
-                    x = get(i + 1, j + 1, hh[k])
+                for i in range(1, len(h) - k + 1):
+                    j = i + k - 1
+                    x = (h[j] - h[i - 1] * p[j - i + 1]) % mod
                     if x not in vis:
                         vis.add(x)
                         cnt[x] += 1
-            return max(cnt.values()) == len(paths)
+            return max(cnt.values()) == m
 
+        m = len(paths)
+        mx = max(len(path) for path in paths)
         base = 133331
-        mod = 2**64+1
-        p = [0] * 100010
+        mod = 2**64 + 1
+        p = [0] * (mx + 1)
         p[0] = 1
         for i in range(1, len(p)):
-            p[i] = (p[i - 1] * base) % mod
+            p[i] = p[i - 1] * base % mod
         hh = []
         for path in paths:
-            h = [0] * (len(path) + 10)
-            for j, c in enumerate(path):
-                h[j + 1] = (h[j] * base) % mod + c
+            k = len(path)
+            h = [0] * (k + 1)
+            for i, x in enumerate(path, 1):
+                h[i] = h[i - 1] * base % mod + x
             hh.append(h)
-        left, right = 0, min(len(path) for path in paths)
-        while left < right:
-            mid = (left + right + 1) >> 1
+        l, r = 0, min(len(path) for path in paths)
+        while l < r:
+            mid = (l + r + 1) >> 1
             if check(mid):
-                left = mid
+                l = mid
             else:
-                right = mid - 1
-        return left
+                r = mid - 1
+        return l
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -176,10 +190,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

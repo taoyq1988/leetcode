@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1282.Group%20the%20People%20Given%20the%20Group%20Size%20They%20Belong%20To/README.md
+rating: 1267
+source: 第 166 场周赛 Q2
+tags:
+    - 贪心
+    - 数组
+    - 哈希表
+---
+
+<!-- problem:start -->
+
 # [1282. 用户分组](https://leetcode.cn/problems/group-the-people-given-the-group-size-they-belong-to)
 
 [English Version](/solution/1200-1299/1282.Group%20the%20People%20Given%20the%20Group%20Size%20They%20Belong%20To/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>有&nbsp;<code>n</code>&nbsp;个人被分成数量未知的组。每个人都被标记为一个从 <code>0</code> 到 <code>n - 1</code> 的<strong>唯一ID</strong>&nbsp;。</p>
 
@@ -45,100 +59,153 @@
 	<li><code>1 &lt;=&nbsp;groupSizes[i] &lt;= n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：哈希表或数组
+
+我们用一个哈希表 $g$ 来存放每个 $groupSize$ 都有哪些人。然后对每个 $groupSize$ 中的人划分为 $k$ 等份，每一等份有 $groupSize$ 个人。
+
+由于题目中的 $n$ 范围较小，我们也可以直接创建一个大小为 $n+1$ 的数组来存放数据，运行效率较高。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为 $groupSizes$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def groupThePeople(self, groupSizes: List[int]) -> List[List[int]]:
-        mp = defaultdict(list)
-        for i, x in enumerate(groupSizes):
-            mp[x].append(i)
-        res = []
-        for x, indexes in mp.items():
-            l = len(indexes)
-            for i in range(0, l, x):
-                res.append(indexes[i: i + x])
-        return res
+        g = defaultdict(list)
+        for i, v in enumerate(groupSizes):
+            g[v].append(i)
+        return [v[j : j + i] for i, v in g.items() for j in range(0, len(v), i)]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public List<List<Integer>> groupThePeople(int[] groupSizes) {
-        Map<Integer, List<Integer>> mp = new HashMap<>();
-        for (int i = 0; i < groupSizes.length; ++i) {
-            mp.computeIfAbsent(groupSizes[i], k -> new ArrayList<>()).add(i);
+        int n = groupSizes.length;
+        List<Integer>[] g = new List[n + 1];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for (int i = 0; i < n; ++i) {
+            g[groupSizes[i]].add(i);
         }
-        List<List<Integer>> res = new ArrayList<>();
-        for (Map.Entry<Integer, List<Integer>> entry : mp.entrySet()) {
-            int x = entry.getKey();
-            List<Integer> indexes = entry.getValue();
-            for (int i = 0; i < indexes.size(); i += x) {
-                res.add(new ArrayList<>(indexes.subList(i, i + x)));
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < g.length; ++i) {
+            List<Integer> v = g[i];
+            for (int j = 0; j < v.size(); j += i) {
+                ans.add(v.subList(j, j + i));
             }
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<vector<int>> groupThePeople(vector<int>& groupSizes) {
-        unordered_map<int, vector<int>> mp;
-        for (int i = 0; i < groupSizes.size(); ++i) mp[groupSizes[i]].push_back(i);
-        vector<vector<int>> res;
-        for (auto& entry : mp)
-        {
-            int x = entry.first;
-            auto indexes = entry.second;
-            for (int i = 0; i < indexes.size(); i += x)
-            {
-                vector<int> t(indexes.begin() + i, indexes.begin() + i + x);
-                res.push_back(t);
+        int n = groupSizes.size();
+        vector<vector<int>> g(n + 1);
+        for (int i = 0; i < n; ++i) {
+            g[groupSizes[i]].push_back(i);
+        }
+        vector<vector<int>> ans;
+        for (int i = 0; i < g.size(); ++i) {
+            for (int j = 0; j < g[i].size(); j += i) {
+                vector<int> t(g[i].begin() + j, g[i].begin() + j + i);
+                ans.push_back(t);
             }
         }
-        return res;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func groupThePeople(groupSizes []int) [][]int {
-	mp := make(map[int][]int)
-	for i, x := range groupSizes {
-		mp[x] = append(mp[x], i)
+	n := len(groupSizes)
+	g := make([][]int, n+1)
+	for i, v := range groupSizes {
+		g[v] = append(g[v], i)
 	}
-	var res [][]int
-	for x, indexes := range mp {
-		for i := 0; i < len(indexes); i += x {
-			res = append(res, indexes[i:i+x])
+	ans := [][]int{}
+	for i, v := range g {
+		for j := 0; j < len(v); j += i {
+			ans = append(ans, v[j:j+i])
 		}
 	}
-	return res
+	return ans
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function groupThePeople(groupSizes: number[]): number[][] {
+    const n: number = groupSizes.length;
+    const g: number[][] = Array.from({ length: n + 1 }, () => []);
+
+    for (let i = 0; i < groupSizes.length; i++) {
+        const size: number = groupSizes[i];
+        g[size].push(i);
+    }
+    const ans: number[][] = [];
+    for (let i = 1; i <= n; i++) {
+        const group: number[] = [];
+        for (let j = 0; j < g[i].length; j += i) {
+            group.push(...g[i].slice(j, j + i));
+            ans.push([...group]);
+            group.length = 0;
+        }
+    }
+    return ans;
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn group_the_people(group_sizes: Vec<i32>) -> Vec<Vec<i32>> {
+        let n: usize = group_sizes.len();
+        let mut g: Vec<Vec<usize>> = vec![Vec::new(); n + 1];
+
+        for (i, &size) in group_sizes.iter().enumerate() {
+            g[size as usize].push(i);
+        }
+
+        let mut ans: Vec<Vec<i32>> = Vec::new();
+        for (i, v) in g.into_iter().enumerate() {
+            for j in (0..v.len()).step_by(i.max(1)) {
+                ans.push(
+                    v[j..(j + i).min(v.len())]
+                        .iter()
+                        .map(|&x| x as i32)
+                        .collect(),
+                );
+            }
+        }
+
+        ans
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

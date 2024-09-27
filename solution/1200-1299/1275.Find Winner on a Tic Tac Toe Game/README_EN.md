@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1275.Find%20Winner%20on%20a%20Tic%20Tac%20Toe%20Game/README_EN.md
+rating: 1336
+source: Weekly Contest 165 Q1
+tags:
+    - Array
+    - Hash Table
+    - Matrix
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [1275. Find Winner on a Tic Tac Toe Game](https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game)
 
 [中文文档](/solution/1200-1299/1275.Find%20Winner%20on%20a%20Tic%20Tac%20Toe%20Game/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p><strong>Tic-tac-toe</strong> is played by two players <code>A</code> and <code>B</code> on a <code>3 x 3</code> grid. The rules of Tic-Tac-Toe are:</p>
 
@@ -20,7 +37,7 @@
 <p>You can assume that <code>moves</code> is valid (i.e., it follows the rules of <strong>Tic-Tac-Toe</strong>), the grid is initially empty, and <code>A</code> will play first.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1200-1299/1275.Find%20Winner%20on%20a%20Tic%20Tac%20Toe%20Game/images/xo1-grid.jpg" style="width: 244px; height: 245px;" />
 <pre>
 <strong>Input:</strong> moves = [[0,0],[2,0],[1,1],[2,1],[2,2]]
@@ -28,7 +45,7 @@
 <strong>Explanation:</strong> A wins, they always play first.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1200-1299/1275.Find%20Winner%20on%20a%20Tic%20Tac%20Toe%20Game/images/xo2-grid.jpg" style="width: 244px; height: 245px;" />
 <pre>
 <strong>Input:</strong> moves = [[0,0],[1,1],[0,1],[0,2],[1,0],[2,0]]
@@ -36,7 +53,7 @@
 <strong>Explanation:</strong> B wins.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1200-1299/1275.Find%20Winner%20on%20a%20Tic%20Tac%20Toe%20Game/images/xo3-grid.jpg" style="width: 244px; height: 245px;" />
 <pre>
 <strong>Input:</strong> moves = [[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]
@@ -55,45 +72,63 @@
 	<li><code>moves</code> follow the rules of tic tac toe.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Determine if the last player to move can win
+
+Since all `moves` are valid, that is, there is no situation where a person continues to play after someone has won. Therefore, we only need to determine whether the last player to move can win.
+
+We use an array `cnt` of length $8$ to record the number of moves in rows, columns, and diagonals. Where $cnt[0, 1, 2]$ represent the number of moves in the $0, 1, 2$ rows respectively, and $cnt[3, 4, 5]$ represent the number of moves in the $0, 1, 2$ columns respectively. Additionally, $cnt[6]$ and $cnt[7]$ represent the number of moves on the two diagonals respectively. During the game, if a player makes $3$ moves in a row, column, or diagonal, that player wins.
+
+If the last player to move does not win, then we determine whether the board is full. If it is full, it is a draw; otherwise, the game is not over yet.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$. Where $n$ is the length of `moves`.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def tictactoe(self, moves: List[List[int]]) -> str:
         n = len(moves)
-        counter = [0] * 8
-        for i in range(n - 1, -1, -2):
-            row, col = moves[i][0], moves[i][1]
-            counter[row] += 1
-            counter[col + 3] += 1
-            if row == col:
-                counter[6] += 1
-            if row + col == 2:
-                counter[7] += 1
-            if counter[row] == 3 or counter[col + 3] == 3 or counter[6] == 3 or counter[7] == 3:
-                return "A" if (i % 2) == 0 else "B"
+        cnt = [0] * 8
+        for k in range(n - 1, -1, -2):
+            i, j = moves[k]
+            cnt[i] += 1
+            cnt[j + 3] += 1
+            if i == j:
+                cnt[6] += 1
+            if i + j == 2:
+                cnt[7] += 1
+            if any(v == 3 for v in cnt):
+                return "B" if k & 1 else "A"
         return "Draw" if n == 9 else "Pending"
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String tictactoe(int[][] moves) {
         int n = moves.length;
-        int[] counter = new int[8];
-        for (int i = n - 1; i >= 0; i -= 2) {
-            int row = moves[i][0], col = moves[i][1];
-            ++counter[row];
-            ++counter[col + 3];
-            if (row == col) ++counter[6];
-            if (row + col == 2) ++counter[7];
-            if (counter[row] == 3 || counter[col + 3] == 3 || counter[6] == 3 || counter[7] == 3) {
-                return (i % 2) == 0 ? "A" : "B";
+        int[] cnt = new int[8];
+        for (int k = n - 1; k >= 0; k -= 2) {
+            int i = moves[k][0], j = moves[k][1];
+            cnt[i]++;
+            cnt[j + 3]++;
+            if (i == j) {
+                cnt[6]++;
+            }
+            if (i + j == 2) {
+                cnt[7]++;
+            }
+            if (cnt[i] == 3 || cnt[j + 3] == 3 || cnt[6] == 3 || cnt[7] == 3) {
+                return k % 2 == 0 ? "A" : "B";
             }
         }
         return n == 9 ? "Draw" : "Pending";
@@ -101,22 +136,26 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string tictactoe(vector<vector<int>>& moves) {
         int n = moves.size();
-        vector<int> counter(8, 0);
-        for (int i = n - 1; i >= 0; i -= 2) {
-            int row = moves[i][0], col = moves[i][1];
-            ++counter[row];
-            ++counter[col + 3];
-            if (row == col) ++counter[6];
-            if (row + col == 2) ++counter[7];
-            if (counter[row] == 3 || counter[col + 3] == 3 || counter[6] == 3 || counter[7] == 3) {
-                return (i % 2 == 0) ? "A" : "B";
+        int cnt[8]{};
+        for (int k = n - 1; k >= 0; k -= 2) {
+            int i = moves[k][0], j = moves[k][1];
+            cnt[i]++;
+            cnt[j + 3]++;
+            if (i == j) {
+                cnt[6]++;
+            }
+            if (i + j == 2) {
+                cnt[7]++;
+            }
+            if (cnt[i] == 3 || cnt[j + 3] == 3 || cnt[6] == 3 || cnt[7] == 3) {
+                return k % 2 == 0 ? "A" : "B";
             }
         }
         return n == 9 ? "Draw" : "Pending";
@@ -124,10 +163,62 @@ public:
 };
 ```
 
-### **...**
+#### Go
 
+```go
+func tictactoe(moves [][]int) string {
+	n := len(moves)
+	cnt := [8]int{}
+	for k := n - 1; k >= 0; k -= 2 {
+		i, j := moves[k][0], moves[k][1]
+		cnt[i]++
+		cnt[j+3]++
+		if i == j {
+			cnt[6]++
+		}
+		if i+j == 2 {
+			cnt[7]++
+		}
+		if cnt[i] == 3 || cnt[j+3] == 3 || cnt[6] == 3 || cnt[7] == 3 {
+			if k%2 == 0 {
+				return "A"
+			}
+			return "B"
+		}
+	}
+	if n == 9 {
+		return "Draw"
+	}
+	return "Pending"
+}
 ```
 
+#### TypeScript
+
+```ts
+function tictactoe(moves: number[][]): string {
+    const n = moves.length;
+    const cnt = new Array(8).fill(0);
+    for (let k = n - 1; k >= 0; k -= 2) {
+        const [i, j] = moves[k];
+        cnt[i]++;
+        cnt[j + 3]++;
+        if (i == j) {
+            cnt[6]++;
+        }
+        if (i + j == 2) {
+            cnt[7]++;
+        }
+        if (cnt[i] == 3 || cnt[j + 3] == 3 || cnt[6] == 3 || cnt[7] == 3) {
+            return k % 2 == 0 ? 'A' : 'B';
+        }
+    }
+    return n == 9 ? 'Draw' : 'Pending';
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

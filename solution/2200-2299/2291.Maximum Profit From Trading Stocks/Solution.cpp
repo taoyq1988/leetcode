@@ -2,12 +2,16 @@ class Solution {
 public:
     int maximumProfit(vector<int>& present, vector<int>& future, int budget) {
         int n = present.size();
-        vector<int>dp(budget + 1);
-        for (int i = 0; i < n; i++) {
-            for (int j = budget; j >= present[i]; j--) {
-                dp[j] = max(dp[j], dp[j - present[i]] + future[i] - present[i]);
+        int f[n + 1][budget + 1];
+        memset(f, 0, sizeof f);
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 0; j <= budget; ++j) {
+                f[i][j] = f[i - 1][j];
+                if (j >= present[i - 1]) {
+                    f[i][j] = max(f[i][j], f[i - 1][j - present[i - 1]] + future[i - 1] - present[i - 1]);
+                }
             }
         }
-        return dp.back();
+        return f[n][budget];
     }
 };

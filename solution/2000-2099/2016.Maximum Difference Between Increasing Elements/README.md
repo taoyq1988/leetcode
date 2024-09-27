@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2016.Maximum%20Difference%20Between%20Increasing%20Elements/README.md
+rating: 1246
+source: 第 260 场周赛 Q1
+tags:
+    - 数组
+---
+
+<!-- problem:start -->
+
 # [2016. 增量元素之间的最大差值](https://leetcode.cn/problems/maximum-difference-between-increasing-elements)
 
 [English Version](/solution/2000-2099/2016.Maximum%20Difference%20Between%20Increasing%20Elements/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从 <strong>0</strong> 开始的整数数组 <code>nums</code> ，该数组的大小为 <code>n</code> ，请你计算 <code>nums[j] - nums[i]</code> 能求得的 <strong>最大差值 </strong>，其中 <code>0 &lt;= i &lt; j &lt; n</code> 且 <code>nums[i] &lt; nums[j]</code> 。</p>
 
@@ -47,51 +59,53 @@
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-此题并不能单纯遍历数组，寻找其中的最大最小值，然后计算差，因为需要保证最大最小值的前后顺序。
+### 方法一：维护前缀最小值
 
-**步骤：**
+我们用一个变量 $\textit{mi}$ 表示当前遍历到的元素中的最小值，用一个变量 $\textit{ans}$ 表示最大差值，初始时 $\textit{mi}$ 为 $+\infty$，而 $\textit{ans}$ 为 $-1$。
 
-1. 只维护最小值与最大差值（返回值）。
-2. 遍历数组，当遍历元素比最小值大时，与最小值比较，更新最大差值。
-3. 否则更新最小值。
+遍历数组，对于当前遍历到的元素 $x$，如果 $x \gt \textit{mi}$，则更新 $\textit{ans}$ 为 $\max(\textit{ans}, x - \textit{mi})$，否则更新 $\textit{mi} = x$。
+
+遍历结束后，返回 $\textit{ans}$。
+
+遍历结束后，返回 $ans$。
+
+时间复杂度 $O(n)$，其中 $n$ 为数组的长度。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def maximumDifference(self, nums: List[int]) -> int:
-        mi = nums[0]
-        ans, n = -1, len(nums)
-        for i in range(1, n):
-            if nums[i] > mi:
-                ans = max(ans, nums[i] - mi)
+        mi = inf
+        ans = -1
+        for x in nums:
+            if x > mi:
+                ans = max(ans, x - mi)
             else:
-                mi = nums[i]
+                mi = x
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int maximumDifference(int[] nums) {
-        int mi = nums[0];
+        int mi = 1 << 30;
         int ans = -1;
-        for (int i = 1; i < nums.length; ++i) {
-            if (nums[i] > mi) {
-                ans = Math.max(ans, nums[i] - mi);
+        for (int x : nums) {
+            if (x > mi) {
+                ans = Math.max(ans, x - mi);
             } else {
-                mi = nums[i];
+                mi = x;
             }
         }
         return ans;
@@ -99,85 +113,102 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function maximumDifference(nums: number[]): number {
-    const n = nums.length;
-    let min = nums[0];
-    let res = -1;
-    for (let i = 1; i < n; i++) {
-        res = Math.max(res, nums[i] - min);
-        min = Math.min(min, nums[i]);
-    }
-    return res === 0 ? -1 : res;
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn maximum_difference(nums: Vec<i32>) -> i32 {
-        let mut min = nums[0];
-        let mut res = -1;
-        for i in 1..nums.len() {
-            res = res.max(nums[i] - min);
-            min = min.min(nums[i]);
-        }
-        match res {
-            0 => -1,
-            _ => res,
-        }
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maximumDifference(vector<int>& nums) {
-        int mi = nums[0];
+        int mi = 1 << 30;
         int ans = -1;
-        for (int i = 1, n = nums.size(); i < n; ++i)
-        {
-            if (nums[i] > mi) ans = max(ans, nums[i] - mi);
-            else mi = nums[i];
+        for (int& x : nums) {
+            if (x > mi) {
+                ans = max(ans, x - mi);
+            } else {
+                mi = x;
+            }
         }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumDifference(nums []int) int {
-	mi, ans := nums[0], -1
-	for i, n := 1, len(nums); i < n; i++ {
-		if nums[i] > mi {
-			ans = max(ans, nums[i]-mi)
+	mi := 1 << 30
+	ans := -1
+	for _, x := range nums {
+		if mi < x {
+			ans = max(ans, x-mi)
 		} else {
-			mi = nums[i]
+			mi = x
 		}
 	}
 	return ans
 }
+```
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+#### TypeScript
+
+```ts
+function maximumDifference(nums: number[]): number {
+    let [ans, mi] = [-1, Infinity];
+    for (const x of nums) {
+        if (x > mi) {
+            ans = Math.max(ans, x - mi);
+        } else {
+            mi = x;
+        }
+    }
+    return ans;
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn maximum_difference(nums: Vec<i32>) -> i32 {
+        let mut mi = i32::MAX;
+        let mut ans = -1;
+
+        for &x in &nums {
+            if x > mi {
+                ans = ans.max(x - mi);
+            } else {
+                mi = x;
+            }
+        }
+
+        ans
+    }
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maximumDifference = function (nums) {
+    let [ans, mi] = [-1, Infinity];
+    for (const x of nums) {
+        if (x > mi) {
+            ans = Math.max(ans, x - mi);
+        } else {
+            mi = x;
+        }
+    }
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

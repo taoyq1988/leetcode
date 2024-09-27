@@ -1,15 +1,29 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0814.Binary%20Tree%20Pruning/README_EN.md
+tags:
+    - Tree
+    - Depth-First Search
+    - Binary Tree
+---
+
+<!-- problem:start -->
+
 # [814. Binary Tree Pruning](https://leetcode.com/problems/binary-tree-pruning)
 
 [中文文档](/solution/0800-0899/0814.Binary%20Tree%20Pruning/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given the <code>root</code> of a binary tree, return <em>the same tree where every subtree (of the given tree) not containing a </em><code>1</code><em> has been removed</em>.</p>
 
 <p>A subtree of a node <code>node</code> is <code>node</code> plus every node that is a descendant of <code>node</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0814.Binary%20Tree%20Pruning/images/1028_2.png" style="width: 500px; height: 140px;" />
 <pre>
 <strong>Input:</strong> root = [1,null,0,0,1]
@@ -19,14 +33,14 @@ Only the red nodes satisfy the property &quot;every subtree not containing a 1&q
 The diagram on the right represents the answer.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0814.Binary%20Tree%20Pruning/images/1028_1.png" style="width: 500px; height: 115px;" />
 <pre>
 <strong>Input:</strong> root = [1,0,1,0,0,0,1]
 <strong>Output:</strong> [1,null,1,null,1]
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0814.Binary%20Tree%20Pruning/images/1028.png" style="width: 500px; height: 134px;" />
 <pre>
 <strong>Input:</strong> root = [1,1,0,1,1,0,1,0]
@@ -41,11 +55,23 @@ The diagram on the right represents the answer.
 	<li><code>Node.val</code> is either <code>0</code> or <code>1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Recursion
+
+First, we check if the current node is null. If it is, we directly return the null node.
+
+Otherwise, we recursively prune the left and right subtrees and reassign the pruned subtrees to the current node's left and right children. Then, we check if the current node's value is 0 and both its left and right children are null. If so, we return the null node; otherwise, we return the current node.
+
+Time complexity is $O(n)$, and space complexity is $O(n)$. Here, $n$ is the number of nodes in the binary tree.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -57,15 +83,15 @@ The diagram on the right represents the answer.
 class Solution:
     def pruneTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         if root is None:
-            return None
+            return root
         root.left = self.pruneTree(root.left)
         root.right = self.pruneTree(root.right)
-        if root.val == 0 and root.left is None and root.right is None:
+        if root.val == 0 and root.left == root.right:
             return None
         return root
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -98,7 +124,37 @@ class Solution {
 }
 ```
 
-### **Go**
+#### C++
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* pruneTree(TreeNode* root) {
+        if (!root) {
+            return root;
+        }
+        root->left = pruneTree(root->left);
+        root->right = pruneTree(root->right);
+        if (root->val == 0 && root->left == root->right) {
+            return nullptr;
+        }
+        return root;
+    }
+};
+```
+
+#### Go
 
 ```go
 /**
@@ -122,59 +178,7 @@ func pruneTree(root *TreeNode) *TreeNode {
 }
 ```
 
-### **C++**
-
-```cpp
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
-class Solution {
-public:
-    TreeNode* pruneTree(TreeNode* root) {
-        if (!root) return nullptr;
-        root->left = pruneTree(root->left);
-        root->right = pruneTree(root->right);
-        if (!root->val && !root->left && !root->right) return nullptr;
-        return root;
-    }
-};
-```
-
-### **JavaScript**
-
-```js
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {TreeNode}
- */
-var pruneTree = function (root) {
-    if (!root) return null;
-    root.left = pruneTree(root.left);
-    root.right = pruneTree(root.right);
-    if (root.val == 0 && !root.left && !root.right) {
-        return null;
-    }
-    return root;
-};
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -192,19 +196,19 @@ var pruneTree = function (root) {
  */
 
 function pruneTree(root: TreeNode | null): TreeNode | null {
-    if (root == null) {
+    if (!root) {
         return root;
     }
     root.left = pruneTree(root.left);
     root.right = pruneTree(root.right);
-    if (root.val == 0 && root.left == null && root.right == null) {
+    if (root.val === 0 && root.left === root.right) {
         return null;
     }
     return root;
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for a binary tree node.
@@ -225,8 +229,8 @@ function pruneTree(root: TreeNode | null): TreeNode | null {
 //     }
 //   }
 // }
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 impl Solution {
     pub fn prune_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         if root.is_none() {
@@ -247,10 +251,36 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var pruneTree = function (root) {
+    if (!root) {
+        return root;
+    }
+    root.left = pruneTree(root.left);
+    root.right = pruneTree(root.right);
+    if (root.val === 0 && root.left === root.right) {
+        return null;
+    }
+    return root;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

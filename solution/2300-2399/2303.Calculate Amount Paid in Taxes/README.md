@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2303.Calculate%20Amount%20Paid%20in%20Taxes/README.md
+rating: 1283
+source: 第 297 场周赛 Q1
+tags:
+    - 数组
+    - 模拟
+---
+
+<!-- problem:start -->
+
 # [2303. 计算应缴税款总额](https://leetcode.cn/problems/calculate-amount-paid-in-taxes)
 
 [English Version](/solution/2300-2399/2303.Calculate%20Amount%20Paid%20in%20Taxes/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从 <strong>0</strong> 开始的二维整数数组 <code>brackets</code> ，其中 <code>brackets[i] = [upper<sub>i</sub>, percent<sub>i</sub>]</code> ，表示第 <code>i</code> 个税级的上限是 <code>upper<sub>i</sub></code> ，征收的税率为 <code>percent<sub>i</sub></code> 。税级按上限 <strong>从低到高排序</strong>（在满足 <code>0 &lt; i &lt; brackets.length</code> 的前提下，<code>upper<sub>i-1</sub> &lt; upper<sub>i</sub></code>）。</p>
 
@@ -64,112 +77,94 @@
 	<li>最后一个税级的上限大于等于 <code>income</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：模拟**
+### 方法一：模拟
+
+我们遍历 `brackets`，对于每个税级，计算该税级的税额，然后累加即可。
+
+时间复杂度 $O(n)$，其中 $n$ 为 `brackets` 的长度。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def calculateTax(self, brackets: List[List[int]], income: int) -> float:
-        ans = idx = 0
-        prev = 0
-        while income:
-            a, b = brackets[idx]
-            d = a - prev
-            ans += min(d, income) * b / 100
-            if income <= d:
-                break
-            income -= d
-            idx += 1
-            prev = a
-        return ans
+        ans = prev = 0
+        for upper, percent in brackets:
+            ans += max(0, min(income, upper) - prev) * percent
+            prev = upper
+        return ans / 100
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public double calculateTax(int[][] brackets, int income) {
-        double ans = 0;
-        int idx = 0, prev = 0;
-        while (income > 0) {
-            int a = brackets[idx][0], b = brackets[idx][1];
-            int d = a - prev;
-            ans += Math.min(d, income) * b / 100.0;
-            if (income <= d) {
-                break;
-            }
-            income -= d;
-            ++idx;
-            prev = a;
+        int ans = 0, prev = 0;
+        for (var e : brackets) {
+            int upper = e[0], percent = e[1];
+            ans += Math.max(0, Math.min(income, upper) - prev) * percent;
+            prev = upper;
         }
-        return ans;
+        return ans / 100.0;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     double calculateTax(vector<vector<int>>& brackets, int income) {
-        double ans = 0;
-        int idx = 0, prev = 0;
-        while (income)
-        {
-            int a = brackets[idx][0], b = brackets[idx][1];
-            int d = a - prev;
-            ans += min(d, income) * b / 100.0;
-            if (income <= d) break;
-            income -= d;
-            ++idx;
-            prev = a;
+        int ans = 0, prev = 0;
+        for (auto& e : brackets) {
+            int upper = e[0], percent = e[1];
+            ans += max(0, min(income, upper) - prev) * percent;
+            prev = upper;
         }
-        return ans;
+        return ans / 100.0;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func calculateTax(brackets [][]int, income int) float64 {
-	var ans float64
-	idx, prev := 0, 0
-	for income > 0 {
-		a, b := brackets[idx][0], brackets[idx][1]
-		d := a - prev
-		ans += float64(min(d, income)*b) / 100.0
-		if income <= d {
-			break
-		}
-		income -= d
-		idx++
-		prev = a
+	var ans, prev int
+	for _, e := range brackets {
+		upper, percent := e[0], e[1]
+		ans += max(0, min(income, upper)-prev) * percent
+		prev = upper
 	}
-	return ans
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return float64(ans) / 100.0
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function calculateTax(brackets: number[][], income: number): number {
+    let ans = 0;
+    let prev = 0;
+    for (const [upper, percent] of brackets) {
+        ans += Math.max(0, Math.min(income, upper) - prev) * percent;
+        prev = upper;
+    }
+    return ans / 100;
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -188,25 +183,8 @@ impl Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function calculateTax(brackets: number[][], income: number): number {
-    let ans = 0;
-    let prev = 0;
-    for (let [upper, percent] of brackets) {
-        if (prev > income) break;
-        ans += ((Math.min(upper, income) - prev) * percent) / 100;
-        prev = upper;
-    }
-    return ans;
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,27 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1368.Minimum%20Cost%20to%20Make%20at%20Least%20One%20Valid%20Path%20in%20a%20Grid/README.md
+rating: 2068
+source: 第 178 场周赛 Q4
+tags:
+    - 广度优先搜索
+    - 图
+    - 数组
+    - 矩阵
+    - 最短路
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [1368. 使网格图至少有一条有效路径的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid)
 
 [English Version](/solution/1300-1399/1368.Minimum%20Cost%20to%20Make%20at%20Least%20One%20Valid%20Path%20in%20a%20Grid/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个 m x n 的网格图&nbsp;<code>grid</code>&nbsp;。&nbsp;<code>grid</code>&nbsp;中每个格子都有一个数字，对应着从该格子出发下一步走的方向。&nbsp;<code>grid[i][j]</code>&nbsp;中的数字可能为以下几种情况：</p>
 
@@ -75,11 +92,13 @@
 	<li><code>1 &lt;= m, n &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：双端队列 BFS**
+### 方法一：双端队列 BFS
 
 本题实际上也是最短路模型，只不过求解的是改变方向的最小次数。
 
@@ -89,9 +108,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -117,9 +134,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -127,7 +142,7 @@ class Solution {
         int m = grid.length, n = grid[0].length;
         boolean[][] vis = new boolean[m][n];
         Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 0, 0});
+        q.offer(new int[] {0, 0, 0});
         int[][] dirs = {{0, 0}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         while (!q.isEmpty()) {
             int[] p = q.poll();
@@ -143,9 +158,9 @@ class Solution {
                 int x = i + dirs[k][0], y = j + dirs[k][1];
                 if (x >= 0 && x < m && y >= 0 && y < n) {
                     if (grid[i][j] == k) {
-                        q.offerFirst(new int[]{x, y, d});
+                        q.offerFirst(new int[] {x, y, d});
                     } else {
-                        q.offer(new int[]{x, y, d + 1});
+                        q.offer(new int[] {x, y, d + 1});
                     }
                 }
             }
@@ -155,42 +170,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function minCost(grid: number[][]): number {
-    const m = grid.length,
-        n = grid[0].length;
-    let ans = Array.from({ length: m }, v => new Array(n).fill(Infinity));
-    ans[0][0] = 0;
-    let queue = [[0, 0]];
-    const dirs = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
-    while (queue.length) {
-        let [x, y] = queue.shift();
-        for (let step = 1; step < 5; step++) {
-            let [dx, dy] = dirs[step - 1];
-            let [i, j] = [x + dx, y + dy];
-            if (i < 0 || i >= m || j < 0 || j >= n) continue;
-            let cost = ~~(grid[x][y] != step) + ans[x][y];
-            if (cost >= ans[i][j]) continue;
-            ans[i][j] = cost;
-            if (grid[x][y] == step) {
-                queue.unshift([i, j]);
-            } else {
-                queue.push([i, j]);
-            }
-        }
-    }
-    return ans[m - 1][n - 1];
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -201,21 +181,20 @@ public:
         vector<vector<int>> dirs = {{0, 0}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         deque<pair<int, int>> q;
         q.push_back({0, 0});
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             auto p = q.front();
             q.pop_front();
             int i = p.first / n, j = p.first % n, d = p.second;
             if (i == m - 1 && j == n - 1) return d;
             if (vis[i][j]) continue;
             vis[i][j] = true;
-            for (int k = 1; k <= 4; ++k)
-            {
+            for (int k = 1; k <= 4; ++k) {
                 int x = i + dirs[k][0], y = j + dirs[k][1];
-                if (x >= 0 && x < m && y >= 0 && y < n)
-                {
-                    if (grid[i][j] == k) q.push_front({x * n + y, d});
-                    else q.push_back({x * n + y, d + 1});
+                if (x >= 0 && x < m && y >= 0 && y < n) {
+                    if (grid[i][j] == k)
+                        q.push_front({x * n + y, d});
+                    else
+                        q.push_back({x * n + y, d + 1});
                 }
             }
         }
@@ -224,7 +203,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minCost(grid [][]int) int {
@@ -263,10 +242,43 @@ func minCost(grid [][]int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function minCost(grid: number[][]): number {
+    const m = grid.length,
+        n = grid[0].length;
+    let ans = Array.from({ length: m }, v => new Array(n).fill(Infinity));
+    ans[0][0] = 0;
+    let queue = [[0, 0]];
+    const dirs = [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+    ];
+    while (queue.length) {
+        let [x, y] = queue.shift();
+        for (let step = 1; step < 5; step++) {
+            let [dx, dy] = dirs[step - 1];
+            let [i, j] = [x + dx, y + dy];
+            if (i < 0 || i >= m || j < 0 || j >= n) continue;
+            let cost = ~~(grid[x][y] != step) + ans[x][y];
+            if (cost >= ans[i][j]) continue;
+            ans[i][j] = cost;
+            if (grid[x][y] == step) {
+                queue.unshift([i, j]);
+            } else {
+                queue.push([i, j]);
+            }
+        }
+    }
+    return ans[m - 1][n - 1];
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1897.Redistribute%20Characters%20to%20Make%20All%20Strings%20Equal/README_EN.md
+rating: 1309
+source: Weekly Contest 245 Q1
+tags:
+    - Hash Table
+    - String
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [1897. Redistribute Characters to Make All Strings Equal](https://leetcode.com/problems/redistribute-characters-to-make-all-strings-equal)
 
 [中文文档](/solution/1800-1899/1897.Redistribute%20Characters%20to%20Make%20All%20Strings%20Equal/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of strings <code>words</code> (<strong>0-indexed</strong>).</p>
 
@@ -11,7 +27,7 @@
 <p>Return <code>true</code> <em>if you can make<strong> every</strong> string in </em><code>words</code><em> <strong>equal </strong>using <strong>any</strong> number of operations</em>,<em> and </em><code>false</code> <em>otherwise</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;abc&quot;,&quot;aabc&quot;,&quot;bc&quot;]
@@ -21,7 +37,7 @@ to make </code><code>words[1]</code> = &quot;abc&quot; and words[2] = &quot;abc&
 All the strings are now equal to &quot;abc&quot;, so return <code>true</code>.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;ab&quot;,&quot;a&quot;]
@@ -38,11 +54,17 @@ All the strings are now equal to &quot;abc&quot;, so return <code>true</code>.
 	<li><code>words[i]</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -55,7 +77,7 @@ class Solution:
         return all(count % n == 0 for count in counter.values())
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -77,28 +99,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function makeEqual(words: string[]): boolean {
-    let n = words.length;
-    let letters = new Array(26).fill(0);
-    for (let word of words) {
-        for (let i = 0; i < word.length; ++i) {
-            ++letters[word.charCodeAt(i) - 97];
-        }
-    }
-
-    for (let i = 0; i < letters.length; ++i) {
-        if (letters[i] % n != 0) {
-            return false;
-        }
-    }
-    return true;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -119,7 +120,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func makeEqual(words []string) bool {
@@ -139,10 +140,29 @@ func makeEqual(words []string) bool {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+function makeEqual(words: string[]): boolean {
+    let n = words.length;
+    let letters = new Array(26).fill(0);
+    for (let word of words) {
+        for (let i = 0; i < word.length; ++i) {
+            ++letters[word.charCodeAt(i) - 97];
+        }
+    }
 
+    for (let i = 0; i < letters.length; ++i) {
+        if (letters[i] % n != 0) {
+            return false;
+        }
+    }
+    return true;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

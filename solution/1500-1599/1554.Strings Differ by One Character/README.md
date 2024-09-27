@@ -1,10 +1,23 @@
-# [1554. 只有一个不同字符的字符串](https://leetcode.cn/problems/strings-differ-by-one-character)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1554.Strings%20Differ%20by%20One%20Character/README.md
+tags:
+    - 哈希表
+    - 字符串
+    - 哈希函数
+    - 滚动哈希
+---
+
+<!-- problem:start -->
+
+# [1554. 只有一个不同字符的字符串 🔒](https://leetcode.cn/problems/strings-differ-by-one-character)
 
 [English Version](/solution/1500-1599/1554.Strings%20Differ%20by%20One%20Character/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个字符串列表&nbsp;<code>dict</code> ，其中所有字符串的长度都相同。</p>
 
@@ -49,19 +62,17 @@
 
 <p><strong>进阶：</strong>你可以以 <code>O(n*m)</code> 的复杂度解决问题吗？其中 n 是列表 <code>dict</code> 的长度，<code>m</code> 是字符串的长度。</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-哈希表。
-
-将字符串列表中每个字符串进行处理，比如 `"abcd"` 处理成 `"*bcd"`、`"a*cd"`、`"ab*d"`、`"abc*"` 模式串，依次存入哈希表中。存入之前先判断哈希表中是否已存在该模式串，若是，说明存在两个字符串在相同索引处只有一个字符不同，直接返回 true。否则遍历结束返回 false。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -69,16 +80,14 @@ class Solution:
         s = set()
         for word in dict:
             for i in range(len(word)):
-                t = word[:i] + "*" + word[i + 1:]
+                t = word[:i] + "*" + word[i + 1 :]
                 if t in s:
                     return True
                 s.add(t)
         return False
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -98,17 +107,15 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool differByOne(vector<string>& dict) {
         unordered_set<string> s;
-        for (auto word : dict)
-        {
-            for (int i = 0; i < word.size(); ++i)
-            {
+        for (auto word : dict) {
+            for (int i = 0; i < word.size(); ++i) {
                 auto t = word;
                 t[i] = '*';
                 if (s.count(t)) return true;
@@ -120,7 +127,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func differByOne(dict []string) bool {
@@ -138,10 +145,8 @@ func differByOne(dict []string) bool {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

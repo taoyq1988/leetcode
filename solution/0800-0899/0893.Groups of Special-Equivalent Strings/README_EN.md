@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0893.Groups%20of%20Special-Equivalent%20Strings/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [893. Groups of Special-Equivalent Strings](https://leetcode.com/problems/groups-of-special-equivalent-strings)
 
 [中文文档](/solution/0800-0899/0893.Groups%20of%20Special-Equivalent%20Strings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array of strings of the same length <code>words</code>.</p>
 
@@ -24,7 +39,7 @@
 <p>Return <em>the number of <strong>groups of special-equivalent strings</strong> from </em><code>words</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;abcd&quot;,&quot;cdab&quot;,&quot;cbad&quot;,&quot;xyzz&quot;,&quot;zzxy&quot;,&quot;zzyx&quot;]
@@ -35,7 +50,7 @@ The other two groups are [&quot;xyzz&quot;, &quot;zzxy&quot;] and [&quot;zzyx&qu
 Note that in particular, &quot;zzxy&quot; is not special equivalent to &quot;zzyx&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;abc&quot;,&quot;acb&quot;,&quot;bac&quot;,&quot;bca&quot;,&quot;cab&quot;,&quot;cba&quot;]
@@ -52,11 +67,17 @@ Note that in particular, &quot;zzxy&quot; is not special equivalent to &quot;zzy
 	<li>All the strings are of the same length.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -65,7 +86,7 @@ class Solution:
         return len(s)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -102,20 +123,20 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int numSpecialEquivGroups(vector<string>& words) {
         unordered_set<string> s;
-        for (auto& word : words)
-        {
+        for (auto& word : words) {
             string a = "", b = "";
-            for (int i = 0; i < word.size(); ++i)
-            {
-                if (i & 1) a += word[i];
-                else b += word[i];
+            for (int i = 0; i < word.size(); ++i) {
+                if (i & 1)
+                    a += word[i];
+                else
+                    b += word[i];
             }
             sort(a.begin(), a.end());
             sort(b.begin(), b.end());
@@ -126,7 +147,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numSpecialEquivGroups(words []string) int {
@@ -152,10 +173,8 @@ func numSpecialEquivGroups(words []string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

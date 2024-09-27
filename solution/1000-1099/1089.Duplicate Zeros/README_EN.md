@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1089.Duplicate%20Zeros/README_EN.md
+rating: 1262
+source: Weekly Contest 141 Q1
+tags:
+    - Array
+    - Two Pointers
+---
+
+<!-- problem:start -->
+
 # [1089. Duplicate Zeros](https://leetcode.com/problems/duplicate-zeros)
 
 [中文文档](/solution/1000-1099/1089.Duplicate%20Zeros/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a fixed-length integer array <code>arr</code>, duplicate each occurrence of zero, shifting the remaining elements to the right.</p>
 
 <p><strong>Note</strong> that elements beyond the length of the original array are not written. Do the above modifications to the input array in place and do not return anything.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,0,2,3,0,4,5,0]
@@ -17,7 +32,7 @@
 <strong>Explanation:</strong> After calling your function, the input array is modified to: [1,0,0,2,3,0,0,4]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,2,3]
@@ -33,11 +48,17 @@
 	<li><code>0 &lt;= arr[i] &lt;= 9</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,7 +84,7 @@ class Solution:
             i, j = i - 1, j - 1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -91,7 +112,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -99,19 +120,16 @@ public:
     void duplicateZeros(vector<int>& arr) {
         int n = arr.size();
         int i = -1, k = 0;
-        while (k < n)
-        {
+        while (k < n) {
             ++i;
             k += arr[i] ? 1 : 2;
         }
         int j = n - 1;
-        if (k == n + 1)
-        {
+        if (k == n + 1) {
             arr[j--] = 0;
             --i;
         }
-        while (~j)
-        {
+        while (~j) {
             arr[j] = arr[i];
             if (arr[i] == 0) arr[--j] = arr[i];
             --i;
@@ -121,7 +139,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func duplicateZeros(arr []int) {
@@ -149,36 +167,7 @@ func duplicateZeros(arr []int) {
 }
 ```
 
-### **C**
-
-```c
-void duplicateZeros(int* arr, int arrSize){
-    int i = 0;
-    int j = 0;
-    while (j < arrSize) {
-        if (arr[i] == 0) {
-            j++;
-        }
-        i++;
-        j++;
-    }
-    i--;
-    j--;
-    while (i >= 0) {
-        if (arr[i] == 0) {
-            if (j < arrSize) {
-                arr[j] = arr[i];
-            }
-            j--;
-        }
-        arr[j] = arr[i];
-        i--;
-        j--;
-    }
-}
-```
-
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -208,10 +197,37 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C
 
-```
-
+```c
+void duplicateZeros(int* arr, int arrSize) {
+    int i = 0;
+    int j = 0;
+    while (j < arrSize) {
+        if (arr[i] == 0) {
+            j++;
+        }
+        i++;
+        j++;
+    }
+    i--;
+    j--;
+    while (i >= 0) {
+        if (arr[i] == 0) {
+            if (j < arrSize) {
+                arr[j] = arr[i];
+            }
+            j--;
+        }
+        arr[j] = arr[i];
+        i--;
+        j--;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

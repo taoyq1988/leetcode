@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1431.Kids%20With%20the%20Greatest%20Number%20of%20Candies/README_EN.md
+rating: 1176
+source: Biweekly Contest 25 Q1
+tags:
+    - Array
+---
+
+<!-- problem:start -->
+
 # [1431. Kids With the Greatest Number of Candies](https://leetcode.com/problems/kids-with-the-greatest-number-of-candies)
 
 [中文文档](/solution/1400-1499/1431.Kids%20With%20the%20Greatest%20Number%20of%20Candies/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are <code>n</code> kids with candies. You are given an integer array <code>candies</code>, where each <code>candies[i]</code> represents the number of candies the <code>i<sup>th</sup></code> kid has, and an integer <code>extraCandies</code>, denoting the number of extra candies that you have.</p>
 
@@ -11,7 +25,7 @@
 <p>Note that <strong>multiple</strong> kids can have the <strong>greatest</strong> number of candies.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> candies = [2,3,5,1,3], extraCandies = 3
@@ -24,7 +38,7 @@
 - Kid 5, they will have 3 + 3 = 6 candies, which is the greatest among the kids.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> candies = [4,2,1,1,2], extraCandies = 1
@@ -33,7 +47,7 @@
 Kid 1 will always have the greatest number of candies, even if a different kid is given the extra candy.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> candies = [12,1,12], extraCandies = 10
@@ -50,11 +64,17 @@ Kid 1 will always have the greatest number of candies, even if a different kid i
 	<li><code>1 &lt;= extraCandies &lt;= 50</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,7 +83,7 @@ class Solution:
         return [candy + extraCandies >= mx for candy in candies]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -81,7 +101,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -97,33 +117,81 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func kidsWithCandies(candies []int, extraCandies int) []bool {
-	mx := 0
+func kidsWithCandies(candies []int, extraCandies int) (ans []bool) {
+	mx := slices.Max(candies)
 	for _, candy := range candies {
-		mx = max(mx, candy)
+		ans = append(ans, candy+extraCandies >= mx)
 	}
-	var res []bool
-	for _, candy := range candies {
-		res = append(res, candy+extraCandies >= mx)
-	}
-	return res
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function kidsWithCandies(candies: number[], extraCandies: number): boolean[] {
+    const max = candies.reduce((r, v) => Math.max(r, v));
+    return candies.map(v => v + extraCandies >= max);
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn kids_with_candies(candies: Vec<i32>, extra_candies: i32) -> Vec<bool> {
+        let max = *candies.iter().max().unwrap();
+        candies.iter().map(|v| v + extra_candies >= max).collect()
+    }
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param Integer[] $candies
+     * @param Integer $extraCandies
+     * @return Boolean[]
+     */
+    function kidsWithCandies($candies, $extraCandies) {
+        $max = max($candies);
+        $rs = [];
+        for ($i = 0; $i < count($candies); $i++) {
+            array_push($rs, $candies[$i] + $extraCandies >= $max);
+        }
+        return $rs;
+    }
+}
+```
+
+#### C
+
+```c
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+bool* kidsWithCandies(int* candies, int candiesSize, int extraCandies, int* returnSize) {
+    int mx = 0;
+    for (int i = 0; i < candiesSize; i++) {
+        mx = max(mx, candies[i]);
+    }
+    bool* ans = malloc(candiesSize * sizeof(bool));
+    for (int i = 0; i < candiesSize; i++) {
+        ans[i] = candies[i] + extraCandies >= mx;
+    }
+    *returnSize = candiesSize;
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

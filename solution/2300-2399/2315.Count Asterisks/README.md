@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2315.Count%20Asterisks/README.md
+rating: 1250
+source: 第 81 场双周赛 Q1
+tags:
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2315. 统计星号](https://leetcode.cn/problems/count-asterisks)
 
 [English Version](/solution/2300-2399/2315.Count%20Asterisks/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个字符串&nbsp;<code>s</code>&nbsp;，每&nbsp;<strong>两个</strong>&nbsp;连续竖线&nbsp;<code>'|'</code>&nbsp;为 <strong>一对</strong>&nbsp;。换言之，第一个和第二个&nbsp;<code>'|'</code>&nbsp;为一对，第三个和第四个&nbsp;<code>'|'</code>&nbsp;为一对，以此类推。</p>
 
@@ -46,44 +58,50 @@
 	<li><code>s</code>&nbsp;包含 <strong>偶数</strong>&nbsp;个竖线&nbsp;<code>'|'</code> 。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+我们定义一个整型变量 $ok$，表示遇到 `*` 时是否能计数，初始时 $ok=1$，表示可以计数。
+
+遍历字符串 $s$，如果遇到 `*`，则根据 $ok$ 的值决定是否计数，如果遇到 `|`，则 $ok$ 的值取反。
+
+最后返回计数的结果。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为字符串 $s$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def countAsterisks(self, s: str) -> int:
-        ans = t = 0
+        ans, ok = 0, 1
         for c in s:
-            if c == '|':
-                t ^= 1
-            elif c == '*':
-                if t == 0:
-                    ans += 1
+            if c == "*":
+                ans += ok
+            elif c == "|":
+                ok ^= 1
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int countAsterisks(String s) {
-        int ans = 0, t = 0;
-        for (char c : s.toCharArray()) {
-            if (c == '|') {
-                t ^= 1;
-            } else if (c == '*') {
-                if (t == 0) {
-                    ++ans;
-                }
+        int ans = 0;
+        for (int i = 0, ok = 1; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (c == '*') {
+                ans += ok;
+            } else if (c == '|') {
+                ok ^= 1;
             }
         }
         return ans;
@@ -91,51 +109,114 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int countAsterisks(string s) {
-        int ans = 0, t = 0;
-        for (char& c : s)
-        {
-            if (c == '|') t ^= 1;
-            else if (c == '*') ans += t == 0;
+        int ans = 0, ok = 1;
+        for (char& c : s) {
+            if (c == '*') {
+                ans += ok;
+            } else if (c == '|') {
+                ok ^= 1;
+            }
         }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func countAsterisks(s string) int {
-	ans, t := 0, 0
+func countAsterisks(s string) (ans int) {
+	ok := 1
 	for _, c := range s {
-		if c == '|' {
-			t ^= 1
-		} else if c == '*' {
-			if t == 0 {
-				ans++
-			}
+		if c == '*' {
+			ans += ok
+		} else if c == '|' {
+			ok ^= 1
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function countAsterisks(s: string): number {
+    let ans = 0;
+    let ok = 1;
+    for (const c of s) {
+        if (c === '*') {
+            ans += ok;
+        } else if (c === '|') {
+            ok ^= 1;
+        }
+    }
+    return ans;
+}
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn count_asterisks(s: String) -> i32 {
+        let mut ans = 0;
+        let mut ok = 1;
+        for &c in s.as_bytes() {
+            if c == b'*' {
+                ans += ok;
+            } else if c == b'|' {
+                ok ^= 1;
+            }
+        }
+        ans
+    }
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int CountAsterisks(string s) {
+        int ans = 0, ok = 1;
+        foreach (char c in s) {
+            if (c == '*') {
+                ans += ok;
+            } else if (c == '|') {
+                ok ^= 1;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+#### C
+
+```c
+int countAsterisks(char* s) {
+    int ans = 0;
+    int ok = 1;
+    for (int i = 0; s[i]; i++) {
+        if (s[i] == '*') {
+            ans += ok;
+        } else if (s[i] == '|') {
+            ok ^= 1;
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

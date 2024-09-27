@@ -1,10 +1,20 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0831.Masking%20Personal%20Information/README.md
+tags:
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [831. 隐藏个人信息](https://leetcode.cn/problems/masking-personal-information)
 
 [English Version](/solution/0800-0899/0831.Masking%20Personal%20Information/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一条个人信息字符串 <code>s</code> ，可能表示一个 <strong>邮箱地址</strong> ，也可能表示一串 <strong>电话号码</strong> 。返回按如下规则 <strong>隐藏</strong> 个人信息后的结果：</p>
 
@@ -84,16 +94,6 @@
 因此，隐藏后的电话号码应该是 "***-***-7890" 。
 </pre>
 
-<p><strong>示例 4：</strong></p>
-
-<pre>
-<strong>输入：</strong>s = "86-(10)12345678"
-<strong>输出：</strong>"+**-***-***-5678"
-<strong>解释：</strong>s 是一个电话号码。
-共计 12 位数字，所以本地号码为 10 位数字，国家代码为 2 位数字。
-因此，隐藏后的电话号码应该是 "+**-***-***-7890" 。
-</pre>
-
 <p>&nbsp;</p>
 
 <p><strong>提示：</strong></p>
@@ -117,32 +117,140 @@
 </div>
 </div>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+根据题目描述，我们可以先判断字符串 $s$ 是电子邮件还是电话号码，然后分别处理。
+
+时间复杂度为 $O(n)$，空间复杂度为 $O(n)$。其中 $n$ 为字符串 $s$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def maskPII(self, s: str) -> str:
+        if s[0].isalpha():
+            s = s.lower()
+            return s[0] + '*****' + s[s.find('@') - 1 :]
+        s = ''.join(c for c in s if c.isdigit())
+        cnt = len(s) - 10
+        suf = '***-***-' + s[-4:]
+        return suf if cnt == 0 else f'+{"*" * cnt}-{suf}'
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public String maskPII(String s) {
+        if (Character.isLetter(s.charAt(0))) {
+            s = s.toLowerCase();
+            int i = s.indexOf('@');
+            return s.substring(0, 1) + "*****" + s.substring(i - 1);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(c);
+            }
+        }
+        s = sb.toString();
+        int cnt = s.length() - 10;
+        String suf = "***-***-" + s.substring(s.length() - 4);
+        return cnt == 0 ? suf
+                        : "+"
+                + "*".repeat(cnt) + "-" + suf;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    string maskPII(string s) {
+        int i = s.find('@');
+        if (i != -1) {
+            string ans;
+            ans += tolower(s[0]);
+            ans += "*****";
+            for (int j = i - 1; j < s.size(); ++j) {
+                ans += tolower(s[j]);
+            }
+            return ans;
+        }
+        string t;
+        for (char c : s) {
+            if (isdigit(c)) {
+                t += c;
+            }
+        }
+        int cnt = t.size() - 10;
+        string suf = "***-***-" + t.substr(t.size() - 4);
+        return cnt == 0 ? suf : "+" + string(cnt, '*') + "-" + suf;
+    }
+};
 ```
 
+#### Go
+
+```go
+func maskPII(s string) string {
+	i := strings.Index(s, "@")
+	if i != -1 {
+		s = strings.ToLower(s)
+		return s[0:1] + "*****" + s[i-1:]
+	}
+	t := []rune{}
+	for _, c := range s {
+		if c >= '0' && c <= '9' {
+			t = append(t, c)
+		}
+	}
+	s = string(t)
+	cnt := len(s) - 10
+	suf := "***-***-" + s[len(s)-4:]
+	if cnt == 0 {
+		return suf
+	}
+	return "+" + strings.Repeat("*", cnt) + "-" + suf
+}
+```
+
+#### TypeScript
+
+```ts
+function maskPII(s: string): string {
+    const i = s.indexOf('@');
+    if (i !== -1) {
+        let ans = s[0].toLowerCase() + '*****';
+        for (let j = i - 1; j < s.length; ++j) {
+            ans += s.charAt(j).toLowerCase();
+        }
+        return ans;
+    }
+    let t = '';
+    for (const c of s) {
+        if (/\d/.test(c)) {
+            t += c;
+        }
+    }
+    const cnt = t.length - 10;
+    const suf = `***-***-${t.substring(t.length - 4)}`;
+    return cnt === 0 ? suf : `+${'*'.repeat(cnt)}-${suf}`;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

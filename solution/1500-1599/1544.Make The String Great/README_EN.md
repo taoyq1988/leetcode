@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1544.Make%20The%20String%20Great/README_EN.md
+rating: 1344
+source: Weekly Contest 201 Q1
+tags:
+    - Stack
+    - String
+---
+
+<!-- problem:start -->
+
 # [1544. Make The String Great](https://leetcode.com/problems/make-the-string-great)
 
 [中文文档](/solution/1500-1599/1544.Make%20The%20String%20Great/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string <code>s</code> of lower and upper case English letters.</p>
 
@@ -20,7 +35,7 @@
 <p><strong>Notice</strong> that an empty string is also good.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;leEeetcode&quot;
@@ -28,7 +43,7 @@
 <strong>Explanation:</strong> In the first step, either you choose i = 1 or i = 2, both will result &quot;leEeetcode&quot; to be reduced to &quot;leetcode&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abBAcC&quot;
@@ -38,7 +53,7 @@
 &quot;abBAcC&quot; --&gt; &quot;abBA&quot; --&gt; &quot;aA&quot; --&gt; &quot;&quot;
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;s&quot;
@@ -53,26 +68,92 @@
 	<li><code>s</code> contains only lower and upper case English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def makeGood(self, s: str) -> str:
+        stk = []
+        for c in s:
+            if not stk or abs(ord(stk[-1]) - ord(c)) != 32:
+                stk.append(c)
+            else:
+                stk.pop()
+        return "".join(stk)
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public String makeGood(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (sb.length() == 0 || Math.abs(sb.charAt(sb.length() - 1) - c) != 32) {
+                sb.append(c);
+            } else {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+        return sb.toString();
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    string makeGood(string s) {
+        string stk;
+        for (char c : s) {
+            if (stk.empty() || abs(stk.back() - c) != 32) {
+                stk += c;
+            } else {
+                stk.pop_back();
+            }
+        }
+        return stk;
+    }
+};
 ```
 
+#### Go
+
+```go
+func makeGood(s string) string {
+	stk := []rune{}
+	for _, c := range s {
+		if len(stk) == 0 || abs(int(stk[len(stk)-1]-c)) != 32 {
+			stk = append(stk, c)
+		} else {
+			stk = stk[:len(stk)-1]
+		}
+	}
+	return string(stk)
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

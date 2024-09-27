@@ -1,10 +1,21 @@
-# [1891. 割绳子](https://leetcode.cn/problems/cutting-ribbons)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1891.Cutting%20Ribbons/README.md
+tags:
+    - 数组
+    - 二分查找
+---
+
+<!-- problem:start -->
+
+# [1891. 割绳子 🔒](https://leetcode.cn/problems/cutting-ribbons)
 
 [English Version](/solution/1800-1899/1891.Cutting%20Ribbons/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个整数数组 <code>ribbons</code> 和一个整数 <code>k</code>，数组每项 <code>ribbons[i]</code> 表示第 <code>i</code> 条绳子的长度。对于每条绳子，你可以将任意切割成一系列长度为<strong>正整数</strong>的部分，或者选择不进行切割。</p>
 
@@ -62,60 +73,161 @@
 	<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-“二分法”实现。
+### 方法一：二分查找
+
+我们发现，如果我们能够得到长度为 $x$ 的 $k$ 根绳子，那么我们一定能够得到长度为 $x - 1$ 的 $k$ 根绳子，这存在着单调性。因此，我们可以使用二分查找的方法，找到最大的长度 $x$，使得我们能够得到长度为 $x$ 的 $k$ 根绳子。
+
+我们定义二分查找的左边界 $left=0$, $right=\max(ribbons)$，中间值 $mid=(left+right+1)/2$，然后计算当前长度为 $mid$ 的绳子能够得到的数量 $cnt$，如果 $cnt \geq k$，说明我们能够得到长度为 $mid$ 的 $k$ 根绳子，那么我们将 $left$ 更新为 $mid$，否则我们将 $right$ 更新为 $mid-1$。
+
+最后，我们返回 $left$ 即可。
+
+时间复杂度 $O(n \times \log M)$，其中 $n$ 和 $M$ 分别为绳子的数量和绳子的最大长度。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def maxLength(self, ribbons: List[int], k: int) -> int:
-        low, high = 0, 100000
-        while low < high:
-            mid = (low + high + 1) >> 1
-            cnt = 0
-            for ribbon in ribbons:
-                cnt += ribbon // mid
-            if cnt < k:
-                high = mid - 1
+        left, right = 0, max(ribbons)
+        while left < right:
+            mid = (left + right + 1) >> 1
+            cnt = sum(x // mid for x in ribbons)
+            if cnt >= k:
+                left = mid
             else:
-                low = mid
-        return low
+                right = mid - 1
+        return left
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int maxLength(int[] ribbons, int k) {
-        int low = 0, high = 100000;
-        while (low < high) {
-            int mid = (low + high + 1) >> 1;
+        int left = 0, right = 0;
+        for (int x : ribbons) {
+            right = Math.max(right, x);
+        }
+        while (left < right) {
+            int mid = (left + right + 1) >>> 1;
             int cnt = 0;
-            for (int ribbon : ribbons) {
-                cnt += ribbon / mid;
+            for (int x : ribbons) {
+                cnt += x / mid;
             }
-            if (cnt < k) {
-                high = mid - 1;
+            if (cnt >= k) {
+                left = mid;
             } else {
-                low = mid;
+                right = mid - 1;
             }
         }
-        return low;
+        return left;
     }
 }
 ```
 
-### **JavaScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int maxLength(vector<int>& ribbons, int k) {
+        int left = 0, right = *max_element(ribbons.begin(), ribbons.end());
+        while (left < right) {
+            int mid = (left + right + 1) >> 1;
+            int cnt = 0;
+            for (int ribbon : ribbons) {
+                cnt += ribbon / mid;
+            }
+            if (cnt >= k) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+};
+```
+
+#### Go
+
+```go
+func maxLength(ribbons []int, k int) int {
+	left, right := 0, slices.Max(ribbons)
+	for left < right {
+		mid := (left + right + 1) >> 1
+		cnt := 0
+		for _, x := range ribbons {
+			cnt += x / mid
+		}
+		if cnt >= k {
+			left = mid
+		} else {
+			right = mid - 1
+		}
+	}
+	return left
+}
+```
+
+#### TypeScript
+
+```ts
+function maxLength(ribbons: number[], k: number): number {
+    let left = 0;
+    let right = Math.max(...ribbons);
+    while (left < right) {
+        const mid = (left + right + 1) >> 1;
+        let cnt = 0;
+        for (const x of ribbons) {
+            cnt += Math.floor(x / mid);
+        }
+        if (cnt >= k) {
+            left = mid;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return left;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn max_length(ribbons: Vec<i32>, k: i32) -> i32 {
+        let mut left = 0i32;
+        let mut right = *ribbons.iter().max().unwrap();
+        while left < right {
+            let mid = (left + right + 1) / 2;
+            let mut cnt = 0i32;
+            for &entry in ribbons.iter() {
+                cnt += entry / mid;
+                if cnt >= k {
+                    break;
+                }
+            }
+            if cnt >= k {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -124,73 +236,26 @@ class Solution {
  * @return {number}
  */
 var maxLength = function (ribbons, k) {
-    let low = 0;
-    let high = 100000;
-    while (low < high) {
-        const mid = (low + high + 1) >> 1;
+    let left = 0;
+    let right = Math.max(...ribbons);
+    while (left < right) {
+        const mid = (left + right + 1) >> 1;
         let cnt = 0;
-        for (let ribbon of ribbons) {
-            cnt += Math.floor(ribbon / mid);
+        for (const x of ribbons) {
+            cnt += Math.floor(x / mid);
         }
-        if (cnt < k) {
-            high = mid - 1;
+        if (cnt >= k) {
+            left = mid;
         } else {
-            low = mid;
+            right = mid - 1;
         }
     }
-    return low;
+    return left;
 };
-```
-
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int maxLength(vector<int>& ribbons, int k) {
-        int low = 0, high = 100000;
-        while (low < high) {
-            int mid = (low + high + 1) / 2;
-            int cnt = 0;
-            for (auto ribbon : ribbons) {
-                cnt += ribbon / mid;
-            }
-            if (cnt < k) {
-                high = mid - 1;
-            } else {
-                low = mid;
-            }
-        }
-        return low;
-    }
-};
-```
-
-### **Go**
-
-```go
-func maxLength(ribbons []int, k int) int {
-	low, high := 0, 100000
-	for low < high {
-		mid := (low + high + 1) >> 1
-		cnt := 0
-		for _, ribbon := range ribbons {
-			cnt += ribbon / mid
-		}
-		if cnt < k {
-			high = mid - 1
-		} else {
-			low = mid
-		}
-	}
-	return low
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

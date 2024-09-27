@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0591.Tag%20Validator/README_EN.md
+tags:
+    - Stack
+    - String
+---
+
+<!-- problem:start -->
+
 # [591. Tag Validator](https://leetcode.com/problems/tag-validator)
 
 [中文文档](/solution/0500-0599/0591.Tag%20Validator/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string representing a code snippet, implement a tag validator to parse the code and return whether it is valid.</p>
 
@@ -20,7 +33,7 @@
 </ol>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> code = &quot;&lt;DIV&gt;This is the first line &lt;![CDATA[&lt;div&gt;]]&gt;&lt;/DIV&gt;&quot;
@@ -32,7 +45,7 @@ Although CDATA_CONTENT has an unmatched start tag with invalid TAG_NAME, it shou
 So TAG_CONTENT is valid, and then the code is valid. Thus return true.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> code = &quot;&lt;DIV&gt;&gt;&gt;  ![cdata[]] &lt;![CDATA[&lt;div&gt;]&gt;]]&gt;]]&gt;&gt;]&lt;/DIV&gt;&quot;
@@ -49,7 +62,7 @@ The reason why start_tag is NOT <b>&quot;&lt;DIV&gt;&gt;&gt;&quot;</b> is becaus
 The reason why cdata is NOT <b>&quot;&lt;![CDATA[&lt;div&gt;]&gt;]]&gt;]]&gt;&quot;</b> is because of the rule 7.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> code = &quot;&lt;A&gt;  &lt;B&gt; &lt;/A&gt;   &lt;/B&gt;&quot;
@@ -65,11 +78,17 @@ The reason why cdata is NOT <b>&quot;&lt;![CDATA[&lt;div&gt;]&gt;]]&gt;]]&gt;&qu
 	<li><code>code</code> consists of English letters, digits, <code>&#39;&lt;&#39;</code>, <code>&#39;&gt;&#39;</code>, <code>&#39;/&#39;</code>, <code>&#39;!&#39;</code>, <code>&#39;[&#39;</code>, <code>&#39;]&#39;</code>, <code>&#39;.&#39;</code>, and <code>&#39; &#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -108,7 +127,7 @@ class Solution:
         return not stk
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -165,33 +184,27 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool isValid(string code) {
         stack<string> stk;
-        for (int i = 0; i < code.size(); ++i)
-        {
+        for (int i = 0; i < code.size(); ++i) {
             if (i && stk.empty()) return false;
-            if (code.substr(i, 9) == "<![CDATA[")
-            {
+            if (code.substr(i, 9) == "<![CDATA[") {
                 i = code.find("]]>", i + 9);
                 if (i < 0) return false;
                 i += 2;
-            }
-            else if (code.substr(i, 2) == "</")
-            {
+            } else if (code.substr(i, 2) == "</") {
                 int j = i + 2;
                 i = code.find('>', j);
                 if (i < 0) return false;
                 string t = code.substr(j, i - j);
                 if (!check(t) || stk.empty() || stk.top() != t) return false;
                 stk.pop();
-            }
-            else if (code.substr(i, 1) == "<")
-            {
+            } else if (code.substr(i, 1) == "<") {
                 int j = i + 1;
                 i = code.find('>', j);
                 if (i < 0) return false;
@@ -214,7 +227,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isValid(code string) bool {
@@ -276,7 +289,7 @@ func check(tag string) bool {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -294,8 +307,12 @@ impl Solution {
             }
             if code[i..].starts_with("<![CDATA[") {
                 match code[i + 9..].find("]]>") {
-                    Some(n) => i += n + 11,
-                    None => return false,
+                    Some(n) => {
+                        i += n + 11;
+                    }
+                    None => {
+                        return false;
+                    }
                 };
             } else if code[i..].starts_with("</") {
                 let j = i + 2;
@@ -307,7 +324,9 @@ impl Solution {
                         }
                         i += n + 2;
                     }
-                    None => return false,
+                    None => {
+                        return false;
+                    }
                 };
             } else if code[i..].starts_with("<") {
                 let j = i + 1;
@@ -319,7 +338,9 @@ impl Solution {
                         }
                         stk.push(t);
                     }
-                    None => return false,
+                    None => {
+                        return false;
+                    }
                 };
             }
             i += 1;
@@ -329,10 +350,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,15 +1,30 @@
-# [1055. Shortest Way to Form String](https://leetcode.com/problems/shortest-way-to-form-string)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1055.Shortest%20Way%20to%20Form%20String/README_EN.md
+tags:
+    - Greedy
+    - Two Pointers
+    - String
+    - Binary Search
+---
+
+<!-- problem:start -->
+
+# [1055. Shortest Way to Form String 🔒](https://leetcode.com/problems/shortest-way-to-form-string)
 
 [中文文档](/solution/1000-1099/1055.Shortest%20Way%20to%20Form%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A <strong>subsequence</strong> of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., <code>&quot;ace&quot;</code> is a subsequence of <code>&quot;<u>a</u>b<u>c</u>d<u>e</u>&quot;</code> while <code>&quot;aec&quot;</code> is not).</p>
 
 <p>Given two strings <code>source</code> and <code>target</code>, return <em>the minimum number of <strong>subsequences</strong> of </em><code>source</code><em> such that their concatenation equals </em><code>target</code>. If the task is impossible, return <code>-1</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> source = &quot;abc&quot;, target = &quot;abcbc&quot;
@@ -17,7 +32,7 @@
 <strong>Explanation:</strong> The target &quot;abcbc&quot; can be formed by &quot;abc&quot; and &quot;bc&quot;, which are subsequences of source &quot;abc&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> source = &quot;abc&quot;, target = &quot;acdbc&quot;
@@ -25,7 +40,7 @@
 <strong>Explanation:</strong> The target string cannot be constructed from the subsequences of source string due to the character &quot;d&quot; in target string.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> source = &quot;xyz&quot;, target = &quot;xzyxz&quot;
@@ -41,26 +56,125 @@
 	<li><code>source</code> and <code>target</code> consist of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Two Pointers
+
+We can use the two pointers method, where pointer $j$ points to the target string `target`. Then we traverse the source string `source` with pointer $i$ pointing to the source string `source`. If $source[i] = target[j]$, then both $i$ and $j$ move one step forward, otherwise only pointer $i$ moves. When both pointers $i$ and $j$ reach the end of the string, if no equal character is found, return $-1$, otherwise the subsequence count increases by one, and then set pointer $i$ to $0$ and continue to traverse.
+
+After the traversal ends, return the subsequence count.
+
+The time complexity is $O(m \times n)$, where $m$ and $n$ are the lengths of the strings `source` and `target` respectively. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+class Solution:
+    def shortestWay(self, source: str, target: str) -> int:
+        def f(i, j):
+            while i < m and j < n:
+                if source[i] == target[j]:
+                    j += 1
+                i += 1
+            return j
 
+        m, n = len(source), len(target)
+        ans = j = 0
+        while j < n:
+            k = f(0, j)
+            if k == j:
+                return -1
+            j = k
+            ans += 1
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int shortestWay(String source, String target) {
+        int m = source.length(), n = target.length();
+        int ans = 0, j = 0;
+        while (j < n) {
+            int i = 0;
+            boolean ok = false;
+            while (i < m && j < n) {
+                if (source.charAt(i) == target.charAt(j)) {
+                    ok = true;
+                    ++j;
+                }
+                ++i;
+            }
+            if (!ok) {
+                return -1;
+            }
+            ++ans;
+        }
+        return ans;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int shortestWay(string source, string target) {
+        int m = source.size(), n = target.size();
+        int ans = 0, j = 0;
+        while (j < n) {
+            int i = 0;
+            bool ok = false;
+            while (i < m && j < n) {
+                if (source[i] == target[j]) {
+                    ok = true;
+                    ++j;
+                }
+                ++i;
+            }
+            if (!ok) {
+                return -1;
+            }
+            ++ans;
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func shortestWay(source string, target string) int {
+	m, n := len(source), len(target)
+	ans, j := 0, 0
+	for j < n {
+		ok := false
+		for i := 0; i < m && j < n; i++ {
+			if source[i] == target[j] {
+				ok = true
+				j++
+			}
+		}
+		if !ok {
+			return -1
+		}
+		ans++
+	}
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

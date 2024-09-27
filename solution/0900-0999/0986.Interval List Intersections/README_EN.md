@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0986.Interval%20List%20Intersections/README_EN.md
+tags:
+    - Array
+    - Two Pointers
+---
+
+<!-- problem:start -->
+
 # [986. Interval List Intersections](https://leetcode.com/problems/interval-list-intersections)
 
 [中文文档](/solution/0900-0999/0986.Interval%20List%20Intersections/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two lists of closed intervals, <code>firstList</code> and <code>secondList</code>, where <code>firstList[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> and <code>secondList[j] = [start<sub>j</sub>, end<sub>j</sub>]</code>. Each list of intervals is pairwise <strong>disjoint</strong> and in <strong>sorted order</strong>.</p>
 
@@ -13,14 +26,14 @@
 <p>The <strong>intersection</strong> of two closed intervals is a set of real numbers that are either empty or represented as a closed interval. For example, the intersection of <code>[1, 3]</code> and <code>[2, 4]</code> is <code>[2, 3]</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0900-0999/0986.Interval%20List%20Intersections/images/interval1.png" style="width: 700px; height: 194px;" />
 <pre>
 <strong>Input:</strong> firstList = [[0,2],[5,10],[13,23],[24,25]], secondList = [[1,5],[8,12],[15,24],[25,26]]
 <strong>Output:</strong> [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> firstList = [[1,3],[5,9]], secondList = []
@@ -39,16 +52,24 @@
 	<li><code>end<sub>j</sub> &lt; start<sub>j+1</sub></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
-        i =  j = 0
+    def intervalIntersection(
+        self, firstList: List[List[int]], secondList: List[List[int]]
+    ) -> List[List[int]]:
+        i = j = 0
         ans = []
         while i < len(firstList) and j < len(secondList):
             s1, e1, s2, e2 = *firstList[i], *secondList[j]
@@ -62,7 +83,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -73,7 +94,7 @@ class Solution {
             int l = Math.max(firstList[i][0], secondList[j][0]);
             int r = Math.min(firstList[i][1], secondList[j][1]);
             if (l <= r) {
-                ans.add(new int[]{l, r});
+                ans.add(new int[] {l, r});
             }
             if (firstList[i][1] < secondList[j][1]) {
                 ++i;
@@ -86,7 +107,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -94,20 +115,21 @@ public:
     vector<vector<int>> intervalIntersection(vector<vector<int>>& firstList, vector<vector<int>>& secondList) {
         vector<vector<int>> ans;
         int m = firstList.size(), n = secondList.size();
-        for (int i = 0, j = 0; i < m && j < n;)
-        {
+        for (int i = 0, j = 0; i < m && j < n;) {
             int l = max(firstList[i][0], secondList[j][0]);
             int r = min(firstList[i][1], secondList[j][1]);
             if (l <= r) ans.push_back({l, r});
-            if (firstList[i][1] < secondList[j][1]) ++i;
-            else ++j;
+            if (firstList[i][1] < secondList[j][1])
+                ++i;
+            else
+                ++j;
         }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
@@ -127,29 +149,12 @@ func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-function intervalIntersection(
-    firstList: number[][],
-    secondList: number[][],
-): number[][] {
+function intervalIntersection(firstList: number[][], secondList: number[][]): number[][] {
     const n = firstList.length;
     const m = secondList.length;
     const res = [];
@@ -171,7 +176,7 @@ function intervalIntersection(
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -200,10 +205,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

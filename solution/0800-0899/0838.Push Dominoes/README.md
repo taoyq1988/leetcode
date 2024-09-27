@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0838.Push%20Dominoes/README.md
+tags:
+    - 双指针
+    - 字符串
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [838. 推多米诺](https://leetcode.cn/problems/push-dominoes)
 
 [English Version](/solution/0800-0899/0838.Push%20Dominoes/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p><code>n</code> 张多米诺骨牌排成一行，将每张多米诺骨牌垂直竖立。在开始时，同时把一些多米诺骨牌向左或向右推。</p>
 
@@ -50,19 +62,17 @@
 	<li><code>dominoes[i]</code> 为 <code>'L'</code>、<code>'R'</code> 或 <code>'.'</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-BFS。设 time 记录骨牌翻倒或者确定不翻倒的时间，翻倒的骨牌不会对正在翻倒或者已经翻倒的骨牌施加力，force 记录骨牌受到的力，骨牌仅在受到单侧的力时会翻倒。
-
-初始时，将所有受力点 i (`dominoes[i] != '.'`)入队，并设置 `time[i] = 0`。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -93,9 +103,7 @@ class Solution:
         return ''.join(ans)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -141,53 +149,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function pushDominoes(dominoes: string): string {
-    const n = dominoes.length;
-    const map = {
-        L: -1,
-        R: 1,
-        '.': 0,
-    };
-    let ans = new Array(n).fill(0);
-    let visited = new Array(n).fill(0);
-    let queue = [];
-    let depth = 1;
-    for (let i = 0; i < n; i++) {
-        let cur = map[dominoes.charAt(i)];
-        if (cur) {
-            queue.push(i);
-            visited[i] = depth;
-            ans[i] = cur;
-        }
-    }
-    while (queue.length) {
-        depth++;
-        let nextLevel = [];
-        for (let i of queue) {
-            const dx = ans[i];
-            let x = i + dx;
-            if (x >= 0 && x < n && [0, depth].includes(visited[x])) {
-                ans[x] += dx;
-                visited[x] = depth;
-                nextLevel.push(x);
-            }
-        }
-        queue = nextLevel;
-    }
-    return ans
-        .map(d => {
-            if (!d) return '.';
-            else if (d < 0) return 'L';
-            else return 'R';
-        })
-        .join('');
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -195,10 +157,9 @@ public:
     string pushDominoes(string dominoes) {
         int n = dominoes.size();
         queue<int> q;
-        vector<int> time(n, - 1);
+        vector<int> time(n, -1);
         vector<string> force(n);
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++) {
             if (dominoes[i] == '.') continue;
             q.emplace(i);
             time[i] = 0;
@@ -206,25 +167,21 @@ public:
         }
 
         string ans(n, '.');
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int i = q.front();
             q.pop();
-            if (force[i].size() == 1)
-            {
+            if (force[i].size() == 1) {
                 char f = force[i][0];
                 ans[i] = f;
                 int j = (f == 'L') ? (i - 1) : (i + 1);
-                if (j >= 0 && j < n)
-                {
+                if (j >= 0 && j < n) {
                     int t = time[i];
-                    if (time[j] == -1)
-                    {
+                    if (time[j] == -1) {
                         q.emplace(j);
                         time[j] = t + 1;
                         force[j].push_back(f);
-                    }
-                    else if(time[j] == t + 1) force[j].push_back(f);
+                    } else if (time[j] == t + 1)
+                        force[j].push_back(f);
                 }
             }
         }
@@ -233,7 +190,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func pushDominoes(dominoes string) string {
@@ -280,10 +237,54 @@ func pushDominoes(dominoes string) string {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function pushDominoes(dominoes: string): string {
+    const n = dominoes.length;
+    const map = {
+        L: -1,
+        R: 1,
+        '.': 0,
+    };
+    let ans = new Array(n).fill(0);
+    let visited = new Array(n).fill(0);
+    let queue = [];
+    let depth = 1;
+    for (let i = 0; i < n; i++) {
+        let cur = map[dominoes.charAt(i)];
+        if (cur) {
+            queue.push(i);
+            visited[i] = depth;
+            ans[i] = cur;
+        }
+    }
+    while (queue.length) {
+        depth++;
+        let nextLevel = [];
+        for (let i of queue) {
+            const dx = ans[i];
+            let x = i + dx;
+            if (x >= 0 && x < n && [0, depth].includes(visited[x])) {
+                ans[x] += dx;
+                visited[x] = depth;
+                nextLevel.push(x);
+            }
+        }
+        queue = nextLevel;
+    }
+    return ans
+        .map(d => {
+            if (!d) return '.';
+            else if (d < 0) return 'L';
+            else return 'R';
+        })
+        .join('');
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

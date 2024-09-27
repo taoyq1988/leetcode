@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0803.Bricks%20Falling%20When%20Hit/README_EN.md
+tags:
+    - Union Find
+    - Array
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [803. Bricks Falling When Hit](https://leetcode.com/problems/bricks-falling-when-hit)
 
 [中文文档](/solution/0800-0899/0803.Bricks%20Falling%20When%20Hit/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> binary <code>grid</code>, where each <code>1</code> represents a brick and <code>0</code> represents an empty space. A brick is <strong>stable</strong> if:</p>
 
@@ -18,7 +32,7 @@
 <p><strong>Note</strong> that an erasure may refer to a location with no brick, and if it does, no bricks drop.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[1,0,0,0],[1,1,1,0]], hits = [[1,0]]
@@ -35,7 +49,7 @@ The two underlined bricks are no longer stable as they are no longer connected t
 Hence the result is [2].
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[1,0,0,0],[1,1,0,0]], hits = [[1,1],[1,0]]
@@ -71,13 +85,17 @@ Hence the result is [0,0].
 	<li>All <code>(x<sub>i</sub>, y<sub>i</sub>)</code> are unique.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Union find.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -128,7 +146,7 @@ class Solution:
         return ans[::-1]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -215,7 +233,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -227,8 +245,7 @@ public:
         int m = grid.size(), n = grid[0].size();
         p.resize(m * n + 1);
         size.resize(m * n + 1);
-        for (int i = 0; i < p.size(); ++i)
-        {
+        for (int i = 0; i < p.size(); ++i) {
             p[i] = i;
             size[i] = 1;
         }
@@ -240,10 +257,8 @@ public:
         for (int j = 0; j < n; ++j)
             if (g[0][j] == 1)
                 merge(j, m * n);
-        for (int i = 1; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        for (int i = 1; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (g[i][j] == 0) continue;
                 if (g[i - 1][j] == 1) merge(i * n + j, (i - 1) * n + j);
                 if (j > 0 && g[i][j - 1] == 1) merge(i * n + j, i * n + j - 1);
@@ -251,15 +266,13 @@ public:
         }
         vector<int> ans(hits.size());
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        for (int k = hits.size() - 1; k >= 0; --k)
-        {
+        for (int k = hits.size() - 1; k >= 0; --k) {
             int i = hits[k][0], j = hits[k][1];
             if (grid[i][j] == 0) continue;
             g[i][j] = 1;
             int prev = size[find(m * n)];
             if (i == 0) merge(j, m * n);
-            for (int l = 0; l < 4; ++l)
-            {
+            for (int l = 0; l < 4; ++l) {
                 int x = i + dirs[l], y = j + dirs[l + 1];
                 if (x >= 0 && x < m && y >= 0 && y < n && g[x][y] == 1)
                     merge(i * n + j, x * n + y);
@@ -277,8 +290,7 @@ public:
 
     void merge(int a, int b) {
         int pa = find(a), pb = find(b);
-        if (pa != pb)
-        {
+        if (pa != pb) {
             size[pb] += size[pa];
             p[pa] = pb;
         }
@@ -286,7 +298,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func hitBricks(grid [][]int, hits [][]int) []int {
@@ -364,19 +376,10 @@ func hitBricks(grid [][]int, hits [][]int) []int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

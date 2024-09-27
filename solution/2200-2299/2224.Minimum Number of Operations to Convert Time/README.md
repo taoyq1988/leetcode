@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2224.Minimum%20Number%20of%20Operations%20to%20Convert%20Time/README.md
+rating: 1295
+source: 第 287 场周赛 Q1
+tags:
+    - 贪心
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2224. 转化时间需要的最少操作数](https://leetcode.cn/problems/minimum-number-of-operations-to-convert-time)
 
 [English Version](/solution/2200-2299/2224.Minimum%20Number%20of%20Operations%20to%20Convert%20Time/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个字符串 <code>current</code> 和 <code>correct</code> ，表示两个 <strong>24 小时制时间</strong> 。</p>
 
@@ -43,17 +56,17 @@
 	<li><code>current &lt;= correct</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：贪心
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -67,15 +80,15 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int convertTime(String current, String correct) {
-        int a = Integer.parseInt(current.substring(0, 2)) * 60 + Integer.parseInt(current.substring(3));
-        int b = Integer.parseInt(correct.substring(0, 2)) * 60 + Integer.parseInt(correct.substring(3));
+        int a = Integer.parseInt(current.substring(0, 2)) * 60
+            + Integer.parseInt(current.substring(3));
+        int b = Integer.parseInt(correct.substring(0, 2)) * 60
+            + Integer.parseInt(correct.substring(3));
         int ans = 0, d = b - a;
         for (int i : Arrays.asList(60, 15, 5, 1)) {
             ans += d / i;
@@ -86,7 +99,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -96,8 +109,7 @@ public:
         int b = stoi(correct.substr(0, 2)) * 60 + stoi(correct.substr(3, 2));
         int ans = 0, d = b - a;
         vector<int> inc = {60, 15, 5, 1};
-        for (int i : inc)
-        {
+        for (int i : inc) {
             ans += d / i;
             d %= i;
         }
@@ -106,35 +118,27 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func convertTime(current string, correct string) int {
-    parse := func(s string) int {
-        h := int(s[0] - '0') * 10 + int(s[1] - '0')
-        m := int(s[3] - '0') * 10 + int(s[4] - '0')
-        return h * 60 + m
-    }
-    a, b := parse(current), parse(correct)
-    ans, d := 0, b - a
-    for _, i := range []int{60, 15, 5, 1} {
-        ans += d / i
-        d %= i
-    }
-    return ans
+	parse := func(s string) int {
+		h := int(s[0]-'0')*10 + int(s[1]-'0')
+		m := int(s[3]-'0')*10 + int(s[4]-'0')
+		return h*60 + m
+	}
+	a, b := parse(current), parse(correct)
+	ans, d := 0, b-a
+	for _, i := range []int{60, 15, 5, 1} {
+		ans += d / i
+		d %= i
+	}
+	return ans
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

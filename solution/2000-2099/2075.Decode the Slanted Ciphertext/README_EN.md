@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2075.Decode%20the%20Slanted%20Ciphertext/README_EN.md
+rating: 1759
+source: Weekly Contest 267 Q3
+tags:
+    - String
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2075. Decode the Slanted Ciphertext](https://leetcode.com/problems/decode-the-slanted-ciphertext)
 
 [中文文档](/solution/2000-2099/2075.Decode%20the%20Slanted%20Ciphertext/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A string <code>originalText</code> is encoded using a <strong>slanted transposition cipher</strong> to a string <code>encodedText</code> with the help of a matrix having a <strong>fixed number of rows</strong> <code>rows</code>.</p>
 
@@ -23,7 +38,7 @@
 <p><strong>Note:</strong> <code>originalText</code> <strong>does not</strong> have any trailing spaces <code>&#39; &#39;</code>. The test cases are generated such that there is only one possible <code>originalText</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> encodedText = &quot;ch   ie   pr&quot;, rows = 3
@@ -31,7 +46,7 @@
 <strong>Explanation:</strong> This is the same example described in the problem description.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2000-2099/2075.Decode%20the%20Slanted%20Ciphertext/images/exam1.png" style="width: 250px; height: 168px;" />
 <pre>
 <strong>Input:</strong> encodedText = &quot;iveo    eed   l te   olc&quot;, rows = 4
@@ -40,7 +55,7 @@
 The blue arrows show how we can find originalText from encodedText.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2000-2099/2075.Decode%20the%20Slanted%20Ciphertext/images/eg2.png" style="width: 300px; height: 51px;" />
 <pre>
 <strong>Input:</strong> encodedText = &quot;coding&quot;, rows = 1
@@ -59,11 +74,23 @@ The blue arrows show how we can find originalText from encodedText.
 	<li>The testcases are generated such that there is <strong>only one</strong> possible <code>originalText</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+First, we calculate the number of columns in the matrix $cols = \textit{len}(encodedText) / rows$. Then, following the rules described in the problem, we start traversing the matrix from the top left corner, adding characters to the answer.
+
+Finally, we return the answer, making sure to remove any trailing spaces.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$, where $n$ is the length of the string $encodedText$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -78,7 +105,7 @@ class Solution:
         return ''.join(ans).rstrip()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -98,22 +125,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function decodeCiphertext(encodedText: string, rows: number): string {
-    const cols = Math.ceil(encodedText.length / rows);
-    let ans = [];
-    for (let k = 0; k <= cols; k++) {
-        for (let i = 0, j = k; i < rows && j < cols; i++, j++) {
-            ans.push(encodedText.charAt(i * cols + j));
-        }
-    }
-    return ans.join('').trimEnd();
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -121,19 +133,54 @@ public:
     string decodeCiphertext(string encodedText, int rows) {
         string ans;
         int cols = encodedText.size() / rows;
-        for (int j = 0; j < cols; ++j)
-            for (int x = 0, y = j; x < rows && y < cols; ++x, ++y)
+        for (int j = 0; j < cols; ++j) {
+            for (int x = 0, y = j; x < rows && y < cols; ++x, ++y) {
                 ans += encodedText[x * cols + y];
-        while (ans.back() == ' ') ans.pop_back();
+            }
+        }
+        while (ans.size() && ans.back() == ' ') {
+            ans.pop_back();
+        }
         return ans;
     }
 };
 ```
 
-### **...**
+#### Go
 
+```go
+func decodeCiphertext(encodedText string, rows int) string {
+	ans := []byte{}
+	cols := len(encodedText) / rows
+	for j := 0; j < cols; j++ {
+		for x, y := 0, j; x < rows && y < cols; x, y = x+1, y+1 {
+			ans = append(ans, encodedText[x*cols+y])
+		}
+	}
+	for len(ans) > 0 && ans[len(ans)-1] == ' ' {
+		ans = ans[:len(ans)-1]
+	}
+	return string(ans)
+}
 ```
 
+#### TypeScript
+
+```ts
+function decodeCiphertext(encodedText: string, rows: number): string {
+    const cols = Math.ceil(encodedText.length / rows);
+    const ans: string[] = [];
+    for (let k = 0; k <= cols; k++) {
+        for (let i = 0, j = k; i < rows && j < cols; i++, j++) {
+            ans.push(encodedText[i * cols + j]);
+        }
+    }
+    return ans.join('').trimEnd();
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

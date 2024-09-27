@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0146.LRU%20Cache/README_EN.md
+tags:
+    - Design
+    - Hash Table
+    - Linked List
+    - Doubly-Linked List
+---
+
+<!-- problem:start -->
+
 # [146. LRU Cache](https://leetcode.com/problems/lru-cache)
 
 [中文文档](/solution/0100-0199/0146.LRU%20Cache/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a data structure that follows the constraints of a <strong><a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU" target="_blank">Least Recently Used (LRU) cache</a></strong>.</p>
 
@@ -11,13 +26,13 @@
 <ul>
 	<li><code>LRUCache(int capacity)</code> Initialize the LRU cache with <strong>positive</strong> size <code>capacity</code>.</li>
 	<li><code>int get(int key)</code> Return the value of the <code>key</code> if the key exists, otherwise return <code>-1</code>.</li>
-	<li><code>void put(int key, int value)</code>&nbsp;Update the value of the <code>key</code> if the <code>key</code> exists. Otherwise, add the <code>key-value</code> pair to the cache. If the number of keys exceeds the <code>capacity</code> from this operation, <strong>evict</strong> the least recently used key.</li>
+	<li><code>void put(int key, int value)</code> Update the value of the <code>key</code> if the <code>key</code> exists. Otherwise, add the <code>key-value</code> pair to the cache. If the number of keys exceeds the <code>capacity</code> from this operation, <strong>evict</strong> the least recently used key.</li>
 </ul>
 
-<p>The functions&nbsp;<code data-stringify-type="code">get</code>&nbsp;and&nbsp;<code data-stringify-type="code">put</code>&nbsp;must each run in <code>O(1)</code> average time complexity.</p>
+<p>The functions <code>get</code> and <code>put</code> must each run in <code>O(1)</code> average time complexity.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -46,14 +61,31 @@ lRUCache.get(4);    // return 4
 	<li><code>1 &lt;= capacity &lt;= 3000</code></li>
 	<li><code>0 &lt;= key &lt;= 10<sup>4</sup></code></li>
 	<li><code>0 &lt;= value &lt;= 10<sup>5</sup></code></li>
-	<li>At most 2<code>&nbsp;* 10<sup>5</sup></code>&nbsp;calls will be made to <code>get</code> and <code>put</code>.</li>
+	<li>At most <code>2 * 10<sup>5</sup></code> calls will be made to <code>get</code> and <code>put</code>.</li>
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Doubly Linked List
+
+We can implement an LRU (Least Recently Used) cache using a "hash table" and a "doubly linked list".
+
+-   Hash Table: Used to store the key and its corresponding node location.
+-   Doubly Linked List: Used to store node data, sorted by access time.
+
+When accessing a node, if the node exists, we delete it from its original position and reinsert it at the head of the list. This ensures that the node stored at the tail of the list is the least recently used node. When the number of nodes exceeds the maximum cache space, we eliminate the node at the tail of the list.
+
+When inserting a node, if the node exists, we delete it from its original position and reinsert it at the head of the list. If it does not exist, we first check if the cache is full. If it is full, we delete the node at the tail of the list and insert the new node at the head of the list.
+
+The time complexity is $O(1)$, and the space complexity is $O(\textit{capacity})$.
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Node:
@@ -65,7 +97,6 @@ class Node:
 
 
 class LRUCache:
-
     def __init__(self, capacity: int):
         self.cache = {}
         self.head = Node()
@@ -123,7 +154,7 @@ class LRUCache:
 # obj.put(key,value)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Node {
@@ -133,7 +164,6 @@ class Node {
     Node next;
 
     Node() {
-
     }
 
     Node(int key, int val) {
@@ -214,7 +244,214 @@ class LRUCache {
  */
 ```
 
-### **Rust**
+#### C++
+
+```cpp
+struct Node {
+    int k;
+    int v;
+    Node* prev;
+    Node* next;
+
+    Node()
+        : k(0)
+        , v(0)
+        , prev(nullptr)
+        , next(nullptr) {}
+    Node(int key, int val)
+        : k(key)
+        , v(val)
+        , prev(nullptr)
+        , next(nullptr) {}
+};
+
+class LRUCache {
+public:
+    LRUCache(int capacity)
+        : cap(capacity)
+        , size(0) {
+        head = new Node();
+        tail = new Node();
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    int get(int key) {
+        if (!cache.count(key)) return -1;
+        Node* node = cache[key];
+        moveToHead(node);
+        return node->v;
+    }
+
+    void put(int key, int value) {
+        if (cache.count(key)) {
+            Node* node = cache[key];
+            node->v = value;
+            moveToHead(node);
+        } else {
+            Node* node = new Node(key, value);
+            cache[key] = node;
+            addToHead(node);
+            ++size;
+            if (size > cap) {
+                node = removeTail();
+                cache.erase(node->k);
+                --size;
+            }
+        }
+    }
+
+private:
+    unordered_map<int, Node*> cache;
+    Node* head;
+    Node* tail;
+    int cap;
+    int size;
+
+    void moveToHead(Node* node) {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    void removeNode(Node* node) {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+    }
+
+    void addToHead(Node* node) {
+        node->next = head->next;
+        node->prev = head;
+        head->next = node;
+        node->next->prev = node;
+    }
+
+    Node* removeTail() {
+        Node* node = tail->prev;
+        removeNode(node);
+        return node;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+```
+
+#### Go
+
+```go
+type node struct {
+	key, val   int
+	prev, next *node
+}
+
+type LRUCache struct {
+	capacity   int
+	cache      map[int]*node
+	head, tail *node
+}
+
+func Constructor(capacity int) LRUCache {
+	head := new(node)
+	tail := new(node)
+	head.next = tail
+	tail.prev = head
+	return LRUCache{
+		capacity: capacity,
+		cache:    make(map[int]*node, capacity),
+		head:     head,
+		tail:     tail,
+	}
+}
+
+func (this *LRUCache) Get(key int) int {
+	n, ok := this.cache[key]
+	if !ok {
+		return -1
+	}
+	this.moveToFront(n)
+	return n.val
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	n, ok := this.cache[key]
+	if ok {
+		n.val = value
+		this.moveToFront(n)
+		return
+	}
+	if len(this.cache) == this.capacity {
+		back := this.tail.prev
+		this.remove(back)
+		delete(this.cache, back.key)
+	}
+	n = &node{key: key, val: value}
+	this.pushFront(n)
+	this.cache[key] = n
+}
+
+func (this *LRUCache) moveToFront(n *node) {
+	this.remove(n)
+	this.pushFront(n)
+}
+
+func (this *LRUCache) remove(n *node) {
+	n.prev.next = n.next
+	n.next.prev = n.prev
+	n.prev = nil
+	n.next = nil
+}
+
+func (this *LRUCache) pushFront(n *node) {
+	n.prev = this.head
+	n.next = this.head.next
+	this.head.next.prev = n
+	this.head.next = n
+}
+```
+
+#### TypeScript
+
+```ts
+class LRUCache {
+    capacity: number;
+    map: Map<number, number>;
+    constructor(capacity: number) {
+        this.capacity = capacity;
+        this.map = new Map();
+    }
+
+    get(key: number): number {
+        if (this.map.has(key)) {
+            const val = this.map.get(key)!;
+            this.map.delete(key);
+            this.map.set(key, val);
+            return val;
+        }
+        return -1;
+    }
+
+    put(key: number, value: number): void {
+        this.map.delete(key);
+        this.map.set(key, value);
+        if (this.map.size > this.capacity) {
+            this.map.delete(this.map.keys().next().value);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
+```
+
+#### Rust
 
 ```rust
 use std::cell::RefCell;
@@ -340,182 +577,91 @@ impl LRUCache {
         }
     }
 }
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * let obj = LRUCache::new(capacity);
- * let ret_1: i32 = obj.get(key);
- * obj.put(key, value);
- */
 ```
 
-### **Go**
+#### C#
 
-```go
-type node struct {
-	key, val   int
-	prev, next *node
-}
-
-type LRUCache struct {
-	capacity   int
-	cache      map[int]*node
-	head, tail *node
-}
-
-func Constructor(capacity int) LRUCache {
-	head := new(node)
-	tail := new(node)
-	head.next = tail
-	tail.prev = head
-	return LRUCache{
-		capacity: capacity,
-		cache:    make(map[int]*node, capacity),
-		head:     head,
-		tail:     tail,
-	}
-}
-
-func (this *LRUCache) Get(key int) int {
-	n, ok := this.cache[key]
-	if !ok {
-		return -1
-	}
-	this.moveToFront(n)
-	return n.val
-}
-
-func (this *LRUCache) Put(key int, value int) {
-	n, ok := this.cache[key]
-	if ok {
-		n.val = value
-		this.moveToFront(n)
-		return
-	}
-	if len(this.cache) == this.capacity {
-		back := this.tail.prev
-		this.remove(back)
-		delete(this.cache, back.key)
-	}
-	n = &node{key: key, val: value}
-	this.pushFront(n)
-	this.cache[key] = n
-}
-
-func (this *LRUCache) moveToFront(n *node) {
-	this.remove(n)
-	this.pushFront(n)
-}
-
-func (this *LRUCache) remove(n *node) {
-	n.prev.next = n.next
-	n.next.prev = n.prev
-	n.prev = nil
-	n.next = nil
-}
-
-func (this *LRUCache) pushFront(n *node) {
-	n.prev = this.head
-	n.next = this.head.next
-	this.head.next.prev = n
-	this.head.next = n
-}
-```
-
-### **C++**
-
-```cpp
-struct Node {
-    int k;
-    int v;
-    Node* prev;
-    Node* next;
-
-    Node(): k(0), v(0), prev(nullptr), next(nullptr) {}
-    Node(int key, int val): k(key), v(val), prev(nullptr), next(nullptr) {}
-};
-
-class LRUCache {
-public:
-    LRUCache(int capacity): cap(capacity), size(0) {
-        head = new Node();
-        tail = new Node();
-        head->next = tail;
-        tail->prev = head;
+```cs
+public class LRUCache {
+    class Node {
+        public Node Prev;
+        public Node Next;
+        public int Key;
+        public int Val;
     }
 
-    int get(int key) {
-        if (!cache.count(key)) return -1;
-        Node* node = cache[key];
-        moveToHead(node);
-        return node->v;
+    private Node head = new Node();
+    private Node tail = new Node();
+    private Dictionary<int, Node> cache = new Dictionary<int, Node>();
+    private readonly int capacity;
+    private int size;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        head.Next = tail;
+        tail.Prev = head;
     }
 
-    void put(int key, int value) {
-        if (cache.count(key))
-        {
-            Node* node = cache[key];
-            node->v = value;
+    public int Get(int key) {
+        Node node;
+        if (cache.TryGetValue(key, out node)) {
             moveToHead(node);
+            return node.Val;
         }
-        else
-        {
-            Node* node = new Node(key, value);
-            cache[key] = node;
+        return -1;
+    }
+
+    public void Put(int key, int Val) {
+        Node node;
+        if (cache.TryGetValue(key, out node)) {
+            moveToHead(node);
+            node.Val = Val;
+        } else {
+            node = new Node() { Key = key, Val = Val };
+            cache.Add(key, node);
             addToHead(node);
-            ++size;
-            if (size > cap)
-            {
+            if (++size > capacity) {
                 node = removeTail();
-                cache.erase(node->k);
+                cache.Remove(node.Key);
                 --size;
             }
         }
     }
 
-private:
-    unordered_map<int, Node*> cache;
-    Node* head;
-    Node* tail;
-    int cap;
-    int size;
-
-    void moveToHead(Node* node) {
+    private void moveToHead(Node node) {
         removeNode(node);
         addToHead(node);
     }
 
-    void removeNode(Node* node) {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
+    private void removeNode(Node node) {
+        node.Prev.Next = node.Next;
+        node.Next.Prev = node.Prev;
     }
 
-    void addToHead(Node* node) {
-        node->next = head->next;
-        node->prev = head;
-        head->next = node;
-        node->next->prev = node;
+    private void addToHead(Node node) {
+        node.Next = head.Next;
+        node.Prev = head;
+        head.Next = node;
+        node.Next.Prev = node;
     }
 
-    Node* removeTail() {
-        Node* node = tail->prev;
+    private Node removeTail() {
+        Node node = tail.Prev;
         removeNode(node);
         return node;
     }
-};
+}
 
 /**
  * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.Get(key);
+ * obj.Put(key,Val);
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

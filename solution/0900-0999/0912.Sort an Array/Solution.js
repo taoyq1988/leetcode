@@ -3,13 +3,13 @@
  * @return {number[]}
  */
 var sortArray = function (nums) {
-    function quickSort(left, right) {
-        if (left >= right) {
+    function quickSort(l, r) {
+        if (l >= r) {
             return;
         }
-        let i = left - 1;
-        let j = right + 1;
-        const x = nums[(left + right) >> 1];
+        let i = l - 1;
+        let j = r + 1;
+        const x = nums[(l + r) >> 1];
         while (i < j) {
             while (nums[++i] < x);
             while (nums[--j] > x);
@@ -17,8 +17,8 @@ var sortArray = function (nums) {
                 [nums[i], nums[j]] = [nums[j], nums[i]];
             }
         }
-        quickSort(left, j);
-        quickSort(j + 1, right);
+        quickSort(l, j);
+        quickSort(j + 1, r);
     }
     const n = nums.length;
     quickSort(0, n - 1);

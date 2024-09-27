@@ -1,15 +1,29 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0817.Linked%20List%20Components/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - Linked List
+---
+
+<!-- problem:start -->
+
 # [817. Linked List Components](https://leetcode.com/problems/linked-list-components)
 
 [中文文档](/solution/0800-0899/0817.Linked%20List%20Components/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You are given the <code>head</code> of a linked list containing unique integer values and an integer array <code>nums</code> that is a subset of the linked list values.</p>
 
 <p>Return <em>the number of connected components in </em><code>nums</code><em> where two values are connected if they appear <strong>consecutively</strong> in the linked list</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0817.Linked%20List%20Components/images/lc-linkedlistcom1.jpg" style="width: 424px; height: 65px;" />
 <pre>
 <strong>Input:</strong> head = [0,1,2,3], nums = [0,1,3]
@@ -17,7 +31,7 @@
 <strong>Explanation:</strong> 0 and 1 are connected, so [0, 1] and [3] are the two connected components.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0817.Linked%20List%20Components/images/lc-linkedlistcom2.jpg" style="width: 544px; height: 65px;" />
 <pre>
 <strong>Input:</strong> head = [0,1,2,3,4], nums = [0,3,1,4]
@@ -38,11 +52,17 @@
 	<li>All the values of <code>nums</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -51,21 +71,19 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    def numComponents(self, head: ListNode, nums: List[int]) -> int:
+    def numComponents(self, head: Optional[ListNode], nums: List[int]) -> int:
+        ans = 0
         s = set(nums)
-        res, pre = 0, True
         while head:
-            if head.val in s:
-                if pre:
-                    res += 1
-                    pre = False
-            else:
-                pre = True
-            head = head.next
-        return res
+            while head and head.val not in s:
+                head = head.next
+            ans += head is not None
+            while head and head.val in s:
+                head = head.next
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -80,32 +98,194 @@ class Solution:
  */
 class Solution {
     public int numComponents(ListNode head, int[] nums) {
+        int ans = 0;
         Set<Integer> s = new HashSet<>();
-        for (int num : nums) {
-            s.add(num);
+        for (int v : nums) {
+            s.add(v);
         }
-        int res = 0;
-        boolean pre = true;
         while (head != null) {
-            if (s.contains(head.val)) {
-                if (pre) {
-                    ++res;
-                    pre = false;
-                }
-            } else {
-                pre = true;
+            while (head != null && !s.contains(head.val)) {
+                head = head.next;
             }
-            head = head.next;
+            ans += head != null ? 1 : 0;
+            while (head != null && s.contains(head.val)) {
+                head = head.next;
+            }
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int numComponents(ListNode* head, vector<int>& nums) {
+        unordered_set<int> s(nums.begin(), nums.end());
+        int ans = 0;
+        while (head) {
+            while (head && !s.count(head->val)) head = head->next;
+            ans += head != nullptr;
+            while (head && s.count(head->val)) head = head->next;
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func numComponents(head *ListNode, nums []int) int {
+	s := map[int]bool{}
+	for _, v := range nums {
+		s[v] = true
+	}
+	ans := 0
+	for head != nil {
+		for head != nil && !s[head.Val] {
+			head = head.Next
+		}
+		if head != nil {
+			ans++
+		}
+		for head != nil && s[head.Val] {
+			head = head.Next
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+function numComponents(head: ListNode | null, nums: number[]): number {
+    const set = new Set<number>(nums);
+    let res = 0;
+    let cur = head;
+    let inSet = false;
+    while (cur != null) {
+        if (set.has(cur.val)) {
+            if (!inSet) {
+                inSet = true;
+                res++;
+            }
+        } else {
+            inSet = false;
+        }
+        cur = cur.next;
+    }
+    return res;
+}
+```
+
+#### Rust
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+//
+// impl ListNode {
+//   #[inline]
+//   fn new(val: i32) -> Self {
+//     ListNode {
+//       next: None,
+//       val
+//     }
+//   }
+// }
+use std::collections::HashSet;
+impl Solution {
+    pub fn num_components(head: Option<Box<ListNode>>, nums: Vec<i32>) -> i32 {
+        let set = nums.into_iter().collect::<HashSet<i32>>();
+        let mut res = 0;
+        let mut in_set = false;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            if set.contains(&node.val) {
+                if !in_set {
+                    in_set = true;
+                    res += 1;
+                }
+            } else {
+                in_set = false;
+            }
+            cur = &node.next;
+        }
+        res
+    }
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number[]} nums
+ * @return {number}
+ */
+var numComponents = function (head, nums) {
+    const s = new Set(nums);
+    let ans = 0;
+    while (head) {
+        while (head && !s.has(head.val)) {
+            head = head.next;
+        }
+        ans += head != null;
+        while (head && s.has(head.val)) {
+            head = head.next;
+        }
+    }
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

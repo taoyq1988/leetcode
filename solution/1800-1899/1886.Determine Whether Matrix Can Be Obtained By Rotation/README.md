@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1886.Determine%20Whether%20Matrix%20Can%20Be%20Obtained%20By%20Rotation/README.md
+rating: 1407
+source: 第 244 场周赛 Q1
+tags:
+    - 数组
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [1886. 判断矩阵经轮转后是否一致](https://leetcode.cn/problems/determine-whether-matrix-can-be-obtained-by-rotation)
 
 [English Version](/solution/1800-1899/1886.Determine%20Whether%20Matrix%20Can%20Be%20Obtained%20By%20Rotation/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个大小为 <code>n x n</code> 的二进制矩阵 <code>mat</code> 和 <code>target</code> 。现<strong> 以 90 度顺时针轮转 </strong>矩阵 <code>mat</code> 中的元素 <strong>若干次</strong> ，如果能够使 <code>mat</code> 与 <code>target</code> 一致，返回 <code>true</code> ；否则，返回<em> </em><code>false</code><em> 。</em></p>
 
@@ -45,32 +58,19 @@
 	<li><code>mat[i][j]</code> 和 <code>target[i][j]</code> 不是 <code>0</code> 就是 <code>1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-方法一：模拟旋转
+### 方法一：模拟旋转
 
 旋转矩阵，判断矩阵是否一致，旋转方式同 [48. 旋转图像](https://leetcode.cn/problems/rotate-image/)。
 
-方法二：原地比较
-
-此题不同于 [48. 旋转图像](https://leetcode.cn/problems/rotate-image/)，并不要求改动原数组，因此，只要比较对应的位置即可。
-
-| 旋转度数 | A      | B              |
-| -------- | ------ | -------------- |
-| 0        | `i, j` | `i, j`         |
-| 90       | `i, j` | `j, n - i`     |
-| 180      | `i, j` | `n - i, n - j` |
-| 270      | `i, j` | `n - j, i`     |
-
-> `n = A.length - 1 = B.length - 1`
-
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -84,6 +84,7 @@ class Solution:
                     matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1]
                     matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1]
                     matrix[j][n - i - 1] = t
+
         for _ in range(4):
             if mat == target:
                 return True
@@ -91,9 +92,7 @@ class Solution:
         return False
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -135,7 +134,62 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    bool findRotation(vector<vector<int>>& mat, vector<vector<int>>& target) {
+        int n = mat.size();
+        for (int k = 0; k < 4; ++k) {
+            vector<vector<int>> g(n, vector<int>(n));
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < n; ++j)
+                    g[i][j] = mat[j][n - i - 1];
+            if (g == target) return true;
+            mat = g;
+        }
+        return false;
+    }
+};
+```
+
+#### Go
+
+```go
+func findRotation(mat [][]int, target [][]int) bool {
+	n := len(mat)
+	for k := 0; k < 4; k++ {
+		g := make([][]int, n)
+		for i := range g {
+			g[i] = make([]int, n)
+		}
+		for i := 0; i < n; i++ {
+			for j := 0; j < n; j++ {
+				g[i][j] = mat[j][n-i-1]
+			}
+		}
+		if equals(g, target) {
+			return true
+		}
+		mat = g
+	}
+	return false
+}
+
+func equals(a, b [][]int) bool {
+	for i, row := range a {
+		for j, v := range row {
+			if v != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
+```
+
+#### TypeScript
 
 ```ts
 function findRotation(mat: number[][], target: number[][]): boolean {
@@ -180,7 +234,7 @@ function rotate(matrix: number[][]): void {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -208,10 +262,76 @@ impl Solution {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：原地比较
+
+此题不同于 [48. 旋转图像](https://leetcode.cn/problems/rotate-image/)，并不要求改动原数组，因此，只要比较对应的位置即可。
+
+| 旋转度数 | A      | B              |
+| -------- | ------ | -------------- |
+| 0        | `i, j` | `i, j`         |
+| 90       | `i, j` | `j, n - i`     |
+| 180      | `i, j` | `n - i, n - j` |
+| 270      | `i, j` | `n - j, i`     |
+
+> `n = A.length - 1 = B.length - 1`
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def findRotation(self, mat: List[List[int]], target: List[List[int]]) -> bool:
+        for _ in range(4):
+            mat = [list(col) for col in zip(*mat[::-1])]
+            if mat == target:
+                return True
+        return False
 ```
 
+#### Java
+
+```java
+class Solution {
+    public boolean findRotation(int[][] mat, int[][] target) {
+        int n = mat.length;
+        for (int k = 0; k < 4; ++k) {
+            int[][] g = new int[n][n];
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    g[i][j] = mat[j][n - i - 1];
+                }
+            }
+            if (equals(g, target)) {
+                return true;
+            }
+            mat = g;
+        }
+        return false;
+    }
+
+    private boolean equals(int[][] a, int[][] b) {
+        int n = a.length;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (a[i][j] != b[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

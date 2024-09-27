@@ -1,13 +1,12 @@
-func countEven(num int) int {
-	ans := 0
+func countEven(num int) (ans int) {
 	for i := 1; i <= num; i++ {
-		t := 0
-		for j := i; j > 0; j /= 10 {
-			t += j % 10
+		s := 0
+		for x := i; x > 0; x /= 10 {
+			s += x % 10
 		}
-		if t%2 == 0 {
+		if s%2 == 0 {
 			ans++
 		}
 	}
-	return ans
+	return
 }

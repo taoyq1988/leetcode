@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0205.Isomorphic%20Strings/README.md
+tags:
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [205. 同构字符串](https://leetcode.cn/problems/isomorphic-strings)
 
 [English Version](/solution/0200-0299/0205.Isomorphic%20Strings/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定两个字符串&nbsp;<code>s</code>&nbsp;和&nbsp;<code>t</code>&nbsp;，判断它们是否是同构的。</p>
 
@@ -17,20 +28,20 @@
 <p><strong>示例 1:</strong></p>
 
 <pre>
-<strong>输入：</strong>s = <code>"egg", </code>t = <code>"add"</code>
+<strong>输入：</strong>s = <code>"egg"</code>, t = <code>"add"</code>
 <strong>输出：</strong>true
 </pre>
 
 <p><strong>示例 2：</strong></p>
 
 <pre>
-<strong>输入：</strong>s = <code>"foo", </code>t = <code>"bar"</code>
+<strong>输入：</strong>s = <code>"foo"</code>, t = <code>"bar"</code>
 <strong>输出：</strong>false</pre>
 
 <p><strong>示例 3：</strong></p>
 
 <pre>
-<strong>输入：</strong>s = <code>"paper", </code>t = <code>"title"</code>
+<strong>输入：</strong>s = <code>"paper"</code>, t = <code>"title"</code>
 <strong>输出：</strong>true</pre>
 
 <p>&nbsp;</p>
@@ -45,47 +56,38 @@
 	<li><code>s</code>&nbsp;和&nbsp;<code>t</code>&nbsp;由任意有效的 ASCII 字符组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表**
+### 方法一：哈希表或数组
+
+我们可以用两个哈希表或数组 $d_1$ 和 $d_2$ 记录 $s$ 和 $t$ 中字符的映射关系。
+
+遍历 $s$ 和 $t$，如果 $d_1$ 和 $d_2$ 中对应的字符映射关系不同，则返回 `false`，否则更新 $d_1$ 和 $d_2$ 中对应的字符映射关系。遍历结束，说明 $s$ 和 $t$ 是同构的，返回 `true`。
+
+时间复杂度 $O(n)$，空间复杂度 $O(C)$。其中 $n$ 为字符串 $s$ 的长度；而 $C$ 为字符集大小，本题中 $C = 256$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def isIsomorphic(self, s: str, t: str) -> bool:
-        d1, d2 = {}, {}
+        d1 = {}
+        d2 = {}
         for a, b in zip(s, t):
-            if a in d1 and d1[a] != b:
-                return False
-            if b in d2 and d2[b] != a:
+            if (a in d1 and d1[a] != b) or (b in d2 and d2[b] != a):
                 return False
             d1[a] = b
             d2[b] = a
         return True
 ```
 
-```python
-class Solution:
-    def isIsomorphic(self, s: str, t: str) -> bool:
-        d1, d2 = [0] * 256, [0] * 256
-        for i, (a, b) in enumerate(zip(s, t)):
-            a, b = ord(a), ord(b)
-            if d1[a] != d2[b]:
-                return False
-            d1[a] = d2[b] = i + 1
-        return True
-```
-
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -109,38 +111,20 @@ class Solution {
 }
 ```
 
-```java
-class Solution {
-    public boolean isIsomorphic(String s, String t) {
-        int[] d1 = new int[256];
-        int[] d2 = new int[256];
-        int n = s.length();
-        for (int i = 0; i < n; ++i) {
-            char a = s.charAt(i), b = t.charAt(i);
-            if (d1[a] != d2[b]) {
-                return false;
-            }
-            d1[a] = i + 1;
-            d2[b] = i + 1;
-        }
-        return true;
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool isIsomorphic(string s, string t) {
-        vector<int> d1(256);
-        vector<int> d2(256);
+        int d1[256]{};
+        int d2[256]{};
         int n = s.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             char a = s[i], b = t[i];
-            if (d1[a] != d2[b]) return false;
+            if (d1[a] != d2[b]) {
+                return false;
+            }
             d1[a] = d2[b] = i + 1;
         }
         return true;
@@ -148,74 +132,43 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isIsomorphic(s string, t string) bool {
-	d1, d2 := make([]int, 256), make([]int, 256)
-	for i, a := range s {
-		b := t[i]
-		if d1[a] != d2[b] {
+	d1 := [256]int{}
+	d2 := [256]int{}
+	for i := range s {
+		if d1[s[i]] != d2[t[i]] {
 			return false
 		}
-		d1[a], d2[b] = i+1, i+1
+		d1[s[i]] = i + 1
+		d2[t[i]] = i + 1
 	}
 	return true
 }
 ```
 
-### **C#**
-
-```cs
-public class Solution {
-    public bool IsIsomorphic(string s, string t) {
-        var d1 = new Dictionary<char, char>();
-        var d2 = new Dictionary<char, char>();
-        for (var i = 0; i < s.Length; ++i)
-        {
-            char mapping1;
-            char mapping2;
-            var found1 = d1.TryGetValue(s[i], out mapping1);
-            var found2 = d2.TryGetValue(t[i], out mapping2);
-            if (found1 ^ found2) return false;
-            if (!found1)
-            {
-                d1.Add(s[i], t[i]);
-                d2.Add(t[i], s[i]);
-            }
-            else if (mapping1 != t[i] || mapping2 != s[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function isIsomorphic(s: string, t: string): boolean {
-    const n = s.length;
-    const help = (s: string, t: string) => {
-        const map = new Map();
-        for (let i = 0; i < n; i++) {
-            if (map.has(s[i])) {
-                if (map.get(s[i]) !== t[i]) {
-                    return false;
-                }
-            } else {
-                map.set(s[i], t[i]);
-            }
+    const d1: number[] = new Array(256).fill(0);
+    const d2: number[] = new Array(256).fill(0);
+    for (let i = 0; i < s.length; ++i) {
+        const a = s.charCodeAt(i);
+        const b = t.charCodeAt(i);
+        if (d1[a] !== d2[b]) {
+            return false;
         }
-        return true;
-    };
-    return help(s, t) && help(t, s);
+        d1[a] = i + 1;
+        d2[b] = i + 1;
+    }
+    return true;
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::HashMap;
@@ -241,10 +194,74 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C#
 
-```
-
+```cs
+public class Solution {
+    public bool IsIsomorphic(string s, string t) {
+        int[] d1 = new int[256];
+        int[] d2 = new int[256];
+        for (int i = 0; i < s.Length; ++i) {
+            var a = s[i];
+            var b = t[i];
+            if (d1[a] != d2[b]) {
+                return false;
+            }
+            d1[a] = i + 1;
+            d2[b] = i + 1;
+        }
+        return true;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        d1, d2 = [0] * 256, [0] * 256
+        for i, (a, b) in enumerate(zip(s, t), 1):
+            a, b = ord(a), ord(b)
+            if d1[a] != d2[b]:
+                return False
+            d1[a] = d2[b] = i
+        return True
+```
+
+#### Java
+
+```java
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        int[] d1 = new int[256];
+        int[] d2 = new int[256];
+        int n = s.length();
+        for (int i = 0; i < n; ++i) {
+            char a = s.charAt(i), b = t.charAt(i);
+            if (d1[a] != d2[b]) {
+                return false;
+            }
+            d1[a] = i + 1;
+            d2[b] = i + 1;
+        }
+        return true;
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

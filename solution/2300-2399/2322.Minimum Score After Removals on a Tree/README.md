@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/README.md
+rating: 2391
+source: 第 299 场周赛 Q4
+tags:
+    - 位运算
+    - 树
+    - 深度优先搜索
+    - 数组
+---
+
+<!-- problem:start -->
+
 # [2322. 从树中删除边的最小分数](https://leetcode.cn/problems/minimum-score-after-removals-on-a-tree)
 
 [English Version](/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>存在一棵无向连通树，树中有编号从 <code>0</code> 到 <code>n - 1</code> 的 <code>n</code> 个节点， 以及 <code>n - 1</code> 条边。</p>
 
@@ -64,11 +79,13 @@
 	<li><code>edges</code> 表示一棵有效的树</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：DFS + 子树异或和**
+### 方法一：DFS + 子树异或和
 
 枚举 $[0,n)$ 的每个点 $i$ 作为树的根节点，将根节点与某个子节点相连的边作为第一条被删除的边。这样我们就获得了两个连通块，我们记包含根节点 $i$ 的连通块为 $A$，不包含根节点 $i$ 的连通块为 $B$。
 
@@ -78,9 +95,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -122,9 +137,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -139,9 +152,7 @@ class Solution {
         n = nums.length;
         g = new List[n];
         this.nums = nums;
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<>();
-        }
+        Arrays.setAll(g, k -> new ArrayList<>());
         for (int[] e : edges) {
             int a = e[0], b = e[1];
             g[a].add(b);
@@ -186,7 +197,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -201,18 +212,15 @@ public:
     int minimumScore(vector<int>& nums, vector<vector<int>>& edges) {
         n = nums.size();
         g.resize(n, vector<int>());
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int a = e[0], b = e[1];
             g[a].push_back(b);
             g[b].push_back(a);
         }
         for (int& v : nums) s ^= v;
         this->nums = nums;
-        for (int i = 0; i < n; ++i)
-        {
-            for (int j : g[i])
-            {
+        for (int i = 0; i < n; ++i) {
+            for (int j : g[i]) {
                 s1 = dfs(i, -1, j);
                 dfs2(i, -1, j);
             }
@@ -222,27 +230,28 @@ public:
 
     int dfs(int i, int fa, int x) {
         int res = nums[i];
-        for (int j : g[i]) if (j != fa && j != x) res ^= dfs(j, i, x);
+        for (int j : g[i])
+            if (j != fa && j != x) res ^= dfs(j, i, x);
         return res;
     }
 
     int dfs2(int i, int fa, int x) {
         int res = nums[i];
-        for (int j : g[i]) if (j != fa && j != x)
-        {
-            int a = dfs2(j, i, x);
-            res ^= a;
-            int b = s1 ^ a;
-            int c = s ^ s1;
-            int t = max(max(a, b), c) - min(min(a, b), c);
-            ans = min(ans, t);
-        }
+        for (int j : g[i])
+            if (j != fa && j != x) {
+                int a = dfs2(j, i, x);
+                res ^= a;
+                int b = s1 ^ a;
+                int c = s ^ s1;
+                int t = max(max(a, b), c) - min(min(a, b), c);
+                ans = min(ans, t);
+            }
         return res;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumScore(nums []int, edges [][]int) int {
@@ -292,32 +301,10 @@ func minimumScore(nums []int, edges [][]int) int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

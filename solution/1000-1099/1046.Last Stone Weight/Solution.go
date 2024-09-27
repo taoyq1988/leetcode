@@ -2,9 +2,9 @@ func lastStoneWeight(stones []int) int {
 	q := &hp{stones}
 	heap.Init(q)
 	for q.Len() > 1 {
-		x, y := q.pop(), q.pop()
+		y, x := q.pop(), q.pop()
 		if x != y {
-			q.push(x - y)
+			q.push(y - x)
 		}
 	}
 	if q.Len() > 0 {
@@ -15,9 +15,9 @@ func lastStoneWeight(stones []int) int {
 
 type hp struct{ sort.IntSlice }
 
-func (h hp) Less(i, j int) bool  { return h.IntSlice[i] > h.IntSlice[j] }
-func (h *hp) Push(v interface{}) { h.IntSlice = append(h.IntSlice, v.(int)) }
-func (h *hp) Pop() interface{} {
+func (h hp) Less(i, j int) bool { return h.IntSlice[i] > h.IntSlice[j] }
+func (h *hp) Push(v any)        { h.IntSlice = append(h.IntSlice, v.(int)) }
+func (h *hp) Pop() any {
 	a := h.IntSlice
 	v := a[len(a)-1]
 	h.IntSlice = a[:len(a)-1]

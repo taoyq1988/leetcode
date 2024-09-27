@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0675.Cut%20Off%20Trees%20for%20Golf%20Event/README.md
+tags:
+    - 广度优先搜索
+    - 数组
+    - 矩阵
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [675. 为高尔夫比赛砍树](https://leetcode.cn/problems/cut-off-trees-for-golf-event)
 
 [English Version](/solution/0600-0699/0675.Cut%20Off%20Trees%20for%20Golf%20Event/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>你被请来给一个要举办高尔夫比赛的树林砍树。树林由一个 <code>m x n</code> 的矩阵表示， 在这个矩阵中：</p>
 
@@ -59,11 +72,15 @@
 	<li><code>0 <= forest[i][j] <= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-题目的一个关键信息是“所有树的高度都不同”，要按照从小到大的顺序依次砍树，因此，先遍历树林，找出所有树及对应的坐标点。然后将树按照高度升序排列。
+### 方法一：BFS + 优先队列（A\* 算法）
+
+题目的一个关键信息是“所有树的高度都不同”，要按照从小到大的顺序依次砍树，因此，我们先遍历树林，找出所有树及对应的坐标点。然后将树按照高度升序排列。
 
 接下来就是找相邻两个点之间的最短距离。可以用 BFS，A\* 算法优化搜索。
 
@@ -77,9 +94,7 @@ A\* 算法主要思想如下：
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -104,7 +119,9 @@ class Solution:
             return -1
 
         m, n = len(forest), len(forest[0])
-        trees = [(forest[i][j], i, j) for i in range(m) for j in range(n) if forest[i][j] > 1]
+        trees = [
+            (forest[i][j], i, j) for i in range(m) for j in range(n) if forest[i][j] > 1
+        ]
         trees.sort()
         i = j = 0
         ans = 0
@@ -117,9 +134,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -136,7 +151,7 @@ class Solution {
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (forest.get(i).get(j) > 1) {
-                    trees.add(new int[]{forest.get(i).get(j), i * n + j});
+                    trees.add(new int[] {forest.get(i).get(j), i * n + j});
                 }
             }
         }
@@ -157,7 +172,7 @@ class Solution {
 
     private int bfs(int start, int end) {
         PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
-        q.offer(new int[]{f(start, end), start});
+        q.offer(new int[] {f(start, end), start});
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[start] = 0;
         int[] dirs = {-1, 0, 1, 0, -1};
@@ -172,7 +187,7 @@ class Solution {
                 if (x >= 0 && x < m && y >= 0 && y < n && forest.get(x).get(y) > 0) {
                     if (dist[x * n + y] > dist[state] + 1) {
                         dist[x * n + y] = dist[state] + 1;
-                        q.offer(new int[]{dist[x * n + y] + f(x * n + y, end), x * n + y});
+                        q.offer(new int[] {dist[x * n + y] + f(x * n + y, end), x * n + y});
                     }
                 }
             }
@@ -190,7 +205,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -211,8 +226,7 @@ public:
         sort(trees.begin(), trees.end());
         int ans = 0;
         int start = 0;
-        for (auto& tree : trees)
-        {
+        for (auto& tree : trees) {
             int end = tree.second;
             int t = bfs(start, end, forest);
             if (t == -1) return -1;
@@ -228,16 +242,13 @@ public:
         fill(dist.begin(), dist.end(), INT_MAX);
         dist[start] = 0;
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int state = q.top().second;
             q.pop();
             if (state == end) return dist[state];
-            for (int k = 0; k < 4; ++k)
-            {
+            for (int k = 0; k < 4; ++k) {
                 int x = state / n + dirs[k], y = state % n + dirs[k + 1];
-                if (x >= 0 && x < m && y >= 0 && y < n && forest[x][y] && dist[x * n + y] > dist[state] + 1)
-                {
+                if (x >= 0 && x < m && y >= 0 && y < n && forest[x][y] && dist[x * n + y] > dist[state] + 1) {
                     dist[x * n + y] = dist[state] + 1;
                     q.push({dist[x * n + y] + f(x * n + y, end), x * n + y});
                 }
@@ -254,7 +265,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 var dirs = [][]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
@@ -319,7 +330,7 @@ func cutOffTree(forest [][]int) int {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::HashSet;
@@ -346,7 +357,7 @@ impl Solution {
                     }
                     for k in 0..4 {
                         let x = state / col + DIRS[k][0];
-                        let y = state % col + DIRS[k][1];
+                        let y = (state % col) + DIRS[k][1];
                         let nxt = x * col + y;
                         if x >= 0
                             && x < row
@@ -391,10 +402,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

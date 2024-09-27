@@ -1,10 +1,22 @@
-# [549. 二叉树中最长的连续序列](https://leetcode.cn/problems/binary-tree-longest-consecutive-sequence-ii)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0549.Binary%20Tree%20Longest%20Consecutive%20Sequence%20II/README.md
+tags:
+    - 树
+    - 深度优先搜索
+    - 二叉树
+---
+
+<!-- problem:start -->
+
+# [549. 二叉树最长连续序列 II 🔒](https://leetcode.cn/problems/binary-tree-longest-consecutive-sequence-ii)
 
 [English Version](/solution/0500-0599/0549.Binary%20Tree%20Longest%20Consecutive%20Sequence%20II/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定二叉树的根&nbsp;<code>root</code>&nbsp;，返回树中<strong>最长连续路径</strong>的长度。<br />
 <strong>连续路径</strong>是路径中相邻节点的值相差 <code>1</code> 的路径。此路径可以是增加或减少。</p>
@@ -48,15 +60,17 @@
 	<li><code>-3 * 10<sup>4</sup>&nbsp;&lt;= Node.val &lt;= 3 * 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 # Definition for a binary tree node.
@@ -92,9 +106,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 /**
@@ -123,7 +135,7 @@ class Solution {
 
     private int[] dfs(TreeNode root) {
         if (root == null) {
-            return new int[]{0, 0};
+            return new int[] {0, 0};
         }
         int incr = 1, decr = 1;
         int[] left = dfs(root.left);
@@ -145,12 +157,12 @@ class Solution {
             }
         }
         ans = Math.max(ans, incr + decr - 1);
-        return new int[]{incr, decr};
+        return new int[] {incr, decr};
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -179,13 +191,11 @@ public:
         int incr = 1, decr = 1;
         auto left = dfs(root->left);
         auto right = dfs(root->right);
-        if (root->left)
-        {
+        if (root->left) {
             if (root->left->val + 1 == root->val) incr = left[0] + 1;
             if (root->left->val - 1 == root->val) decr = left[1] + 1;
         }
-        if (root->right)
-        {
+        if (root->right) {
             if (root->right->val + 1 == root->val) incr = max(incr, right[0] + 1);
             if (root->right->val - 1 == root->val) decr = max(decr, right[1] + 1);
         }
@@ -195,7 +205,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -238,19 +248,10 @@ func longestConsecutive(root *TreeNode) int {
 	dfs(root)
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

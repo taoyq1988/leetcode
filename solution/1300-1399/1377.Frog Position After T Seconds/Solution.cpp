@@ -2,38 +2,30 @@ class Solution {
 public:
     double frogPosition(int n, vector<vector<int>>& edges, int t, int target) {
         vector<vector<int>> g(n + 1);
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int u = e[0], v = e[1];
             g[u].push_back(v);
             g[v].push_back(u);
         }
-        typedef pair<int, double> pid;
-        queue<pid> q;
-        q.push({1, 1.0});
-        vector<bool> vis(n + 1);
+        queue<pair<int, double>> q{{{1, 1.0}}};
+        bool vis[n + 1];
+        memset(vis, false, sizeof(vis));
         vis[1] = true;
-        while (!q.empty() && t >= 0)
-        {
-            for (int k = q.size(); k; --k)
-            {
-                auto x = q.front();
+        for (; q.size() && t >= 0; --t) {
+            for (int k = q.size(); k; --k) {
+                auto [u, p] = q.front();
                 q.pop();
-                int u = x.first;
-                double p = x.second;
-                vector<int> nxt;
-                for (int v : g[u])
-                {
-                    if (!vis[v])
-                    {
+                int cnt = g[u].size() - (u != 1);
+                if (u == target) {
+                    return cnt * t == 0 ? p : 0;
+                }
+                for (int v : g[u]) {
+                    if (!vis[v]) {
                         vis[v] = true;
-                        nxt.push_back(v);
+                        q.push({v, p / cnt});
                     }
                 }
-                if (u == target && (t == 0 || nxt.empty())) return p;
-                for (int v : nxt) q.push({v, p / nxt.size()});
             }
-            --t;
         }
         return 0;
     }

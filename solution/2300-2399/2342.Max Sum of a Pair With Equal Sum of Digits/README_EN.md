@@ -1,15 +1,32 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2342.Max%20Sum%20of%20a%20Pair%20With%20Equal%20Sum%20of%20Digits/README_EN.md
+rating: 1308
+source: Weekly Contest 302 Q2
+tags:
+    - Array
+    - Hash Table
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2342. Max Sum of a Pair With Equal Sum of Digits](https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits)
 
 [中文文档](/solution/2300-2399/2342.Max%20Sum%20of%20a%20Pair%20With%20Equal%20Sum%20of%20Digits/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You are given a <strong>0-indexed</strong> array <code>nums</code> consisting of <strong>positive</strong> integers. You can choose two indices <code>i</code> and <code>j</code>, such that <code>i != j</code>, and the sum of digits of the number <code>nums[i]</code> is equal to that of <code>nums[j]</code>.</p>
 
 <p>Return <em>the <strong>maximum</strong> value of </em><code>nums[i] + nums[j]</code><em> that you can obtain over all possible indices </em><code>i</code><em> and </em><code>j</code><em> that satisfy the conditions.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [18,43,36,13,7]
@@ -20,7 +37,7 @@
 So the maximum sum that we can obtain is 54.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [10,12,19,14]
@@ -36,133 +53,157 @@ So the maximum sum that we can obtain is 54.
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table
+
+We can use a hash table $d$ to record the maximum value corresponding to each digit sum, and initialize an answer variable $ans = -1$.
+
+Next, we traverse the array $nums$. For each number $v$, we calculate its digit sum $x$. If $x$ exists in the hash table $d$, then we update the answer $ans = \max(ans, d[x] + v)$. Then update the hash table $d[x] = \max(d[x], v)$.
+
+Finally, return the answer $ans$.
+
+Since the maximum element in $nums$ is $10^9$, the maximum digit sum is $9 \times 9 = 81$. We can directly define an array $d$ of length $100$ to replace the hash table.
+
+The time complexity is $O(n \times \log M)$, and the space complexity is $O(D)$. Here, $n$ is the length of the array $nums$, and $M$ and $D$ are the maximum value of the elements in the array $nums$ and the maximum value of the digit sum, respectively. In this problem, $M \leq 10^9$, $D \leq 81$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def maximumSum(self, nums: List[int]) -> int:
-        d = defaultdict(list)
-        for i, v in enumerate(nums):
-            t = 0
-            while v:
-                t += v % 10
-                v //= 10
-            d[t].append(nums[i])
+        d = defaultdict(int)
         ans = -1
-        for v in d.values():
-            v.sort(reverse=True)
-            if len(v) > 1:
-                ans = max(ans, v[0] + v[1])
+        for v in nums:
+            x, y = 0, v
+            while y:
+                x += y % 10
+                y //= 10
+            if x in d:
+                ans = max(ans, d[x] + v)
+            d[x] = max(d[x], v)
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int maximumSum(int[] nums) {
-        Map<Integer, List<Integer>> d = new HashMap<>();
-        for (int i = 0; i < nums.length; ++i) {
-            int v = nums[i];
-            int t = 0;
-            while (v != 0) {
-                t += v % 10;
-                v /= 10;
-            }
-            d.computeIfAbsent(t, k -> new ArrayList<>()).add(nums[i]);
-        }
+        int[] d = new int[100];
         int ans = -1;
-        for (List<Integer> v : d.values()) {
-            int n = v.size();
-            if (n > 1) {
-                Collections.sort(v);
-                ans = Math.max(ans, v.get(n - 1) + v.get(n - 2));
+        for (int v : nums) {
+            int x = 0;
+            for (int y = v; y > 0; y /= 10) {
+                x += y % 10;
             }
+            if (d[x] > 0) {
+                ans = Math.max(ans, d[x] + v);
+            }
+            d[x] = Math.max(d[x], v);
         }
         return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maximumSum(vector<int>& nums) {
-        unordered_map<int, vector<int>> d;
-        for (int i = 0; i < nums.size(); ++i)
-        {
-            int v = nums[i];
-            int t = 0;
-            while (v)
-            {
-                t += v % 10;
-                v /= 10;
-            }
-            d[t].push_back(nums[i]);
-        }
+        int d[100]{};
         int ans = -1;
-        for (auto& [_, v] : d)
-        {
-            int n = v.size();
-            if (n > 1)
-            {
-                sort(v.begin(), v.end());
-                ans = max(ans, v[n - 1] + v[n - 2]);
+        for (int v : nums) {
+            int x = 0;
+            for (int y = v; y; y /= 10) {
+                x += y % 10;
             }
+            if (d[x]) {
+                ans = max(ans, d[x] + v);
+            }
+            d[x] = max(d[x], v);
         }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumSum(nums []int) int {
-	d := map[int][]int{}
-	for i, v := range nums {
-		t := 0
-		for v > 0 {
-			t += v % 10
-			v /= 10
-		}
-		d[t] = append(d[t], nums[i])
-	}
+	d := [100]int{}
 	ans := -1
-	for _, v := range d {
-		n := len(v)
-		if n > 1 {
-			sort.Ints(v)
-			ans = max(ans, v[n-1]+v[n-2])
+	for _, v := range nums {
+		x := 0
+		for y := v; y > 0; y /= 10 {
+			x += y % 10
 		}
+		if d[x] > 0 {
+			ans = max(ans, d[x]+v)
+		}
+		d[x] = max(d[x], v)
 	}
 	return ans
 }
+```
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+#### TypeScript
+
+```ts
+function maximumSum(nums: number[]): number {
+    const d: number[] = Array(100).fill(0);
+    let ans = -1;
+    for (const v of nums) {
+        let x = 0;
+        for (let y = v; y; y = (y / 10) | 0) {
+            x += y % 10;
+        }
+        if (d[x]) {
+            ans = Math.max(ans, d[x] + v);
+        }
+        d[x] = Math.max(d[x], v);
+    }
+    return ans;
 }
 ```
 
-### **TypeScript**
+#### Rust
 
-```ts
+```rust
+impl Solution {
+    pub fn maximum_sum(nums: Vec<i32>) -> i32 {
+        let mut d = vec![0; 100];
+        let mut ans = -1;
 
-```
+        for &v in nums.iter() {
+            let mut x: usize = 0;
+            let mut y = v;
+            while y > 0 {
+                x += (y % 10) as usize;
+                y /= 10;
+            }
+            if d[x] > 0 {
+                ans = ans.max(d[x] + v);
+            }
+            d[x] = d[x].max(v);
+        }
 
-### **...**
-
-```
-
+        ans
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

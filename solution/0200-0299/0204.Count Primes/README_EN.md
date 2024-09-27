@@ -1,13 +1,28 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0204.Count%20Primes/README_EN.md
+tags:
+    - Array
+    - Math
+    - Enumeration
+    - Number Theory
+---
+
+<!-- problem:start -->
+
 # [204. Count Primes](https://leetcode.com/problems/count-primes)
 
 [中文文档](/solution/0200-0299/0204.Count%20Primes/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an integer <code>n</code>, return <em>the number of prime numbers that are strictly less than</em> <code>n</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 10
@@ -15,14 +30,14 @@
 <strong>Explanation:</strong> There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 0
 <strong>Output:</strong> 0
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 1
@@ -36,11 +51,17 @@
 	<li><code>0 &lt;= n &lt;= 5 * 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -55,7 +76,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -76,7 +97,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -84,12 +105,10 @@ public:
     int countPrimes(int n) {
         vector<bool> primes(n, true);
         int ans = 0;
-        for (int i = 2; i < n; ++i)
-        {
-            if (primes[i])
-            {
+        for (int i = 2; i < n; ++i) {
+            if (primes[i]) {
                 ++ans;
-                for (int j = i + i; j < n; j += i) primes[j] = false;
+                for (int j = i; j < n; j += i) primes[j] = false;
             }
         }
         return ans;
@@ -97,7 +116,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countPrimes(n int) int {
@@ -118,7 +137,7 @@ func countPrimes(n int) int {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -140,7 +159,7 @@ var countPrimes = function (n) {
 };
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -163,10 +182,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

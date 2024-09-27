@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/README_EN.md
+rating: 2391
+source: Weekly Contest 299 Q4
+tags:
+    - Bit Manipulation
+    - Tree
+    - Depth-First Search
+    - Array
+---
+
+<!-- problem:start -->
+
 # [2322. Minimum Score After Removals on a Tree](https://leetcode.com/problems/minimum-score-after-removals-on-a-tree)
 
 [中文文档](/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an undirected connected tree with <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and <code>n - 1</code> edges.</p>
 
@@ -22,7 +39,7 @@
 <p>Return <em>the <strong>minimum</strong> score of any possible pair of edge removals on the given tree</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/images/ex1drawio.png" style="width: 193px; height: 190px;" />
 <pre>
 <strong>Input:</strong> nums = [1,5,5,4,11], edges = [[0,1],[1,2],[1,3],[3,4]]
@@ -35,7 +52,7 @@ The score is the difference between the largest and smallest XOR value which is 
 It can be shown that no other pair of removals will obtain a smaller score than 9.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2300-2399/2322.Minimum%20Score%20After%20Removals%20on%20a%20Tree/images/ex2drawio.png" style="width: 287px; height: 150px;" />
 <pre>
 <strong>Input:</strong> nums = [5,5,2,4,4,2], edges = [[0,1],[1,2],[5,2],[4,3],[1,3]]
@@ -62,11 +79,17 @@ We cannot obtain a smaller score than 0.
 	<li><code>edges</code> represents a valid tree.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -108,7 +131,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -123,9 +146,7 @@ class Solution {
         n = nums.length;
         g = new List[n];
         this.nums = nums;
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<>();
-        }
+        Arrays.setAll(g, k -> new ArrayList<>());
         for (int[] e : edges) {
             int a = e[0], b = e[1];
             g[a].add(b);
@@ -170,7 +191,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -185,18 +206,15 @@ public:
     int minimumScore(vector<int>& nums, vector<vector<int>>& edges) {
         n = nums.size();
         g.resize(n, vector<int>());
-        for (auto& e : edges)
-        {
+        for (auto& e : edges) {
             int a = e[0], b = e[1];
             g[a].push_back(b);
             g[b].push_back(a);
         }
         for (int& v : nums) s ^= v;
         this->nums = nums;
-        for (int i = 0; i < n; ++i)
-        {
-            for (int j : g[i])
-            {
+        for (int i = 0; i < n; ++i) {
+            for (int j : g[i]) {
                 s1 = dfs(i, -1, j);
                 dfs2(i, -1, j);
             }
@@ -206,27 +224,28 @@ public:
 
     int dfs(int i, int fa, int x) {
         int res = nums[i];
-        for (int j : g[i]) if (j != fa && j != x) res ^= dfs(j, i, x);
+        for (int j : g[i])
+            if (j != fa && j != x) res ^= dfs(j, i, x);
         return res;
     }
 
     int dfs2(int i, int fa, int x) {
         int res = nums[i];
-        for (int j : g[i]) if (j != fa && j != x)
-        {
-            int a = dfs2(j, i, x);
-            res ^= a;
-            int b = s1 ^ a;
-            int c = s ^ s1;
-            int t = max(max(a, b), c) - min(min(a, b), c);
-            ans = min(ans, t);
-        }
+        for (int j : g[i])
+            if (j != fa && j != x) {
+                int a = dfs2(j, i, x);
+                res ^= a;
+                int b = s1 ^ a;
+                int c = s ^ s1;
+                int t = max(max(a, b), c) - min(min(a, b), c);
+                ans = min(ans, t);
+            }
         return res;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumScore(nums []int, edges [][]int) int {
@@ -276,32 +295,10 @@ func minimumScore(nums []int, edges [][]int) int {
 	}
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

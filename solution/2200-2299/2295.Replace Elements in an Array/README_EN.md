@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2295.Replace%20Elements%20in%20an%20Array/README_EN.md
+rating: 1445
+source: Weekly Contest 296 Q3
+tags:
+    - Array
+    - Hash Table
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2295. Replace Elements in an Array](https://leetcode.com/problems/replace-elements-in-an-array)
 
 [中文文档](/solution/2200-2299/2295.Replace%20Elements%20in%20an%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> array <code>nums</code> that consists of <code>n</code> <strong>distinct</strong> positive integers. Apply <code>m</code> operations to this array, where in the <code>i<sup>th</sup></code> operation you replace the number <code>operations[i][0]</code> with <code>operations[i][1]</code>.</p>
 
@@ -16,7 +32,7 @@
 <p>Return <em>the array obtained after applying all the operations</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,2,4,6], operations = [[1,3],[4,7],[6,1]]
@@ -28,7 +44,7 @@
 We return the final array [3,2,7,1].
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,2], operations = [[1,3],[2,1],[3,2]]
@@ -54,119 +70,106 @@ We return the array [2,1].
 	<li><code>operations[i][1]</code> will not exist in <code>nums</code> when applying the <code>i<sup>th</sup></code> operation.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table
+
+First, we use a hash table $d$ to record the indices of each number in the array $\textit{nums}$. Then, we iterate through the operation array $\textit{operations}$. For each operation $[x, y]$, we replace the number at index $d[x]$ in $\textit{nums}$ with $y$, and update the index of $y$ in $d$ to $d[x]$.
+
+Finally, we return $\textit{nums}$.
+
+The time complexity is $O(n + m)$, and the space complexity is $O(n)$. Here, $n$ and $m$ are the lengths of the array $\textit{nums}$ and the operation array $\textit{operations}$, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def arrayChange(self, nums: List[int], operations: List[List[int]]) -> List[int]:
-        d = {v: i for i, v in enumerate(nums)}
-        for a, b in operations:
-            idx = d[a]
-            d.pop(a)
-            d[b] = idx
-        ans = [0] * len(nums)
-        for v, i in d.items():
-            ans[i] = v
-        return ans
+        d = {x: i for i, x in enumerate(nums)}
+        for x, y in operations:
+            nums[d[x]] = y
+            d[y] = d[x]
+        return nums
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] arrayChange(int[] nums, int[][] operations) {
         int n = nums.length;
-        Map<Integer, Integer> d = new HashMap<>();
+        Map<Integer, Integer> d = new HashMap<>(n);
         for (int i = 0; i < n; ++i) {
             d.put(nums[i], i);
         }
-        for (int[] op : operations) {
-            int a = op[0], b = op[1];
-            int idx = d.get(a);
-            d.remove(a);
-            d.put(b, idx);
+        for (var op : operations) {
+            int x = op[0], y = op[1];
+            nums[d.get(x)] = y;
+            d.put(y, d.get(x));
         }
-        int[] ans = new int[n];
-        d.forEach((v, i) -> {
-            ans[i] = v;
-        });
-        return ans;
+        return nums;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> arrayChange(vector<int>& nums, vector<vector<int>>& operations) {
-        int n = nums.size();
         unordered_map<int, int> d;
-        for (int i = 0; i < n; ++i) d[nums[i]] = i;
-        for (auto& op : operations)
-        {
-            int a = op[0], b = op[1];
-            int idx = d[a];
-            d.erase(a);
-            d[b] = idx;
+        for (int i = 0; i < nums.size(); ++i) {
+            d[nums[i]] = i;
         }
-        vector<int> ans(n);
-        for (auto& [v, i] : d) ans[i] = v;
-        return ans;
+        for (auto& op : operations) {
+            int x = op[0], y = op[1];
+            nums[d[x]] = y;
+            d[y] = d[x];
+        }
+        return nums;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func arrayChange(nums []int, operations [][]int) []int {
 	d := map[int]int{}
-	for i, v := range nums {
-		d[v] = i
+	for i, x := range nums {
+		d[x] = i
 	}
 	for _, op := range operations {
-		a, b := op[0], op[1]
-		idx := d[a]
-		delete(d, a)
-		d[b] = idx
+		x, y := op[0], op[1]
+		nums[d[x]] = y
+		d[y] = d[x]
 	}
-	ans := make([]int, len(nums))
-	for v, i := range d {
-		ans[i] = v
-	}
-	return ans
+	return nums
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function arrayChange(nums: number[], operations: number[][]): number[] {
-    const n = nums.length;
-    let hashMap = new Map(nums.map((v, i) => [v, i]));
-    for (let [oldVal, newVal] of operations) {
-        let idx = hashMap.get(oldVal);
-        hashMap.delete(oldVal);
-        hashMap.set(newVal, idx);
+    const d: Map<number, number> = new Map(nums.map((x, i) => [x, i]));
+    for (const [x, y] of operations) {
+        nums[d.get(x)!] = y;
+        d.set(y, d.get(x)!);
     }
-    let ans = new Array(n);
-    for (let [val, key] of hashMap.entries()) {
-        ans[key] = val;
-    }
-    return ans;
+    return nums;
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

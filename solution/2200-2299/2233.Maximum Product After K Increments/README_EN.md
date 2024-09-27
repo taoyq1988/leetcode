@@ -1,15 +1,31 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2233.Maximum%20Product%20After%20K%20Increments/README_EN.md
+rating: 1685
+source: Weekly Contest 288 Q3
+tags:
+    - Greedy
+    - Array
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2233. Maximum Product After K Increments](https://leetcode.com/problems/maximum-product-after-k-increments)
 
 [中文文档](/solution/2200-2299/2233.Maximum%20Product%20After%20K%20Increments/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You are given an array of non-negative integers <code>nums</code> and an integer <code>k</code>. In one operation, you may choose <strong>any</strong> element from <code>nums</code> and <strong>increment</strong> it by <code>1</code>.</p>
 
 <p>Return<em> the <strong>maximum</strong> <strong>product</strong> of </em><code>nums</code><em> after <strong>at most</strong> </em><code>k</code><em> operations. </em>Since the answer may be very large, return it <b>modulo</b> <code>10<sup>9</sup> + 7</code>. Note that you should maximize the product before taking the modulo.&nbsp;</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [0,4], k = 5
@@ -20,7 +36,7 @@ It can be shown that 20 is maximum product possible, so we return 20.
 Note that there may be other ways to increment nums to have the maximum product.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [6,3,3,2], k = 2
@@ -39,11 +55,17 @@ Note that there may be other ways to increment nums to have the maximum product.
 	<li><code>0 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -58,7 +80,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -81,7 +103,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -89,8 +111,7 @@ public:
     int maximumProduct(vector<int>& nums, int k) {
         int mod = 1e9 + 7;
         make_heap(nums.begin(), nums.end(), greater<int>());
-        while (k--)
-        {
+        while (k--) {
             pop_heap(nums.begin(), nums.end(), greater<int>());
             ++nums.back();
             push_heap(nums.begin(), nums.end(), greater<int>());
@@ -102,7 +123,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumProduct(nums []int, k int) int {
@@ -120,11 +141,11 @@ func maximumProduct(nums []int, k int) int {
 
 type hp struct{ sort.IntSlice }
 
-func (hp) Push(interface{})     {}
-func (hp) Pop() (_ interface{}) { return }
+func (hp) Push(any)     {}
+func (hp) Pop() (_ any) { return }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -150,10 +171,8 @@ var maximumProduct = function (nums, k) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

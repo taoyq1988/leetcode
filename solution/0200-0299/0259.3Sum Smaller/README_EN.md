@@ -1,12 +1,27 @@
-# [259. 3Sum Smaller](https://leetcode.com/problems/3sum-smaller)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0259.3Sum%20Smaller/README_EN.md
+tags:
+    - Array
+    - Two Pointers
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
+# [259. 3Sum Smaller 🔒](https://leetcode.com/problems/3sum-smaller)
 
 [中文文档](/solution/0200-0299/0259.3Sum%20Smaller/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an array of <code>n</code> integers <code>nums</code> and an integer&nbsp;<code>target</code>, find the number of index triplets <code>i</code>, <code>j</code>, <code>k</code> with <code>0 &lt;= i &lt; j &lt; k &lt; n</code> that satisfy the condition <code>nums[i] + nums[j] + nums[k] &lt; target</code>.</p>
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [-2,0,1,3], target = 2
@@ -16,14 +31,14 @@
 [-2,0,3]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [], target = 0
 <strong>Output:</strong> 0
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [0], target = 0
@@ -40,11 +55,17 @@
 	<li><code>-100 &lt;= target &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,7 +84,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -88,7 +109,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -96,15 +117,13 @@ public:
     int threeSumSmaller(vector<int>& nums, int target) {
         sort(nums.begin(), nums.end());
         int ans = 0;
-        for (int i = 0, n = nums.size(); i < n; ++i)
-        {
+        for (int i = 0, n = nums.size(); i < n; ++i) {
             int j = i + 1, k = n - 1;
-            while (j < k)
-            {
+            while (j < k) {
                 int s = nums[i] + nums[j] + nums[k];
-                if (s >= target) --k;
-                else
-                {
+                if (s >= target)
+                    --k;
+                else {
                     ans += k - j;
                     ++j;
                 }
@@ -115,7 +134,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func threeSumSmaller(nums []int, target int) int {
@@ -137,7 +156,7 @@ func threeSumSmaller(nums []int, target int) int {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -165,10 +184,8 @@ var threeSumSmaller = function (nums, target) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

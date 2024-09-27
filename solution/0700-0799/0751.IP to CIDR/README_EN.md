@@ -1,8 +1,21 @@
-# [751. IP to CIDR](https://leetcode.com/problems/ip-to-cidr)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0751.IP%20to%20CIDR/README_EN.md
+tags:
+    - Bit Manipulation
+    - String
+---
+
+<!-- problem:start -->
+
+# [751. IP to CIDR 🔒](https://leetcode.com/problems/ip-to-cidr)
 
 [中文文档](/solution/0700-0799/0751.IP%20to%20CIDR/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>An <strong>IP address</strong> is a formatted 32-bit unsigned integer where each group of 8 bits is printed as a decimal number and the dot character <code>&#39;.&#39;</code> splits the groups.</p>
 
@@ -21,7 +34,7 @@
 <p>Return <em>the <strong>shortest</strong> list of <strong>CIDR blocks</strong> that covers the range of IP addresses. If there are multiple answers, return <strong>any</strong> of them</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> ip = &quot;255.0.0.7&quot;, n = 10
@@ -44,7 +57,7 @@ The CIDR block &quot;255.0.0.16/32&quot; covers the last address.
 Note that while the CIDR block &quot;255.0.0.0/28&quot; does cover all the addresses, it also includes addresses outside of the range, so we cannot use it.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> ip = &quot;117.145.102.62&quot;, n = 8
@@ -61,26 +74,42 @@ Note that while the CIDR block &quot;255.0.0.0/28&quot; does cover all the addre
 	<li>Every implied address <code>ip + x</code> (for <code>x &lt; n</code>) will be a valid IPv4 address.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

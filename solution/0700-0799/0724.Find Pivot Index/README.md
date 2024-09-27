@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0724.Find%20Pivot%20Index/README.md
+tags:
+    - 数组
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [724. 寻找数组的中心下标](https://leetcode.cn/problems/find-pivot-index)
 
 [English Version](/solution/0700-0799/0724.Find%20Pivot%20Index/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数数组&nbsp;<code>nums</code> ，请计算数组的 <strong>中心下标 </strong>。</p>
 
@@ -58,179 +69,157 @@
 
 <p><strong>注意：</strong>本题与主站 1991 题相同：<a href="https://leetcode.cn/problems/find-the-middle-index-in-array/" target="_blank">https://leetcode.cn/problems/find-the-middle-index-in-array/</a></p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：前缀和**
+### 方法一：前缀和
+
+我们定义变量 $left$ 表示数组 $\textit{nums}$ 中下标 $i$ 左侧元素之和，变量 $right$ 表示数组 $\textit{nums}$ 中下标 $i$ 右侧元素之和。初始时 $left = 0$, $right = \sum_{i = 0}^{n - 1} nums[i]$。
+
+遍历数组 $\textit{nums}$，对于当前遍历到的数字 $x$，我们更新 $right = right - x$，此时如果 $left=right$，说明当前下标 $i$ 就是中间位置，直接返回即可。否则，我们更新 $left = left + x$，继续遍历下一个数字。
+
+遍历结束，如果没有找到中间位置，返回 $-1$。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 为数组 $\textit{nums}$ 的长度。
+
+相似题目：
+
+-   [1991. 找到数组的中间位置](https://github.com/doocs/leetcode/blob/main/solution/1900-1999/1991.Find%20the%20Middle%20Index%20in%20Array/README.md)
+-   [2574. 左右元素和的差值](https://github.com/doocs/leetcode/blob/main/solution/2500-2599/2574.Left%20and%20Right%20Sum%20Differences/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def pivotIndex(self, nums: List[int]) -> int:
-        s, presum = sum(nums), 0
-        for i, v in enumerate(nums):
-            if (presum << 1) == s - v:
+        left, right = 0, sum(nums)
+        for i, x in enumerate(nums):
+            right -= x
+            if left == right:
                 return i
-            presum += v
+            left += x
         return -1
 ```
 
-```python
-class Solution:
-    def pivotIndex(self, nums: List[int]) -> int:
-        l, r = 0, sum(nums)
-        for i, v in enumerate(nums):
-            r -= v
-            if l == r:
-                return i
-            l += v
-        return -1
-```
-
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int pivotIndex(int[] nums) {
-        int n = nums.length, s = 0;
-        for (int e : nums) {
-            s += e;
-        }
-        int presum = 0;
-        for (int i = 0; i < n; ++i) {
-            // presum == sums - nums[i] - presum
-            if (presum << 1 == s - nums[i]) {
-                return i;
-            }
-            presum += nums[i];
-        }
-        return -1;
-    }
-}
-```
-
-```java
-class Solution {
-    public int pivotIndex(int[] nums) {
-        int l = 0, r = 0;
-        for (int v : nums) {
-            r += v;
-        }
+        int left = 0, right = Arrays.stream(nums).sum();
         for (int i = 0; i < nums.length; ++i) {
-            r -= nums[i];
-            if (l == r) {
+            right -= nums[i];
+            if (left == right) {
                 return i;
             }
-            l += nums[i];
+            left += nums[i];
         }
         return -1;
     }
 }
 ```
 
-### **TypeScript**
-
-```ts
-function pivotIndex(nums: number[]): number {
-    let l = 0;
-    let r = nums.reduce((a, b) => a + b, 0);
-    for (let i = 0; i < nums.length; ++i) {
-        r -= nums[i];
-        if (l == r) {
-            return i;
-        }
-        l += nums[i];
-    }
-    return -1;
-}
-```
-
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int pivotIndex(vector<int> &nums) {
-        int s = 0;
-        for (int e : nums)
-            s += e;
-        int presum = 0;
-        for (int i = 0; i < nums.size(); ++i)
-        {
-            if (presum * 2 == s - nums[i])
-                return i;
-            presum += nums[i];
-        }
-        return -1;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
 public:
     int pivotIndex(vector<int>& nums) {
-        int l = 0, r = 0;
-        for (int& v : nums) r += v;
-        for (int i = 0; i < nums.size(); ++i)
-        {
-            r -= nums[i];
-            if (l == r) return i;
-            l += nums[i];
+        int left = 0, right = accumulate(nums.begin(), nums.end(), 0);
+        for (int i = 0; i < nums.size(); ++i) {
+            right -= nums[i];
+            if (left == right) {
+                return i;
+            }
+            left += nums[i];
         }
         return -1;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func pivotIndex(nums []int) int {
-	s := 0
-	for _, e := range nums {
-		s += e
+	var left, right int
+	for _, x := range nums {
+		right += x
 	}
-	presum := 0
-	for i, e := range nums {
-		if presum<<1 == s-e {
+	for i, x := range nums {
+		right -= x
+		if left == right {
 			return i
 		}
-		presum += e
+		left += x
 	}
 	return -1
 }
 ```
 
-```go
-func pivotIndex(nums []int) int {
-	l, r := 0, 0
-	for _, v := range nums {
-		r += v
-	}
-	for i, v := range nums {
-		r -= v
-		if l == r {
-			return i
-		}
-		l += v
-	}
-	return -1
+#### TypeScript
+
+```ts
+function pivotIndex(nums: number[]): number {
+    let left = 0,
+        right = nums.reduce((a, b) => a + b);
+    for (let i = 0; i < nums.length; ++i) {
+        right -= nums[i];
+        if (left == right) {
+            return i;
+        }
+        left += nums[i];
+    }
+    return -1;
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        let (mut left, mut right): (i32, i32) = (0, nums.iter().sum());
+        for i in 0..nums.len() {
+            right -= nums[i];
+            if left == right {
+                return i as i32;
+            }
+            left += nums[i];
+        }
+        -1
+    }
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var pivotIndex = function (nums) {
+    let left = 0,
+        right = nums.reduce((a, b) => a + b);
+    for (let i = 0; i < nums.length; ++i) {
+        right -= nums[i];
+        if (left == right) {
+            return i;
+        }
+        left += nums[i];
+    }
+    return -1;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

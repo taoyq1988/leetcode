@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2271.Maximum%20White%20Tiles%20Covered%20by%20a%20Carpet/README_EN.md
+rating: 2021
+source: Biweekly Contest 78 Q3
+tags:
+    - Greedy
+    - Array
+    - Binary Search
+    - Prefix Sum
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2271. Maximum White Tiles Covered by a Carpet](https://leetcode.com/problems/maximum-white-tiles-covered-by-a-carpet)
 
 [中文文档](/solution/2200-2299/2271.Maximum%20White%20Tiles%20Covered%20by%20a%20Carpet/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a 2D integer array <code>tiles</code> where <code>tiles[i] = [l<sub>i</sub>, r<sub>i</sub>]</code> represents that every tile <code>j</code> in the range <code>l<sub>i</sub> &lt;= j &lt;= r<sub>i</sub></code> is colored white.</p>
 
@@ -11,7 +29,7 @@
 <p>Return <em>the <strong>maximum</strong> number of white tiles that can be covered by the carpet</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2271.Maximum%20White%20Tiles%20Covered%20by%20a%20Carpet/images/example1drawio3.png" style="width: 644px; height: 158px;" />
 <pre>
 <strong>Input:</strong> tiles = [[1,5],[10,11],[12,18],[20,25],[30,32]], carpetLen = 10
@@ -22,7 +40,7 @@ Note that there may be other places where the carpet covers 9 white tiles.
 It can be shown that the carpet cannot cover more than 9 white tiles.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2271.Maximum%20White%20Tiles%20Covered%20by%20a%20Carpet/images/example2drawio.png" style="width: 231px; height: 168px;" />
 <pre>
 <strong>Input:</strong> tiles = [[10,11],[1,1]], carpetLen = 2
@@ -42,32 +60,111 @@ It covers 2 white tiles, so we return 2.
 	<li>The <code>tiles</code> are <strong>non-overlapping</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def maximumWhiteTiles(self, tiles: List[List[int]], carpetLen: int) -> int:
+        tiles.sort()
+        n = len(tiles)
+        s = ans = j = 0
+        for i, (li, ri) in enumerate(tiles):
+            while j < n and tiles[j][1] - li + 1 <= carpetLen:
+                s += tiles[j][1] - tiles[j][0] + 1
+                j += 1
+            if j < n and li + carpetLen > tiles[j][0]:
+                ans = max(ans, s + li + carpetLen - tiles[j][0])
+            else:
+                ans = max(ans, s)
+            s -= ri - li + 1
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+        Arrays.sort(tiles, (a, b) -> a[0] - b[0]);
+        int n = tiles.length;
+        int s = 0, ans = 0;
+        for (int i = 0, j = 0; i < n; ++i) {
+            while (j < n && tiles[j][1] - tiles[i][0] + 1 <= carpetLen) {
+                s += tiles[j][1] - tiles[j][0] + 1;
+                ++j;
+            }
+            if (j < n && tiles[i][0] + carpetLen > tiles[j][0]) {
+                ans = Math.max(ans, s + tiles[i][0] + carpetLen - tiles[j][0]);
+            } else {
+                ans = Math.max(ans, s);
+            }
+            s -= (tiles[i][1] - tiles[i][0] + 1);
+        }
+        return ans;
+    }
+}
 ```
 
-### **TypeScript**
+#### C++
 
-```ts
-
+```cpp
+class Solution {
+public:
+    int maximumWhiteTiles(vector<vector<int>>& tiles, int carpetLen) {
+        sort(tiles.begin(), tiles.end());
+        int s = 0, ans = 0, n = tiles.size();
+        for (int i = 0, j = 0; i < n; ++i) {
+            while (j < n && tiles[j][1] - tiles[i][0] + 1 <= carpetLen) {
+                s += tiles[j][1] - tiles[j][0] + 1;
+                ++j;
+            }
+            if (j < n && tiles[i][0] + carpetLen > tiles[j][0]) {
+                ans = max(ans, s + tiles[i][0] + carpetLen - tiles[j][0]);
+            } else {
+                ans = max(ans, s);
+            }
+            s -= (tiles[i][1] - tiles[i][0] + 1);
+        }
+        return ans;
+    }
+};
 ```
 
-### **...**
+#### Go
 
-```
-
+```go
+func maximumWhiteTiles(tiles [][]int, carpetLen int) int {
+	sort.Slice(tiles, func(i, j int) bool { return tiles[i][0] < tiles[j][0] })
+	n := len(tiles)
+	s, ans := 0, 0
+	for i, j := 0, 0; i < n; i++ {
+		for j < n && tiles[j][1]-tiles[i][0]+1 <= carpetLen {
+			s += tiles[j][1] - tiles[j][0] + 1
+			j++
+		}
+		if j < n && tiles[i][0]+carpetLen > tiles[j][0] {
+			ans = max(ans, s+tiles[i][0]+carpetLen-tiles[j][0])
+		} else {
+			ans = max(ans, s)
+		}
+		s -= (tiles[i][1] - tiles[i][0] + 1)
+	}
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

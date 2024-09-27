@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2341.Maximum%20Number%20of%20Pairs%20in%20Array/README_EN.md
+rating: 1184
+source: Weekly Contest 302 Q1
+tags:
+    - Array
+    - Hash Table
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [2341. Maximum Number of Pairs in Array](https://leetcode.com/problems/maximum-number-of-pairs-in-array)
 
 [中文文档](/solution/2300-2399/2341.Maximum%20Number%20of%20Pairs%20in%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>. In one operation, you may do the following:</p>
 
@@ -16,7 +32,7 @@
 <p>Return <em>a <strong>0-indexed</strong> integer array </em><code>answer</code><em> of size </em><code>2</code><em> where </em><code>answer[0]</code><em> is the number of pairs that are formed and </em><code>answer[1]</code><em> is the number of leftover integers in </em><code>nums</code><em> after doing the operation as many times as possible</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,3,2,1,3,2,2]
@@ -28,7 +44,7 @@ Form a pair with nums[0] and nums[1] and remove them from nums. Now, nums = [2].
 No more pairs can be formed. A total of 3 pairs have been formed, and there is 1 number leftover in nums.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,1]
@@ -37,7 +53,7 @@ No more pairs can be formed. A total of 3 pairs have been formed, and there is 1
 No more pairs can be formed. A total of 1 pair has been formed, and there are 0 numbers leftover in nums.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [0]
@@ -53,11 +69,17 @@ No more pairs can be formed. A total of 1 pair has been formed, and there are 0 
 	<li><code>0 &lt;= nums[i] &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -67,68 +89,152 @@ class Solution:
         return [s, len(nums) - s * 2]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] numberOfPairs(int[] nums) {
         int[] cnt = new int[101];
-        for (int v : nums) {
-            ++cnt[v];
+        for (int x : nums) {
+            ++cnt[x];
         }
         int s = 0;
         for (int v : cnt) {
             s += v / 2;
         }
-        return new int[]{s, nums.length - s * 2};
+        return new int[] {s, nums.length - s * 2};
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> numberOfPairs(vector<int>& nums) {
         vector<int> cnt(101);
-        for (int v : nums) ++cnt[v];
+        for (int& x : nums) {
+            ++cnt[x];
+        }
         int s = 0;
-        for (int v : cnt) s += v / 2;
-        vector<int> ans(2);
-        ans[0] = s;
-        ans[1] = nums.size() - s * 2;
-        return ans;
+        for (int& v : cnt) {
+            s += v >> 1;
+        }
+        return {s, (int) nums.size() - s * 2};
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numberOfPairs(nums []int) []int {
-    cnt := make([]int, 101)
-    for _, v := range nums {
-        cnt[v]++
-    }
-    s := 0
-    for _, v := range cnt {
-        s += v / 2
-    }
-    return []int{s, len(nums) - s * 2}
+	cnt := [101]int{}
+	for _, x := range nums {
+		cnt[x]++
+	}
+	s := 0
+	for _, v := range cnt {
+		s += v / 2
+	}
+	return []int{s, len(nums) - s*2}
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function numberOfPairs(nums: number[]): number[] {
+    const n = nums.length;
+    const count = new Array(101).fill(0);
+    for (const num of nums) {
+        count[num]++;
+    }
+    const sum = count.reduce((r, v) => r + (v >> 1), 0);
+    return [sum, n - sum * 2];
+}
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn number_of_pairs(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut count = [0; 101];
+        for &v in nums.iter() {
+            count[v as usize] += 1;
+        }
+        let mut sum = 0;
+        for v in count.iter() {
+            sum += v >> 1;
+        }
+        vec![sum as i32, (n - sum * 2) as i32]
+    }
+}
 ```
 
+#### JavaScript
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var numberOfPairs = function (nums) {
+    const cnt = new Array(101).fill(0);
+    for (const x of nums) {
+        ++cnt[x];
+    }
+    const s = cnt.reduce((a, b) => a + (b >> 1), 0);
+    return [s, nums.length - s * 2];
+};
+```
+
+#### C#
+
+```cs
+public class Solution {
+    public int[] NumberOfPairs(int[] nums) {
+        int[] cnt = new int[101];
+        foreach(int x in nums) {
+            ++cnt[x];
+        }
+        int s = 0;
+        foreach(int v in cnt) {
+            s += v / 2;
+        }
+        return new int[] {s, nums.Length - s * 2};
+    }
+}
+```
+
+#### C
+
+```c
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* numberOfPairs(int* nums, int numsSize, int* returnSize) {
+    int count[101] = {0};
+    for (int i = 0; i < numsSize; i++) {
+        count[nums[i]]++;
+    }
+    int sum = 0;
+    for (int i = 0; i < 101; i++) {
+        sum += count[i] >> 1;
+    }
+    int* ans = malloc(sizeof(int) * 2);
+    ans[0] = sum;
+    ans[1] = numsSize - sum * 2;
+    *returnSize = 2;
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0394.Decode%20String/README_EN.md
+tags:
+    - Stack
+    - Recursion
+    - String
+---
+
+<!-- problem:start -->
+
 # [394. Decode String](https://leetcode.com/problems/decode-string)
 
 [中文文档](/solution/0300-0399/0394.Decode%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an encoded string, return its decoded string.</p>
 
@@ -13,21 +27,21 @@
 <p>The test cases are generated so that the length of the output will never exceed <code>10<sup>5</sup></code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;3[a]2[bc]&quot;
 <strong>Output:</strong> &quot;aaabcbc&quot;
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;3[a2[c]]&quot;
 <strong>Output:</strong> &quot;accaccacc&quot;
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;2[abc]3[cd]ef&quot;
@@ -44,11 +58,17 @@
 	<li>All the integers in <code>s</code> are in the range <code>[1, 300]</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -69,7 +89,7 @@ class Solution:
         return res
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -101,7 +121,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function decodeString(s: string): string {
@@ -128,10 +148,8 @@ function decodeString(s: string): string {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

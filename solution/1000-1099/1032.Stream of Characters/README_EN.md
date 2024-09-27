@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1032.Stream%20of%20Characters/README_EN.md
+rating: 1970
+source: Weekly Contest 133 Q4
+tags:
+    - Design
+    - Trie
+    - Array
+    - String
+    - Data Stream
+---
+
+<!-- problem:start -->
+
 # [1032. Stream of Characters](https://leetcode.com/problems/stream-of-characters)
 
 [中文文档](/solution/1000-1099/1032.Stream%20of%20Characters/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design an algorithm that accepts a stream of characters and checks if a suffix of these characters is a string of a given array of strings <code>words</code>.</p>
 
@@ -16,7 +34,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -52,26 +70,249 @@ streamChecker.query(&quot;l&quot;); // return True, because &#39;kl&#39; is in t
 	<li>At most <code>4 * 10<sup>4</sup></code> calls will be made to query.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+class Trie:
+    def __init__(self):
+        self.children = [None] * 26
+        self.is_end = False
 
+    def insert(self, w: str):
+        node = self
+        for c in w[::-1]:
+            idx = ord(c) - ord('a')
+            if node.children[idx] is None:
+                node.children[idx] = Trie()
+            node = node.children[idx]
+        node.is_end = True
+
+    def search(self, w: List[str]) -> bool:
+        node = self
+        for c in w[::-1]:
+            idx = ord(c) - ord('a')
+            if node.children[idx] is None:
+                return False
+            node = node.children[idx]
+            if node.is_end:
+                return True
+        return False
+
+
+class StreamChecker:
+    def __init__(self, words: List[str]):
+        self.trie = Trie()
+        self.cs = []
+        self.limit = 201
+        for w in words:
+            self.trie.insert(w)
+
+    def query(self, letter: str) -> bool:
+        self.cs.append(letter)
+        return self.trie.search(self.cs[-self.limit :])
+
+
+# Your StreamChecker object will be instantiated and called as such:
+# obj = StreamChecker(words)
+# param_1 = obj.query(letter)
 ```
 
-### **Java**
+#### Java
 
 ```java
+class Trie {
+    Trie[] children = new Trie[26];
+    boolean isEnd = false;
 
+    public void insert(String w) {
+        Trie node = this;
+        for (int i = w.length() - 1; i >= 0; --i) {
+            int idx = w.charAt(i) - 'a';
+            if (node.children[idx] == null) {
+                node.children[idx] = new Trie();
+            }
+            node = node.children[idx];
+        }
+        node.isEnd = true;
+    }
+
+    public boolean query(StringBuilder s) {
+        Trie node = this;
+        for (int i = s.length() - 1; i >= 0; --i) {
+            int idx = s.charAt(i) - 'a';
+            if (node.children[idx] == null) {
+                return false;
+            }
+            node = node.children[idx];
+            if (node.isEnd) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+class StreamChecker {
+    private StringBuilder sb = new StringBuilder();
+    private Trie trie = new Trie();
+
+    public StreamChecker(String[] words) {
+        for (String w : words) {
+            trie.insert(w);
+        }
+    }
+
+    public boolean query(char letter) {
+        sb.append(letter);
+        return trie.query(sb);
+    }
+}
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker obj = new StreamChecker(words);
+ * boolean param_1 = obj.query(letter);
+ */
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Trie {
+private:
+    Trie* children[26]{};
+    bool isEnd = false;
+
+public:
+    void insert(string& w) {
+        Trie* node = this;
+        reverse(w.begin(), w.end());
+        for (char& c : w) {
+            int idx = c - 'a';
+            if (!node->children[idx]) {
+                node->children[idx] = new Trie();
+            }
+            node = node->children[idx];
+        }
+        node->isEnd = true;
+    }
+
+    bool search(string& w) {
+        Trie* node = this;
+        for (int i = w.size() - 1, j = 0; ~i && j < 201; --i, ++j) {
+            int idx = w[i] - 'a';
+            if (!node->children[idx]) {
+                return false;
+            }
+            node = node->children[idx];
+            if (node->isEnd) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+class StreamChecker {
+public:
+    Trie* trie = new Trie();
+    string s;
+
+    StreamChecker(vector<string>& words) {
+        for (auto& w : words) {
+            trie->insert(w);
+        }
+    }
+
+    bool query(char letter) {
+        s += letter;
+        return trie->search(s);
+    }
+};
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker* obj = new StreamChecker(words);
+ * bool param_1 = obj->query(letter);
+ */
 ```
 
+#### Go
+
+```go
+type Trie struct {
+	children [26]*Trie
+	isEnd    bool
+}
+
+func newTrie() Trie {
+	return Trie{}
+}
+
+func (this *Trie) Insert(word string) {
+	node := this
+	for i := len(word) - 1; i >= 0; i-- {
+		idx := word[i] - 'a'
+		if node.children[idx] == nil {
+			node.children[idx] = &Trie{}
+		}
+		node = node.children[idx]
+	}
+	node.isEnd = true
+}
+
+func (this *Trie) Search(word []byte) bool {
+	node := this
+	for i := len(word) - 1; i >= 0; i-- {
+		idx := word[i] - 'a'
+		if node.children[idx] == nil {
+			return false
+		}
+		node = node.children[idx]
+		if node.isEnd {
+			return true
+		}
+	}
+	return false
+}
+
+type StreamChecker struct {
+	trie Trie
+	s    []byte
+}
+
+func Constructor(words []string) StreamChecker {
+	trie := newTrie()
+	for _, w := range words {
+		trie.Insert(w)
+	}
+	return StreamChecker{trie, []byte{}}
+}
+
+func (this *StreamChecker) Query(letter byte) bool {
+	this.s = append(this.s, letter)
+	return this.trie.Search(this.s)
+}
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * obj := Constructor(words);
+ * param_1 := obj.Query(letter);
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

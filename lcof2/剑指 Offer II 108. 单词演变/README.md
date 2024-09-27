@@ -1,8 +1,15 @@
+---
+comments: true
+edit_url: https://github.com/doocs/leetcode/edit/main/lcof2/%E5%89%91%E6%8C%87%20Offer%20II%20108.%20%E5%8D%95%E8%AF%8D%E6%BC%94%E5%8F%98/README.md
+---
+
+<!-- problem:start -->
+
 # [剑指 Offer II 108. 单词演变](https://leetcode.cn/problems/om3reC)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>在字典（单词列表）&nbsp;<code>wordList</code> 中，从单词 <code>beginWord</code><em>&nbsp;</em>和 <code>endWord</code> 的 <strong>转换序列 </strong>是一个按下述规格形成的序列：</p>
 
@@ -50,17 +57,17 @@
 
 <p><meta charset="UTF-8" />注意：本题与主站 127&nbsp;题相同：&nbsp;<a href="https://leetcode.cn/problems/word-ladder/">https://leetcode.cn/problems/word-ladder/</a></p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-BFS。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -89,18 +96,12 @@ class Solution:
         return 0
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
 
-    public int ladderLength(
-        String beginWord,
-        String endWord,
-        List<String> wordList
-    ) {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Set<String> words = new HashSet<>(wordList);
         Queue<String> q = new LinkedList<>();
         q.offer(beginWord);
@@ -131,10 +132,9 @@ class Solution {
         return 0;
     }
 }
-
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -143,17 +143,13 @@ public:
         unordered_set<string> words(wordList.begin(), wordList.end());
         queue<string> q{{beginWord}};
         int ans = 1;
-        while (!q.empty())
-        {
-            for (int i = q.size(); i > 0; --i)
-            {
+        while (!q.empty()) {
+            for (int i = q.size(); i > 0; --i) {
                 string s = q.front();
                 q.pop();
-                for (int j = 0; j < s.size(); ++j)
-                {
+                for (int j = 0; j < s.size(); ++j) {
                     char ch = s[j];
-                    for (char k = 'a'; k <= 'z'; ++k)
-                    {
+                    for (char k = 'a'; k <= 'z'; ++k) {
                         s[j] = k;
                         if (!words.count(s)) continue;
                         if (s == endWord) return ans + 1;
@@ -170,7 +166,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func ladderLength(beginWord string, endWord string, wordList []string) int {
@@ -208,10 +204,8 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

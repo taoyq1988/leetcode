@@ -3,32 +3,18 @@ func maxHeight(cuboids [][]int) int {
 		sort.Ints(c)
 	}
 	sort.Slice(cuboids, func(i, j int) bool {
-		if cuboids[i][0] != cuboids[j][0] {
-			return cuboids[i][0] < cuboids[j][0]
-		}
-		if cuboids[i][1] != cuboids[j][1] {
-			return cuboids[i][1] < cuboids[j][1]
-		}
-		return cuboids[i][2] < cuboids[j][2]
+		a, b := cuboids[i], cuboids[j]
+		return a[0] < b[0] || a[0] == b[0] && (a[1] < b[1] || a[1] == b[1] && a[2] < b[2])
 	})
 	n := len(cuboids)
-	dp := make([]int, n)
-	ans := 0
-	for i := 0; i < n; i++ {
+	f := make([]int, n)
+	for i := range f {
 		for j := 0; j < i; j++ {
 			if cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2] {
-				dp[i] = max(dp[i], dp[j])
+				f[i] = max(f[i], f[j])
 			}
 		}
-		dp[i] += cuboids[i][2]
-		ans = max(ans, dp[i])
+		f[i] += cuboids[i][2]
 	}
-	return ans
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return slices.Max(f)
 }

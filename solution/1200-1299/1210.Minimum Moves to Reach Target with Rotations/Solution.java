@@ -1,32 +1,36 @@
 class Solution {
+    private int n;
+    private int[][] grid;
+    private boolean[][] vis;
+    private Deque<int[]> q = new ArrayDeque<>();
+
     public int minimumMoves(int[][] grid) {
-        int n = grid.length;
-        int[] target = new int[]{n * n - 2, n * n - 1};
-        Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 1});
-        boolean[][] vis = new boolean[n * n][n * n];
+        this.grid = grid;
+        n = grid.length;
+        vis = new boolean[n * n][2];
+        int[] target = {n * n - 2, n * n - 1};
+        q.offer(new int[] {0, 1});
+        vis[0][0] = true;
         int ans = 0;
-        vis[0][1] = true;
         while (!q.isEmpty()) {
             for (int k = q.size(); k > 0; --k) {
-                int[] p = q.poll();
+                var p = q.poll();
                 if (p[0] == target[0] && p[1] == target[1]) {
                     return ans;
                 }
-                int a = p[0], b = p[1];
-                int i1 = a / n, j1 = a % n;
-                int i2 = b / n, j2 = b % n;
-                if (j1 + 1 < n && j2 + 1 < n && grid[i1][j1 + 1] == 0 && grid[i2][j2 + 1] == 0) {
-                    check(i1 * n + j1 + 1, i2 * n + j2 + 1, q, vis);
-                    if (j1 == j2) {
-                        check(a, i1 * n + j2 + 1, q, vis);
-                    }
+                int i1 = p[0] / n, j1 = p[0] % n;
+                int i2 = p[1] / n, j2 = p[1] % n;
+                // 尝试向右平移（保持身体水平/垂直状态）
+                move(i1, j1 + 1, i2, j2 + 1);
+                // 尝试向下平移（保持身体水平/垂直状态）
+                move(i1 + 1, j1, i2 + 1, j2);
+                // 当前处于水平状态，且 grid[i1 + 1][j2] 无障碍，尝试顺时针旋转90°
+                if (i1 == i2 && i1 + 1 < n && grid[i1 + 1][j2] == 0) {
+                    move(i1, j1, i1 + 1, j1);
                 }
-                if (i1 + 1 < n && i2 + 1 < n && grid[i1 + 1][j1] == 0 && grid[i2 + 1][j2] == 0) {
-                    check((i1 + 1) * n + j1, (i2 + 1) * n + j2, q, vis);
-                    if (i1 == i2) {
-                        check(a, (i2 + 1) * n + j1, q, vis);
-                    }
+                // 当前处于垂直状态，且 grid[i2][j1 + 1] 无障碍，尝试逆时针旋转90°
+                if (j1 == j2 && j1 + 1 < n && grid[i2][j1 + 1] == 0) {
+                    move(i1, j1, i1, j1 + 1);
                 }
             }
             ++ans;
@@ -34,10 +38,14 @@ class Solution {
         return -1;
     }
 
-    private void check(int a, int b, Deque<int[]> q, boolean[][] vis) {
-        if (!vis[a][b]) {
-            vis[a][b] = true;
-            q.offer(new int[]{a, b});
+    private void move(int i1, int j1, int i2, int j2) {
+        if (i1 >= 0 && i1 < n && j1 >= 0 && j1 < n && i2 >= 0 && i2 < n && j2 >= 0 && j2 < n) {
+            int a = i1 * n + j1, b = i2 * n + j2;
+            int status = i1 == i2 ? 0 : 1;
+            if (!vis[a][status] && grid[i1][j1] == 0 && grid[i2][j2] == 0) {
+                q.offer(new int[] {a, b});
+                vis[a][status] = true;
+            }
         }
     }
 }

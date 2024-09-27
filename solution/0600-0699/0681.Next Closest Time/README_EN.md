@@ -1,15 +1,30 @@
-# [681. Next Closest Time](https://leetcode.com/problems/next-closest-time)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0681.Next%20Closest%20Time/README_EN.md
+tags:
+    - Hash Table
+    - String
+    - Backtracking
+    - Enumeration
+---
+
+<!-- problem:start -->
+
+# [681. Next Closest Time 🔒](https://leetcode.com/problems/next-closest-time)
 
 [中文文档](/solution/0600-0699/0681.Next%20Closest%20Time/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a <code>time</code> represented in the format <code>&quot;HH:MM&quot;</code>, form the next closest time by reusing the current digits. There is no limit on how many times a digit can be reused.</p>
 
 <p>You may assume the given input string is always valid. For example, <code>&quot;01:34&quot;</code>, <code>&quot;12:09&quot;</code> are all valid. <code>&quot;1:34&quot;</code>, <code>&quot;12:9&quot;</code> are all invalid.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> time = &quot;19:34&quot;
@@ -18,7 +33,7 @@
 It is not <strong>19:33</strong>, because this occurs 23 hours and 59 minutes later.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> time = &quot;23:59&quot;
@@ -37,11 +52,17 @@ It may be assumed that the returned time is next day&#39;s time since it is smal
 	<li><code>0 &lt;= MM &lt; 60</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -65,7 +86,7 @@ class Solution:
 
         s = {c for c in time if c != ':'}
         t = int(time[:2]) * 60 + int(time[3:])
-        d = float('inf')
+        d = inf
         ans = None
         dfs('')
         if ans is None:
@@ -74,7 +95,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -109,7 +130,8 @@ class Solution {
             if (!check(curr)) {
                 return;
             }
-            int p = Integer.parseInt(curr.substring(0, 2)) * 60 + Integer.parseInt(curr.substring(2));
+            int p
+                = Integer.parseInt(curr.substring(0, 2)) * 60 + Integer.parseInt(curr.substring(2));
             if (p > t && p - t < d) {
                 d = p - t;
                 ans = curr.substring(0, 2) + ":" + curr.substring(2);
@@ -129,10 +151,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

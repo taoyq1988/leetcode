@@ -1,10 +1,26 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1284.Minimum%20Number%20of%20Flips%20to%20Convert%20Binary%20Matrix%20to%20Zero%20Matrix/README.md
+rating: 1810
+source: 第 166 场周赛 Q4
+tags:
+    - 位运算
+    - 广度优先搜索
+    - 数组
+    - 哈希表
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [1284. 转化为全零矩阵的最少反转次数](https://leetcode.cn/problems/minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix)
 
 [English Version](/solution/1200-1299/1284.Minimum%20Number%20of%20Flips%20to%20Convert%20Binary%20Matrix%20to%20Zero%20Matrix/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个&nbsp;<code>m x n</code>&nbsp;的二进制矩阵&nbsp;<code>mat</code>。每一步，你可以选择一个单元格并将它反转（反转表示 <code>0</code> 变 <code>1</code> ，<code>1</code> 变 <code>0</code> ）。如果存在和它相邻的单元格，那么这些相邻的单元格也会被反转。相邻的两个单元格共享同一条边。</p>
 
@@ -54,24 +70,23 @@
 	<li><code>mat[i][j]</code>&nbsp;是 0 或 1 。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：状态压缩 + BFS**
+### 方法一：状态压缩 + BFS
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def minFlips(self, mat: List[List[int]]) -> int:
         m, n = len(mat), len(mat[0])
-        state = sum(1 << (i * n + j) for i in range(m)
-                    for j in range(n) if mat[i][j])
+        state = sum(1 << (i * n + j) for i in range(m) for j in range(n) if mat[i][j])
         q = deque([state])
         vis = {state}
         ans = 0
@@ -99,9 +114,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -155,7 +168,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -171,27 +184,23 @@ public:
         unordered_set<int> vis{{state}};
         int ans = 0;
         vector<int> dirs = {0, -1, 0, 1, 0, 0};
-        while (!q.empty())
-        {
-            for (int t = q.size(); t; --t)
-            {
+        while (!q.empty()) {
+            for (int t = q.size(); t; --t) {
                 state = q.front();
                 if (state == 0) return ans;
                 q.pop();
-                for (int i = 0; i < m; ++i)
-                {
-                    for (int j = 0; j < n; ++j)
-                    {
+                for (int i = 0; i < m; ++i) {
+                    for (int j = 0; j < n; ++j) {
                         int nxt = state;
-                        for (int k = 0; k < 5; ++k)
-                        {
+                        for (int k = 0; k < 5; ++k) {
                             int x = i + dirs[k], y = j + dirs[k + 1];
                             if (x < 0 || x >= m || y < 0 || y >= n) continue;
-                            if ((nxt & (1 << (x * n + y))) != 0) nxt -= 1 << (x * n + y);
-                            else nxt |= 1 << (x * n + y);
+                            if ((nxt & (1 << (x * n + y))) != 0)
+                                nxt -= 1 << (x * n + y);
+                            else
+                                nxt |= 1 << (x * n + y);
                         }
-                        if (!vis.count(nxt))
-                        {
+                        if (!vis.count(nxt)) {
                             vis.insert(nxt);
                             q.push(nxt);
                         }
@@ -205,7 +214,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minFlips(mat [][]int) int {
@@ -256,10 +265,8 @@ func minFlips(mat [][]int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

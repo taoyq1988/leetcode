@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2281.Sum%20of%20Total%20Strength%20of%20Wizards/README_EN.md
+rating: 2621
+source: Weekly Contest 294 Q4
+tags:
+    - Stack
+    - Array
+    - Prefix Sum
+    - Monotonic Stack
+---
+
+<!-- problem:start -->
+
 # [2281. Sum of Total Strength of Wizards](https://leetcode.com/problems/sum-of-total-strength-of-wizards)
 
 [中文文档](/solution/2200-2299/2281.Sum%20of%20Total%20Strength%20of%20Wizards/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>As the ruler of a kingdom, you have an army of wizards at your command.</p>
 
@@ -18,7 +35,7 @@
 <p>A <strong>subarray</strong> is a contiguous <strong>non-empty</strong> sequence of elements within an array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> strength = [1,3,1,2]
@@ -37,7 +54,7 @@
 The sum of all the total strengths is 1 + 9 + 1 + 4 + 4 + 4 + 3 + 5 + 6 + 7 = 44.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> strength = [5,4,6]
@@ -60,11 +77,17 @@ The sum of all the total strengths is 25 + 16 + 36 + 36 + 40 + 60 = 213.
 	<li><code>1 &lt;= strength[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -98,7 +121,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -150,7 +173,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -160,15 +183,13 @@ public:
         vector<int> left(n, -1);
         vector<int> right(n, n);
         stack<int> stk;
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             while (!stk.empty() && strength[stk.top()] >= strength[i]) stk.pop();
             if (!stk.empty()) left[i] = stk.top();
             stk.push(i);
         }
         stk = stack<int>();
-        for (int i = n - 1; i >= 0; --i)
-        {
+        for (int i = n - 1; i >= 0; --i) {
             while (!stk.empty() && strength[stk.top()] > strength[i]) stk.pop();
             if (!stk.empty()) right[i] = stk.top();
             stk.push(i);
@@ -179,8 +200,7 @@ public:
         vector<int> ss(n + 2);
         for (int i = 0; i < n + 1; ++i) ss[i + 1] = (ss[i] + s[i]) % mod;
         int ans = 0;
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             int v = strength[i];
             int l = left[i] + 1, r = right[i] - 1;
             long a = (long) (i - l + 1) * (ss[r + 2] - ss[i + 1]);
@@ -192,7 +212,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func totalStrength(strength []int) int {
@@ -243,16 +263,8 @@ func totalStrength(strength []int) int {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1331.Rank%20Transform%20of%20an%20Array/README.md
+rating: 1355
+source: 第 18 场双周赛 Q1
+tags:
+    - 数组
+    - 哈希表
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [1331. 数组序号转换](https://leetcode.cn/problems/rank-transform-of-an-array)
 
 [English Version](/solution/1300-1399/1331.Rank%20Transform%20of%20an%20Array/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数数组&nbsp;<code>arr</code> ，请你将数组中的每个元素替换为它们排序后的序号。</p>
 
@@ -46,115 +60,127 @@
 	<li><code>-10<sup>9</sup>&nbsp;&lt;= arr[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-离散化。
+### 方法一：离散化
+
+我们先复制一个数组 $t$，然后对其进行排序并去重，得到一个长度为 $m$ 且严格单调递增的数组。
+
+然后我们遍历原数组 $arr$，对于其中的每个元素 $x$，我们利用二分查找得到 $x$ 在 $t$ 中的位置，那么该位置加一就是 $x$ 的排名。
+
+时间复杂度 $O(n \times \log n)$，空间复杂度 $O(n)$。其中 $n$ 是数组 $arr$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def arrayRankTransform(self, arr: List[int]) -> List[int]:
-        def find(x):
-            left, right = 0, len(t) - 1
-            while left < right:
-                mid = (left + right) >> 1
-                if t[mid] >= x:
-                    right = mid
-                else:
-                    left = mid + 1
-            return left + 1
-
         t = sorted(set(arr))
-        return [find(x) for x in arr]
+        return [bisect_right(t, x) for x in arr]
 ```
 
-```python
-class Solution:
-    def arrayRankTransform(self, arr: List[int]) -> List[int]:
-        m = {v: i for i, v in enumerate(sorted(set(arr)), 1)}
-        return [m[v] for v in arr]
-```
-
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int[] arrayRankTransform(int[] arr) {
-        Set<Integer> s = new HashSet<>();
-        for (int v : arr) {
-            s.add(v);
+        int n = arr.length;
+        int[] t = arr.clone();
+        Arrays.sort(t);
+        int m = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i == 0 || t[i] != t[i - 1]) {
+                t[m++] = t[i];
+            }
         }
-        List<Integer> alls = new ArrayList<>(s);
-        alls.sort((a, b) -> a - b);
-        Map<Integer, Integer> m = new HashMap<>();
-        for (int i = 0; i < alls.size(); ++i) {
-            m.put(alls.get(i), i + 1);
-        }
-        int[] ans = new int[arr.length];
-        for (int i = 0; i < arr.length; ++i) {
-            ans[i] = m.get(arr[i]);
+        int[] ans = new int[n];
+        for (int i = 0; i < n; ++i) {
+            ans[i] = Arrays.binarySearch(t, 0, m, arr[i]) + 1;
         }
         return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> arrayRankTransform(vector<int>& arr) {
-        unordered_set<int> s(arr.begin(), arr.end());
-        vector<int> alls(s.begin(), s.end());
-        sort(alls.begin(), alls.end());
-        unordered_map<int, int> m;
-        for (int i = 0; i < alls.size(); ++i) m[alls[i]] = i + 1;
+        vector<int> t = arr;
+        sort(t.begin(), t.end());
+        t.erase(unique(t.begin(), t.end()), t.end());
         vector<int> ans;
-        for (int v : arr) ans.push_back(m[v]);
+        for (int x : arr) {
+            ans.push_back(upper_bound(t.begin(), t.end(), x) - t.begin());
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func arrayRankTransform(arr []int) []int {
-	s := make(map[int]bool)
-	for _, v := range arr {
-		s[v] = true
+func arrayRankTransform(arr []int) (ans []int) {
+	t := make([]int, len(arr))
+	copy(t, arr)
+	sort.Ints(t)
+	m := 0
+	for i, x := range t {
+		if i == 0 || x != t[i-1] {
+			t[m] = x
+			m++
+		}
 	}
-	var alls []int
-	for v := range s {
-		alls = append(alls, v)
+	t = t[:m]
+	for _, x := range arr {
+		ans = append(ans, sort.SearchInts(t, x)+1)
 	}
-	sort.Ints(alls)
-	m := make(map[int]int)
-	for i, v := range alls {
-		m[v] = i + 1
-	}
-	var ans []int
-	for _, v := range arr {
-		ans = append(ans, m[v])
-	}
-	return ans
+	return
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function arrayRankTransform(arr: number[]): number[] {
+    const t = [...arr].sort((a, b) => a - b);
+    let m = 0;
+    for (let i = 0; i < t.length; ++i) {
+        if (i === 0 || t[i] !== t[i - 1]) {
+            t[m++] = t[i];
+        }
+    }
+    const search = (t: number[], right: number, x: number) => {
+        let left = 0;
+        while (left < right) {
+            const mid = (left + right) >> 1;
+            if (t[mid] > x) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    };
+    const ans: number[] = [];
+    for (const x of arr) {
+        ans.push(search(t, m, x));
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

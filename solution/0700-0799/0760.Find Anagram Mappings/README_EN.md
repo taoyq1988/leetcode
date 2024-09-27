@@ -1,8 +1,21 @@
-# [760. Find Anagram Mappings](https://leetcode.com/problems/find-anagram-mappings)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0760.Find%20Anagram%20Mappings/README_EN.md
+tags:
+    - Array
+    - Hash Table
+---
+
+<!-- problem:start -->
+
+# [760. Find Anagram Mappings 🔒](https://leetcode.com/problems/find-anagram-mappings)
 
 [中文文档](/solution/0700-0799/0760.Find%20Anagram%20Mappings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two integer arrays <code>nums1</code> and <code>nums2</code> where <code>nums2</code> is <strong>an anagram</strong> of <code>nums1</code>. Both arrays may contain duplicates.</p>
 
@@ -11,7 +24,7 @@
 <p>An array <code>a</code> is <strong>an anagram</strong> of an array <code>b</code> means <code>b</code> is made by randomizing the order of the elements in <code>a</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums1 = [12,28,46,32,50], nums2 = [50,12,32,46,28]
@@ -19,7 +32,7 @@
 <strong>Explanation:</strong> As mapping[0] = 1 because the 0<sup>th</sup> element of nums1 appears at nums2[1], and mapping[1] = 4 because the 1<sup>st</sup> element of nums1 appears at nums2[4], and so on.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums1 = [84,46], nums2 = [84,46]
@@ -36,11 +49,17 @@
 	<li><code>nums2</code> is an anagram of <code>nums1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -51,7 +70,7 @@ class Solution:
         return [mapper[num].pop() for num in nums1]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -71,10 +90,8 @@ class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

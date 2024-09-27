@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0557.Reverse%20Words%20in%20a%20String%20III/README.md
+tags:
+    - 双指针
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [557. 反转字符串中的单词 III](https://leetcode.cn/problems/reverse-words-in-a-string-iii)
 
 [English Version](/solution/0500-0599/0557.Reverse%20Words%20in%20a%20String%20III/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个字符串<meta charset="UTF-8" />&nbsp;<code>s</code>&nbsp;，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。</p>
 
@@ -20,8 +31,8 @@
 <p><strong>示例 2:</strong></p>
 
 <pre>
-<strong>输入：</strong> s = "God Ding"
-<strong>输出：</strong>"doG gniD"
+<strong>输入：</strong> s = "Mr Ding"
+<strong>输出：</strong>"rM gniD"
 </pre>
 
 <p>&nbsp;</p>
@@ -36,15 +47,17 @@
 	<li><meta charset="UTF-8" /><code>s</code>&nbsp;中的所有单词都用一个空格隔开。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -52,9 +65,7 @@ class Solution:
         return ' '.join([t[::-1] for t in s.split(' ')])
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -71,16 +82,16 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string reverseWords(string s) {
-        for (int i = 0, n = s.size(); i < n; ++i)
-        {
+        for (int i = 0, n = s.size(); i < n; ++i) {
             int j = i;
-            while (++j < n && s[j] != ' ');
+            while (++j < n && s[j] != ' ')
+                ;
             reverse(s.begin() + i, s.begin() + j);
             i = j;
         }
@@ -89,7 +100,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func reverseWords(s string) string {
@@ -108,7 +119,7 @@ func reverseWords(s string) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function reverseWords(s: string): string {
@@ -125,7 +136,7 @@ function reverseWords(s: string): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -138,10 +149,26 @@ impl Solution {
 }
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param String $s
+     * @return String
+     */
+    function reverseWords($s) {
+        $sArr = explode(' ', $s);
+        for ($i = 0; $i < count($sArr); $i++) {
+            $sArr[$i] = strrev($sArr[$i]);
+        }
+        return implode(' ', $sArr);
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

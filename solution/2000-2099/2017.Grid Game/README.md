@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2017.Grid%20Game/README.md
+rating: 1718
+source: 第 260 场周赛 Q2
+tags:
+    - 数组
+    - 矩阵
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [2017. 网格游戏](https://leetcode.cn/problems/grid-game)
 
 [English Version](/solution/2000-2099/2017.Grid%20Game/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从 <strong>0</strong> 开始的二维数组 <code>grid</code> ，数组大小为 <code>2 x n</code> ，其中 <code>grid[r][c]</code> 表示矩阵中 <code>(r, c)</code> 位置上的点数。现在有两个机器人正在矩阵上参与一场游戏。</p>
 
@@ -59,15 +73,27 @@
 	<li><code>1 &lt;= grid[r][c] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：前缀和
+
+我们注意到，如果确定了第一个机器人拐头向下的位置 $j$，那么第二个机器人的最优路径也就确定了，第二个机器人的最优路径就是第一行从 $j+1$ 到 $n-1$ 的前缀和，或者第二行从 $0$ 到 $j-1$ 的前缀和，取两者的最大值。
+
+我们先计算第一行的后缀点数和，记为 $s_1$，第二行的前缀点数和记为 $s_2$，初始时 $s_1 = \sum_{j=0}^{n-1} grid[0][j]$, $s_2 = 0$。
+
+然后我们枚举第一个机器人拐头向下的位置 $j$，此时更新 $s_1 = s_1 - grid[0][j]$, 那么第二个机器人的最优路径和就是 $max(s_1, s_2)$，我们取所有 $j$ 对应的 $max(s_1, s_2)$ 的最小值即可。然后更新 $s_2 = s_2 + grid[1][j]$。
+
+枚举结束后，返回答案即可。
+
+时间复杂度 $O(n)$，空间复杂度 $O(1)$。其中 $n$ 是网格的列数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -81,9 +107,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -104,7 +128,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -116,8 +140,7 @@ public:
         int n = grid[0].size();
         ll s1 = 0, s2 = 0;
         for (int& v : grid[0]) s1 += v;
-        for (int j = 0; j < n; ++j)
-        {
+        for (int j = 0; j < n; ++j) {
             s1 -= grid[0][j];
             ans = min(ans, max(s1, s2));
             s2 += grid[1][j];
@@ -127,7 +150,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func gridGame(grid [][]int) int64 {
@@ -143,26 +166,26 @@ func gridGame(grid [][]int) int64 {
 	}
 	return int64(ans)
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function gridGame(grid: number[][]): number {
+    let ans = Number.MAX_SAFE_INTEGER;
+    let s1 = grid[0].reduce((a, b) => a + b, 0);
+    let s2 = 0;
+    for (let j = 0; j < grid[0].length; ++j) {
+        s1 -= grid[0][j];
+        ans = Math.min(ans, Math.max(s1, s2));
+        s2 += grid[1][j];
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

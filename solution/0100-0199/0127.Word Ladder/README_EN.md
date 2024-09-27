@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0127.Word%20Ladder/README_EN.md
+tags:
+    - Breadth-First Search
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [127. Word Ladder](https://leetcode.com/problems/word-ladder)
 
 [中文文档](/solution/0100-0199/0127.Word%20Ladder/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A <strong>transformation sequence</strong> from word <code>beginWord</code> to word <code>endWord</code> using a dictionary <code>wordList</code> is a sequence of words <code>beginWord -&gt; s<sub>1</sub> -&gt; s<sub>2</sub> -&gt; ... -&gt; s<sub>k</sub></code> such that:</p>
 
@@ -15,7 +29,7 @@
 <p>Given two words, <code>beginWord</code> and <code>endWord</code>, and a dictionary <code>wordList</code>, return <em>the <strong>number of words</strong> in the <strong>shortest transformation sequence</strong> from</em> <code>beginWord</code> <em>to</em> <code>endWord</code><em>, or </em><code>0</code><em> if no such sequence exists.</em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]
@@ -23,7 +37,7 @@
 <strong>Explanation:</strong> One shortest transformation sequence is &quot;hit&quot; -&gt; &quot;hot&quot; -&gt; &quot;dot&quot; -&gt; &quot;dog&quot; -&gt; cog&quot;, which is 5 words long.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]
@@ -44,13 +58,51 @@
 	<li>All the words in <code>wordList</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-BFS.
+<!-- solution:start -->
+
+### Solution 1: BFS
+
+BFS minimum step model. This problem can be solved with naive BFS, or it can be optimized with bidirectional BFS to reduce the search space and improve efficiency.
+
+Bidirectional BFS is a common optimization method for BFS, with the main implementation ideas as follows:
+
+1. Create two queues, q1 and q2, for "start -> end" and "end -> start" search directions, respectively.
+2. Create two hash maps, m1 and m2, to record the visited nodes and their corresponding expansion times (steps).
+3. During each search, prioritize the queue with fewer elements for search expansion. If a node visited from the other direction is found during the expansion, it means the shortest path has been found.
+4. If one of the queues is empty, it means that the search in the current direction cannot continue, indicating that the start and end points are not connected, and there is no need to continue the search.
+
+```python
+while q1 and q2:
+    if len(q1) <= len(q2):
+        # Prioritize the queue with fewer elements for expansion
+        extend(m1, m2, q1)
+    else:
+        extend(m2, m1, q2)
+
+
+def extend(m1, m2, q):
+    # New round of expansion
+    for _ in range(len(q)):
+        p = q.popleft()
+        step = m1[p]
+        for t in next(p):
+            if t in m1:
+                # Already visited before
+                continue
+            if t in m2:
+                # The other direction has been searched, indicating that a shortest path has been found
+                return step + 1 + m2[t]
+            q.append(t)
+            m1[t] = step + 1
+```
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -78,42 +130,7 @@ class Solution:
         return 0
 ```
 
-```python
-class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        def extend(m1, m2, q):
-            for _ in range(len(q)):
-                s = q.popleft()
-                step = m1[s]
-                s = list(s)
-                for i in range(len(s)):
-                    ch = s[i]
-                    for j in range(26):
-                        s[i] = chr(ord('a') + j)
-                        t = ''.join(s)
-                        if t in m1 or t not in words:
-                            continue
-                        if t in m2:
-                            return step + 1 + m2[t]
-                        m1[t] = step + 1
-                        q.append(t)
-                    s[i] = ch
-            return -1
-
-        words = set(wordList)
-        if endWord not in words:
-            return 0
-        q1, q2 = deque([beginWord]), deque([endWord])
-        m1, m2 = {beginWord: 0}, {endWord: 0}
-        while q1 and q2:
-            t = extend(m1, m2, q1) if len(q1) <= len(
-                q2) else extend(m2, m1, q2)
-            if t != -1:
-                return t + 1
-        return 0
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -149,6 +166,248 @@ class Solution {
     }
 }
 ```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> words(wordList.begin(), wordList.end());
+        queue<string> q{{beginWord}};
+        int ans = 1;
+        while (!q.empty()) {
+            ++ans;
+            for (int i = q.size(); i > 0; --i) {
+                string s = q.front();
+                q.pop();
+                for (int j = 0; j < s.size(); ++j) {
+                    char ch = s[j];
+                    for (char k = 'a'; k <= 'z'; ++k) {
+                        s[j] = k;
+                        if (!words.count(s)) continue;
+                        if (s == endWord) return ans;
+                        q.push(s);
+                        words.erase(s);
+                    }
+                    s[j] = ch;
+                }
+            }
+        }
+        return 0;
+    }
+};
+```
+
+#### Go
+
+```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+	words := make(map[string]bool)
+	for _, word := range wordList {
+		words[word] = true
+	}
+	q := []string{beginWord}
+	ans := 1
+	for len(q) > 0 {
+		ans++
+		for i := len(q); i > 0; i-- {
+			s := q[0]
+			q = q[1:]
+			chars := []byte(s)
+			for j := 0; j < len(chars); j++ {
+				ch := chars[j]
+				for k := 'a'; k <= 'z'; k++ {
+					chars[j] = byte(k)
+					t := string(chars)
+					if !words[t] {
+						continue
+					}
+					if t == endWord {
+						return ans
+					}
+					q = append(q, t)
+					words[t] = false
+				}
+				chars[j] = ch
+			}
+		}
+	}
+	return 0
+}
+```
+
+#### C#
+
+```cs
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Solution {
+    public int LadderLength(string beginWord, string endWord, IList<string> wordList) {
+        var words = Enumerable.Repeat(beginWord, 1).Concat(wordList).Select((word, i) => new { Word = word, Index = i }).ToList();
+        var endWordIndex = words.Find(w => w.Word == endWord)?.Index;
+        if (endWordIndex == null) {
+            return 0;
+        }
+
+        var paths = new List<int>[words.Count];
+        for (var i = 0; i < paths.Length; ++i)
+        {
+            paths[i] = new List<int>();
+        }
+        for (var i = 0; i < beginWord.Length; ++i)
+        {
+            var hashMap = new Hashtable();
+            foreach (var item in words)
+            {
+                var newWord = string.Format("{0}_{1}", item.Word.Substring(0, i), item.Word.Substring(i + 1));
+                List<int> similars;
+                if (!hashMap.ContainsKey(newWord))
+                {
+                    similars = new List<int>();
+                    hashMap.Add(newWord, similars);
+                }
+                else
+                {
+                    similars = (List<int>)hashMap[newWord];
+                }
+                foreach (var similar in similars)
+                {
+                    paths[similar].Add(item.Index);
+                    paths[item.Index].Add(similar);
+                }
+                similars.Add(item.Index);
+            }
+        }
+
+        var left = words.Count - 1;
+        var lastRound = new List<int> { 0 };
+        var visited = new bool[words.Count];
+        visited[0] = true;
+        for (var result = 2; left > 0; ++result)
+        {
+            var thisRound = new List<int>();
+            foreach (var index in lastRound)
+            {
+                foreach (var next in paths[index])
+                {
+                    if (!visited[next])
+                    {
+                        visited[next] = true;
+                        if (next == endWordIndex) return result;
+                        thisRound.Add(next);
+                    }
+                }
+            }
+            if (thisRound.Count == 0) break;
+            lastRound = thisRound;
+        }
+
+        return 0;
+    }
+}
+```
+
+#### TypeScript
+
+```ts
+function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+    if (!wordList.includes(endWord)) return 0;
+
+    const replace = (s: string, i: number, ch: string) => s.slice(0, i) + ch + s.slice(i + 1);
+    const { length } = beginWord;
+    const words: Record<string, string[]> = {};
+    const g: Record<string, string[]> = {};
+
+    for (const w of [beginWord, ...wordList]) {
+        const derivatives: string[] = [];
+
+        for (let i = 0; i < length; i++) {
+            const nextW = replace(w, i, '*');
+            derivatives.push(nextW);
+
+            g[nextW] ??= [];
+            g[nextW].push(w);
+        }
+
+        words[w] = derivatives;
+    }
+
+    let ans = 0;
+    let q = words[beginWord];
+    const vis = new Set<string>([beginWord]);
+
+    while (q.length) {
+        const nextQ: string[] = [];
+        ans++;
+
+        for (const variant of q) {
+            for (const w of g[variant]) {
+                if (w === endWord) return ans + 1;
+
+                if (vis.has(w)) continue;
+                vis.add(w);
+
+                nextQ.push(...words[w]);
+            }
+        }
+
+        q = nextQ;
+    }
+
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        def extend(m1, m2, q):
+            for _ in range(len(q)):
+                s = q.popleft()
+                step = m1[s]
+                s = list(s)
+                for i in range(len(s)):
+                    ch = s[i]
+                    for j in range(26):
+                        s[i] = chr(ord('a') + j)
+                        t = ''.join(s)
+                        if t in m1 or t not in words:
+                            continue
+                        if t in m2:
+                            return step + 1 + m2[t]
+                        m1[t] = step + 1
+                        q.append(t)
+                    s[i] = ch
+            return -1
+
+        words = set(wordList)
+        if endWord not in words:
+            return 0
+        q1, q2 = deque([beginWord]), deque([endWord])
+        m1, m2 = {beginWord: 0}, {endWord: 0}
+        while q1 and q2:
+            t = extend(m1, m2, q1) if len(q1) <= len(q2) else extend(m2, m1, q2)
+            if t != -1:
+                return t + 1
+        return 0
+```
+
+#### Java
 
 ```java
 class Solution {
@@ -203,41 +462,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        unordered_set<string> words(wordList.begin(), wordList.end());
-        queue<string> q{{beginWord}};
-        int ans = 1;
-        while (!q.empty())
-        {
-            ++ans;
-            for (int i = q.size(); i > 0; --i)
-            {
-                string s = q.front();
-                q.pop();
-                for (int j = 0; j < s.size(); ++j)
-                {
-                    char ch = s[j];
-                    for (char k = 'a'; k <= 'z'; ++k)
-                    {
-                        s[j] = k;
-                        if (!words.count(s)) continue;
-                        if (s == endWord) return ans;
-                        q.push(s);
-                        words.erase(s);
-                    }
-                    s[j] = ch;
-                }
-            }
-        }
-        return 0;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
@@ -251,8 +476,7 @@ public:
         unordered_map<string, int> m2;
         m1[beginWord] = 0;
         m2[endWord] = 0;
-        while (!q1.empty() && !q2.empty())
-        {
+        while (!q1.empty() && !q2.empty()) {
             int t = q1.size() <= q2.size() ? extend(m1, m2, q1, words) : extend(m2, m1, q2, words);
             if (t != -1) return t + 1;
         }
@@ -260,16 +484,13 @@ public:
     }
 
     int extend(unordered_map<string, int>& m1, unordered_map<string, int>& m2, queue<string>& q, unordered_set<string>& words) {
-        for (int i = q.size(); i > 0; --i)
-        {
+        for (int i = q.size(); i > 0; --i) {
             string s = q.front();
             int step = m1[s];
             q.pop();
-            for (int j = 0; j < s.size(); ++j)
-            {
+            for (int j = 0; j < s.size(); ++j) {
                 char ch = s[j];
-                for (char k = 'a'; k <= 'z'; ++k)
-                {
+                for (char k = 'a'; k <= 'z'; ++k) {
                     s[j] = k;
                     if (!words.count(s) || m1.count(s)) continue;
                     if (m2.count(s)) return step + 1 + m2[s];
@@ -284,43 +505,7 @@ public:
 };
 ```
 
-### **Go**
-
-```go
-func ladderLength(beginWord string, endWord string, wordList []string) int {
-	words := make(map[string]bool)
-	for _, word := range wordList {
-		words[word] = true
-	}
-	q := []string{beginWord}
-	ans := 1
-	for len(q) > 0 {
-		ans++
-		for i := len(q); i > 0; i-- {
-			s := q[0]
-			q = q[1:]
-			chars := []byte(s)
-			for j := 0; j < len(chars); j++ {
-				ch := chars[j]
-				for k := 'a'; k <= 'z'; k++ {
-					chars[j] = byte(k)
-					t := string(chars)
-					if !words[t] {
-						continue
-					}
-					if t == endWord {
-						return ans
-					}
-					q = append(q, t)
-					words[t] = false
-				}
-				chars[j] = ch
-			}
-		}
-	}
-	return 0
-}
-```
+#### Go
 
 ```go
 func ladderLength(beginWord string, endWord string, wordList []string) int {
@@ -376,10 +561,8 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

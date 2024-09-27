@@ -1,13 +1,15 @@
 class Solution {
     public int countHousePlacements(int n) {
-        int mod = (int) 1e9 + 7;
-        long[][] f = new long[n][2];
-        f[0] = new long[]{1, 1};
+        final int mod = (int) 1e9 + 7;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        f[0] = 1;
+        g[0] = 1;
         for (int i = 1; i < n; ++i) {
-            f[i][0] = (f[i - 1][0] + f[i - 1][1]) % mod;
-            f[i][1] = f[i - 1][0];
+            f[i] = g[i - 1];
+            g[i] = (f[i - 1] + g[i - 1]) % mod;
         }
-        long s = f[n - 1][0] + f[n - 1][1];
-        return (int) ((s * s) % mod);
+        long v = (f[n - 1] + g[n - 1]) % mod;
+        return (int) (v * v % mod);
     }
 }

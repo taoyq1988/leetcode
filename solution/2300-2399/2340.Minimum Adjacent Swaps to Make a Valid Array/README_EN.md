@@ -1,8 +1,21 @@
-# [2340. Minimum Adjacent Swaps to Make a Valid Array](https://leetcode.com/problems/minimum-adjacent-swaps-to-make-a-valid-array)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2340.Minimum%20Adjacent%20Swaps%20to%20Make%20a%20Valid%20Array/README_EN.md
+tags:
+    - Greedy
+    - Array
+---
+
+<!-- problem:start -->
+
+# [2340. Minimum Adjacent Swaps to Make a Valid Array 🔒](https://leetcode.com/problems/minimum-adjacent-swaps-to-make-a-valid-array)
 
 [中文文档](/solution/2300-2399/2340.Minimum%20Adjacent%20Swaps%20to%20Make%20a%20Valid%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>.</p>
 
@@ -18,7 +31,7 @@
 <p>Return <em>the <strong>minimum</strong> swaps required to make </em><code>nums</code><em> a valid array</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,4,5,5,3,1]
@@ -33,7 +46,7 @@
 It can be shown that 6 swaps is the minimum swaps required to make a valid array.
 </pre>
 
-<strong>Example 2:</strong>
+<strong class="example">Example 2:</strong>
 
 <pre>
 <strong>Input:</strong> nums = [9]
@@ -49,32 +62,121 @@ It can be shown that 6 swaps is the minimum swaps required to make a valid array
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def minimumSwaps(self, nums: List[int]) -> int:
+        i = j = 0
+        for k, v in enumerate(nums):
+            if v < nums[i] or (v == nums[i] and k < i):
+                i = k
+            if v >= nums[j] or (v == nums[j] and k > j):
+                j = k
+        return 0 if i == j else i + len(nums) - 1 - j - (i > j)
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int minimumSwaps(int[] nums) {
+        int n = nums.length;
+        int i = 0, j = 0;
+        for (int k = 0; k < n; ++k) {
+            if (nums[k] < nums[i] || (nums[k] == nums[i] && k < i)) {
+                i = k;
+            }
+            if (nums[k] > nums[j] || (nums[k] == nums[j] && k > j)) {
+                j = k;
+            }
+        }
+        if (i == j) {
+            return 0;
+        }
+        return i + n - 1 - j - (i > j ? 1 : 0);
+    }
+}
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minimumSwaps(vector<int>& nums) {
+        int n = nums.size();
+        int i = 0, j = 0;
+        for (int k = 0; k < n; ++k) {
+            if (nums[k] < nums[i] || (nums[k] == nums[i] && k < i)) {
+                i = k;
+            }
+            if (nums[k] > nums[j] || (nums[k] == nums[j] && k > j)) {
+                j = k;
+            }
+        }
+        if (i == j) {
+            return 0;
+        }
+        return i + n - 1 - j - (i > j);
+    }
+};
+```
+
+#### Go
+
+```go
+func minimumSwaps(nums []int) int {
+	var i, j int
+	for k, v := range nums {
+		if v < nums[i] || (v == nums[i] && k < i) {
+			i = k
+		}
+		if v > nums[j] || (v == nums[j] && k > j) {
+			j = k
+		}
+	}
+	if i == j {
+		return 0
+	}
+	if i < j {
+		return i + len(nums) - 1 - j
+	}
+	return i + len(nums) - 2 - j
+}
+```
+
+#### TypeScript
 
 ```ts
-
-```
-
-### **...**
-
-```
-
+function minimumSwaps(nums: number[]): number {
+    let i = 0;
+    let j = 0;
+    const n = nums.length;
+    for (let k = 0; k < n; ++k) {
+        if (nums[k] < nums[i] || (nums[k] == nums[i] && k < i)) {
+            i = k;
+        }
+        if (nums[k] > nums[j] || (nums[k] == nums[j] && k > j)) {
+            j = k;
+        }
+    }
+    return i == j ? 0 : i + n - 1 - j - (i > j ? 1 : 0);
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

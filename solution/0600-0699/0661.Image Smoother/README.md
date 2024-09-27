@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0661.Image%20Smoother/README.md
+tags:
+    - 数组
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [661. 图片平滑器](https://leetcode.cn/problems/image-smoother)
 
 [English Version](/solution/0600-0699/0661.Image%20Smoother/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p><strong>图像平滑器</strong> 是大小为&nbsp;<code>3 x 3</code> 的过滤器，用于对图像的每个单元格平滑处理，平滑处理后单元格的值为该单元格的平均灰度。</p>
 
@@ -53,15 +64,17 @@
 	<li><code>0 &lt;= img[i][j] &lt;= 255</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -80,9 +93,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -110,7 +121,58 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
+        int m = img.size(), n = img[0].size();
+        vector<vector<int>> ans(m, vector<int>(n));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int s = 0, cnt = 0;
+                for (int x = i - 1; x <= i + 1; ++x) {
+                    for (int y = j - 1; y <= j + 1; ++y) {
+                        if (x < 0 || x >= m || y < 0 || y >= n) continue;
+                        ++cnt;
+                        s += img[x][y];
+                    }
+                }
+                ans[i][j] = s / cnt;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func imageSmoother(img [][]int) [][]int {
+	m, n := len(img), len(img[0])
+	ans := make([][]int, m)
+	for i, row := range img {
+		ans[i] = make([]int, n)
+		for j := range row {
+			s, cnt := 0, 0
+			for x := i - 1; x <= i+1; x++ {
+				for y := j - 1; y <= j+1; y++ {
+					if x >= 0 && x < m && y >= 0 && y < n {
+						cnt++
+						s += img[x][y]
+					}
+				}
+			}
+			ans[i][j] = s / cnt
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
 
 ```ts
 function imageSmoother(img: number[][]): number[][] {
@@ -147,7 +209,7 @@ function imageSmoother(img: number[][]): number[][] {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -173,9 +235,9 @@ impl Solution {
                 let mut sum = 0;
                 let mut count = 0;
                 for [y, x] in locations.iter() {
-                    let i = i as i32 + y;
-                    let j = j as i32 + x;
-                    if i < 0 || i == m as i32 || j < 0 || j == n as i32 {
+                    let i = (i as i32) + y;
+                    let j = (j as i32) + x;
+                    if i < 0 || i == (m as i32) || j < 0 || j == (n as i32) {
                         continue;
                     }
                     count += 1;
@@ -189,65 +251,8 @@ impl Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
-        int m = img.size(), n = img[0].size();
-        vector<vector<int>> ans(m, vector<int>(n));
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
-                int s = 0, cnt = 0;
-                for (int x = i - 1; x <= i + 1; ++x)
-                {
-                    for (int y = j - 1; y <= j + 1; ++y)
-                    {
-                        if (x < 0 || x >= m || y < 0 || y >= n) continue;
-                        ++cnt;
-                        s += img[x][y];
-                    }
-                }
-                ans[i][j] = s / cnt;
-            }
-        }
-        return ans;
-    }
-};
-```
-
-### **Go**
-
-```go
-func imageSmoother(img [][]int) [][]int {
-	m, n := len(img), len(img[0])
-	ans := make([][]int, m)
-	for i, row := range img {
-		ans[i] = make([]int, n)
-		for j := range row {
-			s, cnt := 0, 0
-			for x := i - 1; x <= i+1; x++ {
-				for y := j - 1; y <= j+1; y++ {
-					if x >= 0 && x < m && y >= 0 && y < n {
-						cnt++
-						s += img[x][y]
-					}
-				}
-			}
-			ans[i][j] = s / cnt
-		}
-	}
-	return ans
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

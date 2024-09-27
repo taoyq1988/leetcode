@@ -1,8 +1,23 @@
-# [425. Word Squares](https://leetcode.com/problems/word-squares)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0425.Word%20Squares/README_EN.md
+tags:
+    - Trie
+    - Array
+    - String
+    - Backtracking
+---
+
+<!-- problem:start -->
+
+# [425. Word Squares 🔒](https://leetcode.com/problems/word-squares)
 
 [中文文档](/solution/0400-0499/0425.Word%20Squares/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of <strong>unique</strong> strings <code>words</code>, return <em>all the </em><strong><a href="https://en.wikipedia.org/wiki/Word_square" target="_blank">word squares</a></strong><em> you can build from </em><code>words</code>. The same word from <code>words</code> can be used <strong>multiple times</strong>. You can return the answer in <strong>any order</strong>.</p>
 
@@ -13,7 +28,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;area&quot;,&quot;lead&quot;,&quot;wall&quot;,&quot;lady&quot;,&quot;ball&quot;]
@@ -22,7 +37,7 @@
 The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;abat&quot;,&quot;baba&quot;,&quot;atan&quot;,&quot;atal&quot;]
@@ -42,11 +57,17 @@ The output consists of two word squares. The order of output does not matter (ju
 	<li>All <code>words[i]</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Trie:
@@ -96,7 +117,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Trie {
@@ -168,7 +189,7 @@ class Solution {
 }
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Trie struct {
@@ -235,10 +256,8 @@ func wordSquares(words []string) [][]string {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

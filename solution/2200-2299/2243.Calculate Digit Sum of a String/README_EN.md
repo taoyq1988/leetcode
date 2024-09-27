@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2243.Calculate%20Digit%20Sum%20of%20a%20String/README_EN.md
+rating: 1301
+source: Weekly Contest 289 Q1
+tags:
+    - String
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2243. Calculate Digit Sum of a String](https://leetcode.com/problems/calculate-digit-sum-of-a-string)
 
 [中文文档](/solution/2200-2299/2243.Calculate%20Digit%20Sum%20of%20a%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a string <code>s</code> consisting of digits and an integer <code>k</code>.</p>
 
@@ -17,7 +32,7 @@
 <p>Return <code>s</code> <em>after all rounds have been completed</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;11111222223&quot;, k = 3
@@ -32,7 +47,7 @@
 Now, s.length &lt;= k, so we return &quot;135&quot; as the answer.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;00000000&quot;, k = 3
@@ -52,47 +67,99 @@ s becomes &quot;0&quot; + &quot;0&quot; + &quot;0&quot; = &quot;000&quot;, whose
 	<li><code>s</code> consists of digits only.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def digitSum(self, s: str, k: int) -> str:
-        if len(s) <= k:
-            return s
-        t = []
-        while s:
-            t.append(str(sum(int(v) for v in s[:k])))
-            s = s[k:]
-        return self.digitSum(''.join(t), k)
+        while len(s) > k:
+            t = []
+            n = len(s)
+            for i in range(0, n, k):
+                x = 0
+                for j in range(i, min(i + k, n)):
+                    x += int(s[j])
+                t.append(str(x))
+            s = "".join(t)
+        return s
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String digitSum(String s, int k) {
         while (s.length() > k) {
             int n = s.length();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder t = new StringBuilder();
             for (int i = 0; i < n; i += k) {
-                int v = 0;
+                int x = 0;
                 for (int j = i; j < Math.min(i + k, n); ++j) {
-                    v += s.charAt(j) - '0';
+                    x += s.charAt(j) - '0';
                 }
-                sb.append(v + "");
+                t.append(x);
             }
-            s = sb.toString();
+            s = t.toString();
         }
         return s;
     }
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    string digitSum(string s, int k) {
+        while (s.size() > k) {
+            string t;
+            int n = s.size();
+            for (int i = 0; i < n; i += k) {
+                int x = 0;
+                for (int j = i; j < min(i + k, n); ++j) {
+                    x += s[j] - '0';
+                }
+                t += to_string(x);
+            }
+            s = t;
+        }
+        return s;
+    }
+};
+```
+
+#### Go
+
+```go
+func digitSum(s string, k int) string {
+	for len(s) > k {
+		t := &strings.Builder{}
+		n := len(s)
+		for i := 0; i < n; i += k {
+			x := 0
+			for j := i; j < i+k && j < n; j++ {
+				x += int(s[j] - '0')
+			}
+			t.WriteString(strconv.Itoa(x))
+		}
+		s = t.String()
+	}
+	return s
+}
+```
+
+#### TypeScript
 
 ```ts
 function digitSum(s: string, k: number): string {
@@ -109,10 +176,32 @@ function digitSum(s: string, k: number): string {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
-```
+<!-- solution:end -->
 
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def digitSum(self, s: str, k: int) -> str:
+        if len(s) <= k:
+            return s
+        t = []
+        while s:
+            t.append(str(sum(int(v) for v in s[:k])))
+            s = s[k:]
+        return self.digitSum(''.join(t), k)
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

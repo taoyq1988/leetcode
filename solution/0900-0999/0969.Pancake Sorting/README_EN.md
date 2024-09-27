@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0969.Pancake%20Sorting/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Two Pointers
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [969. Pancake Sorting](https://leetcode.com/problems/pancake-sorting)
 
 [中文文档](/solution/0900-0999/0969.Pancake%20Sorting/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of integers <code>arr</code>, sort the array by performing a series of <strong>pancake flips</strong>.</p>
 
@@ -18,7 +33,7 @@
 <p>Return <em>an array of the </em><code>k</code><em>-values corresponding to a sequence of pancake flips that sort </em><code>arr</code>. Any valid answer that sorts the array within <code>10 * arr.length</code> flips will be judged as correct.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [3,2,4,1]
@@ -32,7 +47,7 @@ After 3rd flip (k = 4): arr = [<u>3</u>, <u>2</u>, <u>1</u>, <u>4</u>]
 After 4th flip (k = 3): arr = [<u>1</u>, <u>2</u>, <u>3</u>, 4], which is sorted.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> arr = [1,2,3]
@@ -50,11 +65,17 @@ Note that other answers, such as [3, 3], would also be accepted.
 	<li>All integers in <code>arr</code> are unique (i.e. <code>arr</code> is a permutation of the integers from <code>1</code> to <code>arr.length</code>).</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -80,7 +101,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -89,7 +110,8 @@ class Solution {
         List<Integer> ans = new ArrayList<>();
         for (int i = n - 1; i > 0; --i) {
             int j = i;
-            for (; j > 0 && arr[j] != i + 1; --j);
+            for (; j > 0 && arr[j] != i + 1; --j)
+                ;
             if (j < i) {
                 if (j > 0) {
                     ans.add(j + 1);
@@ -112,35 +134,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function pancakeSort(arr: number[]): number[] {
-    let ans = [];
-    for (let n = arr.length; n > 1; n--) {
-        let index = 0;
-        for (let i = 1; i < n; i++) {
-            if (arr[i] >= arr[index]) {
-                index = i;
-            }
-        }
-        if (index == n - 1) continue;
-        reverse(arr, index);
-        reverse(arr, n - 1);
-        ans.push(index + 1);
-        ans.push(n);
-    }
-    return ans;
-}
-
-function reverse(nums: Array<number>, end: number): void {
-    for (let i = 0, j = end; i < j; i++, j--) {
-        [nums[i], nums[j]] = [nums[j], nums[i]];
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -148,13 +142,12 @@ public:
     vector<int> pancakeSort(vector<int>& arr) {
         int n = arr.size();
         vector<int> ans;
-        for (int i = n - 1; i > 0; --i)
-        {
+        for (int i = n - 1; i > 0; --i) {
             int j = i;
-            for (; j > 0 && arr[j] != i + 1; --j);
+            for (; j > 0 && arr[j] != i + 1; --j)
+                ;
             if (j == i) continue;
-            if (j > 0)
-            {
+            if (j > 0) {
                 ans.push_back(j + 1);
                 reverse(arr.begin(), arr.begin() + j + 1);
             }
@@ -166,7 +159,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func pancakeSort(arr []int) []int {
@@ -194,7 +187,35 @@ func pancakeSort(arr []int) []int {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function pancakeSort(arr: number[]): number[] {
+    let ans = [];
+    for (let n = arr.length; n > 1; n--) {
+        let index = 0;
+        for (let i = 1; i < n; i++) {
+            if (arr[i] >= arr[index]) {
+                index = i;
+            }
+        }
+        if (index == n - 1) continue;
+        reverse(arr, index);
+        reverse(arr, n - 1);
+        ans.push(index + 1);
+        ans.push(n);
+    }
+    return ans;
+}
+
+function reverse(nums: Array<number>, end: number): void {
+    for (let i = 0, j = end; i < j; i++, j--) {
+        [nums[i], nums[j]] = [nums[j], nums[i]];
+    }
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -210,10 +231,10 @@ impl Solution {
             if max_idx != n {
                 if max_idx != 0 {
                     arr[..=max_idx].reverse();
-                    res.push(max_idx as i32 + 1);
+                    res.push((max_idx as i32) + 1);
                 }
                 arr[..=n].reverse();
-                res.push(n as i32 + 1);
+                res.push((n as i32) + 1);
             }
         }
         res
@@ -221,10 +242,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

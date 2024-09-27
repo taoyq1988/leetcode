@@ -1,13 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0712.Minimum%20ASCII%20Delete%20Sum%20for%20Two%20Strings/README_EN.md
+tags:
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [712. Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings)
 
 [中文文档](/solution/0700-0799/0712.Minimum%20ASCII%20Delete%20Sum%20for%20Two%20Strings/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given two strings <code>s1</code> and&nbsp;<code>s2</code>, return <em>the lowest <strong>ASCII</strong> sum of deleted characters to make two strings equal</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;sea&quot;, s2 = &quot;eat&quot;
@@ -17,7 +30,7 @@ Deleting &quot;t&quot; from &quot;eat&quot; adds 116 to the sum.
 At the end, both strings are equal, and 115 + 116 = 231 is the minimum sum possible to achieve this.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;delete&quot;, s2 = &quot;leet&quot;
@@ -37,87 +50,188 @@ If instead we turned both strings into &quot;lee&quot; or &quot;eet&quot;, we wo
 	<li><code>s1</code> and <code>s2</code> consist of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Dynamic programming.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def minimumDeleteSum(self, s1: str, s2: str) -> int:
         m, n = len(s1), len(s2)
-        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        f = [[0] * (n + 1) for _ in range(m + 1)]
         for i in range(1, m + 1):
-            dp[i][0] = dp[i - 1][0] + ord(s1[i - 1])
+            f[i][0] = f[i - 1][0] + ord(s1[i - 1])
         for j in range(1, n + 1):
-            dp[0][j] = dp[0][j - 1] + ord(s2[j - 1])
+            f[0][j] = f[0][j - 1] + ord(s2[j - 1])
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 if s1[i - 1] == s2[j - 1]:
-                    dp[i][j] = dp[i - 1][j - 1]
+                    f[i][j] = f[i - 1][j - 1]
                 else:
-                    dp[i][j] = min(dp[i - 1][j] + ord(s1[i - 1]),
-                                   dp[i][j - 1] + ord(s2[j - 1]))
-        return dp[-1][-1]
+                    f[i][j] = min(
+                        f[i - 1][j] + ord(s1[i - 1]), f[i][j - 1] + ord(s2[j - 1])
+                    )
+        return f[m][n]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int minimumDeleteSum(String s1, String s2) {
         int m = s1.length(), n = s2.length();
-        int[][] dp = new int[m + 1][n + 1];
+        int[][] f = new int[m + 1][n + 1];
         for (int i = 1; i <= m; ++i) {
-            dp[i][0] = dp[i - 1][0] + s1.codePointAt(i - 1);
+            f[i][0] = f[i - 1][0] + s1.charAt(i - 1);
         }
         for (int j = 1; j <= n; ++j) {
-            dp[0][j] = dp[0][j - 1] + s2.codePointAt(j - 1);
+            f[0][j] = f[0][j - 1] + s2.charAt(j - 1);
         }
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1];
+                    f[i][j] = f[i - 1][j - 1];
                 } else {
-                    dp[i][j] = Math.min(dp[i - 1][j] + s1.codePointAt(i - 1), dp[i][j - 1] + s2.codePointAt(j - 1));
+                    f[i][j]
+                        = Math.min(f[i - 1][j] + s1.charAt(i - 1), f[i][j - 1] + s2.charAt(j - 1));
                 }
             }
         }
-        return dp[m][n];
+        return f[m][n];
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int minimumDeleteSum(string s1, string s2) {
         int m = s1.size(), n = s2.size();
-        vector<vector<int>> dp(m + 1, vector<int>(n + 1));
-        for (int i = 1; i <= m; ++i) dp[i][0] = dp[i - 1][0] + s1[i - 1];
-        for (int j = 1; j <= n; ++j) dp[0][j] = dp[0][j - 1] + s2[j - 1];
-        for (int i = 1; i <= m; ++i)
-        {
-            for (int j = 1; j <= n; ++j)
-            {
-                if (s1[i - 1] == s2[j - 1]) dp[i][j] = dp[i - 1][j - 1];
-                else dp[i][j] = min(dp[i - 1][j] + s1[i - 1], dp[i][j - 1] + s2[j - 1]);
+        int f[m + 1][n + 1];
+        memset(f, 0, sizeof f);
+        for (int i = 1; i <= m; ++i) {
+            f[i][0] = f[i - 1][0] + s1[i - 1];
+        }
+        for (int j = 1; j <= n; ++j) {
+            f[0][j] = f[0][j - 1] + s2[j - 1];
+        }
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                if (s1[i - 1] == s2[j - 1]) {
+                    f[i][j] = f[i - 1][j - 1];
+                } else {
+                    f[i][j] = min(f[i - 1][j] + s1[i - 1], f[i][j - 1] + s2[j - 1]);
+                }
             }
         }
-        return dp[m][n];
+        return f[m][n];
     }
 };
 ```
 
-### **...**
+#### Go
 
+```go
+func minimumDeleteSum(s1 string, s2 string) int {
+	m, n := len(s1), len(s2)
+	f := make([][]int, m+1)
+	for i := range f {
+		f[i] = make([]int, n+1)
+	}
+	for i, c := range s1 {
+		f[i+1][0] = f[i][0] + int(c)
+	}
+	for j, c := range s2 {
+		f[0][j+1] = f[0][j] + int(c)
+	}
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			if s1[i-1] == s2[j-1] {
+				f[i][j] = f[i-1][j-1]
+			} else {
+				f[i][j] = min(f[i-1][j]+int(s1[i-1]), f[i][j-1]+int(s2[j-1]))
+			}
+		}
+	}
+	return f[m][n]
+}
 ```
 
+#### TypeScript
+
+```ts
+function minimumDeleteSum(s1: string, s2: string): number {
+    const m = s1.length;
+    const n = s2.length;
+    const f = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    for (let i = 1; i <= m; ++i) {
+        f[i][0] = f[i - 1][0] + s1[i - 1].charCodeAt(0);
+    }
+    for (let j = 1; j <= n; ++j) {
+        f[0][j] = f[0][j - 1] + s2[j - 1].charCodeAt(0);
+    }
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            if (s1[i - 1] === s2[j - 1]) {
+                f[i][j] = f[i - 1][j - 1];
+            } else {
+                f[i][j] = Math.min(
+                    f[i - 1][j] + s1[i - 1].charCodeAt(0),
+                    f[i][j - 1] + s2[j - 1].charCodeAt(0),
+                );
+            }
+        }
+    }
+    return f[m][n];
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {number}
+ */
+var minimumDeleteSum = function (s1, s2) {
+    const m = s1.length;
+    const n = s2.length;
+    const f = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    for (let i = 1; i <= m; ++i) {
+        f[i][0] = f[i - 1][0] + s1[i - 1].charCodeAt(0);
+    }
+    for (let j = 1; j <= n; ++j) {
+        f[0][j] = f[0][j - 1] + s2[j - 1].charCodeAt(0);
+    }
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            if (s1[i - 1] === s2[j - 1]) {
+                f[i][j] = f[i - 1][j - 1];
+            } else {
+                f[i][j] = Math.min(
+                    f[i - 1][j] + s1[i - 1].charCodeAt(0),
+                    f[i][j - 1] + s2[j - 1].charCodeAt(0),
+                );
+            }
+        }
+    }
+    return f[m][n];
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -10,7 +10,7 @@ class BinaryIndexedTree {
     public void update(int x, int delta) {
         while (x <= n) {
             c[x] += delta;
-            x += lowbit(x);
+            x += x & -x;
         }
     }
 
@@ -18,13 +18,9 @@ class BinaryIndexedTree {
         int s = 0;
         while (x > 0) {
             s += c[x];
-            x -= lowbit(x);
+            x -= x & -x;
         }
         return s;
-    }
-
-    public static int lowbit(int x) {
-        return x & -x;
     }
 }
 
@@ -38,12 +34,12 @@ class NumArray {
             tree.update(i + 1, nums[i]);
         }
     }
-    
+
     public void update(int index, int val) {
         int prev = sumRange(index, index);
         tree.update(index + 1, val - prev);
     }
-    
+
     public int sumRange(int left, int right) {
         return tree.query(right + 1) - tree.query(left);
     }

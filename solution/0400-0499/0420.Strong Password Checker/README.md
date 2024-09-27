@@ -1,18 +1,29 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0420.Strong%20Password%20Checker/README.md
+tags:
+    - 贪心
+    - 字符串
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [420. 强密码检验器](https://leetcode.cn/problems/strong-password-checker)
 
 [English Version](/solution/0400-0499/0420.Strong%20Password%20Checker/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>&nbsp;</p>
-如果一个密码满足下述所有条件，则认为这个密码是强密码：
+<p>满足以下条件的密码被认为是强密码：</p>
 
 <ul>
 	<li>由至少 <code>6</code> 个，至多 <code>20</code> 个字符组成。</li>
-	<li>至少包含 <strong>一个小写 </strong>字母，<strong>一个大写</strong> 字母，和 <strong>一个数字</strong> 。</li>
-	<li>同一字符 <strong>不能 </strong>连续出现三次 (比如 <code>"...aaa..."</code> 是不允许的, 但是&nbsp;<code>"...aa...a..."</code> 如果满足其他条件也可以算是强密码)。</li>
+	<li>包含至少 <strong>一个小写 </strong>字母，至少&nbsp;<strong>一个大写</strong> 字母，和至少&nbsp;<strong>一个数字</strong> 。</li>
+	<li>不包含连续三个重复字符 (比如 <code>"B<em><strong>aaa</strong></em>bb0"</code> 是弱密码, 但是&nbsp;<code>"B<em><strong>aa</strong></em>b<em><strong>a</strong></em>0"</code> 是强密码)。</li>
 </ul>
 
 <p>给你一个字符串 <code>password</code> ，返回&nbsp;<em>将 <code>password</code> 修改到满足强密码条件需要的最少修改步数。如果 <code>password</code> 已经是强密码，则返回 <code>0</code> 。</em></p>
@@ -54,18 +65,20 @@
 
 <ul>
 	<li><code>1 &lt;= password.length &lt;= 50</code></li>
-	<li><code>password</code> 由字母、数字、点 <code>'.'</code> 或者感叹号 <code>'!'</code></li>
+	<li><code>password</code> 由字母、数字、点 <code>'.'</code> 或者感叹号 <code>'!'</code> 组成</li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -130,9 +143,7 @@ class Solution:
         return n - 20 + max(replace, 3 - types)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -216,7 +227,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -225,15 +236,13 @@ public:
         int types = countTypes(password);
         int n = password.size();
         if (n < 6) return max(6 - n, 3 - types);
-        if (n <= 20)
-        {
+        if (n <= 20) {
             int replace = 0, cnt = 0;
             char prev = '~';
-            for (char& curr : password)
-            {
-                if (curr == prev) ++cnt;
-                else
-                {
+            for (char& curr : password) {
+                if (curr == prev)
+                    ++cnt;
+                else {
                     replace += cnt / 3;
                     cnt = 1;
                     prev = curr;
@@ -246,33 +255,28 @@ public:
         int remove2 = 0;
         int cnt = 0;
         char prev = '~';
-        for (char& curr : password)
-        {
-            if (curr == prev) ++cnt;
-            else
-            {
-                if (remove > 0 && cnt >= 3)
-                {
-                    if (cnt % 3 == 0)
-                    {
+        for (char& curr : password) {
+            if (curr == prev)
+                ++cnt;
+            else {
+                if (remove > 0 && cnt >= 3) {
+                    if (cnt % 3 == 0) {
                         --remove;
                         --replace;
-                    }
-                    else if (cnt % 3 == 1) ++remove2;
+                    } else if (cnt % 3 == 1)
+                        ++remove2;
                 }
                 replace += cnt / 3;
                 cnt = 1;
                 prev = curr;
             }
         }
-        if (remove > 0 && cnt >= 3)
-        {
-            if (cnt % 3 == 0)
-            {
+        if (remove > 0 && cnt >= 3) {
+            if (cnt % 3 == 0) {
                 --remove;
                 --replace;
-            }
-            else if (cnt % 3 == 1) ++remove2;
+            } else if (cnt % 3 == 1)
+                ++remove2;
         }
         replace += cnt / 3;
 
@@ -288,21 +292,21 @@ public:
 
     int countTypes(string& s) {
         int a = 0, b = 0, c = 0;
-        for (char& ch : s)
-        {
-            if (islower(ch)) a = 1;
-            else if (isupper(ch)) b = 1;
-            else if (isdigit(ch)) c = 1;
+        for (char& ch : s) {
+            if (islower(ch))
+                a = 1;
+            else if (isupper(ch))
+                b = 1;
+            else if (isdigit(ch))
+                c = 1;
         }
         return a + b + c;
     }
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

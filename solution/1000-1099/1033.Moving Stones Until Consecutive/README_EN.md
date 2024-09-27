@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1033.Moving%20Stones%20Until%20Consecutive/README_EN.md
+rating: 1421
+source: Weekly Contest 134 Q1
+tags:
+    - Brainteaser
+    - Math
+---
+
+<!-- problem:start -->
+
 # [1033. Moving Stones Until Consecutive](https://leetcode.com/problems/moving-stones-until-consecutive)
 
 [中文文档](/solution/1000-1099/1033.Moving%20Stones%20Until%20Consecutive/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are three stones in different positions on the X-axis. You are given three integers <code>a</code>, <code>b</code>, and <code>c</code>, the positions of the stones.</p>
 
@@ -18,7 +33,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> a = 1, b = 2, c = 5
@@ -26,7 +41,7 @@
 <strong>Explanation:</strong> Move the stone from 5 to 3, or move the stone from 5 to 4 to 3.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> a = 4, b = 3, c = 2
@@ -34,7 +49,7 @@
 <strong>Explanation:</strong> We cannot make any moves.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> a = 3, b = 5, c = 1
@@ -50,26 +65,105 @@
 	<li><code>a</code>, <code>b</code>, and <code>c</code> have different values.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def numMovesStones(self, a: int, b: int, c: int) -> List[int]:
+        x, z = min(a, b, c), max(a, b, c)
+        y = a + b + c - x - z
+        mi = mx = 0
+        if z - x > 2:
+            mi = 1 if y - x < 3 or z - y < 3 else 2
+            mx = z - x - 2
+        return [mi, mx]
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public int[] numMovesStones(int a, int b, int c) {
+        int x = Math.min(a, Math.min(b, c));
+        int z = Math.max(a, Math.max(b, c));
+        int y = a + b + c - x - z;
+        int mi = 0, mx = 0;
+        if (z - x > 2) {
+            mi = y - x < 3 || z - y < 3 ? 1 : 2;
+            mx = z - x - 2;
+        }
+        return new int[] {mi, mx};
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    vector<int> numMovesStones(int a, int b, int c) {
+        int x = min({a, b, c});
+        int z = max({a, b, c});
+        int y = a + b + c - x - z;
+        int mi = 0, mx = 0;
+        if (z - x > 2) {
+            mi = y - x < 3 || z - y < 3 ? 1 : 2;
+            mx = z - x - 2;
+        }
+        return {mi, mx};
+    }
+};
 ```
 
+#### Go
+
+```go
+func numMovesStones(a int, b int, c int) []int {
+	x := min(a, min(b, c))
+	z := max(a, max(b, c))
+	y := a + b + c - x - z
+	mi, mx := 0, 0
+	if z-x > 2 {
+		mi = 2
+		if y-x < 3 || z-y < 3 {
+			mi = 1
+		}
+		mx = z - x - 2
+	}
+	return []int{mi, mx}
+}
+```
+
+#### TypeScript
+
+```ts
+function numMovesStones(a: number, b: number, c: number): number[] {
+    const x = Math.min(a, Math.min(b, c));
+    const z = Math.max(a, Math.max(b, c));
+    const y = a + b + c - x - z;
+    let mi = 0,
+        mx = 0;
+    if (z - x > 2) {
+        mi = y - x < 3 || z - y < 3 ? 1 : 2;
+        mx = z - x - 2;
+    }
+    return [mi, mx];
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

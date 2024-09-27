@@ -1,7 +1,7 @@
-SELECT 
+# Write your MySQL query statement below
+SELECT
     customer_number
-FROM
-    Orders
+FROM orders
 GROUP BY customer_number
-ORDER BY COUNT(customer_number) DESC
+ORDER BY COUNT(1) DESC
 LIMIT 1;

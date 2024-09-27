@@ -1,14 +1,12 @@
 class Solution {
     public boolean hasGroupsSizeX(int[] deck) {
-        int[] counter = new int[10000];
-        for (int d : deck) {
-            ++counter[d];
+        Map<Integer, Integer> cnt = new HashMap<>();
+        for (int x : deck) {
+            cnt.merge(x, 1, Integer::sum);
         }
-        int g = -1;
-        for (int v : counter) {
-            if (v > 0) {
-                g = g == -1 ? v : gcd(g, v);
-            }
+        int g = cnt.get(deck[0]);
+        for (int x : cnt.values()) {
+            g = gcd(g, x);
         }
         return g >= 2;
     }

@@ -1,57 +1,55 @@
 func shortestPathAllKeys(grid []string) int {
 	m, n := len(grid), len(grid[0])
-	cnt := 0
-	sx, sy := 0, 0
+	var k, si, sj int
 	for i, row := range grid {
 		for j, c := range row {
-			if 'a' <= c && c <= 'z' {
-				cnt++
+			if c >= 'a' && c <= 'z' {
+				// 累加钥匙数量
+				k++
 			} else if c == '@' {
-				sx, sy = i, j
+				// 起点
+				si, sj = i, j
 			}
 		}
 	}
-	q := [][]int{{sx, sy, 0}}
-	vis := make([][][]bool, m)
-	for i := range vis {
-		vis[i] = make([][]bool, n)
-		for j := range vis[i] {
-			vis[i][j] = make([]bool, 1<<cnt)
-		}
-	}
-	vis[sx][sy][0] = true
+	type tuple struct{ i, j, state int }
+	q := []tuple{tuple{si, sj, 0}}
+	vis := map[tuple]bool{tuple{si, sj, 0}: true}
 	dirs := []int{-1, 0, 1, 0, -1}
 	ans := 0
-	mask := (1 << cnt) - 1
 	for len(q) > 0 {
 		for t := len(q); t > 0; t-- {
 			p := q[0]
 			q = q[1:]
-			i, j, state := p[0], p[1], p[2]
-			if state == mask {
+			i, j, state := p.i, p.j, p.state
+			// 找到所有钥匙，返回当前步数
+			if state == 1<<k-1 {
 				return ans
 			}
-			for k := 0; k < 4; k++ {
-				nxt := state
-				x, y := i+dirs[k], j+dirs[k+1]
+			// 往四个方向搜索
+			for h := 0; h < 4; h++ {
+				x, y := i+dirs[h], j+dirs[h+1]
+				// 在边界范围内
 				if x >= 0 && x < m && y >= 0 && y < n {
 					c := grid[x][y]
-					if c == '#' {
+					// 是墙，或者是锁，但此时没有对应的钥匙，无法通过
+					if c == '#' || (c >= 'A' && c <= 'Z' && (state>>(c-'A')&1 == 0)) {
 						continue
 					}
-					if 'A' <= c && c <= 'Z' && (nxt&(1<<(c-'A'))) == 0 {
-						continue
-					}
-					if 'a' <= c && c <= 'z' {
+					nxt := state
+					// 是钥匙，更新状态
+					if c >= 'a' && c <= 'z' {
 						nxt |= 1 << (c - 'a')
 					}
-					if !vis[x][y][nxt] {
-						vis[x][y][nxt] = true
-						q = append(q, []int{x, y, nxt})
+					// 此状态未访问过，入队
+					if !vis[tuple{x, y, nxt}] {
+						vis[tuple{x, y, nxt}] = true
+						q = append(q, tuple{x, y, nxt})
 					}
 				}
 			}
 		}
+		// 步数加一
 		ans++
 	}
 	return -1

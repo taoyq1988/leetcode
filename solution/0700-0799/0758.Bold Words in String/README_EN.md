@@ -1,15 +1,31 @@
-# [758. Bold Words in String](https://leetcode.com/problems/bold-words-in-string)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0758.Bold%20Words%20in%20String/README_EN.md
+tags:
+    - Trie
+    - Array
+    - Hash Table
+    - String
+    - String Matching
+---
+
+<!-- problem:start -->
+
+# [758. Bold Words in String 🔒](https://leetcode.com/problems/bold-words-in-string)
 
 [中文文档](/solution/0700-0799/0758.Bold%20Words%20in%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of keywords <code>words</code> and a string <code>s</code>, make all appearances of all keywords <code>words[i]</code> in <code>s</code> bold. Any letters between <code>&lt;b&gt;</code> and <code>&lt;/b&gt;</code> tags become bold.</p>
 
 <p>Return <code>s</code> <em>after adding the bold tags</em>. The returned string should use the least number of tags possible, and the tags should form a valid combination.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;ab&quot;,&quot;bc&quot;], s = &quot;aabcd&quot;
@@ -17,7 +33,7 @@
 <strong>Explanation:</strong> Note that returning <code>&quot;a&lt;b&gt;a&lt;b&gt;b&lt;/b&gt;c&lt;/b&gt;d&quot;</code> would use more tags, so it is incorrect.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;ab&quot;,&quot;cb&quot;], s = &quot;aabcd&quot;
@@ -35,13 +51,19 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Note:</strong> This question is the same as 616: <a href="https://leetcode.com/problems/add-bold-tag-in-string/" target="_blank">https://leetcode.com/problems/add-bold-tag-in-string/</a></p>
+<p><strong>Note:</strong> This question is the same as <a href="https://leetcode.com/problems/add-bold-tag-in-string/description/" target="_blank">616. Add Bold Tag in String</a>.</p>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Trie:
@@ -95,9 +117,9 @@ class Solution:
                 break
             st, ed = t[j]
             if i < st:
-                ans.append(s[i: st])
+                ans.append(s[i:st])
             ans.append('<b>')
-            ans.append(s[st: ed + 1])
+            ans.append(s[st : ed + 1])
             ans.append('</b>')
             j += 1
             i = ed + 1
@@ -105,7 +127,7 @@ class Solution:
         return ''.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Trie {
@@ -141,7 +163,7 @@ class Solution {
                 }
                 node = node.children[idx];
                 if (node.isEnd) {
-                    pairs.add(new int[]{i, j});
+                    pairs.add(new int[] {i, j});
                 }
             }
         }
@@ -153,14 +175,14 @@ class Solution {
         for (int j = 1; j < pairs.size(); ++j) {
             int a = pairs.get(j)[0], b = pairs.get(j)[1];
             if (ed + 1 < a) {
-                t.add(new int[]{st, ed});
+                t.add(new int[] {st, ed});
                 st = a;
                 ed = b;
             } else {
                 ed = Math.max(ed, b);
             }
         }
-        t.add(new int[]{st, ed});
+        t.add(new int[] {st, ed});
         int i = 0, j = 0;
         StringBuilder ans = new StringBuilder();
         while (i < n) {
@@ -184,7 +206,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Trie {
@@ -199,8 +221,7 @@ public:
 
     void insert(string word) {
         Trie* node = this;
-        for (char c : word)
-        {
+        for (char c : word) {
             if (!node->children[c]) node->children[c] = new Trie();
             node = node->children[c];
         }
@@ -215,11 +236,9 @@ public:
         for (string w : words) trie->insert(w);
         int n = s.size();
         vector<pair<int, int>> pairs;
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             Trie* node = trie;
-            for (int j = i; j < n; ++j)
-            {
+            for (int j = i; j < n; ++j) {
                 int idx = s[j];
                 if (!node->children[idx]) break;
                 node = node->children[idx];
@@ -229,23 +248,19 @@ public:
         if (pairs.empty()) return s;
         vector<pair<int, int>> t;
         int st = pairs[0].first, ed = pairs[0].second;
-        for (int i = 1; i < pairs.size(); ++i)
-        {
+        for (int i = 1; i < pairs.size(); ++i) {
             int a = pairs[i].first, b = pairs[i].second;
-            if (ed + 1 < a)
-            {
+            if (ed + 1 < a) {
                 t.push_back({st, ed});
                 st = a, ed = b;
-            }
-            else ed = max(ed, b);
+            } else
+                ed = max(ed, b);
         }
         t.push_back({st, ed});
         string ans = "";
         int i = 0, j = 0;
-        while (i < n)
-        {
-            if (j == t.size())
-            {
+        while (i < n) {
+            if (j == t.size()) {
                 ans += s.substr(i);
                 break;
             }
@@ -262,7 +277,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Trie struct {
@@ -338,19 +353,10 @@ func boldWords(words []string, s string) string {
 	}
 	return ans.String()
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

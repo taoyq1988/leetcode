@@ -1,10 +1,20 @@
-# [1188. 设计有限阻塞队列](https://leetcode.cn/problems/design-bounded-blocking-queue)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1188.Design%20Bounded%20Blocking%20Queue/README.md
+tags:
+    - 多线程
+---
+
+<!-- problem:start -->
+
+# [1188. 设计有限阻塞队列 🔒](https://leetcode.cn/problems/design-bounded-blocking-queue)
 
 [English Version](/solution/1100-1199/1188.Design%20Bounded%20Blocking%20Queue/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>实现一个拥有如下方法的线程安全有限阻塞队列：</p>
 
@@ -94,16 +104,113 @@ queue.size();       // 队列中还有 1 个元素。
 	<li>&nbsp;<code>enque</code>,&nbsp;<code>deque</code> 和&nbsp;<code>size</code>&nbsp;最多被调用&nbsp;<code>40</code>&nbsp;次</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **SQL**
+#### Python3
 
-```sql
+```python
+from threading import Semaphore
 
+
+class BoundedBlockingQueue(object):
+    def __init__(self, capacity: int):
+        self.s1 = Semaphore(capacity)
+        self.s2 = Semaphore(0)
+        self.q = deque()
+
+    def enqueue(self, element: int) -> None:
+        self.s1.acquire()
+        self.q.append(element)
+        self.s2.release()
+
+    def dequeue(self) -> int:
+        self.s2.acquire()
+        ans = self.q.popleft()
+        self.s1.release()
+        return ans
+
+    def size(self) -> int:
+        return len(self.q)
+```
+
+#### Java
+
+```java
+class BoundedBlockingQueue {
+    private Semaphore s1;
+    private Semaphore s2;
+    private Deque<Integer> q = new ArrayDeque<>();
+
+    public BoundedBlockingQueue(int capacity) {
+        s1 = new Semaphore(capacity);
+        s2 = new Semaphore(0);
+    }
+
+    public void enqueue(int element) throws InterruptedException {
+        s1.acquire();
+        q.offer(element);
+        s2.release();
+    }
+
+    public int dequeue() throws InterruptedException {
+        s2.acquire();
+        int ans = q.poll();
+        s1.release();
+        return ans;
+    }
+
+    public int size() {
+        return q.size();
+    }
+}
+```
+
+#### C++
+
+```cpp
+#include <semaphore.h>
+
+class BoundedBlockingQueue {
+public:
+    BoundedBlockingQueue(int capacity) {
+        sem_init(&s1, 0, capacity);
+        sem_init(&s2, 0, 0);
+    }
+
+    void enqueue(int element) {
+        sem_wait(&s1);
+        q.push(element);
+        sem_post(&s2);
+    }
+
+    int dequeue() {
+        sem_wait(&s2);
+        int ans = q.front();
+        q.pop();
+        sem_post(&s1);
+        return ans;
+    }
+
+    int size() {
+        return q.size();
+    }
+
+private:
+    queue<int> q;
+    sem_t s1, s2;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

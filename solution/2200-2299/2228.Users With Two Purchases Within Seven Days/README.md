@@ -1,12 +1,22 @@
-# [2228. Users With Two Purchases Within Seven Days](https://leetcode.cn/problems/users-with-two-purchases-within-seven-days)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2228.Users%20With%20Two%20Purchases%20Within%20Seven%20Days/README.md
+tags:
+    - 数据库
+---
+
+<!-- problem:start -->
+
+# [2228. 7 天内两次购买的用户 🔒](https://leetcode.cn/problems/users-with-two-purchases-within-seven-days)
 
 [English Version](/solution/2200-2299/2228.Users%20With%20Two%20Purchases%20Within%20Seven%20Days/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>Table: <code>Purchases</code></p>
+<p>表: <code>Purchases</code></p>
 
 <pre>
 +---------------+------+
@@ -16,24 +26,25 @@
 | user_id       | int  |
 | purchase_date | date |
 +---------------+------+
-purchase_id is the primary key for this table.
-This table contains logs of the dates that users purchased from a certain retailer.
+purchase_id 包含唯一值。
+该表包含用户从某个零售商购买的日期的日志。
 </pre>
 
 <p>&nbsp;</p>
 
-<p>Write an SQL query to report the IDs of the users that made any two purchases <strong>at most</strong> <code>7</code> days apart.</p>
+<p>编写解决方案，获取&nbsp;<strong>最多&nbsp;</strong>间隔 <code>7</code> 天进行两次购买的用户的 id。</p>
 
-<p>Return the result table ordered by <code>user_id</code>.</p>
+<p data-group="1-1">返回<em>按 <code>user_id</code>&nbsp;排序的结果表。</em></p>
 
-<p>The query result format is in the following example.</p>
+<p>结果格式如下所示。</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+
+<p><strong>示例 1:</strong></p>
 
 <pre>
-<strong>Input:</strong> 
-Purchases table:
+<strong>输入:</strong> 
+Purchases 表:
 +-------------+---------+---------------+
 | purchase_id | user_id | purchase_date |
 +-------------+---------+---------------+
@@ -44,31 +55,53 @@ Purchases table:
 | 5           | 7       | 2022-06-19    |
 | 2           | 2       | 2022-06-08    |
 +-------------+---------+---------------+
-<strong>Output:</strong> 
+<strong>输出:</strong> 
 +---------+
 | user_id |
 +---------+
 | 2       |
 | 7       |
 +---------+
-<strong>Explanation:</strong> 
-User 2 had two purchases on 2022-03-13 and 2022-03-20. Since the second purchase is within 7 days of the first purchase, we add their ID.
-User 5 had only 1 purchase.
-User 7 had two purchases on the same day so we add their ID.
-</pre>
+<strong>解释:</strong> 
+用户 2 在 2022-03-13 和 2022-03-20 有两次购买。由于第二次购买是在第一次购买后的 7 天内，我们添加了他们的 ID。
+用户 5 只购买了 1 次。
+用户 7 在同一天有两次购买，所以我们添加了他们的 ID。</pre>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **SQL**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### MySQL
 
 ```sql
-
+# Write your MySQL query statement below
+WITH
+    t AS (
+        SELECT
+            user_id,
+            DATEDIFF(
+                purchase_date,
+                LAG(purchase_date, 1) OVER (
+                    PARTITION BY user_id
+                    ORDER BY purchase_date
+                )
+            ) AS d
+        FROM Purchases
+    )
+SELECT DISTINCT user_id
+FROM t
+WHERE d <= 7
+ORDER BY user_id;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

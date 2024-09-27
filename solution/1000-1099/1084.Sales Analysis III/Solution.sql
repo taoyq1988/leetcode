@@ -1,7 +1,7 @@
-SELECT p.product_id,
-    P.product_name
-FROM product AS p
-    JOIN sales AS s ON p.product_id = s.product_id
-GROUP BY p.product_id
-HAVING SUM(sale_date < '2019-01-01') = 0
-    AND SUM(sale_date > '2019-03-31') = 0;
+# Write your MySQL query statement below
+SELECT product_id, product_name
+FROM
+    Sales
+    JOIN Product USING (product_id)
+GROUP BY 1
+HAVING COUNT(1) = SUM(sale_date BETWEEN '2019-01-01' AND '2019-03-31');

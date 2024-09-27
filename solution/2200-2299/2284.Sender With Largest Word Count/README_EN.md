@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2284.Sender%20With%20Largest%20Word%20Count/README_EN.md
+rating: 1346
+source: Biweekly Contest 79 Q2
+tags:
+    - Array
+    - Hash Table
+    - String
+    - Counting
+---
+
+<!-- problem:start -->
+
 # [2284. Sender With Largest Word Count](https://leetcode.com/problems/sender-with-largest-word-count)
 
 [中文文档](/solution/2200-2299/2284.Sender%20With%20Largest%20Word%20Count/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You have a chat log of <code>n</code> messages. You are given two string arrays <code>messages</code> and <code>senders</code> where <code>messages[i]</code> is a <strong>message</strong> sent by <code>senders[i]</code>.</p>
 
@@ -18,7 +35,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> messages = [&quot;Hello userTwooo&quot;,&quot;Hi userThree&quot;,&quot;Wonderful day Alice&quot;,&quot;Nice day userThree&quot;], senders = [&quot;Alice&quot;,&quot;userTwo&quot;,&quot;userThree&quot;,&quot;Alice&quot;]
@@ -29,7 +46,7 @@ userThree sends a total of 3 words.
 Since Alice has the largest word count, we return &quot;Alice&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> messages = [&quot;How is leetcode for everyone&quot;,&quot;Leetcode is useful for practice&quot;], senders = [&quot;Bob&quot;,&quot;Charlie&quot;]
@@ -52,37 +69,56 @@ Since there is a tie for the largest word count, we return the sender with the l
 	<li><code>senders[i]</code> consists of uppercase and lowercase English letters only.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Enumeration
+
+We can use a hash table $\textit{cnt}$ to record the word count for each sender. Then, we traverse the hash table to find the sender with the highest word count. If there are multiple senders with the highest word count, we return the name that is lexicographically largest.
+
+The time complexity is $O(n + L)$, and the space complexity is $O(n)$, where $n$ is the number of messages and $L$ is the total length of all messages.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def largestWordCount(self, messages: List[str], senders: List[str]) -> str:
         cnt = Counter()
-        for m, s in zip(messages, senders):
-            cnt[s] += m.count(' ') + 1
-        return sorted(cnt.items(), key=lambda x: (x[1], x[0]))[-1][0]
+        for message, sender in zip(messages, senders):
+            cnt[sender] += message.count(" ") + 1
+        ans = senders[0]
+        for k, v in cnt.items():
+            if cnt[ans] < v or (cnt[ans] == v and ans < k):
+                ans = k
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String largestWordCount(String[] messages, String[] senders) {
-        Map<String, Integer> cnt = new HashMap<>();
-        int n = senders.length;
-        for (int i = 0; i < n; ++i) {
-            cnt.put(senders[i], cnt.getOrDefault(senders[i], 0) + messages[i].split(" ").length);
+        Map<String, Integer> cnt = new HashMap<>(senders.length);
+        for (int i = 0; i < messages.length; ++i) {
+            int v = 1;
+            for (int j = 0; j < messages[i].length(); ++j) {
+                if (messages[i].charAt(j) == ' ') {
+                    ++v;
+                }
+            }
+            cnt.merge(senders[i], v, Integer::sum);
         }
         String ans = senders[0];
-        for (Map.Entry<String, Integer> e : cnt.entrySet()) {
-            String u = e.getKey();
+        for (var e : cnt.entrySet()) {
+            String k = e.getKey();
             int v = e.getValue();
-            if (v > cnt.get(ans) || (v == cnt.get(ans) && ans.compareTo(u) < 0)) {
-                ans = u;
+            if (cnt.get(ans) < v || (cnt.get(ans) == v && ans.compareTo(k) < 0)) {
+                ans = k;
             }
         }
         return ans;
@@ -90,62 +126,72 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string largestWordCount(vector<string>& messages, vector<string>& senders) {
         unordered_map<string, int> cnt;
-        int n = senders.size();
-        for (int i = 0; i < n; ++i)
-        {
-            int v = 0;
-            for (char& c : messages[i])
-            {
-                if (c == ' ') ++v;
-            }
-            cnt[senders[i]] += v + 1;
+        for (int i = 0; i < messages.size(); ++i) {
+            int v = count(messages[i].begin(), messages[i].end(), ' ') + 1;
+            cnt[senders[i]] += v;
         }
         string ans = senders[0];
-        for (auto& [u, v] : cnt)
-        {
-            if (v > cnt[ans] || (v == cnt[ans] && u > ans)) ans = u;
+        for (auto& [k, v] : cnt) {
+            if (cnt[ans] < v || (cnt[ans] == v && ans < k)) {
+                ans = k;
+            }
         }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func largestWordCount(messages []string, senders []string) string {
-	cnt := map[string]int{}
-	for i, msg := range messages {
-		v := strings.Count(msg, " ") + 1
+	cnt := make(map[string]int)
+	for i, message := range messages {
+		v := strings.Count(message, " ") + 1
 		cnt[senders[i]] += v
 	}
-	ans := ""
-	for u, v := range cnt {
-		if v > cnt[ans] || (v == cnt[ans] && u > ans) {
-			ans = u
+
+	ans := senders[0]
+	for k, v := range cnt {
+		if cnt[ans] < v || (cnt[ans] == v && ans < k) {
+			ans = k
 		}
 	}
 	return ans
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
+function largestWordCount(messages: string[], senders: string[]): string {
+    const cnt: { [key: string]: number } = {};
 
-```
+    for (let i = 0; i < messages.length; ++i) {
+        const v = messages[i].split(' ').length;
+        cnt[senders[i]] = (cnt[senders[i]] || 0) + v;
+    }
 
-### **...**
+    let ans = senders[0];
+    for (const k in cnt) {
+        if (cnt[ans] < cnt[k] || (cnt[ans] === cnt[k] && ans < k)) {
+            ans = k;
+        }
+    }
 
-```
-
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

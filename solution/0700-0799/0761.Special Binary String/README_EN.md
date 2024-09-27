@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0761.Special%20Binary%20String/README_EN.md
+tags:
+    - Recursion
+    - String
+---
+
+<!-- problem:start -->
+
 # [761. Special Binary String](https://leetcode.com/problems/special-binary-string)
 
 [中文文档](/solution/0700-0799/0761.Special%20Binary%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p><strong>Special binary strings</strong> are binary strings with the following two properties:</p>
 
@@ -18,7 +31,7 @@
 <p>Return <em>the lexicographically largest resulting string possible after applying the mentioned operations on the string</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;11011000&quot;
@@ -27,7 +40,7 @@
 This is the lexicographically largest string possible after some number of swaps.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;10&quot;
@@ -43,26 +56,109 @@ This is the lexicographically largest string possible after some number of swaps
 	<li><code>s</code> is a special binary string.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def makeLargestSpecial(self, s: str) -> str:
+        if s == '':
+            return ''
+        ans = []
+        cnt = 0
+        i = j = 0
+        while i < len(s):
+            cnt += 1 if s[i] == '1' else -1
+            if cnt == 0:
+                ans.append('1' + self.makeLargestSpecial(s[j + 1 : i]) + '0')
+                j = i + 1
+            i += 1
+        ans.sort(reverse=True)
+        return ''.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public String makeLargestSpecial(String s) {
+        if ("".equals(s)) {
+            return "";
+        }
+        List<String> ans = new ArrayList<>();
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            cnt += s.charAt(i) == '1' ? 1 : -1;
+            if (cnt == 0) {
+                String t = "1" + makeLargestSpecial(s.substring(j + 1, i)) + "0";
+                ans.add(t);
+                j = i + 1;
+            }
+        }
+        ans.sort(Comparator.reverseOrder());
+        return String.join("", ans);
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    string makeLargestSpecial(string s) {
+        if (s == "") return s;
+        vector<string> ans;
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.size(); ++i) {
+            cnt += s[i] == '1' ? 1 : -1;
+            if (cnt == 0) {
+                ans.push_back("1" + makeLargestSpecial(s.substr(j + 1, i - j - 1)) + "0");
+                j = i + 1;
+            }
+        }
+        sort(ans.begin(), ans.end(), greater<string>{});
+        return accumulate(ans.begin(), ans.end(), ""s);
+    }
+};
 ```
 
+#### Go
+
+```go
+func makeLargestSpecial(s string) string {
+	if s == "" {
+		return ""
+	}
+	ans := sort.StringSlice{}
+	cnt := 0
+	for i, j := 0, 0; i < len(s); i++ {
+		if s[i] == '1' {
+			cnt++
+		} else {
+			cnt--
+		}
+		if cnt == 0 {
+			ans = append(ans, "1"+makeLargestSpecial(s[j+1:i])+"0")
+			j = i + 1
+		}
+	}
+	sort.Sort(sort.Reverse(ans))
+	return strings.Join(ans, "")
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

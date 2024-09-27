@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0380.Insert%20Delete%20GetRandom%20O%281%29/README.md
+tags:
+    - 设计
+    - 数组
+    - 哈希表
+    - 数学
+    - 随机化
+---
+
+<!-- problem:start -->
+
 # [380. O(1) 时间插入、删除和获取随机元素](https://leetcode.cn/problems/insert-delete-getrandom-o1)
 
 [English Version](/solution/0300-0399/0380.Insert%20Delete%20GetRandom%20O%281%29/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>实现<code>RandomizedSet</code> 类：</p>
 
@@ -53,62 +67,53 @@ randomizedSet.getRandom(); // 由于 2 是集合中唯一的数字，getRandom �
 </div>
 </div>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表 + 动态列表**
+### 方法一：哈希表 + 动态列表
 
-哈希表存放每个元素的值和对应的下标，而动态列表在每个下标位置存放每个元素。由动态列表实现元素的随机返回。
+我们定义一个动态列表 $q$，用于存储集合中的元素，定义一个哈希表 $d$，用于存储每个元素在 $q$ 中的下标。
 
-注意，在 `remove()` 实现上，将列表的最后一个元素设置到待删元素的位置上，然后删除最后一个元素，这样在删除元素的时候，不需要挪动一大批元素，从而实现 `O(1)` 时间内操作。
+插入元素时，如果元素已经存在于哈希表 $d$ 中，直接返回 `false`；否则，我们将元素插入到动态列表 $q$ 的末尾，同时将元素和其在 $q$ 中的下标插入到哈希表 $d$ 中，最后返回 `true`。
 
-操作细节：
+删除元素时，如果元素不存在于哈希表 $d$ 中，直接返回 `false`；否则，我们从哈希表中获取元素在列表 $q$ 中的下标 $i$，然后将列表 $q$ 的最后一个元素 $q[-1]$ 与 $q[i]$ 交换，然后将哈希表中 $q[-1]$ 的下标更新为 $i$，最后将 $q$ 的最后一个元素删除，同时将元素从哈希表中删除，最后返回 `true`。
 
-1. **插入**
+获取随机元素时，我们从动态列表 $q$ 中随机选择一个元素返回即可。
 
-    每次添加新数值时，先使用哈希表判断该数值是否存在，存在则直接返回 false。不存在则进行插入操作，只要将该数值添加到数组尾部即可，并将该数值和其下标的映射存入哈希表。
-
-2. **删除**
-
-    删除同样需使用哈希表判断是否存在，若不存在则返回 false。存在则进行删除操作，在哈希表中删除时间复杂度为 O(1)，但是在数值中删除比较麻烦。若只是直接删除，则为了保证数组内存连续性需将删除数值后面的数值均前移一位，时间复杂度为 O(n)。比较好的处理方式是，用数组的最后一个数值去填充需要删除的数值的内存，其他数值在数组中的位置保持不变，并将这个拿来填充的数值的下标更新即可，最后只要删除数组最后一个数值，同样可以保证时间复杂度为 O(1)。
-
-3. **随机返回**
-
-    只要随机生成数组下标范围内一个随机下标值，返回该数组下标内的数值即可。
+时间复杂度 $O(1)$，空间复杂度 $O(n)$。其中 $n$ 为集合中元素的个数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class RandomizedSet:
-
     def __init__(self):
-        self.m = {}
-        self.l = []
+        self.d = {}
+        self.q = []
 
     def insert(self, val: int) -> bool:
-        if val in self.m:
+        if val in self.d:
             return False
-        self.m[val] = len(self.l)
-        self.l.append(val)
+        self.d[val] = len(self.q)
+        self.q.append(val)
         return True
 
     def remove(self, val: int) -> bool:
-        if val not in self.m:
+        if val not in self.d:
             return False
-        idx = self.m[val]
-        self.l[idx] = self.l[-1]
-        self.m[self.l[-1]] = idx
-        self.l.pop()
-        self.m.pop(val)
+        i = self.d[val]
+        self.d[self.q[-1]] = i
+        self.q[i] = self.q[-1]
+        self.q.pop()
+        self.d.pop(val)
         return True
 
     def getRandom(self) -> int:
-        return choice(self.l)
+        return choice(self.q)
 
 
 # Your RandomizedSet object will be instantiated and called as such:
@@ -116,47 +121,42 @@ class RandomizedSet:
 # param_1 = obj.insert(val)
 # param_2 = obj.remove(val)
 # param_3 = obj.getRandom()
-
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class RandomizedSet {
-    private Map<Integer, Integer> m = new HashMap<>();
-    private List<Integer> l = new ArrayList<>();
+    private Map<Integer, Integer> d = new HashMap<>();
+    private List<Integer> q = new ArrayList<>();
     private Random rnd = new Random();
 
     public RandomizedSet() {
-
     }
 
     public boolean insert(int val) {
-        if (m.containsKey(val)) {
+        if (d.containsKey(val)) {
             return false;
         }
-        m.put(val, l.size());
-        l.add(val);
+        d.put(val, q.size());
+        q.add(val);
         return true;
     }
 
     public boolean remove(int val) {
-        if (!m.containsKey(val)) {
+        if (!d.containsKey(val)) {
             return false;
         }
-        int idx = m.get(val);
-        l.set(idx, l.get(l.size() - 1));
-        m.put(l.get(l.size() - 1), idx);
-        l.remove(l.size() - 1);
-        m.remove(val);
+        int i = d.get(val);
+        d.put(q.get(q.size() - 1), i);
+        q.set(i, q.get(q.size() - 1));
+        q.remove(q.size() - 1);
+        d.remove(val);
         return true;
     }
 
     public int getRandom() {
-        int idx = rnd.nextInt(l.size());
-        return l.get(idx);
+        return q.get(rnd.nextInt(q.size()));
     }
 }
 
@@ -169,38 +169,42 @@ class RandomizedSet {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class RandomizedSet {
-private:
-    unordered_map<int, int> mp;
-    vector<int> nums;
 public:
     RandomizedSet() {
-
     }
 
     bool insert(int val) {
-        if (mp.count(val)) return false;
-        mp[val] = nums.size();
-        nums.push_back(val);
+        if (d.count(val)) {
+            return false;
+        }
+        d[val] = q.size();
+        q.push_back(val);
         return true;
     }
 
     bool remove(int val) {
-        if (!mp.count(val)) return false;
-        int idx = mp[val];
-        nums[idx] = nums.back();
-        mp[nums.back()] = idx;
-        mp.erase(val);
-        nums.pop_back();
+        if (!d.count(val)) {
+            return false;
+        }
+        int i = d[val];
+        d[q.back()] = i;
+        q[i] = q.back();
+        q.pop_back();
+        d.erase(val);
         return true;
     }
 
     int getRandom() {
-        return nums[rand() % nums.size()];
+        return q[rand() % q.size()];
     }
+
+private:
+    unordered_map<int, int> d;
+    vector<int> q;
 };
 
 /**
@@ -212,12 +216,12 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type RandomizedSet struct {
-	m map[int]int
-	l []int
+	d map[int]int
+	q []int
 }
 
 func Constructor() RandomizedSet {
@@ -225,28 +229,28 @@ func Constructor() RandomizedSet {
 }
 
 func (this *RandomizedSet) Insert(val int) bool {
-	if _, ok := this.m[val]; ok {
+	if _, ok := this.d[val]; ok {
 		return false
 	}
-	this.m[val] = len(this.l)
-	this.l = append(this.l, val)
+	this.d[val] = len(this.q)
+	this.q = append(this.q, val)
 	return true
 }
 
 func (this *RandomizedSet) Remove(val int) bool {
-	if _, ok := this.m[val]; !ok {
+	if _, ok := this.d[val]; !ok {
 		return false
 	}
-	idx := this.m[val]
-	this.l[idx] = this.l[len(this.l)-1]
-	this.m[this.l[len(this.l)-1]] = idx
-	this.l = this.l[:len(this.l)-1]
-	delete(this.m, val)
+	i := this.d[val]
+	this.d[this.q[len(this.q)-1]] = i
+	this.q[i] = this.q[len(this.q)-1]
+	this.q = this.q[:len(this.q)-1]
+	delete(this.d, val)
 	return true
 }
 
 func (this *RandomizedSet) GetRandom() int {
-	return this.l[rand.Intn(len(this.l))]
+	return this.q[rand.Intn(len(this.q))]
 }
 
 /**
@@ -258,47 +262,38 @@ func (this *RandomizedSet) GetRandom() int {
  */
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 class RandomizedSet {
-    public map: Map<number, number>;
-    public arr: number[];
-    public index: number;
+    private d: Map<number, number> = new Map();
+    private q: number[] = [];
 
-    constructor() {
-        this.map = new Map();
-        this.arr = new Array(2 * 10 ** 5).fill(0);
-        this.index = -1;
-    }
+    constructor() {}
 
     insert(val: number): boolean {
-        const { map, arr } = this;
-        if (map.has(val)) {
+        if (this.d.has(val)) {
             return false;
         }
-        this.index++;
-        arr[this.index] = val;
-        map.set(val, this.index);
+        this.d.set(val, this.q.length);
+        this.q.push(val);
         return true;
     }
 
     remove(val: number): boolean {
-        const { arr, map, index } = this;
-        if (!map.has(val)) {
+        if (!this.d.has(val)) {
             return false;
         }
-        const i = map.get(val);
-        [arr[i], arr[index]] = [arr[index], arr[i]];
-        map.set(arr[i], i);
-        map.delete(arr[index]);
-        this.index--;
+        const i = this.d.get(val)!;
+        this.d.set(this.q[this.q.length - 1], i);
+        this.q[i] = this.q[this.q.length - 1];
+        this.q.pop();
+        this.d.delete(val);
         return true;
     }
 
     getRandom(): number {
-        const i = Math.floor(Math.random() * (this.index + 1));
-        return this.arr[i];
+        return this.q[Math.floor(Math.random() * this.q.length)];
     }
 }
 
@@ -311,26 +306,24 @@ class RandomizedSet {
  */
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
-use std::collections::HashSet;
 use rand::Rng;
+use std::collections::HashSet;
 
 struct RandomizedSet {
-    list: HashSet<i32>
+    list: HashSet<i32>,
 }
-
 
 /**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
  */
 impl RandomizedSet {
-
     fn new() -> Self {
         Self {
-            list: HashSet::new()
+            list: HashSet::new(),
         }
     }
 
@@ -347,20 +340,56 @@ impl RandomizedSet {
         *self.list.iter().collect::<Vec<&i32>>()[i]
     }
 }
+```
+
+#### C#
+
+```cs
+public class RandomizedSet {
+    private Dictionary<int, int> d = new Dictionary<int, int>();
+    private List<int> q = new List<int>();
+
+    public RandomizedSet() {
+
+    }
+
+    public bool Insert(int val) {
+        if (d.ContainsKey(val)) {
+            return false;
+        }
+        d.Add(val, q.Count);
+        q.Add(val);
+        return true;
+    }
+
+    public bool Remove(int val) {
+        if (!d.ContainsKey(val)) {
+            return false;
+        }
+        int i = d[val];
+        d[q[q.Count - 1]] = i;
+        q[i] = q[q.Count - 1];
+        q.RemoveAt(q.Count - 1);
+        d.Remove(val);
+        return true;
+    }
+
+    public int GetRandom() {
+        return q[new Random().Next(0, q.Count)];
+    }
+}
 
 /**
  * Your RandomizedSet object will be instantiated and called as such:
- * let obj = RandomizedSet::new();
- * let ret_1: bool = obj.insert(val);
- * let ret_2: bool = obj.remove(val);
- * let ret_3: i32 = obj.get_random();
+ * RandomizedSet obj = new RandomizedSet();
+ * bool param_1 = obj.Insert(val);
+ * bool param_2 = obj.Remove(val);
+ * int param_3 = obj.GetRandom();
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

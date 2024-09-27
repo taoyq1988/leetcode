@@ -1,35 +1,30 @@
 func numberWays(hats [][]int) int {
-	d := make([][]int, 41)
-	mx := 0
+	n := len(hats)
+	m := 0
+	for _, h := range hats {
+		m = max(m, slices.Max(h))
+	}
+	g := make([][]int, m+1)
 	for i, h := range hats {
 		for _, v := range h {
-			d[v] = append(d[v], i)
-			mx = max(mx, v)
+			g[v] = append(g[v], i)
 		}
 	}
-	dp := make([][]int, mx+1)
-	n := len(hats)
-	for i := range dp {
-		dp[i] = make([]int, 1<<n)
+	const mod = 1e9 + 7
+	f := make([][]int, m+1)
+	for i := range f {
+		f[i] = make([]int, 1<<n)
 	}
-	dp[0][0] = 1
-	mod := int(1e9) + 7
-	for i := 1; i <= mx; i++ {
-		for mask := 0; mask < 1<<n; mask++ {
-			dp[i][mask] = dp[i-1][mask]
-			for _, j := range d[i] {
-				if ((mask >> j) & 1) == 1 {
-					dp[i][mask] = (dp[i][mask] + dp[i-1][mask^(1<<j)]) % mod
+	f[0][0] = 1
+	for i := 1; i <= m; i++ {
+		for j := 0; j < 1<<n; j++ {
+			f[i][j] = f[i-1][j]
+			for _, k := range g[i] {
+				if j>>k&1 == 1 {
+					f[i][j] = (f[i][j] + f[i-1][j^(1<<k)]) % mod
 				}
 			}
 		}
 	}
-	return dp[mx][(1<<n)-1]
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return f[m][(1<<n)-1]
 }

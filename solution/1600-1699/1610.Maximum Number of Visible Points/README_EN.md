@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1610.Maximum%20Number%20of%20Visible%20Points/README_EN.md
+rating: 2147
+source: Weekly Contest 209 Q3
+tags:
+    - Geometry
+    - Array
+    - Math
+    - Sorting
+    - Sliding Window
+---
+
+<!-- problem:start -->
+
 # [1610. Maximum Number of Visible Points](https://leetcode.com/problems/maximum-number-of-visible-points)
 
 [中文文档](/solution/1600-1699/1610.Maximum%20Number%20of%20Visible%20Points/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an array <code>points</code>, an integer <code>angle</code>, and your <code>location</code>, where <code>location = [pos<sub>x</sub>, pos<sub>y</sub>]</code> and <code>points[i] = [x<sub>i</sub>, y<sub>i</sub>]</code> both denote <strong>integral coordinates</strong> on the X-Y plane.</p>
 
@@ -19,7 +37,7 @@
 <p>Return <em>the maximum number of points you can see</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1600-1699/1610.Maximum%20Number%20of%20Visible%20Points/images/89a07e9b-00ab-4967-976a-c723b2aa8656.png" style="width: 400px; height: 300px;" />
 <pre>
 <strong>Input:</strong> points = [[2,1],[2,2],[3,3]], angle = 90, location = [1,1]
@@ -27,7 +45,7 @@
 <strong>Explanation:</strong> The shaded region represents your field of view. All points can be made visible in your field of view, including [3,3] even though [2,2] is in front and in the same line of sight.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> points = [[2,1],[2,2],[3,4],[1,1]], angle = 90, location = [1,1]
@@ -35,7 +53,7 @@
 <strong>Explanation:</strong> All points can be made visible in your field of view, including the one at your location.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1600-1699/1610.Maximum%20Number%20of%20Visible%20Points/images/5010bfd3-86e6-465f-ac64-e9df941d2e49.png" style="width: 690px; height: 348px;" />
 <pre>
 <strong>Input:</strong> points = [[1,0],[2,1]], angle = 13, location = [1,1]
@@ -54,15 +72,23 @@
 	<li><code>0 &lt;= pos<sub>x</sub>, pos<sub>y</sub>, x<sub>i</sub>, y<sub>i</sub> &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def visiblePoints(self, points: List[List[int]], angle: int, location: List[int]) -> int:
+    def visiblePoints(
+        self, points: List[List[int]], angle: int, location: List[int]
+    ) -> int:
         v = []
         x, y = location
         same = 0
@@ -79,7 +105,7 @@ class Solution:
         return mx + same
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -113,7 +139,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -122,11 +148,12 @@ public:
         vector<double> v;
         int x = location[0], y = location[1];
         int same = 0;
-        for (auto& p : points)
-        {
+        for (auto& p : points) {
             int xi = p[0], yi = p[1];
-            if (xi == x && yi == y) ++same;
-            else v.emplace_back(atan2(yi - y, xi - x));
+            if (xi == x && yi == y)
+                ++same;
+            else
+                v.emplace_back(atan2(yi - y, xi - x));
         }
         sort(v.begin(), v.end());
         int n = v.size();
@@ -134,8 +161,7 @@ public:
 
         int mx = 0;
         double t = angle * M_PI / 180;
-        for (int i = 0, j = 0; j < 2 * n; ++j)
-        {
+        for (int i = 0, j = 0; j < 2 * n; ++j) {
             while (i < j && v[j] - v[i] > t) ++i;
             mx = max(mx, j - i + 1);
         }
@@ -144,7 +170,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func visiblePoints(points [][]int, angle int, location []int) int {
@@ -172,19 +198,10 @@ func visiblePoints(points [][]int, angle int, location []int) int {
 	}
 	return same + mx
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

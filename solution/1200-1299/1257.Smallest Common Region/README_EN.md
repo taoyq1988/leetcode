@@ -1,8 +1,27 @@
-# [1257. Smallest Common Region](https://leetcode.com/problems/smallest-common-region)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1257.Smallest%20Common%20Region/README_EN.md
+rating: 1654
+source: Biweekly Contest 13 Q2
+tags:
+    - Tree
+    - Depth-First Search
+    - Breadth-First Search
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
+# [1257. Smallest Common Region 🔒](https://leetcode.com/problems/smallest-common-region)
 
 [中文文档](/solution/1200-1299/1257.Smallest%20Common%20Region/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given some lists of <code>regions</code> where the first region of each list includes all other regions in that list.</p>
 
@@ -15,7 +34,7 @@
 <p>It is guaranteed the smallest region exists.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:
@@ -29,7 +48,7 @@ region2 = &quot;New York&quot;
 <strong>Output:</strong> &quot;North America&quot;
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> regions = [[&quot;Earth&quot;, &quot;North America&quot;, &quot;South America&quot;],[&quot;North America&quot;, &quot;United States&quot;, &quot;Canada&quot;],[&quot;United States&quot;, &quot;New York&quot;, &quot;Boston&quot;],[&quot;Canada&quot;, &quot;Ontario&quot;, &quot;Quebec&quot;],[&quot;South America&quot;, &quot;Brazil&quot;]], region1 = &quot;Canada&quot;, region2 = &quot;South America&quot;
@@ -47,15 +66,23 @@ region2 = &quot;New York&quot;
 	<li><code>regions[i][j]</code>, <code>region1</code>, and <code>region2</code> consist of English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def findSmallestRegion(self, regions: List[List[str]], region1: str, region2: str) -> str:
+    def findSmallestRegion(
+        self, regions: List[List[str]], region1: str, region2: str
+    ) -> str:
         m = {}
         for region in regions:
             for r in region[1:]:
@@ -71,7 +98,7 @@ class Solution:
         return region1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -98,7 +125,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -109,13 +136,11 @@ public:
             for (int i = 1; i < region.size(); ++i)
                 m[region[i]] = region[0];
         unordered_set<string> s;
-        while (m.count(region1))
-        {
+        while (m.count(region1)) {
             s.insert(region1);
             region1 = m[region1];
         }
-        while (m.count(region2))
-        {
+        while (m.count(region2)) {
             if (s.count(region2)) return region2;
             region2 = m[region2];
         }
@@ -124,10 +149,33 @@ public:
 };
 ```
 
-### **...**
+#### Go
 
-```
-
+```go
+func findSmallestRegion(regions [][]string, region1 string, region2 string) string {
+	m := make(map[string]string)
+	for _, region := range regions {
+		for i := 1; i < len(region); i++ {
+			m[region[i]] = region[0]
+		}
+	}
+	s := make(map[string]bool)
+	for region1 != "" {
+		s[region1] = true
+		region1 = m[region1]
+	}
+	for region2 != "" {
+		if s[region2] {
+			return region2
+		}
+		region2 = m[region2]
+	}
+	return region1
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

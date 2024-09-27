@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0417.Pacific%20Atlantic%20Water%20Flow/README.md
+tags:
+    - 深度优先搜索
+    - 广度优先搜索
+    - 数组
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow)
 
 [English Version](/solution/0400-0499/0417.Pacific%20Atlantic%20Water%20Flow/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>有一个 <code>m × n</code> 的矩形岛屿，与 <strong>太平洋</strong> 和 <strong>大西洋</strong> 相邻。&nbsp;<strong>“太平洋”&nbsp;</strong>处于大陆的左边界和上边界，而 <strong>“大西洋”</strong> 处于大陆的右边界和下边界。</p>
 
@@ -43,17 +56,17 @@
 	<li><code>0 &lt;= heights[r][c] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-反向寻找，从海洋开始逆流，只要比该陆地高的地方就能逆流。最后是寻找两个海洋的水流都能经过的陆地即为结果。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +77,12 @@ class Solution:
                     i, j = q.popleft()
                     for a, b in [[0, -1], [0, 1], [1, 0], [-1, 0]]:
                         x, y = i + a, j + b
-                        if 0 <= x < m and 0 <= y < n and (x, y) not in vis and heights[x][y] >= heights[i][j]:
+                        if (
+                            0 <= x < m
+                            and 0 <= y < n
+                            and (x, y) not in vis
+                            and heights[x][y] >= heights[i][j]
+                        ):
                             vis.add((x, y))
                             q.append((x, y))
 
@@ -82,12 +100,15 @@ class Solution:
                     q2.append((i, j))
         bfs(q1, vis1)
         bfs(q2, vis2)
-        return [(i, j) for i in range(m) for j in range(n) if (i, j) in vis1 and (i, j) in vis2]
+        return [
+            (i, j)
+            for i in range(m)
+            for j in range(n)
+            if (i, j) in vis1 and (i, j) in vis2
+        ]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -107,11 +128,11 @@ class Solution {
             for (int j = 0; j < n; ++j) {
                 if (i == 0 || j == 0) {
                     vis1.add(i * n + j);
-                    q1.offer(new int[]{i, j});
+                    q1.offer(new int[] {i, j});
                 }
                 if (i == m - 1 || j == n - 1) {
                     vis2.add(i * n + j);
-                    q2.offer(new int[]{i, j});
+                    q2.offer(new int[] {i, j});
                 }
             }
         }
@@ -137,9 +158,10 @@ class Solution {
                 for (int i = 0; i < 4; ++i) {
                     int x = p[0] + dirs[i];
                     int y = p[1] + dirs[i + 1];
-                    if (x >= 0 && x < m && y >= 0 && y < n && !vis.contains(x * n + y) && heights[x][y] >= heights[p[0]][p[1]]) {
+                    if (x >= 0 && x < m && y >= 0 && y < n && !vis.contains(x * n + y)
+                        && heights[x][y] >= heights[p[0]][p[1]]) {
                         vis.add(x * n + y);
-                        q.offer(new int[]{x, y});
+                        q.offer(new int[] {x, y});
                     }
                 }
             }
@@ -148,7 +170,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 typedef pair<int, int> pii;
@@ -167,17 +189,13 @@ public:
         queue<pii> q2;
         unordered_set<int> vis1;
         unordered_set<int> vis2;
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
-                if (i == 0 || j == 0)
-                {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i == 0 || j == 0) {
                     vis1.insert(i * n + j);
                     q1.emplace(i, j);
                 }
-                if (i == m - 1 || j == n - 1)
-                {
+                if (i == m - 1 || j == n - 1) {
                     vis2.insert(i * n + j);
                     q2.emplace(i, j);
                 }
@@ -186,13 +204,10 @@ public:
         bfs(q1, vis1);
         bfs(q2, vis2);
         vector<vector<int>> ans;
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 int x = i * n + j;
-                if (vis1.count(x) && vis2.count(x))
-                {
+                if (vis1.count(x) && vis2.count(x)) {
                     ans.push_back({i, j});
                 }
             }
@@ -202,18 +217,14 @@ public:
 
     void bfs(queue<pii>& q, unordered_set<int>& vis) {
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        while (!q.empty())
-        {
-            for (int k = q.size(); k > 0; --k)
-            {
+        while (!q.empty()) {
+            for (int k = q.size(); k > 0; --k) {
                 auto p = q.front();
                 q.pop();
-                for (int i = 0; i < 4; ++i)
-                {
+                for (int i = 0; i < 4; ++i) {
                     int x = p.first + dirs[i];
                     int y = p.second + dirs[i + 1];
-                    if (x >= 0 && x < m && y >= 0 && y < n && !vis.count(x * n + y) && heights[x][y] >= heights[p.first][p.second])
-                    {
+                    if (x >= 0 && x < m && y >= 0 && y < n && !vis.count(x * n + y) && heights[x][y] >= heights[p.first][p.second]) {
                         vis.insert(x * n + y);
                         q.emplace(x, y);
                     }
@@ -224,7 +235,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func pacificAtlantic(heights [][]int) [][]int {
@@ -276,7 +287,7 @@ func pacificAtlantic(heights [][]int) [][]int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function pacificAtlantic(heights: number[][]): number[][] {
@@ -331,10 +342,8 @@ function pacificAtlantic(heights: number[][]): number[][] {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

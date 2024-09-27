@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0025.Reverse%20Nodes%20in%20k-Group/README_EN.md
+tags:
+    - Recursion
+    - Linked List
+---
+
+<!-- problem:start -->
+
 # [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group)
 
 [中文文档](/solution/0000-0099/0025.Reverse%20Nodes%20in%20k-Group/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given the <code>head</code> of a linked list, reverse the nodes of the list <code>k</code> at a time, and return <em>the modified list</em>.</p>
 
@@ -11,14 +24,14 @@
 <p>You may not alter the values in the list&#39;s nodes, only nodes themselves may be changed.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0000-0099/0025.Reverse%20Nodes%20in%20k-Group/images/reverse_ex1.jpg" style="width: 542px; height: 222px;" />
 <pre>
 <strong>Input:</strong> head = [1,2,3,4,5], k = 2
 <strong>Output:</strong> [2,1,4,3,5]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0000-0099/0025.Reverse%20Nodes%20in%20k-Group/images/reverse_ex2.jpg" style="width: 542px; height: 222px;" />
 <pre>
 <strong>Input:</strong> head = [1,2,3,4,5], k = 3
@@ -37,11 +50,19 @@
 <p>&nbsp;</p>
 <p><strong>Follow-up:</strong> Can you solve the problem in <code>O(1)</code> extra memory space?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Iteration
+
+The time complexity is $O(n)$, and the space complexity is $O(1)$. Here, $n$ is the length of the linked list.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -77,7 +98,7 @@ class Solution:
         return dummy.next
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -125,7 +146,45 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### Go
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	var dummy *ListNode = &ListNode{}
+	p, cur := dummy, head
+	for cur != nil {
+		start := cur
+		for i := 0; i < k; i++ {
+			if cur == nil {
+				p.Next = start
+				return dummy.Next
+			}
+			cur = cur.Next
+		}
+		p.Next, p = reverse(start, cur), start
+	}
+	return dummy.Next
+}
+
+func reverse(start, end *ListNode) *ListNode {
+	var pre *ListNode = nil
+	for start != end {
+		tmp := start.Next
+		start.Next, pre = pre, start
+		start = tmp
+	}
+	return pre
+}
+```
+
+#### TypeScript
 
 ```ts
 /**
@@ -178,104 +237,67 @@ function reverse(head: ListNode, tail: ListNode) {
 }
 ```
 
-```ts
-/**
- * Definition for singly-linked list.
- * class ListNode {
- *     val: number
- *     next: ListNode | null
- *     constructor(val?: number, next?: ListNode | null) {
- *         this.val = (val===undefined ? 0 : val)
- *         this.next = (next===undefined ? null : next)
- *     }
- * }
- */
+#### Rust
 
-function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
-    if (k === 1) {
-        return head;
-    }
-
-    const dummy = new ListNode(0, head);
-    let root = dummy;
-    while (root != null) {
-        let pre = root;
-        let cur = root;
-
-        let count = 0;
-        while (count !== k) {
-            count++;
-            cur = cur.next;
-            if (cur == null) {
-                return dummy.next;
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+//
+// impl ListNode {
+//   #[inline]
+//   fn new(val: i32) -> Self {
+//     ListNode {
+//       next: None,
+//       val
+//     }
+//   }
+// }
+impl Solution {
+    pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        fn reverse(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+            let mut head = head;
+            let mut pre = None;
+            while let Some(mut node) = head {
+                head = node.next.take();
+                node.next = pre.take();
+                pre = Some(node);
             }
+            pre
         }
 
-        const nextRoot = pre.next;
-        pre.next = cur;
+        let mut dummy = Some(Box::new(ListNode::new(0)));
+        let mut pre = &mut dummy;
+        let mut cur = head;
+        while cur.is_some() {
+            let mut q = &mut cur;
+            for _ in 0..k - 1 {
+                if q.is_none() {
+                    break;
+                }
+                q = &mut q.as_mut().unwrap().next;
+            }
+            if q.is_none() {
+                pre.as_mut().unwrap().next = cur;
+                return dummy.unwrap().next;
+            }
 
-        let node = nextRoot;
-        let next = node.next;
-        node.next = cur.next;
-        while (node != cur) {
-            [next.next, node, next] = [node, next, next.next];
+            let b = q.as_mut().unwrap().next.take();
+            pre.as_mut().unwrap().next = reverse(cur);
+            while pre.is_some() && pre.as_mut().unwrap().next.is_some() {
+                pre = &mut pre.as_mut().unwrap().next;
+            }
+            cur = b;
         }
-        root = nextRoot;
+        dummy.unwrap().next
     }
-
-    return dummy.next;
 }
 ```
 
-### **Go**
-
-```go
-/**
- * Definition for singly-linked list.
- * type ListNode struct {
- *     Val int
- *     Next *ListNode
- * }
- */
-func reverseKGroup(head *ListNode, k int) *ListNode {
-    dummy := &ListNode{0, head}
-    pre := dummy
-    cur := dummy
-    for cur.Next != nil {
-        for i := 0; i < k && cur != nil; i++ {
-            cur = cur.Next
-        }
-        if cur == nil {
-            return dummy.Next
-        }
-        t := cur.Next
-        cur.Next = nil
-        start := pre.Next
-        pre.Next = reverseList(start)
-        start.Next = t
-        pre = start
-        cur = pre
-    }
-    return dummy.Next
-}
-
-func reverseList(head *ListNode) *ListNode {
-    if head == nil ||head.Next == nil {
-        return head
-    }
-    dummyHead := &ListNode{}
-    cur := head
-    for cur != nil {
-        tmp := cur.Next
-        cur.Next = dummyHead.Next
-        dummyHead.Next = cur
-        cur = tmp
-    }
-    return dummyHead.Next
-}
-```
-
-### **C#**
+#### C#
 
 ```cs
 /**
@@ -328,10 +350,161 @@ public class Solution {
 }
 ```
 
-### **...**
+#### PHP
 
-```
+```php
+# Definition for singly-linked list.
+# class ListNode {
+#     public $val;
+#     public $next;
+#     public function __construct($val = 0, $next = null)
+#     {
+#         $this->val = $val;
+#         $this->next = $next;
+#     }
+# }
 
+class Solution {
+    /**
+     * @param ListNode $head
+     * @param int $k
+     * @return ListNode
+     */
+
+    function reverseKGroup($head, $k) {
+        $dummy = new ListNode(0);
+        $dummy->next = $head;
+        $prevGroupTail = $dummy;
+
+        while ($head !== null) {
+            $count = 0;
+            $groupHead = $head;
+            $groupTail = $head;
+
+            while ($count < $k && $head !== null) {
+                $head = $head->next;
+                $count++;
+            }
+            if ($count < $k) {
+                $prevGroupTail->next = $groupHead;
+                break;
+            }
+
+            $prev = null;
+            for ($i = 0; $i < $k; $i++) {
+                $next = $groupHead->next;
+                $groupHead->next = $prev;
+                $prev = $groupHead;
+                $groupHead = $next;
+            }
+            $prevGroupTail->next = $prev;
+            $prevGroupTail = $groupTail;
+        }
+
+        return $dummy->next;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2: Recursion
+
+The time complexity is $O(n)$, and the space complexity is $O(\log_k n)$. Here, $n$ is the length of the linked list.
+
+<!-- tabs:start -->
+
+#### Go
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	start, end := head, head
+	for i := 0; i < k; i++ {
+		if end == nil {
+			return head
+		}
+		end = end.Next
+	}
+	res := reverse(start, end)
+	start.Next = reverseKGroup(end, k)
+	return res
+}
+
+func reverse(start, end *ListNode) *ListNode {
+	var pre *ListNode = nil
+	for start != end {
+		tmp := start.Next
+		start.Next, pre = pre, start
+		start = tmp
+	}
+	return pre
+}
+```
+
+#### TypeScript
+
+```ts
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
+    if (k === 1) {
+        return head;
+    }
+
+    const dummy = new ListNode(0, head);
+    let root = dummy;
+    while (root != null) {
+        let pre = root;
+        let cur = root;
+
+        let count = 0;
+        while (count !== k) {
+            count++;
+            cur = cur.next;
+            if (cur == null) {
+                return dummy.next;
+            }
+        }
+
+        const nextRoot = pre.next;
+        pre.next = cur;
+
+        let node = nextRoot;
+        let next = node.next;
+        node.next = cur.next;
+        while (node != cur) {
+            [next.next, node, next] = [node, next, next.next];
+        }
+        root = nextRoot;
+    }
+
+    return dummy.next;
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

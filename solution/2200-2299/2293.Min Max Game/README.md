@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2293.Min%20Max%20Game/README.md
+rating: 1241
+source: 第 296 场周赛 Q1
+tags:
+    - 数组
+    - 模拟
+---
+
+<!-- problem:start -->
+
 # [2293. 极大极小游戏](https://leetcode.cn/problems/min-max-game)
 
 [English Version](/solution/2200-2299/2293.Min%20Max%20Game/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个下标从 <strong>0</strong> 开始的整数数组 <code>nums</code> ，其长度是 <code>2</code> 的幂。</p>
 
@@ -54,131 +67,145 @@
 	<li><code>nums.length</code> 是 <code>2</code> 的幂</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：模拟**
+### 方法一：模拟
+
+根据题意，我们可以模拟整个过程，最后剩下的数字即为答案。在实现上，我们不需要额外创建数组，直接在原数组上进行操作即可。
+
+时间复杂度 $O(n)$，其中 $n$ 是数组 $\textit{nums}$ 的长度。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def minMaxGame(self, nums: List[int]) -> int:
         n = len(nums)
-        if n == 1:
-            return nums[0]
-        t = []
-        for i in range(n >> 1):
-            v = max(nums[i << 1], nums[i << 1 | 1]) if i & 1 else min(
-                nums[i << 1], nums[i << 1 | 1])
-            t.append(v)
-        return self.minMaxGame(t)
+        while n > 1:
+            n >>= 1
+            for i in range(n):
+                a, b = nums[i << 1], nums[i << 1 | 1]
+                nums[i] = min(a, b) if i % 2 == 0 else max(a, b)
+        return nums[0]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int minMaxGame(int[] nums) {
-        int n = nums.length;
-        if (n == 1) {
-            return nums[0];
+        for (int n = nums.length; n > 1;) {
+            n >>= 1;
+            for (int i = 0; i < n; ++i) {
+                int a = nums[i << 1], b = nums[i << 1 | 1];
+                nums[i] = i % 2 == 0 ? Math.min(a, b) : Math.max(a, b);
+            }
         }
-        int[] t = new int[n >> 1];
-        for (int i = 0; i < t.length; ++i) {
-            int a = nums[i << 1], b = nums[i << 1 | 1];
-            t[i] = (i & 1) == 1 ? Math.max(a, b) : Math.min(a, b);
-        }
-        return minMaxGame(t);
+        return nums[0];
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int minMaxGame(vector<int>& nums) {
-        int n = nums.size();
-        if (n == 1) return nums[0];
-        vector<int> t(n >> 1);
-        for (int i = 0; i < t.size(); ++i)
-        {
-            int a = nums[i << 1], b = nums[i << 1 | 1];
-            t[i] = (i & 1) == 1 ? max(a, b) : min(a, b);
+        for (int n = nums.size(); n > 1;) {
+            n >>= 1;
+            for (int i = 0; i < n; ++i) {
+                int a = nums[i << 1], b = nums[i << 1 | 1];
+                nums[i] = i % 2 == 0 ? min(a, b) : max(a, b);
+            }
         }
-        return minMaxGame(t);
+        return nums[0];
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minMaxGame(nums []int) int {
-	n := len(nums)
-	if n == 1 {
-		return nums[0]
-	}
-	var t []int
-	for i := 0; i < n>>1; i++ {
-		a, b := nums[i<<1], nums[i<<1|1]
-		if (i & 1) == 1 {
-			t = append(t, max(a, b))
-		} else {
-			t = append(t, min(a, b))
+	for n := len(nums); n > 1; {
+		n >>= 1
+		for i := 0; i < n; i++ {
+			a, b := nums[i<<1], nums[i<<1|1]
+			if i%2 == 0 {
+				nums[i] = min(a, b)
+			} else {
+				nums[i] = max(a, b)
+			}
 		}
 	}
-	return minMaxGame(t)
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return nums[0]
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minMaxGame(nums: number[]): number {
-    while (nums.length > 1) {
-        let n = nums.length;
-        let tmp = [];
-        for (let i = 0; i < n; i += 2) {
-            if (i % 4 == 2) {
-                tmp.push(Math.max(nums[i], nums[i + 1]));
-            } else {
-                tmp.push(Math.min(nums[i], nums[i + 1]));
-            }
+    for (let n = nums.length; n > 1; ) {
+        n >>= 1;
+        for (let i = 0; i < n; ++i) {
+            const a = nums[i << 1];
+            const b = nums[(i << 1) | 1];
+            nums[i] = i % 2 == 0 ? Math.min(a, b) : Math.max(a, b);
         }
-        nums = tmp;
     }
     return nums[0];
 }
 ```
 
-### **...**
+#### Rust
 
+```rust
+impl Solution {
+    pub fn min_max_game(mut nums: Vec<i32>) -> i32 {
+        let mut n = nums.len();
+        while n != 1 {
+            n >>= 1;
+            for i in 0..n {
+                nums[i] = (if (i & 1) == 1 { i32::max } else { i32::min })(
+                    nums[i << 1],
+                    nums[(i << 1) | 1],
+                );
+            }
+        }
+        nums[0]
+    }
+}
 ```
 
+#### C
+
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
+int minMaxGame(int* nums, int numsSize) {
+    while (numsSize != 1) {
+        numsSize >>= 1;
+        for (int i = 0; i < numsSize; i++) {
+            int a = nums[i << 1];
+            int b = nums[i << 1 | 1];
+            nums[i] = i & 1 ? max(a, b) : min(a, b);
+        }
+    }
+    return nums[0];
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

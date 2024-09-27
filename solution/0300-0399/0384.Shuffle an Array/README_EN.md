@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0384.Shuffle%20an%20Array/README_EN.md
+tags:
+    - Array
+    - Math
+    - Randomized
+---
+
+<!-- problem:start -->
+
 # [384. Shuffle an Array](https://leetcode.com/problems/shuffle-an-array)
 
 [中文文档](/solution/0300-0399/0384.Shuffle%20an%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an integer array <code>nums</code>, design an algorithm to randomly shuffle the array. All permutations of the array should be <strong>equally likely</strong> as a result of the shuffling.</p>
 
@@ -15,7 +29,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -44,15 +58,20 @@ solution.shuffle();    // Returns the random shuffling of array [1,2,3]. Example
 	<li>At most <code>10<sup>4</sup></code> calls <strong>in total</strong> will be made to <code>reset</code> and <code>shuffle</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-
     def __init__(self, nums: List[int]):
         self.nums = nums
         self.original = nums.copy()
@@ -74,7 +93,7 @@ class Solution:
 # param_2 = obj.shuffle()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -115,7 +134,7 @@ class Solution {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -135,8 +154,7 @@ public:
     }
 
     vector<int> shuffle() {
-        for (int i = 0; i < nums.size(); ++i)
-        {
+        for (int i = 0; i < nums.size(); ++i) {
             int j = i + rand() % (nums.size() - i);
             swap(nums[i], nums[j]);
         }
@@ -152,7 +170,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Solution struct {
@@ -185,7 +203,73 @@ func (this *Solution) Shuffle() []int {
  */
 ```
 
-### **JavaScript**
+#### TypeScript
+
+```ts
+class Solution {
+    private nums: number[];
+
+    constructor(nums: number[]) {
+        this.nums = nums;
+    }
+
+    reset(): number[] {
+        return this.nums;
+    }
+
+    shuffle(): number[] {
+        const n = this.nums.length;
+        const res = [...this.nums];
+        for (let i = 0; i < n; i++) {
+            const j = Math.floor(Math.random() * n);
+            [res[i], res[j]] = [res[j], res[i]];
+        }
+        return res;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * var obj = new Solution(nums)
+ * var param_1 = obj.reset()
+ * var param_2 = obj.shuffle()
+ */
+```
+
+#### Rust
+
+```rust
+use rand::Rng;
+struct Solution {
+    nums: Vec<i32>,
+}
+
+/**
+ * `&self` means the method takes an immutable reference.
+ * If you need a mutable reference, change it to `&mut self` instead.
+ */
+impl Solution {
+    fn new(nums: Vec<i32>) -> Self {
+        Self { nums }
+    }
+
+    fn reset(&self) -> Vec<i32> {
+        self.nums.clone()
+    }
+
+    fn shuffle(&mut self) -> Vec<i32> {
+        let n = self.nums.len();
+        let mut res = self.nums.clone();
+        for i in 0..n {
+            let j = rand::thread_rng().gen_range(0, n);
+            res.swap(i, j);
+        }
+        res
+    }
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -226,83 +310,8 @@ Solution.prototype.shuffle = function () {
  */
 ```
 
-### **TypeScript**
-
-```ts
-class Solution {
-    private nums: number[];
-
-    constructor(nums: number[]) {
-        this.nums = nums;
-    }
-
-    reset(): number[] {
-        return this.nums;
-    }
-
-    shuffle(): number[] {
-        const n = this.nums.length;
-        const res = [...this.nums];
-        for (let i = 0; i < n; i++) {
-            const j = Math.floor(Math.random() * n);
-            [res[i], res[j]] = [res[j], res[i]];
-        }
-        return res;
-    }
-}
-
-/**
- * Your Solution object will be instantiated and called as such:
- * var obj = new Solution(nums)
- * var param_1 = obj.reset()
- * var param_2 = obj.shuffle()
- */
-```
-
-### **Rust**
-
-```rust
-use rand::Rng;
-struct Solution {
-    nums: Vec<i32>,
-}
-
-/**
- * `&self` means the method takes an immutable reference.
- * If you need a mutable reference, change it to `&mut self` instead.
- */
-impl Solution {
-    fn new(nums: Vec<i32>) -> Self {
-        Self { nums }
-    }
-
-    fn reset(&self) -> Vec<i32> {
-        self.nums.clone()
-    }
-
-    fn shuffle(&mut self) -> Vec<i32> {
-        let n = self.nums.len();
-        let mut res = self.nums.clone();
-        for i in 0..n {
-            let j = rand::thread_rng().gen_range(0, n);
-            res.swap(i, j);
-        }
-        res
-    }
-}
-
-/**
- * Your Solution object will be instantiated and called as such:
- * let obj = Solution::new(nums);
- * let ret_1: Vec<i32> = obj.reset();
- * let ret_2: Vec<i32> = obj.shuffle();
- */
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

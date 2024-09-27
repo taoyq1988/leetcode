@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0991.Broken%20Calculator/README.md
+tags:
+    - 贪心
+    - 数学
+---
+
+<!-- problem:start -->
+
 # [991. 坏了的计算器](https://leetcode.cn/problems/broken-calculator)
 
 [English Version](/solution/0900-0999/0991.Broken%20Calculator/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>在显示着数字&nbsp;<code>startValue</code>&nbsp;的坏计算器上，我们可以执行以下两种操作：</p>
 
@@ -46,35 +57,99 @@
 <p><strong>提示：</strong></p>
 
 <ul>
-	<li><code>1 &lt;= x, y &lt;= 10<sup>9</sup></code></li>
+	<li><code>1 &lt;= startValue, target &lt;= 10<sup>9</sup></code></li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：逆向计算
+
+我们可以采用逆向计算的方式，从 `target` 开始，如果 `target` 是奇数，则 `target++`，否则 `target >>= 1`，累加操作次数，直到 `target` 小于等于 `startValue`，此时的操作次数加上 `startValue - target` 即为最终结果。
+
+时间复杂度 $O(\log n)$，其中 $n$ 为 `target`。空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def brokenCalc(self, startValue: int, target: int) -> int:
+        ans = 0
+        while startValue < target:
+            if target & 1:
+                target += 1
+            else:
+                target >>= 1
+            ans += 1
+        ans += startValue - target
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public int brokenCalc(int startValue, int target) {
+        int ans = 0;
+        while (startValue < target) {
+            if ((target & 1) == 1) {
+                target++;
+            } else {
+                target >>= 1;
+            }
+            ans += 1;
+        }
+        ans += startValue - target;
+        return ans;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int brokenCalc(int startValue, int target) {
+        int ans = 0;
+        while (startValue < target) {
+            if (target & 1) {
+                target++;
+            } else {
+                target >>= 1;
+            }
+            ++ans;
+        }
+        ans += startValue - target;
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func brokenCalc(startValue int, target int) (ans int) {
+	for startValue < target {
+		if target&1 == 1 {
+			target++
+		} else {
+			target >>= 1
+		}
+		ans++
+	}
+	ans += startValue - target
+	return
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

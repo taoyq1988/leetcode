@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1115.Print%20FooBar%20Alternately/README_EN.md
+tags:
+    - Concurrency
+---
+
+<!-- problem:start -->
+
 # [1115. Print FooBar Alternately](https://leetcode.com/problems/print-foobar-alternately)
 
 [中文文档](/solution/1100-1199/1115.Print%20FooBar%20Alternately/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Suppose you are given the following code:</p>
 
@@ -32,7 +44,7 @@ class FooBar {
 <p>Modify the given program to output <code>&quot;foobar&quot;</code> <code>n</code> times.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 1
@@ -41,7 +53,7 @@ class FooBar {
 &quot;foobar&quot; is being output 1 time.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 2
@@ -56,40 +68,60 @@ class FooBar {
 	<li><code>1 &lt;= n &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Multithreading + Semaphore
+
+We use two semaphores $f$ and $b$ to control the execution order of the two threads, where $f$ is initially set to $1$ and $b$ is set to $0$, indicating that thread $A$ executes first.
+
+When thread $A$ executes, it first performs the $acquire$ operation on $f$, which changes the value of $f$ to $0$. Thread $A$ then gains the right to use $f$ and can execute the $foo$ function. After that, it performs the $release$ operation on $b$, changing the value of $b$ to $1$. This allows thread $B$ to gain the right to use $b$ and execute the $bar$ function.
+
+When thread $B$ executes, it first performs the $acquire$ operation on $b$, which changes the value of $b$ to $0$. Thread $B$ then gains the right to use $b$ and can execute the $bar$ function. After that, it performs the $release$ operation on $f$, changing the value of $f$ to $1$. This allows thread $A$ to gain the right to use $f$ and execute the $foo$ function.
+
+Therefore, we only need to loop $n$ times, each time executing the $foo$ and $bar$ functions, first performing the $acquire$ operation, and then the $release$ operation.
+
+The time complexity is $O(n)$, and the space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
+from threading import Semaphore
+
+
 class FooBar:
     def __init__(self, n):
         self.n = n
-        self.fooLock = threading.Lock()
-        self.barLock = threading.Lock()
-        self.barLock.acquire()
+        self.f = Semaphore(1)
+        self.b = Semaphore(0)
 
-    def foo(self, printFoo: 'Callable[[], None]') -> None:
-        for i in range(self.n):
-            self.fooLock.acquire()
+    def foo(self, printFoo: "Callable[[], None]") -> None:
+        for _ in range(self.n):
+            self.f.acquire()
+            # printFoo() outputs "foo". Do not change or remove this line.
             printFoo()
-            self.barLock.release()
+            self.b.release()
 
-    def bar(self, printBar: 'Callable[[], None]') -> None:
-        for i in range(self.n):
-            self.barLock.acquire()
+    def bar(self, printBar: "Callable[[], None]") -> None:
+        for _ in range(self.n):
+            self.b.acquire()
+            # printBar() outputs "bar". Do not change or remove this line.
             printBar()
-            self.fooLock.release()
+            self.f.release()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class FooBar {
     private int n;
-    private final Semaphore fooSem = new Semaphore(1);
-    private final Semaphore barSem = new Semaphore(0);
+    private Semaphore f = new Semaphore(1);
+    private Semaphore b = new Semaphore(0);
 
     public FooBar(int n) {
         this.n = n;
@@ -97,58 +129,63 @@ class FooBar {
 
     public void foo(Runnable printFoo) throws InterruptedException {
         for (int i = 0; i < n; i++) {
-            fooSem.acquire();
+            f.acquire(1);
+            // printFoo.run() outputs "foo". Do not change or remove this line.
             printFoo.run();
-            barSem.release();
+            b.release(1);
         }
     }
 
     public void bar(Runnable printBar) throws InterruptedException {
         for (int i = 0; i < n; i++) {
-            barSem.acquire();
+            b.acquire(1);
+            // printBar.run() outputs "bar". Do not change or remove this line.
             printBar.run();
-            fooSem.release();
+            f.release(1);
         }
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
+#include <semaphore.h>
+
 class FooBar {
 private:
     int n;
-    mutex fooMu, barMu;
+    sem_t f, b;
 
 public:
     FooBar(int n) {
         this->n = n;
-        barMu.lock();
+        sem_init(&f, 0, 1);
+        sem_init(&b, 0, 0);
     }
 
     void foo(function<void()> printFoo) {
         for (int i = 0; i < n; i++) {
-            fooMu.lock();
-        	printFoo();
-            barMu.unlock();
+            sem_wait(&f);
+            // printFoo() outputs "foo". Do not change or remove this line.
+            printFoo();
+            sem_post(&b);
         }
     }
 
     void bar(function<void()> printBar) {
         for (int i = 0; i < n; i++) {
-            barMu.lock();
-        	printBar();
-            fooMu.unlock();
+            sem_wait(&b);
+            // printBar() outputs "bar". Do not change or remove this line.
+            printBar();
+            sem_post(&f);
         }
     }
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

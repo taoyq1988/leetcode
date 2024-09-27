@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1436.Destination%20City/README.md
+rating: 1192
+source: 第 187 场周赛 Q1
+tags:
+    - 数组
+    - 哈希表
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [1436. 旅行终点站](https://leetcode.cn/problems/destination-city)
 
 [English Version](/solution/1400-1499/1436.Destination%20City/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一份旅游线路图，该线路图中的旅行线路用数组 <code>paths</code> 表示，其中 <code>paths[i] = [cityA<sub>i</sub>, cityB<sub>i</sub>]</code> 表示该线路将会从 <code>cityA<sub>i</sub></code> 直接前往 <code>cityB<sub>i</sub></code> 。请你找出这次旅行的终点站，即没有任何可以通往其他城市的线路的城市<em>。</em></p>
 
@@ -52,84 +66,159 @@
 	<li>所有字符串均由大小写英文字母和空格字符组成。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：哈希表
+
+将所有起点存入哈希表中，然后遍历所有终点，找出没出现在哈希表中的终点，即为答案。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是线路数。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def destCity(self, paths: List[List[str]]) -> str:
-        mp = {a: b for a, b in paths}
-        a =  paths[0][0]
-        while mp.get(a):
-            a = mp[a]
-        return a
+        s = {a for a, _ in paths}
+        return next(b for _, b in paths if b not in s)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public String destCity(List<List<String>> paths) {
-        Map<String, String> mp = new HashMap<>();
-        for (List<String> path : paths) {
-            mp.put(path.get(0), path.get(1));
+        Set<String> s = new HashSet<>();
+        for (var p : paths) {
+            s.add(p.get(0));
         }
-        String a = paths.get(0).get(0);
-        while (mp.get(a) != null) {
-            a = mp.get(a);
+        for (var p : paths) {
+            if (!s.contains(p.get(1))) {
+                return p.get(1);
+            }
         }
-        return a;
+        return "";
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     string destCity(vector<vector<string>>& paths) {
-        unordered_map<string, string> mp;
-        for (auto& path : paths) mp[path[0]] = path[1];
-        string a = paths[0][0];
-        while (mp.find(a) != mp.end()) a = mp[a];
-        return a;
+        unordered_set<string> s;
+        for (auto& p : paths) {
+            s.insert(p[0]);
+        }
+        for (auto& p : paths) {
+            if (!s.count(p[1])) {
+                return p[1];
+            }
+        }
+        return "";
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func destCity(paths [][]string) string {
-	mp := make(map[string]string)
-	for _, path := range paths {
-		mp[path[0]] = path[1]
+	s := map[string]bool{}
+	for _, p := range paths {
+		s[p[0]] = true
 	}
-	a := paths[0][0]
-	for true {
-		if _, ok := mp[a]; !ok {
-			return a
+	for _, p := range paths {
+		if !s[p[1]] {
+			return p[1]
 		}
-		a = mp[a]
 	}
 	return ""
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function destCity(paths: string[][]): string {
+    const set = new Set(paths.map(([a]) => a));
+    for (const [_, b] of paths) {
+        if (!set.has(b)) {
+            return b;
+        }
+    }
+    return '';
+}
 ```
 
+#### Rust
+
+```rust
+use std::collections::HashSet;
+impl Solution {
+    pub fn dest_city(paths: Vec<Vec<String>>) -> String {
+        let set = paths.iter().map(|v| &v[0]).collect::<HashSet<&String>>();
+        for path in paths.iter() {
+            if !set.contains(&path[1]) {
+                return path[1].clone();
+            }
+        }
+        String::new()
+    }
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {string[][]} paths
+ * @return {string}
+ */
+var destCity = function (paths) {
+    const s = new Set();
+    for (const [a, _] of paths) {
+        s.add(a);
+    }
+    for (const [_, b] of paths) {
+        if (!s.has(b)) {
+            return b;
+        }
+    }
+    return '';
+};
+```
+
+#### C
+
+```c
+char* destCity(char*** paths, int pathsSize, int* pathsColSize) {
+    for (int i = 0; i < pathsSize; i++) {
+        int flag = 1;
+        for (int j = 0; j < pathsSize; j++) {
+            if (strcmp(paths[i][1], paths[j][0]) == 0) {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag) {
+            return paths[i][1];
+        }
+    }
+    return NULL;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

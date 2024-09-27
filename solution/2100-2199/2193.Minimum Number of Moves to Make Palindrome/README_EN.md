@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2193.Minimum%20Number%20of%20Moves%20to%20Make%20Palindrome/README_EN.md
+rating: 2090
+source: Biweekly Contest 73 Q4
+tags:
+    - Greedy
+    - Binary Indexed Tree
+    - Two Pointers
+    - String
+---
+
+<!-- problem:start -->
+
 # [2193. Minimum Number of Moves to Make Palindrome](https://leetcode.com/problems/minimum-number-of-moves-to-make-palindrome)
 
 [中文文档](/solution/2100-2199/2193.Minimum%20Number%20of%20Moves%20to%20Make%20Palindrome/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a string <code>s</code> consisting only of lowercase English letters.</p>
 
@@ -13,7 +30,7 @@
 <p><strong>Note</strong> that the input will be generated such that <code>s</code> can always be converted to a palindrome.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;aabb&quot;
@@ -25,7 +42,7 @@ We can obtain two palindromes from s, &quot;abba&quot; and &quot;baab&quot;.
 Thus, the minimum number of moves needed to make s a palindrome is 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;letelt&quot;
@@ -46,11 +63,17 @@ It can be shown that it is not possible to obtain a palindrome in less than 2 mo
 	<li><code>s</code> can be converted to a palindrome using a finite number of moves.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -75,7 +98,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -107,7 +130,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -115,16 +138,12 @@ public:
     int minMovesToMakePalindrome(string s) {
         int n = s.size();
         int ans = 0;
-        for (int i = 0, j = n - 1; i < j; ++i)
-        {
+        for (int i = 0, j = n - 1; i < j; ++i) {
             bool even = false;
-            for (int k = j; k != i; --k)
-            {
-                if (s[i] == s[k])
-                {
+            for (int k = j; k != i; --k) {
+                if (s[i] == s[k]) {
                     even = true;
-                    for (; k < j; ++k)
-                    {
+                    for (; k < j; ++k) {
                         swap(s[k], s[k + 1]);
                         ++ans;
                     }
@@ -139,7 +158,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minMovesToMakePalindrome(s string) int {
@@ -166,16 +185,8 @@ func minMovesToMakePalindrome(s string) int {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

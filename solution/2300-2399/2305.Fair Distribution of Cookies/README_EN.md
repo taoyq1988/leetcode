@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2305.Fair%20Distribution%20of%20Cookies/README_EN.md
+rating: 1886
+source: Weekly Contest 297 Q3
+tags:
+    - Bit Manipulation
+    - Array
+    - Dynamic Programming
+    - Backtracking
+    - Bitmask
+---
+
+<!-- problem:start -->
+
 # [2305. Fair Distribution of Cookies](https://leetcode.com/problems/fair-distribution-of-cookies)
 
 [中文文档](/solution/2300-2399/2305.Fair%20Distribution%20of%20Cookies/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>cookies</code>, where <code>cookies[i]</code> denotes the number of cookies in the <code>i<sup>th</sup></code> bag. You are also given an integer <code>k</code> that denotes the number of children to distribute <strong>all</strong> the bags of cookies to. All the cookies in the same bag must go to the same child and cannot be split up.</p>
 
@@ -11,7 +29,7 @@
 <p>Return <em>the <strong>minimum</strong> unfairness of all distributions</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> cookies = [8,15,10,20,8], k = 2
@@ -23,7 +41,7 @@ The unfairness of the distribution is max(31,30) = 31.
 It can be shown that there is no distribution with an unfairness less than 31.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> cookies = [6,1,3,2,2,4,1,2], k = 3
@@ -45,161 +63,174 @@ It can be shown that there is no distribution with an unfairness less than 7.
 	<li><code>2 &lt;= k &lt;= cookies.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Backtracking + Pruning
+
+First, we sort the array $cookies$ in descending order (to reduce the number of searches), and then create an array $cnt$ of length $k$ to store the number of cookies each child gets. Also, we use a variable $ans$ to maintain the current minimum degree of unfairness, initialized to a very large value.
+
+Next, we start from the first snack pack. For the current snack pack $i$, we enumerate each child $j$. If the cookies $cookies[i]$ in the current snack pack are given to child $j$, making the degree of unfairness greater than or equal to $ans$, or the number of cookies the current child already has is the same as the previous child, then we don't need to consider giving the cookies in the current snack pack to child $j$, just skip it (pruning). Otherwise, we give the cookies $cookies[i]$ in the current snack pack to child $j$, and then continue to consider the next snack pack. When we have considered all the snack packs, we update the value of $ans$, then backtrack to the previous snack pack, and continue to enumerate which child to give the cookies in the current snack pack to.
+
+Finally, we return $ans$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def distributeCookies(self, cookies: List[int], k: int) -> int:
-        def dfs(u):
-            nonlocal ans
-            if u == len(cookies):
-                ans = min(ans, max(cnt))
+        def dfs(i):
+            if i >= len(cookies):
+                nonlocal ans
+                ans = max(cnt)
                 return
-            for i in range(k):
-                if cnt[i] + cookies[u] < ans:
-                    cnt[i] += cookies[u]
-                    dfs(u + 1)
-                    cnt[i] -= cookies[u]
+            for j in range(k):
+                if cnt[j] + cookies[i] >= ans or (j and cnt[j] == cnt[j - 1]):
+                    continue
+                cnt[j] += cookies[i]
+                dfs(i + 1)
+                cnt[j] -= cookies[i]
 
         ans = inf
         cnt = [0] * k
+        cookies.sort(reverse=True)
         dfs(0)
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     private int[] cookies;
-    private int k;
     private int[] cnt;
-    private int ans;
+    private int k;
+    private int n;
+    private int ans = 1 << 30;
 
     public int distributeCookies(int[] cookies, int k) {
-        ans = 0x3f3f3f3f;
+        n = cookies.length;
+        cnt = new int[k];
+        // 升序排列
+        Arrays.sort(cookies);
         this.cookies = cookies;
         this.k = k;
-        this.cnt = new int[k];
-        dfs(0);
+        // 这里搜索顺序是 n-1, n-2,...0
+        dfs(n - 1);
         return ans;
     }
 
-    private void dfs(int u) {
-        if (u == cookies.length) {
-            int mx = cnt[0];
+    private void dfs(int i) {
+        if (i < 0) {
+            // ans = Arrays.stream(cnt).max().getAsInt();
+            ans = 0;
             for (int v : cnt) {
-                mx = Math.max(mx, v);
+                ans = Math.max(ans, v);
             }
-            ans = Math.min(ans, mx);
             return;
         }
-        for (int i = 0; i < k; ++i) {
-            if (cnt[i] + cookies[u] < ans) {
-                cnt[i] += cookies[u];
-                dfs(u + 1);
-                cnt[i] -= cookies[u];
+        for (int j = 0; j < k; ++j) {
+            if (cnt[j] + cookies[i] >= ans || (j > 0 && cnt[j] == cnt[j - 1])) {
+                continue;
             }
+            cnt[j] += cookies[i];
+            dfs(i - 1);
+            cnt[j] -= cookies[i];
         }
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    vector<int> cookies;
-    vector<int> cnt;
-    int k;
-    int ans;
-
     int distributeCookies(vector<int>& cookies, int k) {
-        ans = 0x3f3f3f3f;
-        this->cookies = cookies;
-        this->cnt = vector<int>(k);
-        this->k = k;
+        sort(cookies.rbegin(), cookies.rend());
+        int cnt[k];
+        memset(cnt, 0, sizeof cnt);
+        int n = cookies.size();
+        int ans = 1 << 30;
+        function<void(int)> dfs = [&](int i) {
+            if (i >= n) {
+                ans = *max_element(cnt, cnt + k);
+                return;
+            }
+            for (int j = 0; j < k; ++j) {
+                if (cnt[j] + cookies[i] >= ans || (j && cnt[j] == cnt[j - 1])) {
+                    continue;
+                }
+                cnt[j] += cookies[i];
+                dfs(i + 1);
+                cnt[j] -= cookies[i];
+            }
+        };
         dfs(0);
         return ans;
-    }
-
-    void dfs(int u) {
-        if (u == cookies.size())
-        {
-            ans = min(ans, *max_element(cnt.begin(), cnt.end()));
-            return;
-        }
-        for (int i = 0; i < k; ++i)
-        {
-            if (cnt[i] + cookies[u] < ans)
-            {
-                cnt[i] += cookies[u];
-                dfs(u + 1);
-                cnt[i] -= cookies[u];
-            }
-        }
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func distributeCookies(cookies []int, k int) int {
+	sort.Sort(sort.Reverse(sort.IntSlice(cookies)))
 	cnt := make([]int, k)
-	ans := 0x3f3f3f3f
+	ans := 1 << 30
 	var dfs func(int)
-	dfs = func(u int) {
-		if u == len(cookies) {
-			mx := cnt[0]
-			for _, v := range cnt {
-				mx = max(mx, v)
-			}
-			ans = min(ans, mx)
+	dfs = func(i int) {
+		if i >= len(cookies) {
+			ans = slices.Max(cnt)
 			return
 		}
-		for i := 0; i < k; i++ {
-			if cnt[i]+cookies[u] < ans {
-				cnt[i] += cookies[u]
-				dfs(u + 1)
-				cnt[i] -= cookies[u]
+		for j := 0; j < k; j++ {
+			if cnt[j]+cookies[i] >= ans || (j > 0 && cnt[j] == cnt[j-1]) {
+				continue
 			}
+			cnt[j] += cookies[i]
+			dfs(i + 1)
+			cnt[j] -= cookies[i]
 		}
 	}
 	dfs(0)
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
-```
-
-### **...**
-
-```
-
+function distributeCookies(cookies: number[], k: number): number {
+    const cnt = new Array(k).fill(0);
+    let ans = 1 << 30;
+    const dfs = (i: number) => {
+        if (i >= cookies.length) {
+            ans = Math.max(...cnt);
+            return;
+        }
+        for (let j = 0; j < k; ++j) {
+            if (cnt[j] + cookies[i] >= ans || (j && cnt[j] == cnt[j - 1])) {
+                continue;
+            }
+            cnt[j] += cookies[i];
+            dfs(i + 1);
+            cnt[j] -= cookies[i];
+        }
+    };
+    dfs(0);
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2162.Minimum%20Cost%20to%20Set%20Cooking%20Time/README.md
+rating: 1851
+source: 第 71 场双周赛 Q3
+tags:
+    - 数学
+    - 枚举
+---
+
+<!-- problem:start -->
+
 # [2162. 设置时间的最少代价](https://leetcode.cn/problems/minimum-cost-to-set-cooking-time)
 
 [English Version](/solution/2100-2199/2162.Minimum%20Cost%20to%20Set%20Cooking%20Time/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>常见的微波炉可以设置加热时间，且加热时间满足以下条件：</p>
 
@@ -71,19 +84,23 @@
 	<li><code>1 &lt;= targetSeconds &lt;= 6039</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def minCostSetTime(self, startAt: int, moveCost: int, pushCost: int, targetSeconds: int) -> int:
+    def minCostSetTime(
+        self, startAt: int, moveCost: int, pushCost: int, targetSeconds: int
+    ) -> int:
         def f(m, s):
             if not 0 <= m < 100 or not 0 <= s < 100:
                 return inf
@@ -105,25 +122,25 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int minCostSetTime(int startAt, int moveCost, int pushCost, int targetSeconds) {
         int m = targetSeconds / 60;
         int s = targetSeconds % 60;
-        return Math.min(f(m, s, startAt, moveCost, pushCost), f(m - 1, s + 60, startAt, moveCost, pushCost));
+        return Math.min(
+            f(m, s, startAt, moveCost, pushCost), f(m - 1, s + 60, startAt, moveCost, pushCost));
     }
 
     private int f(int m, int s, int prev, int moveCost, int pushCost) {
         if (m < 0 || m > 99 || s < 0 || s > 99) {
             return Integer.MAX_VALUE;
         }
-        int[] arr = new int[]{m / 10, m % 10, s / 10, s % 10};
+        int[] arr = new int[] {m / 10, m % 10, s / 10, s % 10};
         int i = 0;
-        for (; i < 4 && arr[i] == 0; ++i);
+        for (; i < 4 && arr[i] == 0; ++i)
+            ;
         int t = 0;
         for (; i < 4; ++i) {
             if (arr[i] != prev) {
@@ -137,7 +154,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -151,10 +168,10 @@ public:
         if (m < 0 || m > 99 || s < 0 || s > 99) return INT_MAX;
         vector<int> arr = {m / 10, m % 10, s / 10, s % 10};
         int i = 0;
-        for (; i < 4 && arr[i] == 0; ++i);
+        for (; i < 4 && arr[i] == 0; ++i)
+            ;
         int t = 0;
-        for (; i < 4; ++i)
-        {
+        for (; i < 4; ++i) {
             if (arr[i] != prev) t += moveCost;
             t += pushCost;
             prev = arr[i];
@@ -164,7 +181,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minCostSetTime(startAt int, moveCost int, pushCost int, targetSeconds int) int {
@@ -190,25 +207,10 @@ func minCostSetTime(startAt int, moveCost int, pushCost int, targetSeconds int) 
 	}
 	return min(f(m, s), f(m-1, s+60))
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

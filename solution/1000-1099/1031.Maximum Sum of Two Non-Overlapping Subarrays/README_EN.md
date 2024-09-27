@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1031.Maximum%20Sum%20of%20Two%20Non-Overlapping%20Subarrays/README_EN.md
+rating: 1680
+source: Weekly Contest 133 Q3
+tags:
+    - Array
+    - Dynamic Programming
+    - Sliding Window
+---
+
+<!-- problem:start -->
+
 # [1031. Maximum Sum of Two Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays)
 
 [中文文档](/solution/1000-1099/1031.Maximum%20Sum%20of%20Two%20Non-Overlapping%20Subarrays/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an integer array <code>nums</code> and two integers <code>firstLen</code> and <code>secondLen</code>, return <em>the maximum sum of elements in two non-overlapping <strong>subarrays</strong> with lengths </em><code>firstLen</code><em> and </em><code>secondLen</code>.</p>
 
@@ -11,7 +27,7 @@
 <p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [0,6,5,2,2,5,1,9,4], firstLen = 1, secondLen = 2
@@ -19,7 +35,7 @@
 <strong>Explanation:</strong> One choice of subarrays is [9] with length 1, and [6,5] with length 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,8,1,3,2,1,8,9,0], firstLen = 3, secondLen = 2
@@ -27,7 +43,7 @@
 <strong>Explanation:</strong> One choice of subarrays is [3,8,1] with length 3, and [8,9] with length 2.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,1,5,6,0,9,5,0,3,8], firstLen = 4, secondLen = 3
@@ -45,57 +61,110 @@
 	<li><code>0 &lt;= nums[i] &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def maxSumTwoNoOverlap(self, nums: List[int], firstLen: int, secondLen: int) -> int:
         n = len(nums)
-        s = [0] * (n + 1)
-        for i in range(1, n + 1):
-            s[i] = s[i - 1] + nums[i - 1]
-        ans1, ans2, fm, sm = 0, 0, 0, 0
-        for i in range(n - firstLen - secondLen + 1):
-            fm = max(fm, s[i + firstLen] - s[i])
-            ans1 = max(fm + s[i + firstLen + secondLen] - s[i + firstLen], ans1)
-        for i in range(n - firstLen - secondLen + 1):
-            sm = max(sm, s[i + secondLen] - s[i])
-            ans2 = max(sm + s[i + firstLen + secondLen] - s[i + secondLen], ans2)
-        return max(ans1, ans2)
+        s = list(accumulate(nums, initial=0))
+        ans = t = 0
+        i = firstLen
+        while i + secondLen - 1 < n:
+            t = max(t, s[i] - s[i - firstLen])
+            ans = max(ans, t + s[i + secondLen] - s[i])
+            i += 1
+        t = 0
+        i = secondLen
+        while i + firstLen - 1 < n:
+            t = max(t, s[i] - s[i - secondLen])
+            ans = max(ans, t + s[i + firstLen] - s[i])
+            i += 1
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int maxSumTwoNoOverlap(int[] nums, int firstLen, int secondLen) {
         int n = nums.length;
         int[] s = new int[n + 1];
-        for (int i = 1; i <= n; i++) {
-            s[i] = s[i - 1] + nums[i - 1];
+        for (int i = 0; i < n; ++i) {
+            s[i + 1] = s[i] + nums[i];
         }
-        int ans1 = 0, ans2 = 0, fm = 0, sm = 0;
-        for (int i = 0; i < n - firstLen - secondLen + 1; i++) {
-            fm = Math.max(s[i + firstLen] - s[i], fm);
-            ans1 = Math.max(fm + s[i + firstLen + secondLen] - s[i + firstLen], ans1);
+        int ans = 0;
+        for (int i = firstLen, t = 0; i + secondLen - 1 < n; ++i) {
+            t = Math.max(t, s[i] - s[i - firstLen]);
+            ans = Math.max(ans, t + s[i + secondLen] - s[i]);
         }
-        for (int i = 0; i < n - firstLen - secondLen + 1; i++) {
-            sm = Math.max(s[i + secondLen] - s[i], sm);
-            ans2 = Math.max(sm + s[i + firstLen + secondLen] - s[i + secondLen], ans2);
+        for (int i = secondLen, t = 0; i + firstLen - 1 < n; ++i) {
+            t = Math.max(t, s[i] - s[i - secondLen]);
+            ans = Math.max(ans, t + s[i + firstLen] - s[i]);
         }
-        return Math.max(ans1, ans2);
+        return ans;
     }
 }
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    int maxSumTwoNoOverlap(vector<int>& nums, int firstLen, int secondLen) {
+        int n = nums.size();
+        vector<int> s(n + 1);
+        for (int i = 0; i < n; ++i) {
+            s[i + 1] = s[i] + nums[i];
+        }
+        int ans = 0;
+        for (int i = firstLen, t = 0; i + secondLen - 1 < n; ++i) {
+            t = max(t, s[i] - s[i - firstLen]);
+            ans = max(ans, t + s[i + secondLen] - s[i]);
+        }
+        for (int i = secondLen, t = 0; i + firstLen - 1 < n; ++i) {
+            t = max(t, s[i] - s[i - secondLen]);
+            ans = max(ans, t + s[i + firstLen] - s[i]);
+        }
+        return ans;
+    }
+};
 ```
 
+#### Go
+
+```go
+func maxSumTwoNoOverlap(nums []int, firstLen int, secondLen int) (ans int) {
+	n := len(nums)
+	s := make([]int, n+1)
+	for i, x := range nums {
+		s[i+1] = s[i] + x
+	}
+	for i, t := firstLen, 0; i+secondLen-1 < n; i++ {
+		t = max(t, s[i]-s[i-firstLen])
+		ans = max(ans, t+s[i+secondLen]-s[i])
+	}
+	for i, t := secondLen, 0; i+firstLen-1 < n; i++ {
+		t = max(t, s[i]-s[i-secondLen])
+		ans = max(ans, t+s[i+firstLen]-s[i])
+	}
+	return
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

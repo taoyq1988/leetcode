@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1567.Maximum%20Length%20of%20Subarray%20With%20Positive%20Product/README.md
+rating: 1710
+source: 第 204 场周赛 Q2
+tags:
+    - 贪心
+    - 数组
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [1567. 乘积为正数的最长子数组长度](https://leetcode.cn/problems/maximum-length-of-subarray-with-positive-product)
 
 [English Version](/solution/1500-1599/1567.Maximum%20Length%20of%20Subarray%20With%20Positive%20Product/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数数组 <code>nums</code>&nbsp;，请你求出乘积为正数的最长子数组的长度。</p>
 
@@ -49,15 +63,17 @@
 
 <p>&nbsp;</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -87,9 +103,7 @@ class Solution:
         return res
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -116,34 +130,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function getMaxLen(nums: number[]): number {
-    // 连续正数计数n1, 连续负数计数n2
-    let n1 = nums[0] > 0 ? 1 : 0,
-        n2 = nums[0] < 0 ? 1 : 0;
-    let ans = n1;
-    for (let i = 1; i < nums.length; ++i) {
-        let cur = nums[i];
-        if (cur == 0) {
-            (n1 = 0), (n2 = 0);
-        } else if (cur > 0) {
-            ++n1;
-            n2 = n2 > 0 ? n2 + 1 : 0;
-        } else {
-            let t1 = n1,
-                t2 = n2;
-            n1 = t2 > 0 ? t2 + 1 : 0;
-            n2 = t1 + 1;
-        }
-        ans = Math.max(ans, n1);
-    }
-    return ans;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -171,7 +158,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func getMaxLen(nums []int) int {
@@ -206,19 +193,37 @@ func getMaxLen(nums []int) int {
 	}
 	return res
 }
+```
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+#### TypeScript
+
+```ts
+function getMaxLen(nums: number[]): number {
+    // 连续正数计数n1, 连续负数计数n2
+    let n1 = nums[0] > 0 ? 1 : 0,
+        n2 = nums[0] < 0 ? 1 : 0;
+    let ans = n1;
+    for (let i = 1; i < nums.length; ++i) {
+        let cur = nums[i];
+        if (cur == 0) {
+            (n1 = 0), (n2 = 0);
+        } else if (cur > 0) {
+            ++n1;
+            n2 = n2 > 0 ? n2 + 1 : 0;
+        } else {
+            let t1 = n1,
+                t2 = n2;
+            n1 = t2 > 0 ? t2 + 1 : 0;
+            n2 = t1 + 1;
+        }
+        ans = Math.max(ans, n1);
+    }
+    return ans;
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

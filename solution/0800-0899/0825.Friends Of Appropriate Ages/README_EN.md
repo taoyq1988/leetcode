@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0825.Friends%20Of%20Appropriate%20Ages/README_EN.md
+tags:
+    - Array
+    - Two Pointers
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [825. Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages)
 
 [中文文档](/solution/0800-0899/0825.Friends%20Of%20Appropriate%20Ages/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are <code>n</code> persons on a social media website. You are given an integer array <code>ages</code> where <code>ages[i]</code> is the age of the <code>i<sup>th</sup></code> person.</p>
 
@@ -21,7 +36,7 @@
 <p>Return <em>the total number of friend requests made</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> ages = [16,16]
@@ -29,7 +44,7 @@
 <strong>Explanation:</strong> 2 people friend request each other.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> ages = [16,17,18]
@@ -37,7 +52,7 @@
 <strong>Explanation:</strong> Friend requests are made 17 -&gt; 16, 18 -&gt; 17.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> ages = [20,30,100,110,120]
@@ -54,11 +69,17 @@
 	<li><code>1 &lt;= ages[i] &lt;= 120</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -69,14 +90,14 @@ class Solution:
             n1 = counter[i]
             for j in range(1, 121):
                 n2 = counter[j]
-                if not(j <= 0.5 * i + 7 or j > i or (j > 100 and i < 100)):
+                if not (j <= 0.5 * i + 7 or j > i or (j > 100 and i < 100)):
                     ans += n1 * n2
                     if i == j:
                         ans -= n2
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -103,7 +124,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -112,14 +133,11 @@ public:
         vector<int> counter(121);
         for (int age : ages) ++counter[age];
         int ans = 0;
-        for (int i = 1; i < 121; ++i)
-        {
+        for (int i = 1; i < 121; ++i) {
             int n1 = counter[i];
-            for (int j = 1; j < 121; ++j)
-            {
+            for (int j = 1; j < 121; ++j) {
                 int n2 = counter[j];
-                if (!(j <= 0.5 * i + 7 || j > i || (j > 100 && i < 100)))
-                {
+                if (!(j <= 0.5 * i + 7 || j > i || (j > 100 && i < 100))) {
                     ans += n1 * n2;
                     if (i == j) ans -= n2;
                 }
@@ -130,7 +148,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numFriendRequests(ages []int) int {
@@ -155,10 +173,8 @@ func numFriendRequests(ages []int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

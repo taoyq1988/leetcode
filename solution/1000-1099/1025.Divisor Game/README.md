@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1025.Divisor%20Game/README.md
+rating: 1435
+source: 第 132 场周赛 Q1
+tags:
+    - 脑筋急转弯
+    - 数学
+    - 动态规划
+    - 博弈
+---
+
+<!-- problem:start -->
+
 # [1025. 除数博弈](https://leetcode.cn/problems/divisor-game)
 
 [English Version](/solution/1000-1099/1025.Divisor%20Game/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>爱丽丝和鲍勃一起玩游戏，他们轮流行动。爱丽丝先手开局。</p>
 
@@ -48,32 +63,82 @@
 	<li><code>1 &lt;= n &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：数学归纳法
+
+-   当 $n=1$，先手败
+-   当 $n=2$，先手拿 $1$，剩下 $1$，后手败，先手胜
+-   当 $n=3$，先手拿 $1$，剩下 $2$，后手胜，先手败
+-   当 $n=4$，先手拿 $1$，剩下 $3$，后手败，先手胜
+-   ...
+
+猜想，当 $n$ 为奇数时，先手败；当 $n$ 为偶数时，先手胜。
+
+证明：
+
+1. 若 $n=1$ 或 $n=2$，结论成立；
+1. 若 $n \gt 2$，假设 $n \le k$ 时，该结论成立，则 $n=k+1$ 时：
+    - 若 $k+1$ 为奇数，由于 $x$ 是 $k+1$ 的因数，那么 $x$ 只可能是奇数，因此 $k+1-x$ 为偶数，后手胜，先手败；
+    - 若 $k+1$ 为偶数，此时 $x$ 既可以是奇数 $1$，也可以是偶数，若 $x$ 取奇数，那么 $k+1-x$ 为奇数，后手败，先手胜。
+
+综上，当 $n$ 为奇数时，先手败；当 $n$ 为偶数时，先手胜。结论正确。
+
+时间复杂度 $O(1)$，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def divisorGame(self, n: int) -> bool:
+        return n % 2 == 0
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public boolean divisorGame(int n) {
+        return n % 2 == 0;
+    }
+}
 ```
 
-### **...**
+#### C++
 
+```cpp
+class Solution {
+public:
+    bool divisorGame(int n) {
+        return n % 2 == 0;
+    }
+};
 ```
 
+#### Go
+
+```go
+func divisorGame(n int) bool {
+	return n%2 == 0
+}
+```
+
+#### JavaScript
+
+```js
+var divisorGame = function (n) {
+    return n % 2 === 0;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

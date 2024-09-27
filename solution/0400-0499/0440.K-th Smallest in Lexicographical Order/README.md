@@ -1,10 +1,20 @@
-# [440. 字典序的第 K 小数字](https://leetcode.cn/problems/k-th-smallest-in-lexicographical-order)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0440.K-th%20Smallest%20in%20Lexicographical%20Order/README.md
+tags:
+    - 字典树
+---
+
+<!-- problem:start -->
+
+# [440. 字典序的第K小数字](https://leetcode.cn/problems/k-th-smallest-in-lexicographical-order)
 
 [English Version](/solution/0400-0499/0440.K-th%20Smallest%20in%20Lexicographical%20Order/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定整数&nbsp;<code>n</code>&nbsp;和&nbsp;<code>k</code>，返回&nbsp;&nbsp;<code>[1, n]</code>&nbsp;中字典序第&nbsp;<code>k</code>&nbsp;小的数字。</p>
 
@@ -33,15 +43,17 @@
 	<li><code>1 &lt;= k &lt;= n &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -66,9 +78,7 @@ class Solution:
         return curr
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -91,7 +101,6 @@ class Solution {
         return (int) curr;
     }
 
-
     public int count(long curr) {
         long next = curr + 1;
         long cnt = 0;
@@ -105,7 +114,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -116,16 +125,12 @@ public:
         this->n = n;
         --k;
         long long curr = 1;
-        while (k)
-        {
+        while (k) {
             int cnt = count(curr);
-            if (k >= cnt)
-            {
+            if (k >= cnt) {
                 k -= cnt;
                 ++curr;
-            }
-            else
-            {
+            } else {
                 --k;
                 curr *= 10;
             }
@@ -136,8 +141,7 @@ public:
     int count(long long curr) {
         long long next = curr + 1;
         int cnt = 0;
-        while (curr <= n)
-        {
+        while (curr <= n) {
             cnt += min(n - curr + 1, next - curr);
             next *= 10;
             curr *= 10;
@@ -147,7 +151,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findKthNumber(n int, k int) int {
@@ -175,19 +179,10 @@ func findKthNumber(n int, k int) int {
 	}
 	return curr
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

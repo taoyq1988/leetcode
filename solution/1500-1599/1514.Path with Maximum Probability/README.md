@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1514.Path%20with%20Maximum%20Probability/README.md
+rating: 1846
+source: 第 197 场周赛 Q3
+tags:
+    - 图
+    - 数组
+    - 最短路
+    - 堆（优先队列）
+---
+
+<!-- problem:start -->
+
 # [1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability)
 
 [English Version](/solution/1500-1599/1514.Path%20with%20Maximum%20Probability/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个由 <code>n</code> 个节点（下标从 0 开始）组成的无向加权图，该图由一个描述边的列表组成，其中 <code>edges[i] = [a, b]</code> 表示连接节点 a 和 b 的一条无向边，且该边遍历成功的概率为 <code>succProb[i]</code> 。</p>
 
@@ -55,27 +70,30 @@
 	<li>每两个节点之间最多有一条边</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：堆优化 Dijkstra 算法**
+### 方法一：堆优化 Dijkstra 算法
 
 时间复杂度 O(mlogn)。
 
-**方法二：SPFA 算法**
-
-时间复杂度，平均情况下 O(m)，最坏情况下 O(nm)，n 表示点数，m 表示边数。
-
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start: int, end: int) -> float:
+    def maxProbability(
+        self,
+        n: int,
+        edges: List[List[int]],
+        succProb: List[float],
+        start: int,
+        end: int,
+    ) -> float:
         g = defaultdict(list)
         for (a, b), s in zip(edges, succProb):
             g[a].append((b, s))
@@ -95,48 +113,21 @@ class Solution:
         return d[end]
 ```
 
-```python
-class Solution:
-    def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start: int, end: int) -> float:
-        g = defaultdict(list)
-        for (a, b), s in zip(edges, succProb):
-            g[a].append((b, s))
-            g[b].append((a, s))
-        d = [0] * n
-        vis = [False] * n
-        d[start] = 1
-        q = deque([start])
-        vis[start] = True
-        while q:
-            i = q.popleft()
-            vis[i] = False
-            for j, s in g[i]:
-                if d[j] < d[i] * s:
-                    d[j] = d[i] * s
-                    if not vis[j]:
-                        q.append(j)
-                        vis[j] = True
-        return d[end]
-```
-
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
         List<Pair<Integer, Double>>[] g = new List[n];
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<>();
-        }
+        Arrays.setAll(g, k -> new ArrayList<>());
         for (int i = 0; i < edges.length; ++i) {
             int a = edges[i][0], b = edges[i][1];
             double s = succProb[i];
             g[a].add(new Pair<>(b, s));
             g[b].add(new Pair<>(a, s));
         }
-        PriorityQueue<Pair<Double, Integer>> q = new PriorityQueue<>(Comparator.comparingDouble(Pair::getKey));
+        PriorityQueue<Pair<Double, Integer>> q
+            = new PriorityQueue<>(Comparator.comparingDouble(Pair::getKey));
         double[] d = new double[n];
         d[start] = 1.0;
         q.offer(new Pair<>(-1.0, start));
@@ -159,54 +150,14 @@ class Solution {
 }
 ```
 
-```java
-class Solution {
-    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
-        List<Pair<Integer, Double>>[] g = new List[n];
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<>();
-        }
-        for (int i = 0; i < edges.length; ++i) {
-            int a = edges[i][0], b = edges[i][1];
-            double s = succProb[i];
-            g[a].add(new Pair<>(b, s));
-            g[b].add(new Pair<>(a, s));
-        }
-        double[] d = new double[n];
-        d[start] = 1.0;
-        boolean[] vis = new boolean[n];
-        Deque<Integer> q = new ArrayDeque<>();
-        q.offer(start);
-        vis[start] = true;
-        while (!q.isEmpty()) {
-            int i = q.poll();
-            vis[i] = false;
-            for (Pair<Integer, Double> ne : g[i]) {
-                int j = ne.getKey();
-                double s = ne.getValue();
-                if (d[j] < d[i] * s) {
-                    d[j] = d[i] * s;
-                    if (!vis[j]) {
-                        q.offer(j);
-                        vis[j] = true;
-                    }
-                }
-            }
-        }
-        return d[end];
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
         vector<vector<pair<int, double>>> g(n);
-        for (int i = 0; i < edges.size(); ++i)
-        {
+        for (int i = 0; i < edges.size(); ++i) {
             int a = edges[i][0], b = edges[i][1];
             double s = succProb[i];
             g[a].push_back({b, s});
@@ -216,19 +167,16 @@ public:
         d[start] = 1.0;
         queue<pair<double, int>> q;
         q.push({1.0, start});
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             auto p = q.front();
             q.pop();
             double w = p.first;
             int u = p.second;
             if (d[u] > w) continue;
-            for (auto& e : g[u])
-            {
+            for (auto& e : g[u]) {
                 int v = e.first;
                 double t = e.second;
-                if (d[v] < d[u] * t)
-                {
+                if (d[v] < d[u] * t) {
                     d[v] = d[u] * t;
                     q.push({d[v], v});
                 }
@@ -239,49 +187,7 @@ public:
 };
 ```
 
-```cpp
-class Solution {
-public:
-    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
-        vector<vector<pair<int, double>>> g(n);
-        for (int i = 0; i < edges.size(); ++i)
-        {
-            int a = edges[i][0], b = edges[i][1];
-            double s = succProb[i];
-            g[a].push_back({b, s});
-            g[b].push_back({a, s});
-        }
-        vector<double> d(n);
-        vector<bool> vis(n);
-        d[start] = 1.0;
-        queue<int> q{{start}};
-        vis[start] = true;
-        while (!q.empty())
-        {
-            int i = q.front();
-            q.pop();
-            vis[i] = false;
-            for (auto& ne : g[i])
-            {
-                int j = ne.first;
-                double s = ne.second;
-                if (d[j] < d[i] * s)
-                {
-                    d[j] = d[i] * s;
-                    if (!vis[j])
-                    {
-                        q.push(j);
-                        vis[j] = true;
-                    }
-                }
-            }
-        }
-        return d[end];
-    }
-};
-```
-
-### **Go**
+#### Go
 
 ```go
 func maxProbability(n int, edges [][]int, succProb []float64, start int, end int) float64 {
@@ -320,10 +226,131 @@ type pair struct {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：SPFA 算法
+
+时间复杂度，平均情况下 O(m)，最坏情况下 O(nm)，n 表示点数，m 表示边数。
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def maxProbability(
+        self,
+        n: int,
+        edges: List[List[int]],
+        succProb: List[float],
+        start: int,
+        end: int,
+    ) -> float:
+        g = defaultdict(list)
+        for (a, b), s in zip(edges, succProb):
+            g[a].append((b, s))
+            g[b].append((a, s))
+        d = [0] * n
+        vis = [False] * n
+        d[start] = 1
+        q = deque([start])
+        vis[start] = True
+        while q:
+            i = q.popleft()
+            vis[i] = False
+            for j, s in g[i]:
+                if d[j] < d[i] * s:
+                    d[j] = d[i] * s
+                    if not vis[j]:
+                        q.append(j)
+                        vis[j] = True
+        return d[end]
 ```
 
+#### Java
+
+```java
+class Solution {
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+        List<Pair<Integer, Double>>[] g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for (int i = 0; i < edges.length; ++i) {
+            int a = edges[i][0], b = edges[i][1];
+            double s = succProb[i];
+            g[a].add(new Pair<>(b, s));
+            g[b].add(new Pair<>(a, s));
+        }
+        double[] d = new double[n];
+        d[start] = 1.0;
+        boolean[] vis = new boolean[n];
+        Deque<Integer> q = new ArrayDeque<>();
+        q.offer(start);
+        vis[start] = true;
+        while (!q.isEmpty()) {
+            int i = q.poll();
+            vis[i] = false;
+            for (Pair<Integer, Double> ne : g[i]) {
+                int j = ne.getKey();
+                double s = ne.getValue();
+                if (d[j] < d[i] * s) {
+                    d[j] = d[i] * s;
+                    if (!vis[j]) {
+                        q.offer(j);
+                        vis[j] = true;
+                    }
+                }
+            }
+        }
+        return d[end];
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<vector<pair<int, double>>> g(n);
+        for (int i = 0; i < edges.size(); ++i) {
+            int a = edges[i][0], b = edges[i][1];
+            double s = succProb[i];
+            g[a].push_back({b, s});
+            g[b].push_back({a, s});
+        }
+        vector<double> d(n);
+        vector<bool> vis(n);
+        d[start] = 1.0;
+        queue<int> q{{start}};
+        vis[start] = true;
+        while (!q.empty()) {
+            int i = q.front();
+            q.pop();
+            vis[i] = false;
+            for (auto& ne : g[i]) {
+                int j = ne.first;
+                double s = ne.second;
+                if (d[j] < d[i] * s) {
+                    d[j] = d[i] * s;
+                    if (!vis[j]) {
+                        q.push(j);
+                        vis[j] = true;
+                    }
+                }
+            }
+        }
+        return d[end];
+    }
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0306.Additive%20Number/README.md
+tags:
+    - 字符串
+    - 回溯
+---
+
+<!-- problem:start -->
+
 # [306. 累加数](https://leetcode.cn/problems/additive-number)
 
 [English Version](/solution/0300-0399/0306.Additive%20Number/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p><strong>累加数</strong> 是一个字符串，组成它的数字可以形成累加序列。</p>
 
@@ -44,19 +55,17 @@
 
 <p><strong>进阶：</strong>你计划如何处理由过大的整数输入导致的溢出?</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-DFS + 剪枝。
-
-Python 大整数相加不会有溢出问题。由于 num 字符串长度最大为 35，因此对于其他语言，可以通过控制整数长度防止溢出。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -79,14 +88,12 @@ class Solution:
                     break
                 if j - i > 1 and num[i] == '0':
                     continue
-                if dfs(int(num[:i]), int(num[i: j]), num[j:]):
+                if dfs(int(num[:i]), int(num[i:j]), num[j:]):
                     return True
         return False
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -129,17 +136,15 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool isAdditiveNumber(string num) {
         int n = num.size();
-        for (int i = 1; i < min(n - 1, 19); ++i)
-        {
-            for (int j = i + 1; j < min(n, i + 19); ++j)
-            {
+        for (int i = 1; i < min(n - 1, 19); ++i) {
+            for (int j = i + 1; j < min(n, i + 19); ++j) {
                 if (i > 1 && num[0] == '0') break;
                 if (j - i > 1 && num[i] == '0') continue;
                 auto a = stoll(num.substr(0, i));
@@ -162,7 +167,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isAdditiveNumber(num string) bool {
@@ -202,19 +207,10 @@ func isAdditiveNumber(num string) bool {
 	}
 	return false
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2227.Encrypt%20and%20Decrypt%20Strings/README_EN.md
+rating: 1944
+source: Weekly Contest 287 Q4
+tags:
+    - Design
+    - Trie
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [2227. Encrypt and Decrypt Strings](https://leetcode.com/problems/encrypt-and-decrypt-strings)
 
 [中文文档](/solution/2200-2299/2227.Encrypt%20and%20Decrypt%20Strings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a character array <code>keys</code> containing <strong>unique</strong> characters and a string array <code>values</code> containing strings of length 2. You are also given another string array <code>dictionary</code> that contains all permitted original strings after decryption. You should implement a data structure that can encrypt or decrypt a <strong>0-indexed</strong> string.</p>
 
@@ -31,7 +49,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -67,15 +85,20 @@ encrypter.decrypt(&quot;eizfeiam&quot;); // return 2.
 	<li>At most <code>200</code> calls will be made to <code>encrypt</code> and <code>decrypt</code> <strong>in total</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Encrypter:
-
     def __init__(self, keys: List[str], values: List[str], dictionary: List[str]):
         self.mp = dict(zip(keys, values))
         self.cnt = Counter(self.encrypt(v) for v in dictionary)
@@ -98,7 +121,7 @@ class Encrypter:
 # param_2 = obj.decrypt(word2)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Encrypter {
@@ -139,7 +162,7 @@ class Encrypter {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Encrypter {
@@ -154,8 +177,7 @@ public:
 
     string encrypt(string word1) {
         string res = "";
-        for (char c : word1)
-        {
+        for (char c : word1) {
             if (!mp.count(c)) return "";
             res += mp[c];
         }
@@ -175,7 +197,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Encrypter struct {
@@ -220,16 +242,8 @@ func (this *Encrypter) Decrypt(word2 string) int {
  */
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

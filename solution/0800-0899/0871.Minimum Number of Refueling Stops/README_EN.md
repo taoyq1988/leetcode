@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0871.Minimum%20Number%20of%20Refueling%20Stops/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Dynamic Programming
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [871. Minimum Number of Refueling Stops](https://leetcode.com/problems/minimum-number-of-refueling-stops)
 
 [中文文档](/solution/0800-0899/0871.Minimum%20Number%20of%20Refueling%20Stops/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A car travels from a starting position to a destination which is <code>target</code> miles east of the starting position.</p>
 
@@ -15,7 +30,7 @@
 <p>Note that if the car reaches a gas station with <code>0</code> fuel left, the car can still refuel there. If the car reaches the destination with <code>0</code> fuel left, it is still considered to have arrived.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> target = 1, startFuel = 1, stations = []
@@ -23,7 +38,7 @@
 <strong>Explanation:</strong> We can reach the target without refueling.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> target = 100, startFuel = 1, stations = [[10,100]]
@@ -31,7 +46,7 @@
 <strong>Explanation:</strong> We can not reach the target (or even the first gas station).
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> target = 100, startFuel = 10, stations = [[10,60],[20,30],[30,30],[60,40]]
@@ -49,19 +64,27 @@ We made 2 refueling stops along the way, so we return 2.
 <ul>
 	<li><code>1 &lt;= target, startFuel &lt;= 10<sup>9</sup></code></li>
 	<li><code>0 &lt;= stations.length &lt;= 500</code></li>
-	<li><code>0 &lt;= position<sub>i</sub> &lt;= position<sub>i+1</sub> &lt; target</code></li>
+	<li><code>1 &lt;= position<sub>i</sub> &lt; position<sub>i+1</sub> &lt; target</code></li>
 	<li><code>1 &lt;= fuel<sub>i</sub> &lt; 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def minRefuelStops(self, target: int, startFuel: int, stations: List[List[int]]) -> int:
+    def minRefuelStops(
+        self, target: int, startFuel: int, stations: List[List[int]]
+    ) -> int:
         q = []
         prev = ans = 0
         stations.append([target, 0])
@@ -78,7 +101,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -106,7 +129,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -115,12 +138,10 @@ public:
         priority_queue<int> q;
         stations.push_back({target, 0});
         int ans = 0, prev = 0;
-        for (auto& s : stations)
-        {
+        for (auto& s : stations) {
             int d = s[0] - prev;
             startFuel -= d;
-            while (startFuel < 0 && !q.empty())
-            {
+            while (startFuel < 0 && !q.empty()) {
                 startFuel += q.top();
                 q.pop();
                 ++ans;
@@ -134,7 +155,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minRefuelStops(target int, startFuel int, stations [][]int) int {
@@ -160,9 +181,9 @@ func minRefuelStops(target int, startFuel int, stations [][]int) int {
 
 type hp struct{ sort.IntSlice }
 
-func (h hp) Less(i, j int) bool  { return h.IntSlice[i] > h.IntSlice[j] }
-func (h *hp) Push(v interface{}) { h.IntSlice = append(h.IntSlice, v.(int)) }
-func (h *hp) Pop() interface{} {
+func (h hp) Less(i, j int) bool { return h.IntSlice[i] > h.IntSlice[j] }
+func (h *hp) Push(v any)        { h.IntSlice = append(h.IntSlice, v.(int)) }
+func (h *hp) Pop() any {
 	a := h.IntSlice
 	v := a[len(a)-1]
 	h.IntSlice = a[:len(a)-1]
@@ -172,10 +193,8 @@ func (h *hp) push(v int) { heap.Push(h, v) }
 func (h *hp) pop() int   { return heap.Pop(h).(int) }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

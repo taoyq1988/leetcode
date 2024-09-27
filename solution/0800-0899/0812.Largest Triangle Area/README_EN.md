@@ -1,13 +1,27 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0812.Largest%20Triangle%20Area/README_EN.md
+tags:
+    - Geometry
+    - Array
+    - Math
+---
+
+<!-- problem:start -->
+
 # [812. Largest Triangle Area](https://leetcode.com/problems/largest-triangle-area)
 
 [中文文档](/solution/0800-0899/0812.Largest%20Triangle%20Area/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an array of points on the <strong>X-Y</strong> plane <code>points</code> where <code>points[i] = [x<sub>i</sub>, y<sub>i</sub>]</code>, return <em>the area of the largest triangle that can be formed by any three different points</em>. Answers within <code>10<sup>-5</sup></code> of the actual answer will be accepted.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0812.Largest%20Triangle%20Area/images/1027.png" style="height: 369px; width: 450px;" />
 <pre>
 <strong>Input:</strong> points = [[0,0],[0,1],[1,0],[0,2],[2,0]]
@@ -15,7 +29,7 @@
 <strong>Explanation:</strong> The five points are shown in the above figure. The red triangle is the largest.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> points = [[1,0],[0,0],[0,1]]
@@ -31,11 +45,17 @@
 	<li>All the given points are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -51,7 +71,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -75,21 +95,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     double largestTriangleArea(vector<vector<int>>& points) {
         double ans = 0;
-        for (auto& p1 : points)
-        {
+        for (auto& p1 : points) {
             int x1 = p1[0], y1 = p1[1];
-            for (auto& p2 : points)
-            {
+            for (auto& p2 : points) {
                 int x2 = p2[0], y2 = p2[1];
-                for (auto& p3 : points)
-                {
+                for (auto& p3 : points) {
                     int x3 = p3[0], y3 = p3[1];
                     int u1 = x2 - x1, v1 = y2 - y1;
                     int u2 = x3 - x1, v2 = y3 - y1;
@@ -103,7 +120,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func largestTriangleArea(points [][]int) float64 {
@@ -132,10 +149,8 @@ func abs(x int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

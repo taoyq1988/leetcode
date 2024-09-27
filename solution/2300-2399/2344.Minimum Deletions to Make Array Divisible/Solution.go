@@ -1,6 +1,6 @@
 func minOperations(nums []int, numsDivide []int) int {
-	x := numsDivide[0]
-	for _, v := range numsDivide[1:] {
+	x := 0
+	for _, v := range numsDivide {
 		x = gcd(x, v)
 	}
 	sort.Ints(nums)

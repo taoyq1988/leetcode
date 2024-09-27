@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1041.Robot%20Bounded%20In%20Circle/README_EN.md
+rating: 1521
+source: Weekly Contest 136 Q1
+tags:
+    - Math
+    - String
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [1041. Robot Bounded In Circle](https://leetcode.com/problems/robot-bounded-in-circle)
 
 [中文文档](/solution/1000-1099/1041.Robot%20Bounded%20In%20Circle/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>On an infinite plane, a robot initially stands at <code>(0, 0)</code> and faces north. Note that:</p>
 
@@ -26,7 +42,7 @@
 <p>Return <code>true</code> if and only if there exists a circle in the plane such that the robot never leaves the circle.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> instructions = &quot;GGLLGG&quot;
@@ -42,7 +58,7 @@ Repeating the instructions, the robot goes into the cycle: (0, 0) --&gt; (0, 1) 
 Based on that, we return true.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> instructions = &quot;GG&quot;
@@ -54,7 +70,7 @@ Repeating the instructions, keeps advancing in the north direction and does not 
 Based on that, we return false.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> instructions = &quot;GL&quot;
@@ -80,89 +96,117 @@ Based on that, we return true.
 	<li><code>instructions[i]</code> is <code>&#39;G&#39;</code>, <code>&#39;L&#39;</code> or, <code>&#39;R&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def isRobotBounded(self, instructions: str) -> bool:
-        cur, direction = 0, [0] * 4
-        for ins in instructions:
-            if ins == 'L':
-                cur = (cur + 1) % 4
-            elif ins == 'R':
-                cur = (cur + 3) % 4
+        k = 0
+        dist = [0] * 4
+        for c in instructions:
+            if c == 'L':
+                k = (k + 1) % 4
+            elif c == 'R':
+                k = (k + 3) % 4
             else:
-                direction[cur] += 1
-        return cur != 0 or (direction[0] == direction[2] and direction[1] == direction[3])
+                dist[k] += 1
+        return (dist[0] == dist[2] and dist[1] == dist[3]) or k != 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public boolean isRobotBounded(String instructions) {
-        int[] direction = new int[4];
-        int cur = 0;
-        for (char c : instructions.toCharArray()) {
+        int k = 0;
+        int[] dist = new int[4];
+        for (int i = 0; i < instructions.length(); ++i) {
+            char c = instructions.charAt(i);
             if (c == 'L') {
-                cur = (cur + 1) % 4;
+                k = (k + 1) % 4;
             } else if (c == 'R') {
-                cur = (cur + 3) % 4;
+                k = (k + 3) % 4;
             } else {
-                ++direction[cur];
+                ++dist[k];
             }
         }
-        return cur != 0 || (direction[0] == direction[2] && direction[1] == direction[3]);
+        return (dist[0] == dist[2] && dist[1] == dist[3]) || (k != 0);
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool isRobotBounded(string instructions) {
-        vector<int> direction(4);
-        int cur = 0;
-        for (char c : instructions)
-        {
-            if (c == 'L') cur = (cur + 1) % 4;
-            else if (c == 'R') cur = (cur + 3) % 4;
-            else ++direction[cur];
+        int dist[4]{};
+        int k = 0;
+        for (char& c : instructions) {
+            if (c == 'L') {
+                k = (k + 1) % 4;
+            } else if (c == 'R') {
+                k = (k + 3) % 4;
+            } else {
+                ++dist[k];
+            }
         }
-        return cur != 0 || (direction[0] == direction[2] && direction[1] == direction[3]);
+        return (dist[0] == dist[2] && dist[1] == dist[3]) || k;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isRobotBounded(instructions string) bool {
-	direction := make([]int, 4)
-	cur := 0
-	for _, ins := range instructions {
-		if ins == 'L' {
-			cur = (cur + 1) % 4
-		} else if ins == 'R' {
-			cur = (cur + 3) % 4
+	dist := [4]int{}
+	k := 0
+	for _, c := range instructions {
+		if c == 'L' {
+			k = (k + 1) % 4
+		} else if c == 'R' {
+			k = (k + 3) % 4
 		} else {
-			direction[cur]++
+			dist[k]++
 		}
 	}
-	return cur != 0 || (direction[0] == direction[2] && direction[1] == direction[3])
+	return (dist[0] == dist[2] && dist[1] == dist[3]) || k != 0
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function isRobotBounded(instructions: string): boolean {
+    const dist: number[] = new Array(4).fill(0);
+    let k = 0;
+    for (const c of instructions) {
+        if (c === 'L') {
+            k = (k + 1) % 4;
+        } else if (c === 'R') {
+            k = (k + 3) % 4;
+        } else {
+            ++dist[k];
+        }
+    }
+    return (dist[0] === dist[2] && dist[1] === dist[3]) || k !== 0;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

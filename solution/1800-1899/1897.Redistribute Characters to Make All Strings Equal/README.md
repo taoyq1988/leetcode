@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1897.Redistribute%20Characters%20to%20Make%20All%20Strings%20Equal/README.md
+rating: 1309
+source: 第 245 场周赛 Q1
+tags:
+    - 哈希表
+    - 字符串
+    - 计数
+---
+
+<!-- problem:start -->
+
 # [1897. 重新分配字符使所有字符串都相等](https://leetcode.cn/problems/redistribute-characters-to-make-all-strings-equal)
 
 [English Version](/solution/1800-1899/1897.Redistribute%20Characters%20to%20Make%20All%20Strings%20Equal/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个字符串数组 <code>words</code>（下标 <strong>从 0 开始</strong> 计数）。</p>
 
@@ -40,15 +54,17 @@
 	<li><code>words[i]</code> 由小写英文字母组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -61,9 +77,7 @@ class Solution:
         return all(count % n == 0 for count in counter.values())
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -85,28 +99,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function makeEqual(words: string[]): boolean {
-    let n = words.length;
-    let letters = new Array(26).fill(0);
-    for (let word of words) {
-        for (let i = 0; i < word.length; ++i) {
-            ++letters[word.charCodeAt(i) - 97];
-        }
-    }
-
-    for (let i = 0; i < letters.length; ++i) {
-        if (letters[i] % n != 0) {
-            return false;
-        }
-    }
-    return true;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -127,7 +120,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func makeEqual(words []string) bool {
@@ -147,10 +140,29 @@ func makeEqual(words []string) bool {
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+function makeEqual(words: string[]): boolean {
+    let n = words.length;
+    let letters = new Array(26).fill(0);
+    for (let word of words) {
+        for (let i = 0; i < word.length; ++i) {
+            ++letters[word.charCodeAt(i) - 97];
+        }
+    }
 
+    for (let i = 0; i < letters.length; ++i) {
+        if (letters[i] % n != 0) {
+            return false;
+        }
+    }
+    return true;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,18 +1,16 @@
 class Solution {
     public int maximumProfit(int[] present, int[] future, int budget) {
-        List<int[]> arr = new ArrayList<>();
-        for (int i = 0; i < present.length; ++i) {
-            if (future[i] > present[i]) {
-                arr.add(new int[]{present[i], future[i] - present[i]});
+        int n = present.length;
+        int[][] f = new int[n + 1][budget + 1];
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 0; j <= budget; ++j) {
+                f[i][j] = f[i - 1][j];
+                if (j >= present[i - 1]) {
+                    f[i][j] = Math.max(
+                        f[i][j], f[i - 1][j - present[i - 1]] + future[i - 1] - present[i - 1]);
+                }
             }
         }
-        int[] dp = new int[budget + 1];
-        for (int[] e : arr) {
-            int v = e[0], w = e[1];
-            for (int j = budget; j >= v; --j) {
-                dp[j] = Math.max(dp[j], dp[j - v] + w);
-            }
-        }
-        return dp[budget];
+        return f[n][budget];
     }
 }

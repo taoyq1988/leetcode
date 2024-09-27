@@ -1,60 +1,27 @@
-using System;
-using System.Collections.Generic;
-
-public class Comparer : IComparer<Tuple<double, int>>
-{
-    public int Compare(Tuple<double, int> x, Tuple<double, int> y)
-    {
-        var result = x.Item1.CompareTo(y.Item1);
-        if (result != 0)
-        {
-            return result;
-        }
-        return x.Item2.CompareTo(y.Item2);
-    }
-}
-
 public class MedianFinder {
+    private PriorityQueue<int, int> minQ = new PriorityQueue<int, int>();
+    private PriorityQueue<int, int> maxQ = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
 
-    private SortedSet<Tuple<double, int>> smallerHeap = new SortedSet<Tuple<double, int>>();
-    private SortedSet<Tuple<double, int>> biggerHeap = new SortedSet<Tuple<double, int>>();
+    public MedianFinder() {
 
-    private int index;
+    }
 
-    public void AddNum(double num) {
-        if (smallerHeap.Count == 0 || smallerHeap.Max.Item1 >= num)
-        {
-            smallerHeap.Add(Tuple.Create(num, index++));
-        }
-        else
-        {
-            biggerHeap.Add(Tuple.Create(num, index++));
-        }
-
-        if (smallerHeap.Count == biggerHeap.Count + 2)
-        {
-            biggerHeap.Add(smallerHeap.Max);
-            smallerHeap.Remove(smallerHeap.Max);
-        }
-        else if (biggerHeap.Count == smallerHeap.Count + 2)
-        {
-            smallerHeap.Add(biggerHeap.Min);
-            biggerHeap.Remove(biggerHeap.Min);
+    public void AddNum(int num) {
+        maxQ.Enqueue(num, num);
+        minQ.Enqueue(maxQ.Peek(), maxQ.Dequeue());
+        if (minQ.Count > maxQ.Count + 1) {
+            maxQ.Enqueue(minQ.Peek(), minQ.Dequeue());
         }
     }
 
     public double FindMedian() {
-        if (smallerHeap.Count == biggerHeap.Count)
-        {
-            return (smallerHeap.Max.Item1 + biggerHeap.Min.Item1) / 2;
-        }
-        else if (smallerHeap.Count < biggerHeap.Count)
-        {
-            return biggerHeap.Min.Item1;
-        }
-        else
-        {
-            return smallerHeap.Max.Item1;
-        }
+        return minQ.Count == maxQ.Count ? (minQ.Peek() + maxQ.Peek()) / 2.0 : minQ.Peek();
     }
 }
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.AddNum(num);
+ * double param_2 = obj.FindMedian();
+ */

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1405.Longest%20Happy%20String/README_EN.md
+rating: 1820
+source: Weekly Contest 183 Q3
+tags:
+    - Greedy
+    - String
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1405. Longest Happy String](https://leetcode.com/problems/longest-happy-string)
 
 [中文文档](/solution/1400-1499/1405.Longest%20Happy%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A string <code>s</code> is called <strong>happy</strong> if it satisfies the following conditions:</p>
 
@@ -19,7 +35,7 @@
 <p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> a = 1, b = 1, c = 7
@@ -27,7 +43,7 @@
 <strong>Explanation:</strong> &quot;ccbccacc&quot; would also be a correct answer.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> a = 7, b = 1, c = 0
@@ -43,11 +59,19 @@
 	<li><code>a + b + c &gt; 0</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy + Priority Queue
+
+The greedy strategy is to prioritize the selection of characters with the most remaining occurrences. By using a priority queue or sorting, we ensure that the character selected each time is the one with the most remaining occurrences (to avoid having three consecutive identical characters, in some cases, we need to select the character with the second most remaining occurrences).
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -78,24 +102,23 @@ class Solution:
                     cur[0] += 1
                     heappush(h, cur)
 
-
         return ''.join(ans)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String longestDiverseString(int a, int b, int c) {
         Queue<int[]> pq = new PriorityQueue<>((x, y) -> y[1] - x[1]);
         if (a > 0) {
-            pq.offer(new int[]{'a', a});
+            pq.offer(new int[] {'a', a});
         }
         if (b > 0) {
-            pq.offer(new int[]{'b', b});
+            pq.offer(new int[] {'b', b});
         }
         if (c > 0) {
-            pq.offer(new int[]{'c', c});
+            pq.offer(new int[] {'c', c});
         }
 
         StringBuilder sb = new StringBuilder();
@@ -127,96 +150,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function longestDiverseString(a: number, b: number, c: number): string {
-    let ans = [];
-    let store: Array<[string, number]> = [
-        ['a', a],
-        ['b', b],
-        ['c', c],
-    ];
-    while (true) {
-        store.sort((a, b) => b[1] - a[1]);
-        let hasNext = false;
-        for (let [i, [ch, ctn]] of store.entries()) {
-            if (ctn < 1) {
-                break;
-            }
-            const n = ans.length;
-            if (n >= 2 && ans[n - 1] == ch && ans[n - 2] == ch) {
-                continue;
-            }
-            hasNext = true;
-            ans.push(ch);
-            store[i][1] -= 1;
-            break;
-        }
-        if (!hasNext) {
-            break;
-        }
-    }
-    return ans.join('');
-}
-```
-
-### **Go**
-
-```go
-type pair struct {
-	c   byte
-	num int
-}
-
-type hp []pair
-
-func (a hp) Len() int            { return len(a) }
-func (a hp) Swap(i, j int)       { a[i], a[j] = a[j], a[i] }
-func (a hp) Less(i, j int) bool  { return a[i].num > a[j].num }
-func (a *hp) Push(x interface{}) { *a = append(*a, x.(pair)) }
-func (a *hp) Pop() interface{}   { l := len(*a); t := (*a)[l-1]; *a = (*a)[:l-1]; return t }
-
-func longestDiverseString(a int, b int, c int) string {
-	var h hp
-	if a > 0 {
-		heap.Push(&h, pair{'a', a})
-	}
-	if b > 0 {
-		heap.Push(&h, pair{'b', b})
-	}
-	if c > 0 {
-		heap.Push(&h, pair{'c', c})
-	}
-
-	var ans []byte
-	for len(h) > 0 {
-		cur := heap.Pop(&h).(pair)
-		if len(ans) >= 2 && ans[len(ans)-1] == cur.c && ans[len(ans)-2] == cur.c {
-			if len(h) == 0 {
-				break
-			}
-			next := heap.Pop(&h).(pair)
-			ans = append(ans, next.c)
-			if next.num > 1 {
-				next.num--
-				heap.Push(&h, next)
-			}
-			heap.Push(&h, cur)
-		} else {
-			ans = append(ans, cur.c)
-			if cur.num > 1 {
-				cur.num--
-				heap.Push(&h, cur)
-			}
-		}
-	}
-
-	return string(ans)
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -257,10 +191,97 @@ public:
 };
 ```
 
-### **...**
+#### Go
 
+```go
+type pair struct {
+	c   byte
+	num int
+}
+
+type hp []pair
+
+func (a hp) Len() int           { return len(a) }
+func (a hp) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a hp) Less(i, j int) bool { return a[i].num > a[j].num }
+func (a *hp) Push(x any)        { *a = append(*a, x.(pair)) }
+func (a *hp) Pop() any          { l := len(*a); t := (*a)[l-1]; *a = (*a)[:l-1]; return t }
+
+func longestDiverseString(a int, b int, c int) string {
+	var h hp
+	if a > 0 {
+		heap.Push(&h, pair{'a', a})
+	}
+	if b > 0 {
+		heap.Push(&h, pair{'b', b})
+	}
+	if c > 0 {
+		heap.Push(&h, pair{'c', c})
+	}
+
+	var ans []byte
+	for len(h) > 0 {
+		cur := heap.Pop(&h).(pair)
+		if len(ans) >= 2 && ans[len(ans)-1] == cur.c && ans[len(ans)-2] == cur.c {
+			if len(h) == 0 {
+				break
+			}
+			next := heap.Pop(&h).(pair)
+			ans = append(ans, next.c)
+			if next.num > 1 {
+				next.num--
+				heap.Push(&h, next)
+			}
+			heap.Push(&h, cur)
+		} else {
+			ans = append(ans, cur.c)
+			if cur.num > 1 {
+				cur.num--
+				heap.Push(&h, cur)
+			}
+		}
+	}
+
+	return string(ans)
+}
 ```
 
+#### TypeScript
+
+```ts
+function longestDiverseString(a: number, b: number, c: number): string {
+    let ans = [];
+    let store: Array<[string, number]> = [
+        ['a', a],
+        ['b', b],
+        ['c', c],
+    ];
+    while (true) {
+        store.sort((a, b) => b[1] - a[1]);
+        let hasNext = false;
+        for (let [i, [ch, ctn]] of store.entries()) {
+            if (ctn < 1) {
+                break;
+            }
+            const n = ans.length;
+            if (n >= 2 && ans[n - 1] == ch && ans[n - 2] == ch) {
+                continue;
+            }
+            hasNext = true;
+            ans.push(ch);
+            store[i][1] -= 1;
+            break;
+        }
+        if (!hasNext) {
+            break;
+        }
+    }
+    return ans.join('');
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

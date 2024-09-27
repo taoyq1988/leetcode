@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0412.Fizz%20Buzz/README.md
+tags:
+    - 数学
+    - 字符串
+    - 模拟
+---
+
+<!-- problem:start -->
+
 # [412. Fizz Buzz](https://leetcode.cn/problems/fizz-buzz)
 
 [English Version](/solution/0400-0499/0412.Fizz%20Buzz/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数 <code>n</code> ，找出从 <code>1</code> 到 <code>n</code> 各个整数的 Fizz Buzz 表示，并用字符串数组 <code>answer</code>（<strong>下标从 1 开始</strong>）返回结果，其中：</p>
 
@@ -45,15 +57,21 @@
 	<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：模拟
+
+我们遍历从 1 到 n 的每个整数，对于每个整数，我们检查它是否是 3 和 5 的倍数，或者只是 3 的倍数，或者只是 5 的倍数。根据检查的结果，我们将相应的字符串添加到答案数组中。
+
+时间复杂度 $O(n)$，其中 $n$ 是题目给定的整数。忽略答案数组的空间消耗，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -71,9 +89,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -97,19 +113,24 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<string> fizzBuzz(int n) {
         vector<string> ans;
-        for (int i = 1; i <= n; ++i)
-        {
+        for (int i = 1; i <= n; ++i) {
             string s = "";
-            if (i % 3 == 0) s += "Fizz";
-            if (i % 5 == 0) s += "Buzz";
-            if (s.size() == 0) s = to_string(i);
+            if (i % 3 == 0) {
+                s += "Fizz";
+            }
+            if (i % 5 == 0) {
+                s += "Buzz";
+            }
+            if (s.empty()) {
+                s = to_string(i);
+            }
             ans.push_back(s);
         }
         return ans;
@@ -117,11 +138,10 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func fizzBuzz(n int) []string {
-	var ans []string
+func fizzBuzz(n int) (ans []string) {
 	for i := 1; i <= n; i++ {
 		s := &strings.Builder{}
 		if i%3 == 0 {
@@ -135,14 +155,64 @@ func fizzBuzz(n int) []string {
 		}
 		ans = append(ans, s.String())
 	}
-	return ans
+	return
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var fizzBuzz = function (n) {
+    const ans = [];
+    for (let i = 1; i <= n; ++i) {
+        if (i % 15 === 0) {
+            ans.push('FizzBuzz');
+        } else if (i % 3 === 0) {
+            ans.push('Fizz');
+        } else if (i % 5 === 0) {
+            ans.push('Buzz');
+        } else {
+            ans.push(`${i}`);
+        }
+    }
+    return ans;
+};
 ```
 
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param Integer $n
+     * @return String[]
+     */
+    function fizzBuzz($n) {
+        $ans = [];
+        for ($i = 1; $i <= $n; ++$i) {
+            $s = '';
+            if ($i % 3 == 0) {
+                $s .= 'Fizz';
+            }
+            if ($i % 5 == 0) {
+                $s .= 'Buzz';
+            }
+            if (strlen($s) == 0) {
+                $s .= $i;
+            }
+            $ans[] = $s;
+        }
+        return $ans;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -11,24 +11,21 @@
  * @return {number[][]}
  */
 var levelOrder = function (root) {
-    let ans = [];
+    const ans = [];
     if (!root) {
         return ans;
     }
-    let q = [root];
+    const q = [root];
     while (q.length) {
-        let t = [];
-        for (let n = q.length; n; --n) {
-            const node = q.shift();
-            t.push(node.val);
-            if (node.left) {
-                q.push(node.left);
-            }
-            if (node.right) {
-                q.push(node.right);
-            }
+        const t = [];
+        const qq = [];
+        for (const { val, left, right } of q) {
+            t.push(val);
+            left && qq.push(left);
+            right && qq.push(right);
         }
         ans.push(t);
+        q.splice(0, q.length, ...qq);
     }
     return ans;
 };

@@ -1,8 +1,24 @@
-# [711. Number of Distinct Islands II](https://leetcode.com/problems/number-of-distinct-islands-ii)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Union Find
+    - Hash Table
+    - Hash Function
+---
+
+<!-- problem:start -->
+
+# [711. Number of Distinct Islands II 🔒](https://leetcode.com/problems/number-of-distinct-islands-ii)
 
 [中文文档](/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> binary matrix <code>grid</code>. An island is a group of <code>1</code>&#39;s (representing land) connected <strong>4-directionally</strong> (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.</p>
 
@@ -11,7 +27,7 @@
 <p>Return <em>the number of <b>distinct</b> islands</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/images/distinctisland2-1-grid.jpg" style="width: 413px; height: 334px;" />
 <pre>
 <strong>Input:</strong> grid = [[1,1,0,0,0],[1,0,0,0,0],[0,0,0,0,1],[0,0,0,1,1]]
@@ -19,7 +35,7 @@
 <strong>Explanation:</strong> The two islands are considered the same because if we make a 180 degrees clockwise rotation on the first island, then two islands will have the same shapes.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0711.Number%20of%20Distinct%20Islands%20II/images/distinctisland1-1-grid.jpg" style="width: 413px; height: 334px;" />
 <pre>
 <strong>Input:</strong> grid = [[1,1,0,0,0],[1,1,0,0,0],[0,0,0,1,1],[0,0,0,1,1]]
@@ -36,11 +52,17 @@
 	<li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -83,7 +105,7 @@ class Solution:
         return len(s)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -116,14 +138,14 @@ class Solution {
         for (int e : shape) {
             int i = e / n;
             int j = e % n;
-            shapes[0].add(new int[]{i, j});
-            shapes[1].add(new int[]{i, -j});
-            shapes[2].add(new int[]{-i, j});
-            shapes[3].add(new int[]{-i, -j});
-            shapes[4].add(new int[]{j, i});
-            shapes[5].add(new int[]{j, -i});
-            shapes[6].add(new int[]{-j, i});
-            shapes[7].add(new int[]{-j, -i});
+            shapes[0].add(new int[] {i, j});
+            shapes[1].add(new int[] {i, -j});
+            shapes[2].add(new int[] {-i, j});
+            shapes[3].add(new int[] {-i, -j});
+            shapes[4].add(new int[] {j, i});
+            shapes[5].add(new int[] {j, -i});
+            shapes[6].add(new int[] {-j, i});
+            shapes[7].add(new int[] {-j, -i});
         }
         for (List<int[]> e : shapes) {
             e.sort((a, b) -> {
@@ -141,7 +163,7 @@ class Solution {
             for (int k = e.size() - 1; k >= 0; --k) {
                 int i = e.get(k)[0];
                 int j = e.get(k)[1];
-                e.set(k, new int[]{i - a, j - b});
+                e.set(k, new int[] {i - a, j - b});
             }
         }
         Arrays.sort(shapes, (a, b) -> {
@@ -181,21 +203,18 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
-typedef pair<int,int> PII;
+typedef pair<int, int> PII;
 
 class Solution {
 public:
     int numDistinctIslands2(vector<vector<int>>& grid) {
         set<vector<PII>> s;
-        for (int i = 0; i < grid.size(); ++i)
-        {
-            for (int j = 0; j < grid[0].size(); ++j)
-            {
-                if (grid[i][j])
-                {
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j]) {
                     vector<PII> shape;
                     dfs(i, j, grid, shape);
                     s.insert(normalize(shape));
@@ -207,8 +226,7 @@ public:
 
     vector<PII> normalize(vector<PII>& shape) {
         vector<vector<PII>> shapes(8);
-        for (auto& e : shape)
-        {
+        for (auto& e : shape) {
             int i = e.first, j = e.second;
             shapes[0].push_back({i, j});
             shapes[1].push_back({i, -j});
@@ -219,11 +237,9 @@ public:
             shapes[6].push_back({-j, -i});
             shapes[7].push_back({-j, i});
         }
-        for (auto& e : shapes)
-        {
+        for (auto& e : shapes) {
             sort(e.begin(), e.end());
-            for (int k = e.size() - 1; k >= 0; --k)
-            {
+            for (int k = e.size() - 1; k >= 0; --k) {
                 e[k].first -= e[0].first;
                 e[k].second -= e[0].second;
             }
@@ -236,8 +252,7 @@ public:
         shape.push_back({i, j});
         grid[i][j] = 0;
         vector<int> dirs = {-1, 0, 1, 0, -1};
-        for (int k = 0; k < 4; ++k)
-        {
+        for (int k = 0; k < 4; ++k) {
             int x = i + dirs[k], y = j + dirs[k + 1];
             if (x >= 0 && x < grid.size() && y >= 0 && y < grid[0].size() && grid[x][y] == 1)
                 dfs(x, y, grid, shape);
@@ -246,10 +261,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

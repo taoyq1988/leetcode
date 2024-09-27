@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0715.Range%20Module/README_EN.md
+tags:
+    - Design
+    - Segment Tree
+    - Ordered Set
+---
+
+<!-- problem:start -->
+
 # [715. Range Module](https://leetcode.com/problems/range-module)
 
 [中文文档](/solution/0700-0799/0715.Range%20Module/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A Range Module is a module that tracks ranges of numbers. Design a data structure to track the ranges represented as <strong>half-open intervals</strong> and query about them.</p>
 
@@ -18,7 +32,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -44,16 +58,35 @@ rangeModule.queryRange(16, 17); // return True, (The number 16 in [16, 17) is st
 	<li>At most <code>10<sup>4</sup></code> calls will be made to <code>addRange</code>, <code>queryRange</code>, and <code>removeRange</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Segment Tree.
+<!-- solution:start -->
+
+### Solution 1: Segment Tree
+
+According to the problem description, we need to maintain a set of intervals, supporting operations of interval addition, deletion, and query. For the addition and deletion of intervals, we can use a segment tree to maintain the set of intervals.
+
+The segment tree divides the entire interval into multiple non-continuous sub-intervals, the number of which does not exceed $\log(width)$. To update the value of an element, only $\log(width)$ intervals need to be updated, and these intervals are all included in a large interval containing the element. When modifying the interval, we need to use **lazy propagation** to ensure efficiency.
+
+-   Each node of the segment tree represents an interval;
+-   The segment tree has a unique root node, representing the entire statistical range, such as $[1,N]$;
+-   Each leaf node of the segment tree represents an elementary interval of length $1$, $[x,x]$;
+-   For each internal node $[l,r]$, its left child is $[l,mid]$, and the right child is $[mid+1,r]$, where $mid=⌊(l+r)/2⌋$ (rounded down).
+
+Due to the large data range of the problem, we can implement it with a dynamically allocated segment tree. A dynamically allocated segment tree means that we only allocate nodes when needed, instead of allocating all nodes at the beginning. This can save space, but it requires **lazy propagation** to maintain interval modification.
+
+In terms of time complexity, the time complexity of each operation is $O(\log n)$. The space complexity is $O(m \times \log n)$. Here, $m$ is the number of operations, and $n$ is the data range.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Node:
+    __slots__ = ['left', 'right', 'add', 'v']
+
     def __init__(self):
         self.left = None
         self.right = None
@@ -62,6 +95,8 @@ class Node:
 
 
 class SegmentTree:
+    __slots__ = ['root']
+
     def __init__(self):
         self.root = Node()
 
@@ -99,8 +134,7 @@ class SegmentTree:
         return v
 
     def pushup(self, node):
-        node.v = bool(
-            node.left and node.left.v and node.right and node.right.v)
+        node.v = bool(node.left and node.left.v and node.right and node.right.v)
 
     def pushdown(self, node):
         if node.left is None:
@@ -115,7 +149,6 @@ class SegmentTree:
 
 
 class RangeModule:
-
     def __init__(self):
         self.tree = SegmentTree()
 
@@ -136,7 +169,7 @@ class RangeModule:
 # obj.removeRange(left,right)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Node {
@@ -150,7 +183,6 @@ class SegmentTree {
     private Node root = new Node();
 
     public SegmentTree() {
-
     }
 
     public void modify(int left, int right, int v) {
@@ -219,7 +251,6 @@ class RangeModule {
     private SegmentTree tree = new SegmentTree();
 
     public RangeModule() {
-
     }
 
     public void addRange(int left, int right) {
@@ -244,44 +275,40 @@ class RangeModule {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 template <class T>
 class CachedObj {
 public:
-    void *operator new(size_t s)
-    {
-        if (!head)
-        {
-            T *a = new T[SIZE];
+    void* operator new(size_t s) {
+        if (!head) {
+            T* a = new T[SIZE];
             for (size_t i = 0; i < SIZE; ++i)
                 add(a + i);
         }
-        T *p = head;
+        T* p = head;
         head = head->CachedObj<T>::next;
         return p;
     }
-    void operator delete(void *p, size_t)
-    {
-        if (p) add(static_cast<T *>(p));
+    void operator delete(void* p, size_t) {
+        if (p) add(static_cast<T*>(p));
     }
     virtual ~CachedObj() {}
 
 protected:
-    T *next;
+    T* next;
 
 private:
-    static T *head;
+    static T* head;
     static const size_t SIZE;
-    static void add(T *p)
-    {
+    static void add(T* p) {
         p->CachedObj<T>::next = head;
         head = p;
     }
 };
 template <class T>
-T *CachedObj<T>::head = 0;
+T* CachedObj<T>::head = 0;
 template <class T>
 const size_t CachedObj<T>::SIZE = 10000;
 class Node : public CachedObj<Node> {
@@ -306,8 +333,7 @@ public:
     }
 
     void modify(int left, int right, int v, int l, int r, Node* node) {
-        if (l >= left && r <= right)
-        {
+        if (l >= left && r <= right) {
             node->v = v == 1;
             node->add = v;
             return;
@@ -340,8 +366,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node();
         if (!node->right) node->right = new Node();
-        if (node->add)
-        {
+        if (node->add) {
             node->left->add = node->right->add = node->add;
             node->left->v = node->right->v = node->add == 1;
             node->add = 0;
@@ -379,7 +404,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 const N int = 1e9
@@ -485,10 +510,148 @@ func (this *RangeModule) RemoveRange(left int, right int) {
  */
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+class Node {
+    left: Node | null;
+    right: Node | null;
+    add: number;
+    v: boolean;
 
+    constructor() {
+        this.left = null;
+        this.right = null;
+        this.add = 0;
+        this.v = false;
+    }
+}
+
+class SegmentTree {
+    private root: Node;
+
+    constructor() {
+        this.root = new Node();
+    }
+
+    modify(
+        left: number,
+        right: number,
+        v: number,
+        l: number = 1,
+        r: number = 1e9,
+        node: Node | null = null,
+    ): void {
+        if (node === null) {
+            node = this.root;
+        }
+
+        if (l >= left && r <= right) {
+            node.v = v === 1;
+            node.add = v;
+            return;
+        }
+
+        this.pushdown(node);
+
+        const mid = (l + r) >> 1;
+
+        if (left <= mid) {
+            this.modify(left, right, v, l, mid, node.left);
+        }
+
+        if (right > mid) {
+            this.modify(left, right, v, mid + 1, r, node.right);
+        }
+
+        this.pushup(node);
+    }
+
+    query(
+        left: number,
+        right: number,
+        l: number = 1,
+        r: number = 1e9,
+        node: Node | null = null,
+    ): boolean {
+        if (node === null) {
+            node = this.root;
+        }
+
+        if (l >= left && r <= right) {
+            return node.v;
+        }
+
+        this.pushdown(node);
+
+        const mid = (l + r) >> 1;
+        let result = true;
+
+        if (left <= mid) {
+            result = result && this.query(left, right, l, mid, node.left);
+        }
+
+        if (right > mid) {
+            result = result && this.query(left, right, mid + 1, r, node.right);
+        }
+
+        return result;
+    }
+
+    pushup(node: Node): void {
+        node.v = !!(node.left && node.left.v && node.right && node.right.v);
+    }
+
+    pushdown(node: Node): void {
+        if (node.left === null) {
+            node.left = new Node();
+        }
+
+        if (node.right === null) {
+            node.right = new Node();
+        }
+
+        if (node.add !== 0) {
+            node.left.add = node.add;
+            node.right.add = node.add;
+            node.left.v = node.add === 1;
+            node.right.v = node.add === 1;
+            node.add = 0;
+        }
+    }
+}
+
+class RangeModule {
+    private tree: SegmentTree;
+
+    constructor() {
+        this.tree = new SegmentTree();
+    }
+
+    addRange(left: number, right: number): void {
+        this.tree.modify(left, right - 1, 1);
+    }
+
+    queryRange(left: number, right: number): boolean {
+        return this.tree.query(left, right - 1);
+    }
+
+    removeRange(left: number, right: number): void {
+        this.tree.modify(left, right - 1, -1);
+    }
+}
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * var obj = new RangeModule()
+ * obj.addRange(left,right)
+ * var param_2 = obj.queryRange(left,right)
+ * obj.removeRange(left,right)
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

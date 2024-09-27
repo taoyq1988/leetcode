@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1800-1899/1898.Maximum%20Number%20of%20Removable%20Characters/README_EN.md
+rating: 1912
+source: Weekly Contest 245 Q2
+tags:
+    - Array
+    - Two Pointers
+    - String
+    - Binary Search
+---
+
+<!-- problem:start -->
+
 # [1898. Maximum Number of Removable Characters](https://leetcode.com/problems/maximum-number-of-removable-characters)
 
 [中文文档](/solution/1800-1899/1898.Maximum%20Number%20of%20Removable%20Characters/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two strings <code>s</code> and <code>p</code> where <code>p</code> is a <strong>subsequence </strong>of <code>s</code>. You are also given a <strong>distinct 0-indexed </strong>integer array <code>removable</code> containing a subset of indices of <code>s</code> (<code>s</code> is also <strong>0-indexed</strong>).</p>
 
@@ -13,7 +30,7 @@
 <p>A <strong>subsequence</strong> of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abcacb&quot;, p = &quot;ab&quot;, removable = [3,1,0]
@@ -24,7 +41,7 @@ If we remove the characters at indices 3, 1, and 0, &quot;<s><strong>ab</strong>
 Hence, the maximum k is 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abcbddddd&quot;, p = &quot;abcd&quot;, removable = [3,2,1,4,5,6]
@@ -33,7 +50,7 @@ Hence, the maximum k is 2.
 &quot;abcd&quot; is a subsequence of &quot;<u><strong>abcd</strong></u>dddd&quot;.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abcab&quot;, p = &quot;abc&quot;, removable = [0,1,2,3,4]
@@ -53,49 +70,17 @@ Hence, the maximum k is 2.
 	<li>The elements in <code>removable</code> are <strong>distinct</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Binary search.
+<!-- solution:start -->
 
-Template 1:
-
-```java
-boolean check(int x) {}
-
-int search(int left, int right) {
-    while (left < right) {
-        int mid = (left + right) >> 1;
-        if (check(mid)) {
-            right = mid;
-        } else {
-            left = mid + 1;
-        }
-    }
-    return left;
-}
-```
-
-Template 2:
-
-```java
-boolean check(int x) {}
-
-int search(int left, int right) {
-    while (left < right) {
-        int mid = (left + right + 1) >> 1;
-        if (check(mid)) {
-            left = mid;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return left;
-}
-```
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -120,7 +105,7 @@ class Solution:
         return left
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -154,39 +139,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function maximumRemovals(s: string, p: string, removable: number[]): number {
-    let left = 0,
-        right = removable.length;
-    while (left < right) {
-        let mid = (left + right + 1) >> 1;
-        if (isSub(s, p, new Set(removable.slice(0, mid)))) {
-            left = mid;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return left;
-}
-
-function isSub(str: string, sub: string, idxes: Set<number>): boolean {
-    let m = str.length,
-        n = sub.length;
-    let i = 0,
-        j = 0;
-    while (i < m && j < n) {
-        if (!idxes.has(i) && str.charAt(i) == sub.charAt(j)) {
-            ++j;
-        }
-        ++i;
-    }
-    return j == n;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -221,7 +174,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumRemovals(s string, p string, removable []int) int {
@@ -253,7 +206,39 @@ func maximumRemovals(s string, p string, removable []int) int {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function maximumRemovals(s: string, p: string, removable: number[]): number {
+    let left = 0,
+        right = removable.length;
+    while (left < right) {
+        let mid = (left + right + 1) >> 1;
+        if (isSub(s, p, new Set(removable.slice(0, mid)))) {
+            left = mid;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return left;
+}
+
+function isSub(str: string, sub: string, idxes: Set<number>): boolean {
+    let m = str.length,
+        n = sub.length;
+    let i = 0,
+        j = 0;
+    while (i < m && j < n) {
+        if (!idxes.has(i) && str.charAt(i) == sub.charAt(j)) {
+            ++j;
+        }
+        ++i;
+    }
+    return j == n;
+}
+```
+
+#### Rust
 
 ```rust
 use std::collections::HashSet;
@@ -297,10 +282,95 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * @param {string} s
+ * @param {string} p
+ * @param {number[]} removable
+ * @return {number}
+ */
+function maximumRemovals(s, p, removable) {
+    const str_len = s.length;
+    const sub_len = p.length;
+
+    /**
+     * @param {number} k
+     * @return {boolean}
+     */
+    function isSub(k) {
+        const removed = new Set(removable.slice(0, k));
+
+        let sub_i = 0;
+        for (let str_i = 0; str_i < str_len; ++str_i) {
+            if (s.charAt(str_i) === p.charAt(sub_i) && !removed.has(str_i)) {
+                ++sub_i;
+                if (sub_i >= sub_len) {
+                    break;
+                }
+            }
+        }
+        return sub_i === sub_len;
+    }
+
+    let left = 0;
+    let right = removable.length;
+
+    while (left < right) {
+        const middle = (left + right) >> 1;
+        if (isSub(middle + 1)) {
+            left = middle + 1;
+        } else {
+            right = middle;
+        }
+    }
+    return left;
+}
 ```
 
+#### Kotlin
+
+```kotlin
+class Solution {
+  fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+      val strLen = s.length
+      val subLen = p.length
+
+      fun isSub(k: Int): Boolean {
+          val removed = removable.sliceArray(0 ..< k).toHashSet()
+
+          var subIndex = 0
+          for (strIndex in 0 ..< strLen) {
+              if (s[strIndex] == p[subIndex] && !removed.contains(strIndex)) {
+                  ++subIndex
+                  if (subIndex >= subLen) {
+                      break
+                  }
+              }
+          }
+
+          return subIndex == subLen
+      }
+
+      var left = 0
+      var right = removable.size
+
+      while (left < right) {
+          val middle = (left + right) / 2
+          if (isSub(middle + 1)) {
+              left = middle + 1
+          } else {
+              right = middle
+          }
+      }
+      return left
+  }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -4,17 +4,15 @@ public:
         queue<string> q{{s1}};
         unordered_set<string> vis{{s1}};
         int ans = 0;
-        while (!q.empty())
-        {
-            for (int i = q.size(); i; --i)
-            {
-                s1 = q.front();
+        while (1) {
+            for (int i = q.size(); i; --i) {
+                auto s = q.front();
                 q.pop();
-                if (s1 == s2) return ans;
-                for (string nxt : next(s1, s2))
-                {
-                    if (!vis.count(nxt))
-                    {
+                if (s == s2) {
+                    return ans;
+                }
+                for (auto& nxt : next(s, s2)) {
+                    if (!vis.count(nxt)) {
                         vis.insert(nxt);
                         q.push(nxt);
                     }
@@ -22,17 +20,14 @@ public:
             }
             ++ans;
         }
-        return -1;
     }
 
     vector<string> next(string& s, string& s2) {
         int i = 0, n = s.size();
-        for (; i < n && s[i] == s2[i]; ++i);
+        for (; s[i] == s2[i]; ++i) {}
         vector<string> res;
-        for (int j = i + 1; j < n; ++j)
-        {
-            if (s[j] == s2[i] && s[j] != s2[j])
-            {
+        for (int j = i + 1; j < n; ++j) {
+            if (s[j] == s2[i] && s[j] != s2[j]) {
                 swap(s[i], s[j]);
                 res.push_back(s);
                 swap(s[i], s[j]);

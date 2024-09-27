@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1723.Find%20Minimum%20Time%20to%20Finish%20All%20Jobs/README_EN.md
+rating: 2284
+source: Weekly Contest 223 Q4
+tags:
+    - Bit Manipulation
+    - Array
+    - Dynamic Programming
+    - Backtracking
+    - Bitmask
+---
+
+<!-- problem:start -->
+
 # [1723. Find Minimum Time to Finish All Jobs](https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs)
 
 [中文文档](/solution/1700-1799/1723.Find%20Minimum%20Time%20to%20Finish%20All%20Jobs/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>jobs</code>, where <code>jobs[i]</code> is the amount of time it takes to complete the <code>i<sup>th</sup></code> job.</p>
 
@@ -11,7 +29,7 @@
 <p><em>Return the <strong>minimum</strong> possible <strong>maximum working time</strong> of any assignment. </em></p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> jobs = [3,2,3], k = 3
@@ -19,7 +37,7 @@
 <strong>Explanation:</strong> By assigning each person one job, the maximum time is 3.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> jobs = [1,2,4,7,8], k = 2
@@ -37,11 +55,17 @@ The maximum working time is 11.</pre>
 	<li><code>1 &lt;= jobs[i] &lt;= 10<sup>7</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -67,7 +91,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -115,7 +139,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -135,8 +159,7 @@ public:
             ans = min(ans, *max_element(cnt.begin(), cnt.end()));
             return;
         }
-        for (int j = 0; j < k; ++j)
-        {
+        for (int j = 0; j < k; ++j) {
             if (cnt[j] + jobs[i] >= ans) continue;
             cnt[j] += jobs[i];
             dfs(i + 1, k, jobs, cnt);
@@ -147,7 +170,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumTimeRequired(jobs []int, k int) int {
@@ -159,10 +182,7 @@ func minimumTimeRequired(jobs []int, k int) int {
 	var dfs func(int)
 	dfs = func(i int) {
 		if i == len(jobs) {
-			mx := 0
-			for _, v := range cnt {
-				mx = max(mx, v)
-			}
+			mx := slices.Max(cnt)
 			ans = min(ans, mx)
 			return
 		}
@@ -181,26 +201,10 @@ func minimumTimeRequired(jobs []int, k int) int {
 	dfs(0)
 	return ans
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

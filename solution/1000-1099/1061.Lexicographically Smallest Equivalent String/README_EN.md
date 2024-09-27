@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1000-1099/1061.Lexicographically%20Smallest%20Equivalent%20String/README_EN.md
+tags:
+    - Union Find
+    - String
+---
+
+<!-- problem:start -->
+
 # [1061. Lexicographically Smallest Equivalent String](https://leetcode.com/problems/lexicographically-smallest-equivalent-string)
 
 [中文文档](/solution/1000-1099/1061.Lexicographically%20Smallest%20Equivalent%20String/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two strings of the same length <code>s1</code> and <code>s2</code> and a string <code>baseStr</code>.</p>
 
@@ -25,7 +38,7 @@
 <p>Return <em>the lexicographically smallest equivalent string of </em><code>baseStr</code><em> by using the equivalency information from </em><code>s1</code><em> and </em><code>s2</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;parker&quot;, s2 = &quot;morris&quot;, baseStr = &quot;parser&quot;
@@ -35,7 +48,7 @@ The characters in each group are equivalent and sorted in lexicographical order.
 So the answer is &quot;makkek&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;hello&quot;, s2 = &quot;world&quot;, baseStr = &quot;hold&quot;
@@ -44,7 +57,7 @@ So the answer is &quot;makkek&quot;.
 So only the second letter &#39;o&#39; in baseStr is changed to &#39;d&#39;, the answer is &quot;hdld&quot;.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;leetcode&quot;, s2 = &quot;programs&quot;, baseStr = &quot;sourcecode&quot;
@@ -61,11 +74,17 @@ So only the second letter &#39;o&#39; in baseStr is changed to &#39;d&#39;, the 
 	<li><code>s1</code>, <code>s2</code>, and <code>baseStr</code> consist of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -92,7 +111,7 @@ class Solution:
         return ''.join(res)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -129,7 +148,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -140,8 +159,7 @@ public:
         p.resize(26);
         for (int i = 0; i < 26; ++i)
             p[i] = i;
-        for (int i = 0; i < s1.size(); ++i)
-        {
+        for (int i = 0; i < s1.size(); ++i) {
             int a = s1[i] - 'a', b = s2[i] - 'a';
             int pa = find(a), pb = find(b);
             if (pa < pb)
@@ -150,9 +168,8 @@ public:
                 p[pa] = pb;
         }
         string res = "";
-        for (char a : baseStr)
-        {
-            char b = (char)(find(a - 'a') + 'a');
+        for (char a : baseStr) {
+            char b = (char) (find(a - 'a') + 'a');
             res += b;
         }
         return res;
@@ -166,7 +183,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 var p []int
@@ -201,10 +218,8 @@ func find(x int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

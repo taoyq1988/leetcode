@@ -1,8 +1,22 @@
-# [1242. Web Crawler Multithreaded](https://leetcode.com/problems/web-crawler-multithreaded)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1242.Web%20Crawler%20Multithreaded/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Concurrency
+---
+
+<!-- problem:start -->
+
+# [1242. Web Crawler Multithreaded 🔒](https://leetcode.com/problems/web-crawler-multithreaded)
 
 [中文文档](/solution/1200-1299/1242.Web%20Crawler%20Multithreaded/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a URL <code>startUrl</code> and an interface <code>HtmlParser</code>, implement <strong>a Multi-threaded web crawler</strong> to crawl all links that are under the <strong>same hostname</strong> as <code>startUrl</code>.</p>
 
@@ -34,7 +48,7 @@ interface HtmlParser {
 <p>Below are two examples explaining the functionality of the problem. For custom testing purposes, you&#39;ll have three variables <code>urls</code>, <code>edges</code> and <code>startUrl</code>. Notice that you will only have access to <code>startUrl</code> in your code, while <code>urls</code> and <code>edges</code> are not directly accessible to you in code.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <p><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1200-1299/1242.Web%20Crawler%20Multithreaded/images/sample_2_1497.png" style="width: 610px; height: 300px;" /></p>
 
@@ -57,7 +71,7 @@ startUrl = &quot;http://news.yahoo.com/news/topics/&quot;
 ]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <p><strong><img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1200-1299/1242.Web%20Crawler%20Multithreaded/images/sample_3_1497.png" style="width: 540px; height: 270px;" /></strong></p>
 
@@ -96,26 +110,42 @@ startUrl = &quot;http://news.google.com&quot;
 	<li>How do you know when the crawler is done?</li>
 </ol>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0861.Score%20After%20Flipping%20Matrix/README_EN.md
+tags:
+    - Greedy
+    - Bit Manipulation
+    - Array
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [861. Score After Flipping Matrix](https://leetcode.com/problems/score-after-flipping-matrix)
 
 [中文文档](/solution/0800-0899/0861.Score%20After%20Flipping%20Matrix/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> binary matrix <code>grid</code>.</p>
 
@@ -13,7 +28,7 @@
 <p>Return <em>the highest possible <strong>score</strong> after making any number of <strong>moves</strong> (including zero moves)</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0800-0899/0861.Score%20After%20Flipping%20Matrix/images/lc-toogle1.jpg" style="width: 500px; height: 299px;" />
 <pre>
 <strong>Input:</strong> grid = [[0,0,1,1],[1,0,1,0],[1,1,0,0]]
@@ -21,7 +36,7 @@
 <strong>Explanation:</strong> 0b1111 + 0b1001 + 0b1111 = 15 + 9 + 15 = 39
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> grid = [[0]]
@@ -38,11 +53,17 @@
 	<li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -52,17 +73,14 @@ class Solution:
             if grid[i][0] == 0:
                 for j in range(n):
                     grid[i][j] ^= 1
-
-        res = 0
+        ans = 0
         for j in range(n):
-            cnt = 0
-            for i in range(m):
-                cnt += grid[i][j]
-            res += max(cnt, m - cnt) * (1 << (n - j - 1))
-        return res
+            cnt = sum(grid[i][j] for i in range(m))
+            ans += max(cnt, m - cnt) * (1 << (n - j - 1))
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -75,46 +93,47 @@ class Solution {
                 }
             }
         }
-        int res = 0;
+        int ans = 0;
         for (int j = 0; j < n; ++j) {
             int cnt = 0;
             for (int i = 0; i < m; ++i) {
                 cnt += grid[i][j];
             }
-            res += Math.max(cnt, m - cnt) * (1 << (n - j - 1));
+            ans += Math.max(cnt, m - cnt) * (1 << (n - j - 1));
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int matrixScore(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
-        for (int i = 0; i < m; ++i)
-        {
-            if (grid[i][0] == 0)
-            {
-                for (int j = 0; j < n; ++j) grid[i][j] ^= 1;
+        for (int i = 0; i < m; ++i) {
+            if (grid[i][0] == 0) {
+                for (int j = 0; j < n; ++j) {
+                    grid[i][j] ^= 1;
+                }
             }
         }
-        int res = 0;
-        for (int j = 0; j < n; ++j)
-        {
+        int ans = 0;
+        for (int j = 0; j < n; ++j) {
             int cnt = 0;
-            for (int i = 0; i < m; ++i) cnt += grid[i][j];
-            res += max(cnt, m - cnt) * (1 << (n - j - 1));
+            for (int i = 0; i < m; ++i) {
+                cnt += grid[i][j];
+            }
+            ans += max(cnt, m - cnt) * (1 << (n - j - 1));
         }
-        return res;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func matrixScore(grid [][]int) int {
@@ -126,29 +145,76 @@ func matrixScore(grid [][]int) int {
 			}
 		}
 	}
-	res := 0
+	ans := 0
 	for j := 0; j < n; j++ {
 		cnt := 0
 		for i := 0; i < m; i++ {
 			cnt += grid[i][j]
 		}
-		res += max(cnt, m-cnt) * (1 << (n - j - 1))
+		if cnt < m-cnt {
+			cnt = m - cnt
+		}
+		ans += cnt * (1 << (n - j - 1))
 	}
-	return res
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return ans
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function matrixScore(grid: number[][]): number {
+    const m = grid.length;
+    const n = grid[0].length;
+    for (let i = 0; i < m; ++i) {
+        if (grid[i][0] == 0) {
+            for (let j = 0; j < n; ++j) {
+                grid[i][j] ^= 1;
+            }
+        }
+    }
+    let ans = 0;
+    for (let j = 0; j < n; ++j) {
+        let cnt = 0;
+        for (let i = 0; i < m; ++i) {
+            cnt += grid[i][j];
+        }
+        ans += Math.max(cnt, m - cnt) * (1 << (n - j - 1));
+    }
+    return ans;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int MatrixScore(int[][] grid) {
+        int m = grid.Length, n = grid[0].Length;
+        for (int i = 0; i < m; ++i) {
+            if (grid[i][0] == 0) {
+                for (int j = 0; j < n; ++j) {
+                    grid[i][j] ^= 1;
+                }
+            }
+        }
+        int ans = 0;
+        for (int j = 0; j < n; ++j) {
+            int cnt = 0;
+            for (int i = 0; i < m; ++i) {
+                if (grid[i][j] == 1) {
+                    ++cnt;
+                }
+            }
+            ans += Math.Max(cnt, m - cnt) * (1 << (n - j - 1));
+        }
+        return ans;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,11 +1,10 @@
 class Solution:
     def countEven(self, num: int) -> int:
         ans = 0
-        for i in range(1, num + 1):
-            t = 0
-            while i:
-                t += i % 10
-                i //= 10
-            if t % 2 == 0:
-                ans += 1
+        for x in range(1, num + 1):
+            s = 0
+            while x:
+                s += x % 10
+                x //= 10
+            ans += s % 2 == 0
         return ans

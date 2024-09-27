@@ -1,8 +1,20 @@
-# [660. Remove 9](https://leetcode.com/problems/remove-9)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0660.Remove%209/README_EN.md
+tags:
+    - Math
+---
+
+<!-- problem:start -->
+
+# [660. Remove 9 🔒](https://leetcode.com/problems/remove-9)
 
 [中文文档](/solution/0600-0699/0660.Remove%209/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Start from integer <code>1</code>, remove any integer that contains <code>9</code> such as <code>9</code>, <code>19</code>, <code>29</code>...</p>
 
@@ -11,14 +23,14 @@
 <p>Given an integer <code>n</code>, return <em>the</em> <code>n<sup>th</sup></code> (<strong>1-indexed</strong>) integer in the new sequence.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 9
 <strong>Output:</strong> 10
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 10
@@ -32,26 +44,42 @@
 	<li><code>1 &lt;= n &lt;= 8 * 10<sup>8</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 
 ```
 
-### **Java**
+#### Java
 
 ```java
 
 ```
 
-### **...**
+#### C++
+
+```cpp
 
 ```
+
+#### Go
+
+```go
 
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

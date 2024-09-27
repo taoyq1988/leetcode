@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2157.Groups%20of%20Strings/README_EN.md
+rating: 2499
+source: Weekly Contest 278 Q4
+tags:
+    - Bit Manipulation
+    - Union Find
+    - String
+---
+
+<!-- problem:start -->
+
 # [2157. Groups of Strings](https://leetcode.com/problems/groups-of-strings)
 
 [中文文档](/solution/2100-2199/2157.Groups%20of%20Strings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> array of strings <code>words</code>. Each string consists of <strong>lowercase English letters</strong> only. No letter occurs more than once in any string of <code>words</code>.</p>
 
@@ -31,7 +47,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;a&quot;,&quot;b&quot;,&quot;ab&quot;,&quot;cde&quot;]
@@ -44,7 +60,7 @@
 Thus, words can be divided into 2 groups [&quot;a&quot;,&quot;b&quot;,&quot;ab&quot;] and [&quot;cde&quot;]. The size of the largest group is 3.  
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;a&quot;,&quot;ab&quot;,&quot;abc&quot;]
@@ -67,11 +83,17 @@ Thus, the size of the largest group is 3.
 	<li>No letter occurs more than once in <code>words[i]</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -116,7 +138,7 @@ class Solution:
         return [n, mx]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -154,7 +176,7 @@ class Solution {
                 }
             }
         }
-        return new int[]{n, mx};
+        return new int[] {n, mx};
     }
 
     private int find(int x) {
@@ -180,7 +202,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -192,8 +214,7 @@ public:
         unordered_map<int, int> size;
         mx = 0;
         n = words.size();
-        for (auto& word : words)
-        {
+        for (auto& word : words) {
             int x = 0;
             for (auto& c : word) x |= 1 << (c - 'a');
             p[x] = x;
@@ -201,15 +222,11 @@ public:
             mx = max(mx, size[x]);
             if (size[x] > 1) --n;
         }
-        for (auto& [x, _] : p)
-        {
-            for (int i = 0; i < 26; ++i)
-            {
+        for (auto& [x, _] : p) {
+            for (int i = 0; i < 26; ++i) {
                 unite(x, x ^ (1 << i), p, size);
-                if ((x >> i) & 1)
-                {
-                    for (int j = 0; j < 26; ++j)
-                    {
+                if ((x >> i) & 1) {
+                    for (int j = 0; j < 26; ++j) {
                         if (((x >> j) & 1) == 0) unite(x, x ^ (1 << i) | (1 << j), p, size);
                     }
                 }
@@ -235,7 +252,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func groupStrings(words []string) []int {
@@ -289,25 +306,10 @@ func groupStrings(words []string) []int {
 	}
 	return []int{n, mx}
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-```
-
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

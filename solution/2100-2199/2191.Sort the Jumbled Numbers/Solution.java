@@ -1,33 +1,31 @@
 class Solution {
+    private int[] mapping;
+
     public int[] sortJumbled(int[] mapping, int[] nums) {
-        List<int[]> m = new ArrayList<>();
-        for (int i = 0; i < nums.length; ++i) {
-            int v = nums[i];
-            int a = v, b = 0, t = 1;
-            while (true) {
-                int x = a % 10;
-                x = mapping[x];
-                a /= 10;
-                b = x * t + b;
-                t *= 10;
-                if (a == 0) {
-                    break;
-                }
-            }
-            m.add(new int[]{b, i, v});
+        this.mapping = mapping;
+        int n = nums.length;
+        int[][] arr = new int[n][0];
+        for (int i = 0; i < n; ++i) {
+            arr[i] = new int[] {f(nums[i]), i};
         }
-        m.sort((a, b) -> {
-            if (a[0] != b[0]) {
-                return a[0] - b[0];
-            }
-            if (a[1] != b[1]) {
-                return a[1] - b[1];
-            }
-            return 0;
-        });
-        for (int i = 0; i < m.size(); ++i) {
-            nums[i] = m.get(i)[2];
+        Arrays.sort(arr, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+        int[] ans = new int[n];
+        for (int i = 0; i < n; ++i) {
+            ans[i] = nums[arr[i][1]];
         }
-        return nums;
+        return ans;
+    }
+
+    private int f(int x) {
+        if (x == 0) {
+            return mapping[0];
+        }
+        int y = 0;
+        for (int k = 1; x > 0; x /= 10) {
+            int v = mapping[x % 10];
+            y = k * v + y;
+            k *= 10;
+        }
+        return y;
     }
 }

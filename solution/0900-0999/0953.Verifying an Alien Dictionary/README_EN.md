@@ -1,15 +1,29 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0953.Verifying%20an%20Alien%20Dictionary/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [953. Verifying an Alien Dictionary](https://leetcode.com/problems/verifying-an-alien-dictionary)
 
 [中文文档](/solution/0900-0999/0953.Verifying%20an%20Alien%20Dictionary/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>In an alien language, surprisingly, they also use English lowercase letters, but possibly in a different <code>order</code>. The <code>order</code> of the alphabet is some permutation of lowercase letters.</p>
 
 <p>Given a sequence of <code>words</code> written in the alien language, and the <code>order</code> of the alphabet, return <code>true</code> if and only if the given <code>words</code> are sorted lexicographically in this alien language.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;hello&quot;,&quot;leetcode&quot;], order = &quot;hlabcdefgijkmnopqrstuvwxyz&quot;
@@ -17,7 +31,7 @@
 <strong>Explanation: </strong>As &#39;h&#39; comes before &#39;l&#39; in this language, then the sequence is sorted.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;word&quot;,&quot;world&quot;,&quot;row&quot;], order = &quot;worldabcefghijkmnpqstuvxyz&quot;
@@ -25,7 +39,7 @@
 <strong>Explanation: </strong>As &#39;d&#39; comes after &#39;l&#39; in this language, then words[0] &gt; words[1], hence the sequence is unsorted.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;apple&quot;,&quot;app&quot;], order = &quot;abcdefghijklmnopqrstuvwxyz&quot;
@@ -43,11 +57,17 @@
 	<li>All characters in <code>words[i]</code> and <code>order</code> are English lowercase letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,7 +88,7 @@ class Solution:
         return True
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -99,7 +119,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -107,12 +127,10 @@ public:
     bool isAlienSorted(vector<string>& words, string order) {
         vector<int> m(26);
         for (int i = 0; i < 26; ++i) m[order[i] - 'a'] = i;
-        for (int i = 0; i < 20; ++i)
-        {
+        for (int i = 0; i < 20; ++i) {
             int prev = -1;
             bool valid = true;
-            for (auto& x : words)
-            {
+            for (auto& x : words) {
                 int curr = i >= x.size() ? -1 : m[x[i] - 'a'];
                 if (prev > curr) return false;
                 if (prev == curr) valid = false;
@@ -125,7 +143,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isAlienSorted(words []string, order string) bool {
@@ -157,7 +175,38 @@ func isAlienSorted(words []string, order string) bool {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function isAlienSorted(words: string[], order: string): boolean {
+    const map = new Map();
+    for (const c of order) {
+        map.set(c, map.size);
+    }
+    const n = words.length;
+    for (let i = 1; i < n; i++) {
+        const s1 = words[i - 1];
+        const s2 = words[i];
+        const m = Math.min(s1.length, s2.length);
+        let isEqual = false;
+        for (let j = 0; j < m; j++) {
+            if (map.get(s1[j]) > map.get(s2[j])) {
+                return false;
+            }
+            if (map.get(s1[j]) < map.get(s2[j])) {
+                isEqual = true;
+                break;
+            }
+        }
+        if (!isEqual && s1.length > s2.length) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+#### Rust
 
 ```rust
 use std::collections::HashMap;
@@ -190,10 +239,42 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C
 
-```
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 
+bool isAlienSorted(char** words, int wordsSize, char* order) {
+    int map[26] = {0};
+    for (int i = 0; i < 26; i++) {
+        map[order[i] - 'a'] = i;
+    }
+    for (int i = 1; i < wordsSize; i++) {
+        char* s1 = words[i - 1];
+        char* s2 = words[i];
+        int n = strlen(s1);
+        int m = strlen(s2);
+        int len = min(n, m);
+        int isEqual = 1;
+        for (int j = 0; j < len; j++) {
+            if (map[s1[j] - 'a'] > map[s2[j] - 'a']) {
+                return 0;
+            }
+            if (map[s1[j] - 'a'] < map[s2[j] - 'a']) {
+                isEqual = 0;
+                break;
+            }
+        }
+        if (isEqual && n > m) {
+            return 0;
+        }
+    }
+    return 1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

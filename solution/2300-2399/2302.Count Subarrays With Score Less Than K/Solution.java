@@ -7,10 +7,7 @@ class Solution {
         }
         long ans = 0;
         for (int i = 1; i <= n; ++i) {
-            if (nums[i - 1] >= k) {
-                continue;
-            }
-            int left = 1, right = i;
+            int left = 0, right = i;
             while (left < right) {
                 int mid = (left + right + 1) >> 1;
                 if ((s[i] - s[i - mid]) * mid < k) {

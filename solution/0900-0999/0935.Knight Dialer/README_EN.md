@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0935.Knight%20Dialer/README_EN.md
+tags:
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [935. Knight Dialer](https://leetcode.com/problems/knight-dialer)
 
 [中文文档](/solution/0900-0999/0935.Knight%20Dialer/README.md)
 
 ## Description
 
-<p>The chess knight has a <strong>unique movement</strong>,&nbsp;it may move two squares vertically and one square horizontally, or two squares horizontally and one square vertically (with both forming the shape of an <strong>L</strong>). The possible movements of chess knight are shown in this diagaram:</p>
+<!-- description:start -->
+
+<p>The chess knight has a <strong>unique movement</strong>,&nbsp;it may move two squares vertically and one square horizontally, or two squares horizontally and one square vertically (with both forming the shape of an <strong>L</strong>). The possible movements of chess knight are shown in this diagram:</p>
 
 <p>A chess knight can move as indicated in the chess diagram below:</p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0900-0999/0935.Knight%20Dialer/images/chess.jpg" style="width: 402px; height: 402px;" />
@@ -17,7 +29,7 @@
 <p>As the answer may be very large, <strong>return the answer modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 1
@@ -25,7 +37,7 @@
 <strong>Explanation:</strong> We need to dial a number of length 1, so placing the knight over any numeric cell of the 10 cells is sufficient.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 2
@@ -33,7 +45,7 @@
 <strong>Explanation:</strong> All the valid number we can dial are [04, 06, 16, 18, 27, 29, 34, 38, 40, 43, 49, 60, 61, 67, 72, 76, 81, 83, 92, 94]
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3131
@@ -48,11 +60,17 @@
 	<li><code>1 &lt;= n &lt;= 5000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -75,7 +93,7 @@ class Solution:
         return sum(t) % (10**9 + 7)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -111,7 +129,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -122,8 +140,7 @@ public:
         if (n == 1) return 10;
         int mod = 1e9 + 7;
         vector<ll> f(10, 1ll);
-        while (--n)
-        {
+        while (--n) {
             vector<ll> t(10);
             t[0] = f[4] + f[6];
             t[1] = f[6] + f[8];
@@ -142,7 +159,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func knightDialer(n int) int {
@@ -177,10 +194,76 @@ func knightDialer(n int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function knightDialer(n: number): number {
+    const MOD: number = 1e9 + 7;
+
+    if (n === 1) {
+        return 10;
+    }
+
+    const f: number[] = new Array(10).fill(1);
+
+    while (--n > 0) {
+        const t: number[] = new Array(10).fill(0);
+
+        t[0] = f[4] + f[6];
+        t[1] = f[6] + f[8];
+        t[2] = f[7] + f[9];
+        t[3] = f[4] + f[8];
+        t[4] = f[0] + f[3] + f[9];
+        t[6] = f[0] + f[1] + f[7];
+        t[7] = f[2] + f[6];
+        t[8] = f[1] + f[3];
+        t[9] = f[2] + f[4];
+
+        for (let i = 0; i < 10; ++i) {
+            f[i] = t[i] % MOD;
+        }
+    }
+
+    let ans: number = 0;
+    for (const v of f) {
+        ans = (ans + v) % MOD;
+    }
+
+    return ans;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        int A = 4;
+        int B = 2;
+        int C = 2;
+        int D = 1;
+        int MOD = (int)1e9 + 7;
+        for (int i = 0; i < n - 1; i++) {
+            int tempA = A;
+            int tempB = B;
+            int tempC = C;
+            int tempD = D;
+            A = ((2 * tempB) % MOD + (2 * tempC) % MOD) % MOD;
+            B = tempA;
+            C = (tempA + (2 * tempD) % MOD) % MOD;
+            D = tempC;
+        }
+
+        int ans = (A + B) % MOD;
+        ans = (ans + C) % MOD;
+        return (ans + D) % MOD;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

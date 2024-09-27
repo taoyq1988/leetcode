@@ -1,8 +1,20 @@
-# [1571. Warehouse Manager](https://leetcode.com/problems/warehouse-manager)
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1500-1599/1571.Warehouse%20Manager/README_EN.md
+tags:
+    - Database
+---
+
+<!-- problem:start -->
+
+# [1571. Warehouse Manager 🔒](https://leetcode.com/problems/warehouse-manager)
 
 [中文文档](/solution/1500-1599/1571.Warehouse%20Manager/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Table: <code>Warehouse</code></p>
 
@@ -14,7 +26,7 @@
 | product_id   | int     |
 | units        | int     |
 +--------------+---------+
-(name, product_id) is the primary key for this table.
+(name, product_id) is the primary key (combination of columns with unique values) for this table.
 Each row of this table contains the information of the products in each warehouse.
 </pre>
 
@@ -32,20 +44,20 @@ Each row of this table contains the information of the products in each warehous
 | Length        | int     |
 | Height        | int     |
 +---------------+---------+
-product_id is the primary key for this table.
+product_id is the primary key (column with unique values) for this table.
 Each row of this table contains information about the product dimensions (Width, Lenght, and Height) in feets of each product.
 </pre>
 
 <p>&nbsp;</p>
 
-<p>Write an SQL query to report the number of cubic feet of <strong>volume </strong>the inventory occupies in each warehouse.</p>
+<p>Write a solution to report the number of cubic feet of <strong>volume </strong>the inventory occupies in each warehouse.</p>
 
 <p>Return the result table in <strong>any order</strong>.</p>
 
 <p>The query result format is in the following example.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> 
@@ -90,26 +102,33 @@ LCHouse3: 1 unit of LC-T-Shirt.
           Total volume: 1*800 = 800 cubic feet.
 </pre>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Inner Join + Group By + Sum Function
+
+We can use an inner join to join the `Warehouse` table and the `Products` table on the condition of `product_id`, and then group by warehouse name to calculate the inventory of each warehouse using the `SUM` function.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### MySQL
 
-```python
-
-```
-
-### **Java**
-
-```java
-
-```
-
-### **...**
-
-```
-
+```sql
+# Write your MySQL query statement below
+SELECT
+    name AS warehouse_name,
+    SUM(width * length * height * units) AS volume
+FROM
+    Warehouse
+    JOIN Products USING (product_id)
+GROUP BY 1;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

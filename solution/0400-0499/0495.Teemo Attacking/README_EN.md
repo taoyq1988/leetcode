@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0495.Teemo%20Attacking/README_EN.md
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [495. Teemo Attacking](https://leetcode.com/problems/teemo-attacking)
 
 [中文文档](/solution/0400-0499/0495.Teemo%20Attacking/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Our hero Teemo is attacking an enemy Ashe with poison attacks! When Teemo attacks Ashe, Ashe gets poisoned for a exactly <code>duration</code> seconds. More formally, an attack at second <code>t</code> will mean Ashe is poisoned during the <strong>inclusive</strong> time interval <code>[t, t + duration - 1]</code>. If Teemo attacks again <strong>before</strong> the poison effect ends, the timer for it is <strong>reset</strong>, and the poison effect will end <code>duration</code> seconds after the new attack.</p>
 
@@ -11,7 +24,7 @@
 <p>Return <em>the <strong>total</strong> number of seconds that Ashe is poisoned</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> timeSeries = [1,4], duration = 2
@@ -22,7 +35,7 @@
 Ashe is poisoned for seconds 1, 2, 4, and 5, which is 4 seconds in total.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> timeSeries = [1,2], duration = 2
@@ -41,73 +54,100 @@ Ashe is poisoned for seconds 1, 2, and 3, which is 3 seconds in total.</pre>
 	<li><code>timeSeries</code> is sorted in <strong>non-decreasing</strong> order.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def findPoisonedDuration(self, timeSeries: List[int], duration: int) -> int:
-        n, res = len(timeSeries), duration
-        for i in range(n - 1):
-            res += min(duration, timeSeries[i + 1] - timeSeries[i])
-        return res
+        ans = duration
+        for a, b in pairwise(timeSeries):
+            ans += min(duration, b - a)
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int findPoisonedDuration(int[] timeSeries, int duration) {
-        int n = timeSeries.length, res = duration;
-        for (int i = 0; i < n - 1; ++i) {
-            res += Math.min(duration, timeSeries[i + 1] - timeSeries[i]);
+        int n = timeSeries.length;
+        int ans = duration;
+        for (int i = 1; i < n; ++i) {
+            ans += Math.min(duration, timeSeries[i] - timeSeries[i - 1]);
         }
-        return res;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int findPoisonedDuration(vector<int>& timeSeries, int duration) {
-        int n = timeSeries.size(), res = duration;
-        for (int i = 0; i < n - 1; ++i) {
-            res += min(duration, timeSeries[i + 1] - timeSeries[i]);
+        int ans = duration;
+        int n = timeSeries.size();
+        for (int i = 1; i < n; ++i) {
+            ans += min(duration, timeSeries[i] - timeSeries[i - 1]);
         }
-        return res;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func findPoisonedDuration(timeSeries []int, duration int) int {
-	n, res := len(timeSeries), duration
-	for i := 0; i < n-1; i++ {
-		res += min(duration, timeSeries[i+1]-timeSeries[i])
+func findPoisonedDuration(timeSeries []int, duration int) (ans int) {
+	ans = duration
+	for i, x := range timeSeries[1:] {
+		ans += min(duration, x-timeSeries[i])
 	}
-	return res
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function findPoisonedDuration(timeSeries: number[], duration: number): number {
+    const n = timeSeries.length;
+    let ans = duration;
+    for (let i = 1; i < n; ++i) {
+        ans += Math.min(duration, timeSeries[i] - timeSeries[i - 1]);
+    }
+    return ans;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public int FindPoisonedDuration(int[] timeSeries, int duration) {
+        int ans = duration;
+        int n = timeSeries.Length;
+        for (int i = 1; i < n; ++i) {
+            ans += Math.Min(duration, timeSeries[i] - timeSeries[i - 1]);
+        }
+        return ans;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

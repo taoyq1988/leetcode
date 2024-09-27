@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0888.Fair%20Candy%20Swap/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [888. Fair Candy Swap](https://leetcode.com/problems/fair-candy-swap)
 
 [中文文档](/solution/0800-0899/0888.Fair%20Candy%20Swap/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Alice and Bob have a different total number of candies. You are given two integer arrays <code>aliceSizes</code> and <code>bobSizes</code> where <code>aliceSizes[i]</code> is the number of candies of the <code>i<sup>th</sup></code> box of candy that Alice has and <code>bobSizes[j]</code> is the number of candies of the <code>j<sup>th</sup></code> box of candy that Bob has.</p>
 
@@ -11,21 +26,21 @@
 <p>Return a<em>n integer array </em><code>answer</code><em> where </em><code>answer[0]</code><em> is the number of candies in the box that Alice must exchange, and </em><code>answer[1]</code><em> is the number of candies in the box that Bob must exchange</em>. If there are multiple answers, you may <strong>return any</strong> one of them. It is guaranteed that at least one answer exists.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> aliceSizes = [1,1], bobSizes = [2,2]
 <strong>Output:</strong> [1,2]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> aliceSizes = [1,2], bobSizes = [2,3]
 <strong>Output:</strong> [1,2]
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> aliceSizes = [2], bobSizes = [1,3]
@@ -42,11 +57,17 @@
 	<li>There will be at least one valid answer for the given input.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -59,7 +80,7 @@ class Solution:
                 return [a, target]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -77,7 +98,7 @@ class Solution {
         for (int a : aliceSizes) {
             int target = a - diff;
             if (s.contains(target)) {
-                return new int[]{a, target};
+                return new int[] {a, target};
             }
         }
         return null;
@@ -85,23 +106,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function fairCandySwap(aliceSizes: number[], bobSizes: number[]): number[] {
-    let s1 = aliceSizes.reduce((a, c) => a + c, 0);
-    let s2 = bobSizes.reduce((a, c) => a + c, 0);
-    let diff = (s1 - s2) >> 1;
-    for (let num of aliceSizes) {
-        let target = num - diff;
-        if (bobSizes.includes(target)) {
-            return [num, target];
-        }
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -124,10 +129,24 @@ public:
 };
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function fairCandySwap(aliceSizes: number[], bobSizes: number[]): number[] {
+    let s1 = aliceSizes.reduce((a, c) => a + c, 0);
+    let s2 = bobSizes.reduce((a, c) => a + c, 0);
+    let diff = (s1 - s2) >> 1;
+    for (let num of aliceSizes) {
+        let target = num - diff;
+        if (bobSizes.includes(target)) {
+            return [num, target];
+        }
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

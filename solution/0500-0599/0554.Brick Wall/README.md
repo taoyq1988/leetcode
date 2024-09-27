@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0554.Brick%20Wall/README.md
+tags:
+    - 数组
+    - 哈希表
+---
+
+<!-- problem:start -->
+
 # [554. 砖墙](https://leetcode.cn/problems/brick-wall)
 
 [English Version](/solution/0500-0599/0554.Brick%20Wall/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>你的面前有一堵矩形的、由 <code>n</code> 行砖块组成的砖墙。这些砖块高度相同（也就是一个单位高）但是宽度不同。每一行砖块的宽度之和相等。</p>
 
@@ -39,17 +50,17 @@
 	<li><code>1 <= wall[i][j] <= 2<sup>31</sup> - 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-题目可以理解为，让垂线尽可能多地穿过砖块边缘，用哈希表处理不同位置的砖块边缘出现的频次（不包括两个垂直边缘），最终的答案就是总行数减去最大频数。
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -65,9 +76,7 @@ class Solution:
         return len(wall) - cnt[max(cnt, key=cnt.get)]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -86,15 +95,15 @@ class Solution {
 }
 ```
 
-### **Go**
+#### Go
 
 ```go
 func leastBricks(wall [][]int) int {
 	cnt := make(map[int]int)
 	for _, row := range wall {
-        width := 0
+		width := 0
 		for _, brick := range row[:len(row)-1] {
-            width += brick
+			width += brick
 			cnt[width]++
 		}
 	}
@@ -108,7 +117,7 @@ func leastBricks(wall [][]int) int {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -132,10 +141,8 @@ var leastBricks = function (wall) {
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

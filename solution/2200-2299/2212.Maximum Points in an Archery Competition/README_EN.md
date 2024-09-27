@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2212.Maximum%20Points%20in%20an%20Archery%20Competition/README_EN.md
+rating: 1868
+source: Weekly Contest 285 Q3
+tags:
+    - Bit Manipulation
+    - Array
+    - Backtracking
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2212. Maximum Points in an Archery Competition](https://leetcode.com/problems/maximum-points-in-an-archery-competition)
 
 [中文文档](/solution/2200-2299/2212.Maximum%20Points%20in%20an%20Archery%20Competition/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Alice and Bob are opponents in an archery competition. The competition has set the following rules:</p>
 
@@ -30,7 +47,7 @@
 <p>If there are multiple ways for Bob to earn the maximum total points, return <strong>any</strong> one of them.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2212.Maximum%20Points%20in%20an%20Archery%20Competition/images/ex1.jpg" style="width: 600px; height: 120px;" />
 <pre>
 <strong>Input:</strong> numArrows = 9, aliceArrows = [1,1,0,1,0,0,2,1,0,1,2,0]
@@ -40,7 +57,7 @@ Bob earns a total point of 4 + 5 + 8 + 9 + 10 + 11 = 47.
 It can be shown that Bob cannot obtain a score higher than 47 points.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2212.Maximum%20Points%20in%20an%20Archery%20Competition/images/ex2new.jpg" style="width: 600px; height: 117px;" />
 <pre>
 <strong>Input:</strong> numArrows = 3, aliceArrows = [0,0,1,0,0,0,0,0,0,0,0,2]
@@ -60,11 +77,17 @@ It can be shown that Bob cannot obtain a score higher than 27 points.
 	<li><code>sum(aliceArrows[i]) == numArrows</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -90,7 +113,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -124,7 +147,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -132,28 +155,22 @@ public:
     vector<int> maximumBobPoints(int numArrows, vector<int>& aliceArrows) {
         int n = aliceArrows.size();
         int state = 0, mx = -1;
-        for (int mask = 1; mask < 1 << n; ++mask)
-        {
+        for (int mask = 1; mask < 1 << n; ++mask) {
             int cnt = 0, points = 0;
-            for (int i = 0; i < n; ++i)
-            {
-                if ((mask >> i) & 1)
-                {
+            for (int i = 0; i < n; ++i) {
+                if ((mask >> i) & 1) {
                     cnt += aliceArrows[i] + 1;
                     points += i;
                 }
             }
-            if (cnt <= numArrows && mx < points)
-            {
+            if (cnt <= numArrows && mx < points) {
                 state = mask;
                 mx = points;
             }
         }
         vector<int> ans(n);
-        for (int i = 0; i < n; ++i)
-        {
-            if ((state >> i) & 1)
-            {
+        for (int i = 0; i < n; ++i) {
+            if ((state >> i) & 1) {
                 ans[i] = aliceArrows[i] + 1;
                 numArrows -= ans[i];
             }
@@ -164,7 +181,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumBobPoints(numArrows int, aliceArrows []int) []int {
@@ -195,7 +212,7 @@ func maximumBobPoints(numArrows int, aliceArrows []int) []int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maximumBobPoints(numArrows: number, aliceArrows: number[]): number[] {
@@ -221,7 +238,7 @@ function maximumBobPoints(numArrows: number, aliceArrows: number[]): number[] {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -256,10 +273,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

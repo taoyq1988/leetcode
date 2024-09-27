@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2296.Design%20a%20Text%20Editor/README_EN.md
+rating: 1911
+source: Weekly Contest 296 Q4
+tags:
+    - Stack
+    - Design
+    - Linked List
+    - String
+    - Doubly-Linked List
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2296. Design a Text Editor](https://leetcode.com/problems/design-a-text-editor)
 
 [中文文档](/solution/2200-2299/2296.Design%20a%20Text%20Editor/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Design a text editor with a cursor that can do the following:</p>
 
@@ -25,7 +44,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -72,36 +91,51 @@ textEditor.cursorRight(6); // return &quot;practi&quot;
 <p>&nbsp;</p>
 <p><strong>Follow-up:</strong> Could you find a solution with time complexity of <code>O(k)</code> per call?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Left and Right Stacks
+
+We can use two stacks, `left` and `right`, where the `left` stack stores the characters to the left of the cursor, and the `right` stack stores the characters to the right of the cursor.
+
+-   When the `addText` method is called, we push the characters from `text` onto the `left` stack one by one. The time complexity is $O(|\textit{text}|)$.
+-   When the `deleteText` method is called, we pop characters from the `left` stack up to $k$ times. The time complexity is $O(k)$.
+-   When the `cursorLeft` method is called, we pop characters from the `left` stack up to $k$ times, then push the popped characters onto the `right` stack, and finally return up to $10$ characters from the `left` stack. The time complexity is $O(k)$.
+-   When the `cursorRight` method is called, we pop characters from the `right` stack up to $k$ times, then push the popped characters onto the `left` stack, and finally return up to $10$ characters from the `left` stack. The time complexity is $O(k)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class TextEditor:
     def __init__(self):
-        self.idx = 0
-        self.s = []
+        self.left = []
+        self.right = []
 
     def addText(self, text: str) -> None:
-        t = list(text)
-        self.s[self.idx : self.idx] = t
-        self.idx += len(t)
+        self.left.extend(list(text))
 
     def deleteText(self, k: int) -> int:
-        k = min(self.idx, k)
-        self.s[self.idx - k : self.idx] = []
-        self.idx -= k
+        k = min(k, len(self.left))
+        for _ in range(k):
+            self.left.pop()
         return k
 
     def cursorLeft(self, k: int) -> str:
-        self.idx = max(0, self.idx - k)
-        return ''.join(self.s[max(0, self.idx - 10) : self.idx])
+        k = min(k, len(self.left))
+        for _ in range(k):
+            self.right.append(self.left.pop())
+        return ''.join(self.left[-10:])
 
     def cursorRight(self, k: int) -> str:
-        self.idx = min(len(self.s), self.idx + k)
-        return ''.join(self.s[max(0, self.idx - 10) : self.idx])
+        k = min(k, len(self.right))
+        for _ in range(k):
+            self.left.append(self.right.pop())
+        return ''.join(self.left[-10:])
 
 
 # Your TextEditor object will be instantiated and called as such:
@@ -112,38 +146,42 @@ class TextEditor:
 # param_4 = obj.cursorRight(k)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class TextEditor {
-    private int idx = 0;
-    private StringBuilder s = new StringBuilder();
+    private StringBuilder left = new StringBuilder();
+    private StringBuilder right = new StringBuilder();
 
     public TextEditor() {
-
     }
 
     public void addText(String text) {
-        s.insert(idx, text);
-        idx += text.length();
+        left.append(text);
     }
 
     public int deleteText(int k) {
-        k = Math.min(idx, k);
-        for (int i = 0; i < k; ++i) {
-            s.deleteCharAt(--idx);
-        }
+        k = Math.min(k, left.length());
+        left.setLength(left.length() - k);
         return k;
     }
 
     public String cursorLeft(int k) {
-        idx = Math.max(0, idx - k);
-        return s.substring(Math.max(0, idx - 10), idx);
+        k = Math.min(k, left.length());
+        for (int i = 0; i < k; ++i) {
+            right.append(left.charAt(left.length() - 1));
+            left.deleteCharAt(left.length() - 1);
+        }
+        return left.substring(Math.max(left.length() - 10, 0));
     }
 
     public String cursorRight(int k) {
-        idx = Math.min(s.length(), idx + k);
-        return s.substring(Math.max(0, idx - 10), idx);
+        k = Math.min(k, right.length());
+        for (int i = 0; i < k; ++i) {
+            left.append(right.charAt(right.length() - 1));
+            right.deleteCharAt(right.length() - 1);
+        }
+        return left.substring(Math.max(left.length() - 10, 0));
     }
 }
 
@@ -157,16 +195,162 @@ class TextEditor {
  */
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class TextEditor {
+public:
+    TextEditor() {
+    }
+
+    void addText(string text) {
+        left += text;
+    }
+
+    int deleteText(int k) {
+        k = min(k, (int) left.size());
+        left.resize(left.size() - k);
+        return k;
+    }
+
+    string cursorLeft(int k) {
+        k = min(k, (int) left.size());
+        while (k--) {
+            right += left.back();
+            left.pop_back();
+        }
+        return left.substr(max(0, (int) left.size() - 10));
+    }
+
+    string cursorRight(int k) {
+        k = min(k, (int) right.size());
+        while (k--) {
+            left += right.back();
+            right.pop_back();
+        }
+        return left.substr(max(0, (int) left.size() - 10));
+    }
+
+private:
+    string left, right;
+};
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * TextEditor* obj = new TextEditor();
+ * obj->addText(text);
+ * int param_2 = obj->deleteText(k);
+ * string param_3 = obj->cursorLeft(k);
+ * string param_4 = obj->cursorRight(k);
+ */
+```
+
+#### Go
+
+```go
+type TextEditor struct {
+	left, right []byte
+}
+
+func Constructor() TextEditor {
+	return TextEditor{}
+}
+
+func (this *TextEditor) AddText(text string) {
+	this.left = append(this.left, text...)
+}
+
+func (this *TextEditor) DeleteText(k int) int {
+	k = min(k, len(this.left))
+	if k < len(this.left) {
+		this.left = this.left[:len(this.left)-k]
+	} else {
+		this.left = []byte{}
+	}
+	return k
+}
+
+func (this *TextEditor) CursorLeft(k int) string {
+	k = min(k, len(this.left))
+	for ; k > 0; k-- {
+		this.right = append(this.right, this.left[len(this.left)-1])
+		this.left = this.left[:len(this.left)-1]
+	}
+	return string(this.left[max(len(this.left)-10, 0):])
+}
+
+func (this *TextEditor) CursorRight(k int) string {
+	k = min(k, len(this.right))
+	for ; k > 0; k-- {
+		this.left = append(this.left, this.right[len(this.right)-1])
+		this.right = this.right[:len(this.right)-1]
+	}
+	return string(this.left[max(len(this.left)-10, 0):])
+}
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.AddText(text);
+ * param_2 := obj.DeleteText(k);
+ * param_3 := obj.CursorLeft(k);
+ * param_4 := obj.CursorRight(k);
+ */
+```
+
+#### TypeScript
 
 ```ts
+class TextEditor {
+    private left: string[];
+    private right: string[];
 
-```
+    constructor() {
+        this.left = [];
+        this.right = [];
+    }
 
-### **...**
+    addText(text: string): void {
+        this.left.push(...text);
+    }
 
-```
+    deleteText(k: number): number {
+        k = Math.min(k, this.left.length);
+        for (let i = 0; i < k; i++) {
+            this.left.pop();
+        }
+        return k;
+    }
 
+    cursorLeft(k: number): string {
+        k = Math.min(k, this.left.length);
+        for (let i = 0; i < k; i++) {
+            this.right.push(this.left.pop()!);
+        }
+        return this.left.slice(-10).join('');
+    }
+
+    cursorRight(k: number): string {
+        k = Math.min(k, this.right.length);
+        for (let i = 0; i < k; i++) {
+            this.left.push(this.right.pop()!);
+        }
+        return this.left.slice(-10).join('');
+    }
+}
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * var obj = new TextEditor()
+ * obj.addText(text)
+ * var param_2 = obj.deleteText(k)
+ * var param_3 = obj.cursorLeft(k)
+ * var param_4 = obj.cursorRight(k)
+ */
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

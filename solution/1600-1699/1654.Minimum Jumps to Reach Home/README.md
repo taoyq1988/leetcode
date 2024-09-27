@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1654.Minimum%20Jumps%20to%20Reach%20Home/README.md
+rating: 2124
+source: 第 39 场双周赛 Q3
+tags:
+    - 广度优先搜索
+    - 数组
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [1654. 到家的最少跳跃次数](https://leetcode.cn/problems/minimum-jumps-to-reach-home)
 
 [English Version](/solution/1600-1699/1654.Minimum%20Jumps%20to%20Reach%20Home/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>有一只跳蚤的家在数轴上的位置 <code>x</code> 处。请你帮助它从位置 <code>0</code> 出发，到达它的家。</p>
 
@@ -58,180 +72,208 @@
 	<li>位置 <code>x</code> 不在 <code>forbidden</code> 中。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：BFS**
+### 方法一：BFS
+
+我们可以将跳蚤的位置和跳跃方向作为状态，使用 BFS 搜索最短路径。本题比较关键的地方在于确定右边界，即跳蚤最远能跳到哪里。
+
+如果 $a \geq b$，即往前跳的距离大于往后跳的距离，那么如果跳蚤在位置大于 $x+b$ 的地方，它就不能再往前跳了，因为跳蚤不能连续往后跳两次，如果继续往前跳，那么永远无法跳到 $x$ 的位置。因此，如果 $a \geq b$，那么右边界可以是 $x+b$。
+
+如果 $a \lt b$，即往前跳的距离小于往后跳的距离，那么如果跳蚤所在的位置减去 $b$ 超过 $2000$，此时选择往后跳，否则往前跳。因此，如果 $a \lt b$，那么右边界不超过 $6000$。
+
+综上，我们可以将右边界设置为 $6000$。
+
+接下来，我们使用 BFS 搜索最短路径。我们使用一个队列，初始时将跳蚤的位置和跳跃方向作为状态加入队列。每次从队列中取出一个状态，如果该状态的位置等于 $x$，那么我们就找到了一条从初始状态到达目标状态的路径，返回当前的步数即可。否则，我们将当前状态的下一个状态加入队列，下一个状态有两种情况：
+
+-   往前跳，跳跃方向为 $1$；
+-   当前跳跃方向为 $1$ 时，往后跳，跳跃方向为 $0$。
+
+注意，我们需要判断下一个状态是否合法，即下一个状态的位置不超过右边界，且不在禁止的位置中，且未被访问过。
+
+如果队列为空，说明无法到达目标位置，返回 $-1$。
+
+时间复杂度 $O(M)$，空间复杂度 $O(M)$。其中 $M$ 是右边界，本题中 $M \leq 6000$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def minimumJumps(self, forbidden: List[int], a: int, b: int, x: int) -> int:
         s = set(forbidden)
-        q = deque([(0, 0)])
-        vis = {(0, 1), (0, -1)}
+        q = deque([(0, 1)])
+        vis = {(0, 1)}
         ans = 0
         while q:
             for _ in range(len(q)):
-                i, dir = q.popleft()
+                i, k = q.popleft()
                 if i == x:
                     return ans
                 nxt = [(i + a, 1)]
-                if dir != -1:
-                    nxt.append((i - b, -1))
-                for j, dir in nxt:
-                    if 0 <= j <= 6000 and j not in s and (j, dir) not in vis:
-                        vis.add((j, dir))
-                        q.append((j, dir))
+                if k & 1:
+                    nxt.append((i - b, 0))
+                for j, k in nxt:
+                    if 0 <= j < 6000 and j not in s and (j, k) not in vis:
+                        q.append((j, k))
+                        vis.add((j, k))
             ans += 1
         return -1
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
-    private static final int N = 6010;
-
     public int minimumJumps(int[] forbidden, int a, int b, int x) {
         Set<Integer> s = new HashSet<>();
         for (int v : forbidden) {
             s.add(v);
         }
         Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 2});
-        boolean[][] vis = new boolean[N][2];
-        vis[0][0] = true;
+        q.offer(new int[] {0, 1});
+        final int n = 6000;
+        boolean[][] vis = new boolean[n][2];
         vis[0][1] = true;
-        int ans = 0;
-        while (!q.isEmpty()) {
+        for (int ans = 0; !q.isEmpty(); ++ans) {
             for (int t = q.size(); t > 0; --t) {
-                int[] p = q.poll();
-                int i = p[0], dir = p[1];
+                var p = q.poll();
+                int i = p[0], k = p[1];
                 if (i == x) {
                     return ans;
                 }
                 List<int[]> nxt = new ArrayList<>();
-                nxt.add(new int[]{i + a, 1});
-                if (dir != 0) {
-                    nxt.add(new int[]{i - b, 0});
+                nxt.add(new int[] {i + a, 1});
+                if ((k & 1) == 1) {
+                    nxt.add(new int[] {i - b, 0});
                 }
-                for (int[] e : nxt) {
+                for (var e : nxt) {
                     int j = e[0];
-                    dir = e[1];
-                    if (j >= 0 && j < N && !s.contains(j) && !vis[j][dir]) {
-                        vis[j][dir] = true;
-                        q.offer(new int[]{j, dir});
+                    k = e[1];
+                    if (j >= 0 && j < n && !s.contains(j) && !vis[j][k]) {
+                        q.offer(new int[] {j, k});
+                        vis[j][k] = true;
                     }
                 }
             }
-            ++ans;
         }
         return -1;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    const int N = 6010;
-
     int minimumJumps(vector<int>& forbidden, int a, int b, int x) {
         unordered_set<int> s(forbidden.begin(), forbidden.end());
-        queue<vector<int>> q;
-        q.push({0, 0});
-        vector<vector<bool>> vis(N, vector<bool>(2));
-        vis[0][0] = true;
+        queue<pair<int, int>> q;
+        q.emplace(0, 1);
+        const int n = 6000;
+        bool vis[n][2];
+        memset(vis, false, sizeof(vis));
         vis[0][1] = true;
-        int ans = 0;
-        while (!q.empty())
-        {
-            for (int t = q.size(); t; --t)
-            {
-                auto p = q.front();
+        for (int ans = 0; q.size(); ++ans) {
+            for (int t = q.size(); t; --t) {
+                auto [i, k] = q.front();
                 q.pop();
-                int i = p[0], dir = p[1];
-                if (i == x) return ans;
-                vector<vector<int>> nxt;
-                nxt.push_back({i + a, 1});
-                if (dir) nxt.push_back({i - b, 0});
-                for (auto& e : nxt)
-                {
-                    int j = e[0];
-                    dir = e[1];
-                    if (j >= 0 && j < N && !s.count(j) && !vis[j][dir])
-                    {
-                        vis[j][dir] = true;
-                        q.push({j, dir});
+                if (i == x) {
+                    return ans;
+                }
+                vector<pair<int, int>> nxts = {{i + a, 1}};
+                if (k & 1) {
+                    nxts.emplace_back(i - b, 0);
+                }
+                for (auto [j, l] : nxts) {
+                    if (j >= 0 && j < n && !s.count(j) && !vis[j][l]) {
+                        vis[j][l] = true;
+                        q.emplace(j, l);
                     }
                 }
             }
-            ++ans;
         }
         return -1;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func minimumJumps(forbidden []int, a int, b int, x int) int {
-	n := 6010
-	s := make(map[int]bool)
+func minimumJumps(forbidden []int, a int, b int, x int) (ans int) {
+	s := map[int]bool{}
 	for _, v := range forbidden {
 		s[v] = true
 	}
-	q := [][]int{[]int{0, 0}}
-	vis := make([][]bool, n)
-	for i := range vis {
-		vis[i] = make([]bool, 2)
-	}
-	vis[0][0] = true
+	q := [][2]int{[2]int{0, 1}}
+	const n = 6000
+	vis := make([][2]bool, n)
 	vis[0][1] = true
-	ans := 0
-	for len(q) > 0 {
+	for ; len(q) > 0; ans++ {
 		for t := len(q); t > 0; t-- {
 			p := q[0]
 			q = q[1:]
-			i, dir := p[0], p[1]
+			i, k := p[0], p[1]
 			if i == x {
-				return ans
+				return
 			}
-			nxt := [][]int{[]int{i + a, 1}}
-			if dir != 0 {
-				nxt = append(nxt, []int{i - b, 0})
+			nxt := [][2]int{[2]int{i + a, 1}}
+			if k&1 == 1 {
+				nxt = append(nxt, [2]int{i - b, 0})
 			}
 			for _, e := range nxt {
-				j := e[0]
-				dir = e[1]
-				if j >= 0 && j < n && !s[j] && !vis[j][dir] {
-					vis[j][dir] = true
-					q = append(q, []int{j, dir})
+				j, l := e[0], e[1]
+				if j >= 0 && j < n && !s[j] && !vis[j][l] {
+					q = append(q, [2]int{j, l})
+					vis[j][l] = true
 				}
 			}
 		}
-		ans++
 	}
 	return -1
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function minimumJumps(forbidden: number[], a: number, b: number, x: number): number {
+    const s: Set<number> = new Set(forbidden);
+    const q: [number, number][] = [[0, 1]];
+    const n = 6000;
+    const vis: boolean[][] = Array.from({ length: n }, () => [false, false]);
+    vis[0][1] = true;
+    for (let ans = 0; q.length; ++ans) {
+        for (let t = q.length; t; --t) {
+            const [i, k] = q.shift()!;
+            if (i === x) {
+                return ans;
+            }
+            const nxt: [number, number][] = [[i + a, 1]];
+            if (k & 1) {
+                nxt.push([i - b, 0]);
+            }
+            for (const [j, k] of nxt) {
+                if (j >= 0 && j < n && !s.has(j) && !vis[j][k]) {
+                    vis[j][k] = true;
+                    q.push([j, k]);
+                }
+            }
+        }
+    }
+    return -1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

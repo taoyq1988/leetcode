@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1755.Closest%20Subsequence%20Sum/README_EN.md
+rating: 2363
+source: Weekly Contest 227 Q4
+tags:
+    - Bit Manipulation
+    - Array
+    - Two Pointers
+    - Dynamic Programming
+    - Bitmask
+---
+
+<!-- problem:start -->
+
 # [1755. Closest Subsequence Sum](https://leetcode.com/problems/closest-subsequence-sum)
 
 [中文文档](/solution/1700-1799/1755.Closest%20Subsequence%20Sum/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code> and an integer <code>goal</code>.</p>
 
@@ -13,7 +31,7 @@
 <p>Note that a subsequence of an array is an array formed by removing some elements <strong>(possibly all or none)</strong> of the original array.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [5,-7,3,5], goal = 6
@@ -22,7 +40,7 @@
 This is equal to the goal, so the absolute difference is 0.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [7,-9,15,-2], goal = -5
@@ -31,7 +49,7 @@ This is equal to the goal, so the absolute difference is 0.
 The absolute difference is abs(-4 - (-5)) = abs(1) = 1, which is the minimum.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,2,3], goal = -7
@@ -47,11 +65,17 @@ The absolute difference is abs(-4 - (-5)) = abs(1) = 1, which is the minimum.
 	<li><code>-10<sup>9</sup> &lt;= goal &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -60,10 +84,10 @@ class Solution:
         left = set()
         right = set()
 
-        self.getSubSeqSum(0, 0, nums[:n // 2], left)
-        self.getSubSeqSum(0, 0, nums[n // 2:], right)
+        self.getSubSeqSum(0, 0, nums[: n // 2], left)
+        self.getSubSeqSum(0, 0, nums[n // 2 :], right)
 
-        result = float('inf')
+        result = inf
         right = sorted(right)
         rl = len(right)
 
@@ -88,7 +112,7 @@ class Solution:
         self.getSubSeqSum(i + 1, curr + arr[i], arr, result)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -136,68 +160,7 @@ class Solution {
 }
 ```
 
-### **Go**
-
-```go
-func minAbsDifference(nums []int, goal int) int {
-	n := len(nums)
-	lsum := make([]int, 0)
-	rsum := make([]int, 0)
-
-	dfs(nums[:n/2], &lsum, 0, 0)
-	dfs(nums[n/2:], &rsum, 0, 0)
-
-	sort.Ints(rsum)
-	res := math.MaxInt32
-
-	for _, x := range lsum {
-		t := goal - x
-		l, r := 0, len(rsum)
-		for l < r {
-			m := int(uint(l+r) >> 1)
-			if rsum[m] < t {
-				l = m + 1
-			} else {
-				r = m
-			}
-		}
-		if l < len(rsum) {
-			res = min(res, abs(t-rsum[l]))
-		}
-		if l > 0 {
-			res = min(res, abs(t-rsum[l-1]))
-		}
-	}
-
-	return res
-}
-
-func dfs(nums []int, sum *[]int, i, cur int) {
-	if i == len(nums) {
-		*sum = append(*sum, cur)
-		return
-	}
-
-	dfs(nums, sum, i+1, cur)
-	dfs(nums, sum, i+1, cur+nums[i])
-}
-
-func min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -247,10 +210,228 @@ private:
 };
 ```
 
-### **...**
+#### Go
 
-```
+```go
+func minAbsDifference(nums []int, goal int) int {
+	n := len(nums)
+	lsum := make([]int, 0)
+	rsum := make([]int, 0)
 
+	dfs(nums[:n/2], &lsum, 0, 0)
+	dfs(nums[n/2:], &rsum, 0, 0)
+
+	sort.Ints(rsum)
+	res := math.MaxInt32
+
+	for _, x := range lsum {
+		t := goal - x
+		l, r := 0, len(rsum)
+		for l < r {
+			m := int(uint(l+r) >> 1)
+			if rsum[m] < t {
+				l = m + 1
+			} else {
+				r = m
+			}
+		}
+		if l < len(rsum) {
+			res = min(res, abs(t-rsum[l]))
+		}
+		if l > 0 {
+			res = min(res, abs(t-rsum[l-1]))
+		}
+	}
+
+	return res
+}
+
+func dfs(nums []int, sum *[]int, i, cur int) {
+	if i == len(nums) {
+		*sum = append(*sum, cur)
+		return
+	}
+
+	dfs(nums, sum, i+1, cur)
+	dfs(nums, sum, i+1, cur+nums[i])
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def minAbsDifference(self, nums: List[int], goal: int) -> int:
+        def dfs(arr, res, i, s):
+            if i == len(arr):
+                res.add(s)
+                return
+            dfs(arr, res, i + 1, s)
+            dfs(arr, res, i + 1, s + arr[i])
+
+        n = len(nums)
+        left, right = set(), set()
+        dfs(nums[: n >> 1], left, 0, 0)
+        dfs(nums[n >> 1 :], right, 0, 0)
+        right = sorted(right)
+        ans = inf
+        for l in left:
+            x = goal - l
+            i = bisect_left(right, x)
+            if i < len(right):
+                ans = min(ans, abs(x - right[i]))
+            if i:
+                ans = min(ans, abs(x - right[i - 1]))
+        return ans
+```
+
+#### Java
+
+```java
+class Solution {
+    public int minAbsDifference(int[] nums, int goal) {
+        int n = nums.length;
+        Set<Integer> left = new HashSet<>();
+        Set<Integer> right = new HashSet<>();
+        dfs(nums, 0, n >> 1, 0, left);
+        dfs(nums, n >> 1, n, 0, right);
+        List<Integer> rs = new ArrayList<>(right);
+        Collections.sort(rs);
+        int ans = Integer.MAX_VALUE;
+        for (int x : left) {
+            int y = goal - x;
+            int l = 0, r = rs.size();
+            while (l < r) {
+                int mid = (l + r) >> 1;
+                if (rs.get(mid) >= y) {
+                    r = mid;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            if (l < rs.size()) {
+                ans = Math.min(ans, Math.abs(y - rs.get(l)));
+            }
+            if (l > 0) {
+                ans = Math.min(ans, Math.abs(y - rs.get(l - 1)));
+            }
+        }
+        return ans;
+    }
+
+    private void dfs(int[] arr, int i, int n, int s, Set<Integer> res) {
+        if (i == n) {
+            res.add(s);
+            return;
+        }
+        dfs(arr, i + 1, n, s, res);
+        dfs(arr, i + 1, n, s + arr[i], res);
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minAbsDifference(vector<int>& nums, int goal) {
+        int n = nums.size();
+        vector<int> left;
+        vector<int> right;
+        dfs(nums, left, 0, n >> 1, 0);
+        dfs(nums, right, n >> 1, n, 0);
+        sort(right.begin(), right.end());
+        int ans = INT_MAX;
+        for (int x : left) {
+            int y = goal - x;
+            int idx = lower_bound(right.begin(), right.end(), y) - right.begin();
+            if (idx < right.size()) ans = min(ans, abs(y - right[idx]));
+            if (idx) ans = min(ans, abs(y - right[idx - 1]));
+        }
+        return ans;
+    }
+
+private:
+    void dfs(vector<int>& arr, vector<int>& res, int i, int n, int s) {
+        if (i == n) {
+            res.emplace_back(s);
+            return;
+        }
+        dfs(arr, res, i + 1, n, s);
+        dfs(arr, res, i + 1, n, s + arr[i]);
+    }
+};
+```
+
+#### Go
+
+```go
+func minAbsDifference(nums []int, goal int) int {
+	n := len(nums)
+	left := []int{}
+	right := []int{}
+	dfs(nums[:n>>1], &left, 0, 0)
+	dfs(nums[n>>1:], &right, 0, 0)
+	sort.Ints(right)
+	ans := math.MaxInt32
+	for _, x := range left {
+		y := goal - x
+		l, r := 0, len(right)
+		for l < r {
+			mid := (l + r) >> 1
+			if right[mid] >= y {
+				r = mid
+			} else {
+				l = mid + 1
+			}
+		}
+		if l < len(right) {
+			ans = min(ans, abs(y-right[l]))
+		}
+		if l > 0 {
+			ans = min(ans, abs(y-right[l-1]))
+		}
+	}
+	return ans
+}
+
+func dfs(arr []int, res *[]int, i, s int) {
+	if i == len(arr) {
+		*res = append(*res, s)
+		return
+	}
+	dfs(arr, res, i+1, s)
+	dfs(arr, res, i+1, s+arr[i])
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,13 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0440.K-th%20Smallest%20in%20Lexicographical%20Order/README_EN.md
+tags:
+    - Trie
+---
+
+<!-- problem:start -->
+
 # [440. K-th Smallest in Lexicographical Order](https://leetcode.com/problems/k-th-smallest-in-lexicographical-order)
 
 [中文文档](/solution/0400-0499/0440.K-th%20Smallest%20in%20Lexicographical%20Order/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given two integers <code>n</code> and <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>lexicographically smallest integer in the range</em> <code>[1, n]</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 13, k = 2
@@ -15,7 +27,7 @@
 <strong>Explanation:</strong> The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 1, k = 1
@@ -29,11 +41,17 @@
 	<li><code>1 &lt;= k &lt;= n &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -58,7 +76,7 @@ class Solution:
         return curr
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -81,7 +99,6 @@ class Solution {
         return (int) curr;
     }
 
-
     public int count(long curr) {
         long next = curr + 1;
         long cnt = 0;
@@ -95,7 +112,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -106,16 +123,12 @@ public:
         this->n = n;
         --k;
         long long curr = 1;
-        while (k)
-        {
+        while (k) {
             int cnt = count(curr);
-            if (k >= cnt)
-            {
+            if (k >= cnt) {
                 k -= cnt;
                 ++curr;
-            }
-            else
-            {
+            } else {
                 --k;
                 curr *= 10;
             }
@@ -126,8 +139,7 @@ public:
     int count(long long curr) {
         long long next = curr + 1;
         int cnt = 0;
-        while (curr <= n)
-        {
+        while (curr <= n) {
             cnt += min(n - curr + 1, next - curr);
             next *= 10;
             curr *= 10;
@@ -137,7 +149,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findKthNumber(n int, k int) int {
@@ -165,19 +177,10 @@ func findKthNumber(n int, k int) int {
 	}
 	return curr
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-```
-
-### **...**
-
-```
-
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

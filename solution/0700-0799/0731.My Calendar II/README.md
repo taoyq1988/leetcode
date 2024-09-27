@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0731.My%20Calendar%20II/README.md
+tags:
+    - 设计
+    - 线段树
+    - 数组
+    - 二分查找
+    - 有序集合
+    - 前缀和
+---
+
+<!-- problem:start -->
+
 # [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii)
 
 [English Version](/solution/0700-0799/0731.My%20Calendar%20II/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>实现一个 <code>MyCalendar</code> 类来存放你的日程安排。如果要添加的时间内不会导致三重预订时，则可以存储这个新的日程安排。</p>
 
@@ -18,9 +33,10 @@
 
 <p>&nbsp;</p>
 
-<p><strong>示例：</strong></p>
+<p><strong class="example">示例：</strong></p>
 
-<pre>MyCalendar();
+<pre>
+MyCalendar();
 MyCalendar.book(10, 20); // returns true
 MyCalendar.book(50, 60); // returns true
 MyCalendar.book(10, 40); // returns true
@@ -44,39 +60,21 @@ MyCalendar.book(25, 55); // returns true
 	<li>调用函数&nbsp;<code>MyCalendar.book(start, end)</code>时，&nbsp;<code>start</code> 和&nbsp;<code>end</code> 的取值范围为&nbsp;<code>[0, 10^9]</code>。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：差分**
+### 方法一：差分
 
 利用有序哈希表实现。
 
 时间复杂度 $O(n^2)$，其中 $n$ 表示日程安排的数量。
 
-**方法二：线段树**
-
-线段树将整个区间分割为多个不连续的子区间，子区间的数量不超过 $log(width)$。更新某个元素的值，只需要更新 $log(width)$ 个区间，并且这些区间都包含在一个包含该元素的大区间内。区间修改时，需要使用**懒标记**保证效率。
-
--   线段树的每个节点代表一个区间；
--   线段树具有唯一的根节点，代表的区间是整个统计范围，如 $[1,N]$；
--   线段树的每个叶子节点代表一个长度为 $1$ 的元区间 $[x, x]$；
--   对于每个内部节点 $[l,r]$，它的左儿子是 $[l,mid]$，右儿子是 $[mid+1,r]$, 其中 $mid = ⌊(l+r)/2⌋$ (即向下取整)。
-
-对于本题，线段树节点维护的信息有：
-
-1. 区间范围内被预定的次数的最大值 $v$
-1. 懒标记 $add$
-
-由于时间范围为 $10^9$，非常大，因此我们采用动态开点。
-
-时间复杂度 $O(nlogn)$，其中 $n$ 表示日程安排的数量。
-
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 from sortedcontainers import SortedDict
@@ -103,6 +101,214 @@ class MyCalendarTwo:
 # obj = MyCalendarTwo()
 # param_1 = obj.book(start,end)
 ```
+
+#### Java
+
+```java
+class MyCalendarTwo {
+    private Map<Integer, Integer> tm = new TreeMap<>();
+
+    public MyCalendarTwo() {
+    }
+
+    public boolean book(int start, int end) {
+        tm.put(start, tm.getOrDefault(start, 0) + 1);
+        tm.put(end, tm.getOrDefault(end, 0) - 1);
+        int s = 0;
+        for (int v : tm.values()) {
+            s += v;
+            if (s > 2) {
+                tm.put(start, tm.get(start) - 1);
+                tm.put(end, tm.get(end) + 1);
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
+```
+
+#### C++
+
+```cpp
+class MyCalendarTwo {
+public:
+    map<int, int> m;
+
+    MyCalendarTwo() {
+    }
+
+    bool book(int start, int end) {
+        ++m[start];
+        --m[end];
+        int s = 0;
+        for (auto& [_, v] : m) {
+            s += v;
+            if (s > 2) {
+                --m[start];
+                ++m[end];
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo* obj = new MyCalendarTwo();
+ * bool param_1 = obj->book(start,end);
+ */
+```
+
+#### Go
+
+```go
+type MyCalendarTwo struct {
+	*redblacktree.Tree
+}
+
+func Constructor() MyCalendarTwo {
+	return MyCalendarTwo{redblacktree.NewWithIntComparator()}
+}
+
+func (this *MyCalendarTwo) Book(start int, end int) bool {
+	add := func(key, val int) {
+		if v, ok := this.Get(key); ok {
+			this.Put(key, v.(int)+val)
+		} else {
+			this.Put(key, val)
+		}
+	}
+	add(start, 1)
+	add(end, -1)
+	s := 0
+	it := this.Iterator()
+	for it.Next() {
+		s += it.Value().(int)
+		if s > 2 {
+			add(start, -1)
+			add(end, 1)
+			return false
+		}
+	}
+	return true
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * obj := Constructor();
+ * param_1 := obj.Book(start,end);
+ */
+```
+
+#### TypeScript
+
+```ts
+class MyCalendarTwo {
+    private events: [number, number][];
+    private overlaps: [number, number][];
+
+    constructor() {
+        this.events = [];
+        this.overlaps = [];
+    }
+
+    book(start: number, end: number): boolean {
+        for (const [s, e] of this.overlaps) {
+            if (Math.max(start, s) < Math.min(end, e)) {
+                return false;
+            }
+        }
+
+        for (const [s, e] of this.events) {
+            if (Math.max(start, s) < Math.min(end, e)) {
+                this.overlaps.push([Math.max(start, s), Math.min(end, e)]);
+            }
+        }
+
+        this.events.push([start, end]);
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * var obj = new MyCalendarTwo()
+ * var param_1 = obj.book(start,end)
+ */
+```
+
+#### JavaScript
+
+```js
+var MyCalendarTwo = function () {
+    this.events = [];
+    this.overlaps = [];
+};
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @return {boolean}
+ */
+MyCalendarTwo.prototype.book = function (start, end) {
+    for (let [s, e] of this.overlaps) {
+        if (Math.max(start, s) < Math.min(end, e)) {
+            return false;
+        }
+    }
+
+    for (let [s, e] of this.events) {
+        if (Math.max(start, s) < Math.min(end, e)) {
+            this.overlaps.push([Math.max(start, s), Math.min(end, e)]);
+        }
+    }
+
+    this.events.push([start, end]);
+    return true;
+};
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * var obj = new MyCalendarTwo()
+ * var param_1 = obj.book(start,end)
+ */
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：线段树
+
+线段树将整个区间分割为多个不连续的子区间，子区间的数量不超过 $log(width)$。更新某个元素的值，只需要更新 $log(width)$ 个区间，并且这些区间都包含在一个包含该元素的大区间内。区间修改时，需要使用**懒标记**保证效率。
+
+-   线段树的每个节点代表一个区间；
+-   线段树具有唯一的根节点，代表的区间是整个统计范围，如 $[1,N]$；
+-   线段树的每个叶子节点代表一个长度为 $1$ 的元区间 $[x, x]$；
+-   对于每个内部节点 $[l,r]$，它的左儿子是 $[l,mid]$，右儿子是 $[mid+1,r]$, 其中 $mid = ⌊(l+r)/2⌋$ (即向下取整)。
+
+对于本题，线段树节点维护的信息有：
+
+1. 区间范围内被预定的次数的最大值 $v$
+1. 懒标记 $add$
+
+由于时间范围为 $10^9$，非常大，因此我们采用动态开点。
+
+时间复杂度 $O(nlogn)$，其中 $n$ 表示日程安排的数量。
+
+<!-- tabs:start -->
+
+#### Python3
 
 ```python
 class Node:
@@ -166,8 +372,8 @@ class SegmentTree:
             node.right.add += node.add
             node.add = 0
 
-class MyCalendarTwo:
 
+class MyCalendarTwo:
     def __init__(self):
         self.tree = SegmentTree()
 
@@ -183,40 +389,7 @@ class MyCalendarTwo:
 # param_1 = obj.book(start,end)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
-
-```java
-class MyCalendarTwo {
-    private Map<Integer, Integer> tm = new TreeMap<>();
-
-    public MyCalendarTwo() {
-
-    }
-
-    public boolean book(int start, int end) {
-        tm.put(start, tm.getOrDefault(start, 0) + 1);
-        tm.put(end, tm.getOrDefault(end, 0) - 1);
-        int s = 0;
-        for (int v : tm.values()) {
-            s += v;
-            if (s > 2) {
-                tm.put(start, tm.get(start) - 1);
-                tm.put(end, tm.get(end) + 1);
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-/**
- * Your MyCalendarTwo object will be instantiated and called as such:
- * MyCalendarTwo obj = new MyCalendarTwo();
- * boolean param_1 = obj.book(start,end);
- */
-```
+#### Java
 
 ```java
 class Node {
@@ -238,7 +411,6 @@ class SegmentTree {
     private Node root = new Node(1, (int) 1e9 + 1);
 
     public SegmentTree() {
-
     }
 
     public void modify(int l, int r, int v) {
@@ -312,7 +484,6 @@ class MyCalendarTwo {
     private SegmentTree tree = new SegmentTree();
 
     public MyCalendarTwo() {
-
     }
 
     public boolean book(int start, int end) {
@@ -331,41 +502,7 @@ class MyCalendarTwo {
  */
 ```
 
-### **C++**
-
-```cpp
-class MyCalendarTwo {
-public:
-    map<int, int> m;
-
-    MyCalendarTwo() {
-
-    }
-
-    bool book(int start, int end) {
-        ++m[start];
-        --m[end];
-        int s = 0;
-        for (auto& [_, v] : m)
-        {
-            s += v;
-            if (s > 2)
-            {
-                --m[start];
-                ++m[end];
-                return false;
-            }
-        }
-        return true;
-    }
-};
-
-/**
- * Your MyCalendarTwo object will be instantiated and called as such:
- * MyCalendarTwo* obj = new MyCalendarTwo();
- * bool param_1 = obj->book(start,end);
- */
-```
+#### C++
 
 ```cpp
 class Node {
@@ -400,10 +537,9 @@ public:
         modify(l, r, v, root);
     }
 
-    void modify(int l, int r,int v, Node* node) {
+    void modify(int l, int r, int v, Node* node) {
         if (l > r) return;
-        if (node->l >= l && node->r <= r)
-        {
+        if (node->l >= l && node->r <= r) {
             node->v += v;
             node->add += v;
             return;
@@ -420,7 +556,7 @@ public:
 
     int query(int l, int r, Node* node) {
         if (l > r) return 0;
-        if (node->l >= l && node-> r <= r) return node->v;
+        if (node->l >= l && node->r <= r) return node->v;
         pushdown(node);
         int v = 0;
         if (l <= node->mid) v = max(v, query(l, r, node->left));
@@ -435,8 +571,7 @@ public:
     void pushdown(Node* node) {
         if (!node->left) node->left = new Node(node->l, node->mid);
         if (!node->right) node->right = new Node(node->mid + 1, node->r);
-        if (node->add)
-        {
+        if (node->add) {
             Node* left = node->left;
             Node* right = node->right;
             left->v += node->add;
@@ -453,7 +588,6 @@ public:
     SegmentTree* tree = new SegmentTree();
 
     MyCalendarTwo() {
-
     }
 
     bool book(int start, int end) {
@@ -470,46 +604,7 @@ public:
  */
 ```
 
-### **Go**
-
-```go
-type MyCalendarTwo struct {
-	*redblacktree.Tree
-}
-
-func Constructor() MyCalendarTwo {
-	return MyCalendarTwo{redblacktree.NewWithIntComparator()}
-}
-
-func (this *MyCalendarTwo) Book(start int, end int) bool {
-	add := func(key, val int) {
-		if v, ok := this.Get(key); ok {
-			this.Put(key, v.(int)+val)
-		} else {
-			this.Put(key, val)
-		}
-	}
-	add(start, 1)
-	add(end, -1)
-	s := 0
-	it := this.Iterator()
-	for it.Next() {
-		s += it.Value().(int)
-		if s > 2 {
-			add(start, -1)
-			add(end, 1)
-			return false
-		}
-	}
-	return true
-}
-
-/**
- * Your MyCalendarTwo object will be instantiated and called as such:
- * obj := Constructor();
- * param_1 := obj.Book(start,end);
- */
-```
+#### Go
 
 ```go
 type node struct {
@@ -525,13 +620,6 @@ func newNode(l, r int) *node {
 		r:   r,
 		mid: int(uint(l+r) >> 1),
 	}
-}
-
-func max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
 }
 
 type segmentTree struct {
@@ -624,10 +712,8 @@ func (this *MyCalendarTwo) Book(start int, end int) bool {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

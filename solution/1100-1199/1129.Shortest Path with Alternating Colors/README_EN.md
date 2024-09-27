@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1129.Shortest%20Path%20with%20Alternating%20Colors/README_EN.md
+rating: 1779
+source: Weekly Contest 146 Q2
+tags:
+    - Breadth-First Search
+    - Graph
+---
+
+<!-- problem:start -->
+
 # [1129. Shortest Path with Alternating Colors](https://leetcode.com/problems/shortest-path-with-alternating-colors)
 
 [中文文档](/solution/1100-1199/1129.Shortest%20Path%20with%20Alternating%20Colors/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>n</code>, the number of nodes in a directed graph where the nodes are labeled from <code>0</code> to <code>n - 1</code>. Each edge is red or blue in this graph, and there could be self-edges and parallel edges.</p>
 
@@ -16,14 +31,14 @@
 <p>Return an array <code>answer</code> of length <code>n</code>, where each <code>answer[x]</code> is the length of the shortest path from node <code>0</code> to node <code>x</code> such that the edge colors alternate along the path, or <code>-1</code> if such a path does not exist.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3, redEdges = [[0,1],[1,2]], blueEdges = []
 <strong>Output:</strong> [0,1,-1]
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 3, redEdges = [[0,1]], blueEdges = [[2,1]]
@@ -40,201 +55,245 @@
 	<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub>, u<sub>j</sub>, v<sub>j</sub> &lt; n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-BFS.
+<!-- solution:start -->
+
+### Solution 1: BFS
+
+The problem is essentially a shortest path problem, which we can consider solving using BFS.
+
+First, we preprocess all the edges, categorizing all the edges by color and storing them in a multi-dimensional array $g$. Where $g[0]$ stores all red edges, and $g[1]$ stores all blue edges.
+
+Next, we define the following data structures or variables:
+
+-   Queue $q$: used to store the currently searched node and the color of the current edge;
+-   Set $vis$: used to store the nodes that have been searched and the color of the current edge;
+-   Variable $d$: used to represent the current search level, i.e., the distance from the currently searched node to the starting point;
+-   Array $ans$: used to store the shortest distance from each node to the starting point. Initially, we initialize all elements in the $ans$ array to $-1$, indicating that the distance from all nodes to the starting point is unknown.
+
+We first enqueue the starting point $0$ and the color of the starting edge $0$ or $1$, indicating that we start from the starting point and the current edge is red or blue.
+
+Next, we start the BFS search. Each time we take out a node $(i, c)$ from the queue, if the answer of the current node has not been updated, then we update the answer of the current node to the current level $d$, i.e., $ans[i] = d$. Then, we flip the color of the current edge $c$, i.e., if the current edge is red, we change it to blue, and vice versa. We take out all edges corresponding to the color, if the other end node $j$ of the edge has not been searched, then we enqueue it.
+
+After the search is over, return the answer array.
+
+The time complexity is $O(n + m)$, and the space complexity is $O(n + m)$. Here, $n$ and $m$ are the number of nodes and edges, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def shortestAlternatingPaths(self, n: int, redEdges: List[List[int]], blueEdges: List[List[int]]) -> List[int]:
-        red = defaultdict(list)
-        blue = defaultdict(list)
+    def shortestAlternatingPaths(
+        self, n: int, redEdges: List[List[int]], blueEdges: List[List[int]]
+    ) -> List[int]:
+        g = [defaultdict(list), defaultdict(list)]
         for i, j in redEdges:
-            red[i].append(j)
+            g[0][i].append(j)
         for i, j in blueEdges:
-            blue[i].append(j)
-        vis_blue = [False] * n
-        vis_red = [False] * n
-        q = deque([(0, True), (0, False)])
+            g[1][i].append(j)
         ans = [-1] * n
-        d = -1
+        vis = set()
+        q = deque([(0, 0), (0, 1)])
+        d = 0
         while q:
-            d += 1
             for _ in range(len(q)):
-                i, b = q.popleft()
-                if ans[i] == -1 or ans[i] > d:
+                i, c = q.popleft()
+                if ans[i] == -1:
                     ans[i] = d
-                vis = vis_blue if b else vis_red
-                vis[i] = True
-                ne = red[i] if b else blue[i]
-                v = vis_red if b else vis_blue
-                for j in ne:
-                    if not v[j]:
-                        v[j] = True
-                        q.append((j, not b))
+                vis.add((i, c))
+                c ^= 1
+                for j in g[c][i]:
+                    if (j, c) not in vis:
+                        q.append((j, c))
+            d += 1
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] shortestAlternatingPaths(int n, int[][] redEdges, int[][] blueEdges) {
-        List<Integer>[] red = get(n, redEdges);
-        List<Integer>[] blue = get(n, blueEdges);
-        boolean[] visBlue = new boolean[n];
-        boolean[] visRed = new boolean[n];
+        List<Integer>[][] g = new List[2][n];
+        for (var f : g) {
+            Arrays.setAll(f, k -> new ArrayList<>());
+        }
+        for (var e : redEdges) {
+            g[0][e[0]].add(e[1]);
+        }
+        for (var e : blueEdges) {
+            g[1][e[0]].add(e[1]);
+        }
         Deque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 1});
-        q.offer(new int[]{0, 0});
-        int d = -1;
+        q.offer(new int[] {0, 0});
+        q.offer(new int[] {0, 1});
+        boolean[][] vis = new boolean[n][2];
         int[] ans = new int[n];
         Arrays.fill(ans, -1);
+        int d = 0;
         while (!q.isEmpty()) {
-            ++d;
-            for (int t = q.size(); t > 0; --t) {
-                int[] p = q.poll();
-                int i = p[0];
-                boolean b = p[1] == 1;
-                if (ans[i] == -1 || ans[i] > d) {
+            for (int k = q.size(); k > 0; --k) {
+                var p = q.poll();
+                int i = p[0], c = p[1];
+                if (ans[i] == -1) {
                     ans[i] = d;
                 }
-                boolean[] vis = b ? visBlue : visRed;
-                vis[i] = true;
-                List<Integer> ne = b ? red[i] : blue[i];
-                boolean[] v = b ? visRed : visBlue;
-                for (int j : ne) {
-                    if (!v[j]) {
-                        v[j] = true;
-                        q.offer(new int[]{j, 1 - p[1]});
+                vis[i][c] = true;
+                c ^= 1;
+                for (int j : g[c][i]) {
+                    if (!vis[j][c]) {
+                        q.offer(new int[] {j, c});
                     }
                 }
             }
+            ++d;
         }
         return ans;
-    }
-
-    private List<Integer>[] get(int n, int[][] edges) {
-        List<Integer>[] res = new List[n];
-        for (int i = 0; i < n; ++i) {
-            res[i] = new ArrayList<>();
-        }
-        for (int[] e : edges) {
-            res[e[0]].add(e[1]);
-        }
-        return res;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
-        vector<vector<int>> red = get(n, redEdges);
-        vector<vector<int>> blue = get(n, blueEdges);
-        vector<bool> visBlue(n);
-        vector<bool> visRed(n);
-        queue<pair<int, bool>> q;
-        q.push({0, true});
-        q.push({0, false});
-        int d = -1;
+        vector<vector<vector<int>>> g(2, vector<vector<int>>(n));
+        for (auto& e : redEdges) {
+            g[0][e[0]].push_back(e[1]);
+        }
+        for (auto& e : blueEdges) {
+            g[1][e[0]].push_back(e[1]);
+        }
+        queue<pair<int, int>> q;
+        q.emplace(0, 0);
+        q.emplace(0, 1);
+        bool vis[n][2];
+        memset(vis, false, sizeof vis);
         vector<int> ans(n, -1);
-        while (!q.empty())
-        {
-            ++d;
-            for (int t = q.size(); t > 0; --t)
-            {
-                auto p = q.front();
+        int d = 0;
+        while (!q.empty()) {
+            for (int k = q.size(); k; --k) {
+                auto [i, c] = q.front();
                 q.pop();
-                int i = p.first;
-                bool b = p.second;
-                if (ans[i] == -1 || ans[i] > d) ans[i] = d;
-                vector<bool>& vis = b ? visBlue : visRed;
-                vis[i] = true;
-                vector<int>& ne = b ? red[i] : blue[i];
-                vector<bool>& v = b ? visRed : visBlue;
-                for (int j : ne)
-                {
-                    if (v[j]) continue;
-                    v[j] = true;
-                    q.push({j, !b});
+                if (ans[i] == -1) {
+                    ans[i] = d;
+                }
+                vis[i][c] = true;
+                c ^= 1;
+                for (int& j : g[c][i]) {
+                    if (!vis[j][c]) {
+                        q.emplace(j, c);
+                    }
                 }
             }
+            ++d;
         }
         return ans;
-    }
-
-    vector<vector<int>> get(int n, vector<vector<int>>& edges) {
-        vector<vector<int>> res(n);
-        for (auto& e : edges) res[e[0]].push_back(e[1]);
-        return res;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func shortestAlternatingPaths(n int, redEdges [][]int, blueEdges [][]int) []int {
-	get := func(edges [][]int) [][]int {
-		res := make([][]int, n)
-		for _, e := range edges {
-			res[e[0]] = append(res[e[0]], e[1])
-		}
-		return res
+	g := [2][][]int{}
+	for i := range g {
+		g[i] = make([][]int, n)
 	}
-	red := get(redEdges)
-	blue := get(blueEdges)
-	visBlue := make([]bool, n)
-	visRed := make([]bool, n)
-	q := [][]int{{0, 1}, {0, 0}}
+	for _, e := range redEdges {
+		g[0][e[0]] = append(g[0][e[0]], e[1])
+	}
+	for _, e := range blueEdges {
+		g[1][e[0]] = append(g[1][e[0]], e[1])
+	}
+	type pair struct{ i, c int }
+	q := []pair{pair{0, 0}, pair{0, 1}}
 	ans := make([]int, n)
+	vis := make([][2]bool, n)
 	for i := range ans {
 		ans[i] = -1
 	}
-	d := -1
+	d := 0
 	for len(q) > 0 {
-		d++
-		for t := len(q); t > 0; t-- {
+		for k := len(q); k > 0; k-- {
 			p := q[0]
 			q = q[1:]
-			i := p[0]
-			b := p[1] == 1
-			if ans[i] == -1 || ans[i] > d {
+			i, c := p.i, p.c
+			if ans[i] == -1 {
 				ans[i] = d
 			}
-			vis := visRed
-			ne := blue[i]
-			v := visBlue
-			if b {
-				vis = visBlue
-				ne = red[i]
-				v = visRed
-			}
-			vis[i] = true
-			for _, j := range ne {
-				if !v[j] {
-					v[j] = true
-					q = append(q, []int{j, 1 - p[1]})
+			vis[i][c] = true
+			c ^= 1
+			for _, j := range g[c][i] {
+				if !vis[j][c] {
+					q = append(q, pair{j, c})
 				}
 			}
 		}
+		d++
 	}
 	return ans
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
+```ts
+function shortestAlternatingPaths(
+    n: number,
+    redEdges: number[][],
+    blueEdges: number[][],
+): number[] {
+    const g: [Graph, Graph] = [{}, {}];
+    const ans = Array(n).fill(-1);
+    const vis = Array.from({ length: n }, () => Array.from({ length: 2 }, () => false));
+    let q: Vertex[] = [
+        [0, 0],
+        [0, 1],
+    ];
+    vis[0][0] = vis[0][1] = true;
+    let d = 0;
+    for (const [i, j] of redEdges) {
+        (g[0][i] ??= []).push(j);
+    }
+    for (const [i, j] of blueEdges) {
+        (g[1][i] ??= []).push(j);
+    }
+    while (q.length) {
+        const qNext: Vertex[] = [];
+        for (let [i, color] of q) {
+            if (ans[i] === -1) {
+                ans[i] = d;
+            }
+            color ^= 1;
+            for (const j of g[color][i] ?? []) {
+                if (!vis[j][color]) {
+                    vis[j][color] = true;
+                    qNext.push([j, color as Color]);
+                }
+            }
+        }
+        q = qNext;
+        d++;
+    }
+    return ans;
+}
 
+type Graph = Record<number, number[]>;
+type Color = 0 | 1;
+type Vertex = [number, Color];
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

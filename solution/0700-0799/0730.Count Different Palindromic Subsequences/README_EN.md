@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0730.Count%20Different%20Palindromic%20Subsequences/README_EN.md
+tags:
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [730. Count Different Palindromic Subsequences](https://leetcode.com/problems/count-different-palindromic-subsequences)
 
 [中文文档](/solution/0700-0799/0730.Count%20Different%20Palindromic%20Subsequences/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string s, return <em>the number of different non-empty palindromic subsequences in</em> <code>s</code>. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
 
@@ -13,7 +26,7 @@
 <p>Two sequences <code>a<sub>1</sub>, a<sub>2</sub>, ...</code> and <code>b<sub>1</sub>, b<sub>2</sub>, ...</code> are different if there is some <code>i</code> for which <code>a<sub>i</sub> != b<sub>i</sub></code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;bccb&quot;
@@ -22,7 +35,7 @@
 Note that &#39;bcb&#39; is counted only once, even though it occurs twice.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba&quot;
@@ -38,11 +51,17 @@ Note that &#39;bcb&#39; is counted only once, even though it occurs twice.
 	<li><code>s[i]</code> is either <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, <code>&#39;c&#39;</code>, or <code>&#39;d&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,7 +87,7 @@ class Solution:
         return sum(dp[0][-1]) % mod
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -86,7 +105,8 @@ class Solution {
                 for (char c = 'a'; c <= 'd'; ++c) {
                     int k = c - 'a';
                     if (s.charAt(i) == c && s.charAt(j) == c) {
-                        dp[i][j][k] = 2 + dp[i + 1][j - 1][0] + dp[i + 1][j - 1][1] + dp[i + 1][j - 1][2] + dp[i + 1][j - 1][3];
+                        dp[i][j][k] = 2 + dp[i + 1][j - 1][0] + dp[i + 1][j - 1][1]
+                            + dp[i + 1][j - 1][2] + dp[i + 1][j - 1][3];
                         dp[i][j][k] %= MOD;
                     } else if (s.charAt(i) == c) {
                         dp[i][j][k] = dp[i][j - 1][k];
@@ -107,7 +127,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using ll = long long;
@@ -119,18 +139,19 @@ public:
         int n = s.size();
         vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(n, vector<ll>(4)));
         for (int i = 0; i < n; ++i) dp[i][i][s[i] - 'a'] = 1;
-        for (int l = 2; l <= n; ++l)
-        {
-            for (int i = 0; i + l <= n; ++i)
-            {
+        for (int l = 2; l <= n; ++l) {
+            for (int i = 0; i + l <= n; ++i) {
                 int j = i + l - 1;
-                for (char c = 'a'; c <= 'd'; ++c)
-                {
+                for (char c = 'a'; c <= 'd'; ++c) {
                     int k = c - 'a';
-                    if (s[i] == c && s[j] == c) dp[i][j][k] = 2 + accumulate(dp[i + 1][j - 1].begin(), dp[i + 1][j - 1].end(), 0ll) % mod;
-                    else if (s[i] == c) dp[i][j][k] = dp[i][j - 1][k];
-                    else if (s[j] == c) dp[i][j][k] = dp[i + 1][j][k];
-                    else dp[i][j][k] = dp[i + 1][j - 1][k];
+                    if (s[i] == c && s[j] == c)
+                        dp[i][j][k] = 2 + accumulate(dp[i + 1][j - 1].begin(), dp[i + 1][j - 1].end(), 0ll) % mod;
+                    else if (s[i] == c)
+                        dp[i][j][k] = dp[i][j - 1][k];
+                    else if (s[j] == c)
+                        dp[i][j][k] = dp[i + 1][j][k];
+                    else
+                        dp[i][j][k] = dp[i + 1][j - 1][k];
                 }
             }
         }
@@ -140,7 +161,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func countPalindromicSubsequences(s string) int {
@@ -181,10 +202,8 @@ func countPalindromicSubsequences(s string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

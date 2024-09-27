@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1942.The%20Number%20of%20the%20Smallest%20Unoccupied%20Chair/README_EN.md
+rating: 1695
+source: Biweekly Contest 57 Q2
+tags:
+    - Array
+    - Hash Table
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [1942. The Number of the Smallest Unoccupied Chair](https://leetcode.com/problems/the-number-of-the-smallest-unoccupied-chair)
 
 [中文文档](/solution/1900-1999/1942.The%20Number%20of%20the%20Smallest%20Unoccupied%20Chair/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a party where <code>n</code> friends numbered from <code>0</code> to <code>n - 1</code> are attending. There is an <strong>infinite</strong> number of chairs in this party that are numbered from <code>0</code> to <code>infinity</code>. When a friend arrives at the party, they sit on the unoccupied chair with the <strong>smallest number</strong>.</p>
 
@@ -17,7 +33,7 @@
 <p>Return<em> the <strong>chair number</strong> that the friend numbered </em><code>targetFriend</code><em> will sit on</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> times = [[1,4],[2,3],[4,6]], targetFriend = 1
@@ -31,7 +47,7 @@
 Since friend 1 sat on chair 1, we return 1.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> times = [[3,10],[1,5],[2,6]], targetFriend = 0
@@ -58,11 +74,17 @@ Since friend 0 sat on chair 2, we return 2.
 	<li>Each <code>arrival<sub>i</sub></code> time is <strong>distinct</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -84,7 +106,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +116,7 @@ class Solution {
         PriorityQueue<Integer> q = new PriorityQueue<>();
         PriorityQueue<int[]> busy = new PriorityQueue<>((a, b) -> a[0] - b[0]);
         for (int i = 0; i < n; ++i) {
-            ts[i] = new int[]{times[i][0], times[i][1], i};
+            ts[i] = new int[] {times[i][0], times[i][1], i};
             q.offer(i);
         }
         Arrays.sort(ts, (a, b) -> a[0] - b[0]);
@@ -107,14 +129,14 @@ class Solution {
             if (i == targetFriend) {
                 return c;
             }
-            busy.offer(new int[]{b, c});
+            busy.offer(new int[] {b, c});
         }
         return -1;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 using pii = pair<int, int>;
@@ -125,17 +147,14 @@ public:
         priority_queue<int, vector<int>, greater<int>> q;
         priority_queue<pii, vector<pii>, greater<pii>> busy;
         int n = times.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             times[i].push_back(i);
             q.push(i);
         }
         sort(times.begin(), times.end());
-        for (auto& t : times)
-        {
+        for (auto& t : times) {
             int a = t[0], b = t[1], i = t[2];
-            while (!busy.empty() && busy.top().first <= a)
-            {
+            while (!busy.empty() && busy.top().first <= a) {
                 q.push(busy.top().second);
                 busy.pop();
             }
@@ -149,10 +168,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

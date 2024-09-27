@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0657.Robot%20Return%20to%20Origin/README_EN.md
+tags:
+    - String
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [657. Robot Return to Origin](https://leetcode.com/problems/robot-return-to-origin)
 
 [中文文档](/solution/0600-0699/0657.Robot%20Return%20to%20Origin/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is a robot starting at the position <code>(0, 0)</code>, the origin, on a 2D plane. Given a sequence of its moves, judge if this robot <strong>ends up at </strong><code>(0, 0)</code> after it completes its moves.</p>
 
@@ -13,7 +26,7 @@
 <p><strong>Note</strong>: The way that the robot is &quot;facing&quot; is irrelevant. <code>&#39;R&#39;</code> will always make the robot move to the right once, <code>&#39;L&#39;</code> will always make it move left, etc. Also, assume that the magnitude of the robot&#39;s movement is the same for each move.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> moves = &quot;UD&quot;
@@ -21,7 +34,7 @@
 <strong>Explanation</strong>: The robot moves up once, and then down once. All moves have the same magnitude, so it ended up at the origin where it started. Therefore, we return true.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> moves = &quot;LL&quot;
@@ -37,11 +50,17 @@
 	<li><code>moves</code> only contains the characters <code>&#39;U&#39;</code>, <code>&#39;D&#39;</code>, <code>&#39;L&#39;</code> and <code>&#39;R&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -59,7 +78,7 @@ class Solution:
         return x == 0 and y == 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -67,17 +86,21 @@ class Solution {
         int x = 0, y = 0;
         for (int i = 0; i < moves.length(); ++i) {
             char c = moves.charAt(i);
-            if (c == 'R') ++x;
-            else if (c == 'L') --x;
-            else if (c == 'U') ++y;
-            else if (c == 'D') --y;
+            if (c == 'R')
+                ++x;
+            else if (c == 'L')
+                --x;
+            else if (c == 'U')
+                ++y;
+            else if (c == 'D')
+                --y;
         }
         return x == 0 && y == 0;
     }
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function judgeCircle(moves: string): boolean {
@@ -98,10 +121,8 @@ function judgeCircle(moves: string): boolean {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

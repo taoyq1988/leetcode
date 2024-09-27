@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0970.Powerful%20Integers/README.md
+tags:
+    - 哈希表
+    - 数学
+    - 枚举
+---
+
+<!-- problem:start -->
+
 # [970. 强整数](https://leetcode.cn/problems/powerful-integers)
 
 [English Version](/solution/0900-0999/0970.Powerful%20Integers/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定三个整数 <code>x</code>&nbsp;、&nbsp;<code>y</code>&nbsp;和<em>&nbsp;</em><code>bound</code><em>&nbsp;</em>，返回 <em>值小于或等于&nbsp;<code>bound</code>&nbsp;的所有&nbsp;<strong>强整数</strong>&nbsp;组成的列表</em>&nbsp;。</p>
 
@@ -44,48 +56,55 @@
 	<li><code>0 &lt;= bound &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：哈希表 + 枚举
+
+根据题目描述，一个强整数可以表示成 $x^i + y^j$，其中 $i \geq 0$, $j \geq 0$。
+
+题目需要我们找出所有不超过 $bound$ 的强整数，我们注意到 $bound$ 的取值范围不超过 $10^6$，而 $2^{20} = 1048576 \gt 10^6$。因此，如果 $x \geq 2$，那么 $i$ 最大不超过 $20$，才有可能使得 $x^i + y^j \leq bound$ 成立。同理，如果 $y \geq 2$，那么 $j$ 最大不超过 $20$。
+
+因此我们可以使用双重循环，枚举所有可能的 $x^i$ 和 $y^j$，分别记为 $a$ 和 $b$，并保证 $a + b \leq bound$，此时 $a + b$ 即为一个强整数。我们使用哈希表存储所有满足条件的强整数，最后将哈希表中的所有元素转换成答案列表返回即可。
+
+> 注意，如果 $x=1$ 或者 $y=1$，那么 $a$ 或者 $b$ 的值恒等于 $1$，对应的循环只需要执行一次即可退出。
+
+时间复杂度 $O(\log^2 bound)$，空间复杂度 $O(\log^2 bound)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def powerfulIntegers(self, x: int, y: int, bound: int) -> List[int]:
-        s = set()
-        i = 1
-        while i < bound:
-            j = 1
-            while j < bound:
-                if i + j <= bound:
-                    s.add(i + j)
+        ans = set()
+        a = 1
+        while a <= bound:
+            b = 1
+            while a + b <= bound:
+                ans.add(a + b)
+                b *= y
                 if y == 1:
                     break
-                j *= y
             if x == 1:
                 break
-            i *= x
-        return list(s)
+            a *= x
+        return list(ans)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public List<Integer> powerfulIntegers(int x, int y, int bound) {
-        Set<Integer> s = new HashSet<>();
-        for (int i = 1; i < bound; i *= x) {
-            for (int j = 1; j < bound; j *= y) {
-                if (i + j <= bound) {
-                    s.add(i + j);
-                }
+        Set<Integer> ans = new HashSet<>();
+        for (int a = 1; a <= bound; a *= x) {
+            for (int b = 1; a + b <= bound; b *= y) {
+                ans.add(a + b);
                 if (y == 1) {
                     break;
                 }
@@ -94,12 +113,78 @@ class Solution {
                 break;
             }
         }
-        return new ArrayList<>(s);
+        return new ArrayList<>(ans);
     }
 }
 ```
 
-### **JavaScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    vector<int> powerfulIntegers(int x, int y, int bound) {
+        unordered_set<int> ans;
+        for (int a = 1; a <= bound; a *= x) {
+            for (int b = 1; a + b <= bound; b *= y) {
+                ans.insert(a + b);
+                if (y == 1) {
+                    break;
+                }
+            }
+            if (x == 1) {
+                break;
+            }
+        }
+        return vector<int>(ans.begin(), ans.end());
+    }
+};
+```
+
+#### Go
+
+```go
+func powerfulIntegers(x int, y int, bound int) (ans []int) {
+	s := map[int]struct{}{}
+	for a := 1; a <= bound; a *= x {
+		for b := 1; a+b <= bound; b *= y {
+			s[a+b] = struct{}{}
+			if y == 1 {
+				break
+			}
+		}
+		if x == 1 {
+			break
+		}
+	}
+	for x := range s {
+		ans = append(ans, x)
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+function powerfulIntegers(x: number, y: number, bound: number): number[] {
+    const ans = new Set<number>();
+    for (let a = 1; a <= bound; a *= x) {
+        for (let b = 1; a + b <= bound; b *= y) {
+            ans.add(a + b);
+            if (y === 1) {
+                break;
+            }
+        }
+        if (x === 1) {
+            break;
+        }
+    }
+    return Array.from(ans);
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -109,24 +194,24 @@ class Solution {
  * @return {number[]}
  */
 var powerfulIntegers = function (x, y, bound) {
-    let res = new Set();
-    for (let i = 1; i < bound; i *= x) {
-        for (let j = 1; j < bound; j *= y) {
-            if (i + j <= bound) {
-                res.add(i + j);
+    const ans = new Set();
+    for (let a = 1; a <= bound; a *= x) {
+        for (let b = 1; a + b <= bound; b *= y) {
+            ans.add(a + b);
+            if (y === 1) {
+                break;
             }
-            if (y == 1) break;
         }
-        if (x == 1) break;
+        if (x === 1) {
+            break;
+        }
     }
-    return [...res];
+    return [...ans];
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

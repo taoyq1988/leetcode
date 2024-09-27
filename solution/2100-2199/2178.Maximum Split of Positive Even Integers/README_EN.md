@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2178.Maximum%20Split%20of%20Positive%20Even%20Integers/README_EN.md
+rating: 1538
+source: Biweekly Contest 72 Q3
+tags:
+    - Greedy
+    - Math
+    - Backtracking
+---
+
+<!-- problem:start -->
+
 # [2178. Maximum Split of Positive Even Integers](https://leetcode.com/problems/maximum-split-of-positive-even-integers)
 
 [中文文档](/solution/2100-2199/2178.Maximum%20Split%20of%20Positive%20Even%20Integers/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>finalSum</code>. Split it into a sum of a <strong>maximum</strong> number of <strong>unique</strong> positive even integers.</p>
 
@@ -13,7 +29,7 @@
 <p>Return <em>a list of integers that represent a valid split containing a <strong>maximum</strong> number of integers</em>. If no valid split exists for <code>finalSum</code>, return <em>an <strong>empty</strong> list</em>. You may return the integers in <strong>any</strong> order.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> finalSum = 12
@@ -23,7 +39,7 @@
 Note that [2,6,4], [6,2,4], etc. are also accepted.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> finalSum = 7
@@ -32,7 +48,7 @@ Note that [2,6,4], [6,2,4], etc. are also accepted.
 Thus, we return an empty array.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> finalSum = 28
@@ -49,11 +65,17 @@ Note that [10,2,4,12], [6,2,4,16], etc. are also accepted.
 	<li><code>1 &lt;= finalSum &lt;= 10<sup>10</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -70,7 +92,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -89,7 +111,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -97,8 +119,7 @@ public:
     vector<long long> maximumEvenSplit(long long finalSum) {
         vector<long long> ans;
         if (finalSum % 2) return ans;
-        for (long long i = 2; i <= finalSum; i += 2)
-        {
+        for (long long i = 2; i <= finalSum; i += 2) {
             ans.push_back(i);
             finalSum -= i;
         }
@@ -108,33 +129,60 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func maximumEvenSplit(finalSum int64) []int64 {
-	ans := []int64{}
+func maximumEvenSplit(finalSum int64) (ans []int64) {
 	if finalSum%2 == 1 {
-		return ans
+		return
 	}
 	for i := int64(2); i <= finalSum; i += 2 {
 		ans = append(ans, i)
 		finalSum -= i
 	}
 	ans[len(ans)-1] += finalSum
-	return ans
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
-
+function maximumEvenSplit(finalSum: number): number[] {
+    const ans: number[] = [];
+    if (finalSum % 2 === 1) {
+        return ans;
+    }
+    for (let i = 2; i <= finalSum; i += 2) {
+        ans.push(i);
+        finalSum -= i;
+    }
+    ans[ans.length - 1] += finalSum;
+    return ans;
+}
 ```
 
-### **...**
+#### C#
 
-```
-
+```cs
+public class Solution {
+    public IList<long> MaximumEvenSplit(long finalSum) {
+        IList<long> ans = new List<long>();
+        if (finalSum % 2 == 1) {
+            return ans;
+        }
+        for (long i = 2; i <= finalSum; i += 2) {
+            ans.Add(i);
+            finalSum -= i;
+        }
+        ans[ans.Count - 1] += finalSum;
+        return ans;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

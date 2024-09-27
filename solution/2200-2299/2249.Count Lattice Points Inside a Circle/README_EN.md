@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2249.Count%20Lattice%20Points%20Inside%20a%20Circle/README_EN.md
+rating: 1602
+source: Weekly Contest 290 Q2
+tags:
+    - Geometry
+    - Array
+    - Hash Table
+    - Math
+    - Enumeration
+---
+
+<!-- problem:start -->
+
 # [2249. Count Lattice Points Inside a Circle](https://leetcode.com/problems/count-lattice-points-inside-a-circle)
 
 [中文文档](/solution/2200-2299/2249.Count%20Lattice%20Points%20Inside%20a%20Circle/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a 2D integer array <code>circles</code> where <code>circles[i] = [x<sub>i</sub>, y<sub>i</sub>, r<sub>i</sub>]</code> represents the center <code>(x<sub>i</sub>, y<sub>i</sub>)</code> and radius <code>r<sub>i</sub></code> of the <code>i<sup>th</sup></code> circle drawn on a grid, return <em>the <strong>number of lattice points</strong> </em><em>that are present inside <strong>at least one</strong> circle</em>.</p>
 
@@ -14,7 +32,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2249.Count%20Lattice%20Points%20Inside%20a%20Circle/images/exa-11.png" style="width: 300px; height: 300px;" />
 <pre>
 <strong>Input:</strong> circles = [[2,2,1]]
@@ -25,7 +43,7 @@ The lattice points present inside the circle are (1, 2), (2, 1), (2, 2), (2, 3),
 Other points such as (1, 1) and (1, 3), which are shown in red, are not considered inside the circle.
 Hence, the number of lattice points present inside at least one circle is 5.</pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/2200-2299/2249.Count%20Lattice%20Points%20Inside%20a%20Circle/images/exa-22.png" style="width: 300px; height: 300px;" />
 <pre>
 <strong>Input:</strong> circles = [[2,2,2],[3,4,1]]
@@ -46,40 +64,51 @@ Some of them are (0, 2), (2, 0), (2, 4), (3, 2), and (4, 4).
 	<li><code>1 &lt;= r<sub>i</sub> &lt;= min(x<sub>i</sub>, y<sub>i</sub>)</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def countLatticePoints(self, circles: List[List[int]]) -> int:
         ans = 0
-        imx = max(x + r for x, _, r in circles)
-        jmx = max(y + r for _, y, r in circles)
-        for i in range(imx + 1):
-            for j in range(jmx + 1):
+        mx = max(x + r for x, _, r in circles)
+        my = max(y + r for _, y, r in circles)
+        for i in range(mx + 1):
+            for j in range(my + 1):
                 for x, y, r in circles:
-                    x, y = x - i, y - j
-                    if x * x + y * y <= r * r:
+                    dx, dy = i - x, j - y
+                    if dx * dx + dy * dy <= r * r:
                         ans += 1
                         break
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int countLatticePoints(int[][] circles) {
+        int mx = 0, my = 0;
+        for (var c : circles) {
+            mx = Math.max(mx, c[0] + c[2]);
+            my = Math.max(my, c[1] + c[2]);
+        }
         int ans = 0;
-        for (int i = 0; i <= 200; i++) {
-            for (int j = 0; j <= 200; j++) {
-                for (int[] circle : circles) {
-                    int x = circle[0], y = circle[1], r = circle[2];
-                    if ((i - x) * (i - x) + (j - y) * (j - y) <= r * r) {
-                        ans++;
+        for (int i = 0; i <= mx; ++i) {
+            for (int j = 0; j <= my; ++j) {
+                for (var c : circles) {
+                    int dx = i - c[0], dy = j - c[1];
+                    if (dx * dx + dy * dy <= c[2] * c[2]) {
+                        ++ans;
                         break;
                     }
                 }
@@ -90,55 +119,23 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function countLatticePoints(circles: number[][]): number {
-    const n = circles.length;
-    let minX = Number.MAX_SAFE_INTEGER,
-        minY = minX,
-        maxX = Number.MIN_SAFE_INTEGER,
-        maxY = maxX;
-    let squares = [];
-    for (let [x, y, r] of circles) {
-        minX = Math.min(x - r, minX);
-        minY = Math.min(y - r, minY);
-        maxX = Math.max(x + r, maxX);
-        maxY = Math.max(y + r, maxY);
-        squares.push(r ** 2);
-    }
-    let ans = 0;
-    for (let i = minX; i <= maxX; i++) {
-        for (let j = minY; j <= maxY; j++) {
-            for (let k = 0; k < n; k++) {
-                const [x, y] = circles[k];
-                if ((i - x) ** 2 + (j - y) ** 2 <= squares[k]) {
-                    ans++;
-                    break;
-                }
-            }
-        }
-    }
-    return ans;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int countLatticePoints(vector<vector<int>>& circles) {
+        int mx = 0, my = 0;
+        for (auto& c : circles) {
+            mx = max(mx, c[0] + c[2]);
+            my = max(my, c[1] + c[2]);
+        }
         int ans = 0;
-        for (int i = 0; i <= 200; ++i)
-        {
-            for (int j = 0; j <= 200; ++j)
-            {
-                for (auto& c : circles)
-                {
-                    int x = c[0] - i, y = c[1] - j, r = c[2];
-                    if (x * x + y * y <= r * r)
-                    {
+        for (int i = 0; i <= mx; ++i) {
+            for (int j = 0; j <= my; ++j) {
+                for (auto& c : circles) {
+                    int dx = i - c[0], dy = j - c[1];
+                    if (dx * dx + dy * dy <= c[2] * c[2]) {
                         ++ans;
                         break;
                     }
@@ -150,30 +147,59 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func countLatticePoints(circles [][]int) int {
-	ans := 0
-	for i := 0; i <= 200; i++ {
-		for j := 0; j <= 200; j++ {
+func countLatticePoints(circles [][]int) (ans int) {
+	mx, my := 0, 0
+	for _, c := range circles {
+		mx = max(mx, c[0]+c[2])
+		my = max(my, c[1]+c[2])
+	}
+	for i := 0; i <= mx; i++ {
+		for j := 0; j <= my; j++ {
 			for _, c := range circles {
-				x, y, r := c[0]-i, c[1]-j, c[2]
-				if x*x+y*y <= r*r {
+				dx, dy := i-c[0], j-c[1]
+				if dx*dx+dy*dy <= c[2]*c[2] {
 					ans++
 					break
 				}
 			}
 		}
 	}
-	return ans
+	return
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function countLatticePoints(circles: number[][]): number {
+    let mx = 0;
+    let my = 0;
+    for (const [x, y, r] of circles) {
+        mx = Math.max(mx, x + r);
+        my = Math.max(my, y + r);
+    }
+    let ans = 0;
+    for (let i = 0; i <= mx; ++i) {
+        for (let j = 0; j <= my; ++j) {
+            for (const [x, y, r] of circles) {
+                const dx = i - x;
+                const dy = j - y;
+                if (dx * dx + dy * dy <= r * r) {
+                    ++ans;
+                    break;
+                }
+            }
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

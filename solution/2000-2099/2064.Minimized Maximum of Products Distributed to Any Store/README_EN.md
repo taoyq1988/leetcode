@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2064.Minimized%20Maximum%20of%20Products%20Distributed%20to%20Any%20Store/README_EN.md
+rating: 1885
+source: Weekly Contest 266 Q3
+tags:
+    - Array
+    - Binary Search
+---
+
+<!-- problem:start -->
+
 # [2064. Minimized Maximum of Products Distributed to Any Store](https://leetcode.com/problems/minimized-maximum-of-products-distributed-to-any-store)
 
 [中文文档](/solution/2000-2099/2064.Minimized%20Maximum%20of%20Products%20Distributed%20to%20Any%20Store/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>n</code> indicating there are <code>n</code> specialty retail stores. There are <code>m</code> product types of varying amounts, which are given as a <strong>0-indexed</strong> integer array <code>quantities</code>, where <code>quantities[i]</code> represents the number of products of the <code>i<sup>th</sup></code> product type.</p>
 
@@ -16,7 +31,7 @@
 <p>Return <em>the minimum possible</em> <code>x</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 6, quantities = [11,6]
@@ -27,7 +42,7 @@
 The maximum number of products given to any store is max(2, 3, 3, 3, 3, 3) = 3.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 7, quantities = [15,10,10]
@@ -39,7 +54,7 @@ The maximum number of products given to any store is max(2, 3, 3, 3, 3, 3) = 3.
 The maximum number of products given to any store is max(5, 5, 5, 5, 5, 5, 5) = 5.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> n = 1, quantities = [100000]
@@ -58,29 +73,28 @@ The maximum number of products given to any store is max(100000) = 100000.
 	<li><code>1 &lt;= quantities[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Binary search.
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def minimizedMaximum(self, n: int, quantities: List[int]) -> int:
-        left, right = 1, int(1e5)
-        while left < right:
-            mid = (left + right) >> 1
-            s = sum([(q + mid - 1) // mid for q in quantities])
-            if s <= n:
-                right = mid
-            else:
-                left = mid + 1
-        return left
+        def check(x):
+            return sum((v + x - 1) // x for v in quantities) <= n
+
+        return 1 + bisect_left(range(1, 10**6), True, key=check)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -88,11 +102,11 @@ class Solution {
         int left = 1, right = (int) 1e5;
         while (left < right) {
             int mid = (left + right) >> 1;
-            int s = 0;
-            for (int q : quantities) {
-                s += ((q + mid - 1) / mid);
+            int cnt = 0;
+            for (int v : quantities) {
+                cnt += (v + mid - 1) / mid;
             }
-            if (s <= n) {
+            if (cnt <= n) {
                 right = mid;
             } else {
                 left = mid + 1;
@@ -103,19 +117,58 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minimizedMaximum(int n, vector<int>& quantities) {
+        int left = 1, right = 1e5;
+        while (left < right) {
+            int mid = (left + right) >> 1;
+            int cnt = 0;
+            for (int& v : quantities) {
+                cnt += (v + mid - 1) / mid;
+            }
+            if (cnt <= n) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+};
+```
+
+#### Go
+
+```go
+func minimizedMaximum(n int, quantities []int) int {
+	return 1 + sort.Search(1e5, func(x int) bool {
+		x++
+		cnt := 0
+		for _, v := range quantities {
+			cnt += (v + x - 1) / x
+		}
+		return cnt <= n
+	})
+}
+```
+
+#### TypeScript
 
 ```ts
 function minimizedMaximum(n: number, quantities: number[]): number {
-    let left = 1,
-        right = 1e5;
+    let left = 1;
+    let right = 1e5;
     while (left < right) {
         const mid = (left + right) >> 1;
-        let s = 0;
-        for (let q of quantities) {
-            s += Math.floor((q - 1) / mid) + 1;
+        let cnt = 0;
+        for (const v of quantities) {
+            cnt += Math.ceil(v / mid);
         }
-        if (s <= n) {
+        if (cnt <= n) {
             right = mid;
         } else {
             left = mid + 1;
@@ -125,51 +178,8 @@ function minimizedMaximum(n: number, quantities: number[]): number {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int minimizedMaximum(int n, vector<int>& quantities) {
-        int left = 1, right = 1e5;
-        while (left < right)
-        {
-            int mid = (left + right) >> 1;
-            int s = 0;
-            for (int& q : quantities) s += (q + mid - 1) / mid;
-            if (s <= n) right = mid;
-            else left = mid + 1;
-        }
-        return left;
-    }
-};
-```
-
-### **Go**
-
-```go
-func minimizedMaximum(n int, quantities []int) int {
-	left, right := 1, int(1e5)
-	for left < right {
-		mid := (left + right) >> 1
-		s := 0
-		for _, q := range quantities {
-			s += (q + mid - 1) / mid
-		}
-		if s <= n {
-			right = mid
-		} else {
-			left = mid + 1
-		}
-	}
-	return left
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

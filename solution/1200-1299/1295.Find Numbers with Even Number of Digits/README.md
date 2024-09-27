@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1295.Find%20Numbers%20with%20Even%20Number%20of%20Digits/README.md
+rating: 1139
+source: 第 168 场周赛 Q1
+tags:
+    - 数组
+    - 数学
+---
+
+<!-- problem:start -->
+
 # [1295. 统计位数为偶数的数字](https://leetcode.cn/problems/find-numbers-with-even-number-of-digits)
 
 [English Version](/solution/1200-1299/1295.Find%20Numbers%20with%20Even%20Number%20of%20Digits/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数数组&nbsp;<code>nums</code>，请你返回其中位数为&nbsp;<strong>偶数</strong>&nbsp;的数字的个数。</p>
 
@@ -12,7 +25,8 @@
 
 <p><strong>示例 1：</strong></p>
 
-<pre><strong>输入：</strong>nums = [12,345,2,6,7896]
+<pre>
+<strong>输入：</strong>nums = [12,345,2,6,7896]
 <strong>输出：</strong>2
 <strong>解释：
 </strong>12 是 2 位数字（位数为偶数）&nbsp;
@@ -25,7 +39,8 @@
 
 <p><strong>示例 2：</strong></p>
 
-<pre><strong>输入：</strong>nums = [555,901,482,1771]
+<pre>
+<strong>输入：</strong>nums = [555,901,482,1771]
 <strong>输出：</strong>1 
 <strong>解释： </strong>
 只有 1771 是位数为偶数的数字。
@@ -37,78 +52,93 @@
 
 <ul>
 	<li><code>1 &lt;= nums.length &lt;= 500</code></li>
-	<li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+	<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
+
+<!-- description:end -->
 
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-首先将数组元素转换为字符串,判断字符串长度是否为偶数即可。
+### 方法一：枚举
+
+枚举数组 `nums` 中的每个元素，将其转换为字符串，判断字符串长度是否为偶数，是则答案加一。
+
+时间复杂度 $O(n \times \log_{10} m)$，空间复杂度 $O(\log_{10} m)$，其中 $n$ 和 $m$ 分别为数组 `nums` 的长度以及数组 `nums` 中的最大元素。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def findNumbers(self, nums: List[int]) -> int:
-        return sum(1 for num in nums if (len(str(num)) & 1) == 0)
+        return sum(len(str(v)) % 2 == 0 for v in nums)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int findNumbers(int[] nums) {
-        int s = 0;
-        for (int num : nums) {
-            if ((String.valueOf(num).length() & 1) == 0) {
-                ++s;
+        int ans = 0;
+        for (int v : nums) {
+            if (String.valueOf(v).length() % 2 == 0) {
+                ++ans;
             }
         }
-        return s;
+        return ans;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int findNumbers(vector<int>& nums) {
-        int s = 0;
-        for (int num : nums) {
-            s += (to_string(num).size() & 1) == 0;
+        int ans = 0;
+        for (int& v : nums) {
+            ans += to_string(v).size() % 2 == 0;
         }
-        return s;
+        return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func findNumbers(nums []int) int {
-	s := 0
-	for _, num := range nums {
-		if (len(strconv.Itoa(num)) & 1) == 0 {
-			s++
+func findNumbers(nums []int) (ans int) {
+	for _, v := range nums {
+		if len(strconv.Itoa(v))%2 == 0 {
+			ans++
 		}
 	}
-	return s
+	return
 }
 ```
 
-### **...**
+#### JavaScript
 
-```
-
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findNumbers = function (nums) {
+    let ans = 0;
+    for (const v of nums) {
+        ans += String(v).length % 2 == 0;
+    }
+    return ans;
+};
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,17 +1,29 @@
-# [708. Insert into a Sorted Circular Linked List](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0708.Insert%20into%20a%20Sorted%20Circular%20Linked%20List/README_EN.md
+tags:
+    - Linked List
+---
+
+<!-- problem:start -->
+
+# [708. Insert into a Sorted Circular Linked List 🔒](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list)
 
 [中文文档](/solution/0700-0799/0708.Insert%20into%20a%20Sorted%20Circular%20Linked%20List/README.md)
 
 ## Description
 
-<p>Given a Circular Linked List node, which is sorted in ascending order, write a function to insert a value <code>insertVal</code> into the list such that it remains a sorted circular list. The given node can be a reference to any single node in the list and may not necessarily be the smallest value in the circular list.</p>
+<!-- description:start -->
+
+<p>Given a Circular Linked List node, which is sorted in non-descending order, write a function to insert a value <code>insertVal</code> into the list such that it remains a sorted circular list. The given node can be a reference to any single node in the list and may not necessarily be the smallest value in the circular list.</p>
 
 <p>If there are multiple suitable places for insertion, you may choose any place to insert the new value. After the insertion, the circular list should remain sorted.</p>
 
 <p>If the list is empty (i.e., the given node is <code>null</code>), you should create a new single circular list and return the reference to that single node. Otherwise, you should return the originally given node.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0708.Insert%20into%20a%20Sorted%20Circular%20Linked%20List/images/example_1_before_65p.jpg" style="width: 250px; height: 149px;" /><br />
 &nbsp;
 <pre>
@@ -23,7 +35,7 @@
 
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> head = [], insertVal = 1
@@ -31,7 +43,7 @@
 <strong>Explanation:</strong> The list is empty (given head is&nbsp;<code>null</code>). We create a new single circular list and return the reference to that single node.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> head = [1], insertVal = 0
@@ -46,11 +58,17 @@
 	<li><code>-10<sup>6</sup> &lt;= Node.val, insertVal &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 """
@@ -70,7 +88,9 @@ class Solution:
             return node
         prev, curr = head, head.next
         while curr != head:
-            if prev.val <= insertVal <= curr.val or (prev.val > curr.val and (insertVal >= prev.val or insertVal <= curr.val)):
+            if prev.val <= insertVal <= curr.val or (
+                prev.val > curr.val and (insertVal >= prev.val or insertVal <= curr.val)
+            ):
                 break
             prev, curr = curr, curr.next
         prev.next = node
@@ -78,7 +98,7 @@ class Solution:
         return head
 ```
 
-### **Java**
+#### Java
 
 ```java
 /*
@@ -109,7 +129,8 @@ class Solution {
         }
         Node prev = head, curr = head.next;
         while (curr != head) {
-            if ((prev.val <= insertVal && insertVal <= curr.val) || (prev.val > curr.val && (insertVal >= prev.val || insertVal <= curr.val))) {
+            if ((prev.val <= insertVal && insertVal <= curr.val)
+                || (prev.val > curr.val && (insertVal >= prev.val || insertVal <= curr.val))) {
                 break;
             }
             prev = curr;
@@ -122,7 +143,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /*
@@ -150,14 +171,12 @@ class Solution {
 public:
     Node* insert(Node* head, int insertVal) {
         Node* node = new Node(insertVal);
-        if (!head)
-        {
+        if (!head) {
             node->next = node;
             return node;
         }
         Node *prev = head, *curr = head->next;
-        while (curr != head)
-        {
+        while (curr != head) {
             if ((prev->val <= insertVal && insertVal <= curr->val) || (prev->val > curr->val && (insertVal >= prev->val || insertVal <= curr->val))) break;
             prev = curr;
             curr = curr->next;
@@ -169,7 +188,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -199,10 +218,8 @@ func insert(head *Node, x int) *Node {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2294.Partition%20Array%20Such%20That%20Maximum%20Difference%20Is%20K/README.md
+rating: 1416
+source: 第 296 场周赛 Q2
+tags:
+    - 贪心
+    - 数组
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [2294. 划分数组使最大差为 K](https://leetcode.cn/problems/partition-array-such-that-maximum-difference-is-k)
 
 [English Version](/solution/2200-2299/2294.Partition%20Array%20Such%20That%20Maximum%20Difference%20Is%20K/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code> 。你可以将 <code>nums</code> 划分成一个或多个 <strong>子序列</strong> ，使 <code>nums</code> 中的每个元素都 <strong>恰好</strong> 出现在一个子序列中。</p>
 
@@ -61,47 +75,44 @@
 	<li><code>0 &lt;= k &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：排序**
+### 方法一：贪心 + 排序
+
+题目要求划分子序列，而不是子数组，因此子序列中的元素可以不连续。我们可以将数组 $\textit{nums}$ 排序，假设当前子序列的第一个元素为 $a$，则子序列中的最大值和最小值的差值不会超过 $k$。因此我们可以遍历数组 $\textit{nums}$，如果当前元素 $b$ 与 $a$ 的差值大于 $k$，则更新 $a$ 为 $b$，并将子序列数目加 1。遍历结束后，即可得到最少子序列数目，注意初始时子序列数目为 $1$。
+
+时间复杂度 $O(n \times \log n)$，空间复杂度 $O(\log n)$。其中 $n$ 为数组 $\textit{nums}$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def partitionArray(self, nums: List[int], k: int) -> int:
         nums.sort()
-        d, ans = 0, 1
-        for a, b in pairwise(nums):
-            if (t := b - a) + d <= k:
-                d += t
-            else:
-                d, ans = 0, ans + 1
+        ans, a = 1, nums[0]
+        for b in nums:
+            if b - a > k:
+                a = b
+                ans += 1
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public int partitionArray(int[] nums, int k) {
         Arrays.sort(nums);
-        int d = 0, ans = 1;
-        for (int i = 1; i < nums.length; ++i) {
-            int a = nums[i - 1], b = nums[i];
-            int t = b - a;
-            if (d + t <= k) {
-                d += t;
-            } else {
-                d = 0;
+        int ans = 1, a = nums[0];
+        for (int b : nums) {
+            if (b - a > k) {
+                a = b;
                 ++ans;
             }
         }
@@ -110,22 +121,17 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int partitionArray(vector<int>& nums, int k) {
         sort(nums.begin(), nums.end());
-        int d = 0, ans = 1;
-        for (int i = 1; i < nums.size(); ++i)
-        {
-            int a = nums[i - 1], b = nums[i];
-            int t = b - a;
-            if (d + t <= k) d += t;
-            else
-            {
-                d = 0;
+        int ans = 1, a = nums[0];
+        for (int& b : nums) {
+            if (b - a > k) {
+                a = b;
                 ++ans;
             }
         }
@@ -134,18 +140,15 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func partitionArray(nums []int, k int) int {
 	sort.Ints(nums)
-	d, ans := 0, 1
-	for i, v := range nums[1:] {
-		t := v - nums[i]
-		if d+t <= k {
-			d += t
-		} else {
-			d = 0
+	ans, a := 1, nums[0]
+	for _, b := range nums {
+		if b-a > k {
+			a = b
 			ans++
 		}
 	}
@@ -153,26 +156,25 @@ func partitionArray(nums []int, k int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function partitionArray(nums: number[], k: number): number {
     nums.sort((a, b) => a - b);
     let ans = 1;
-    let prev = nums[0] + k;
-    for (let num of nums) {
-        if (num <= prev) continue;
-        prev = num + k;
-        ans++;
+    let a = nums[0];
+    for (const b of nums) {
+        if (b - a > k) {
+            a = b;
+            ++ans;
+        }
     }
     return ans;
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

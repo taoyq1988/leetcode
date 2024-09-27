@@ -1,24 +1,45 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0900-0999/0976.Largest%20Perimeter%20Triangle/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Math
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [976. Largest Perimeter Triangle](https://leetcode.com/problems/largest-perimeter-triangle)
 
 [中文文档](/solution/0900-0999/0976.Largest%20Perimeter%20Triangle/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an integer array <code>nums</code>, return <em>the largest perimeter of a triangle with a non-zero area, formed from three of these lengths</em>. If it is impossible to form any triangle of a non-zero area, return <code>0</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,1,2]
 <strong>Output:</strong> 5
+<strong>Explanation:</strong> You can form a triangle with three side lengths: 1, 2, and 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
-<strong>Input:</strong> nums = [1,2,1]
+<strong>Input:</strong> nums = [1,2,1,10]
 <strong>Output:</strong> 0
+<strong>Explanation:</strong> 
+You cannot use the side lengths 1, 1, and 2 to form a triangle.
+You cannot use the side lengths 1, 1, and 10 to form a triangle.
+You cannot use the side lengths 1, 2, and 10 to form a triangle.
+As we cannot use any three side lengths to form a triangle of non-zero area, we return 0.
 </pre>
 
 <p>&nbsp;</p>
@@ -29,11 +50,17 @@
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -45,7 +72,7 @@ class Solution:
         return 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -62,15 +89,14 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int largestPerimeter(vector<int>& nums) {
         sort(nums.begin(), nums.end());
-        for (int i = nums.size() - 1; i >= 2; --i)
-        {
+        for (int i = nums.size() - 1; i >= 2; --i) {
             int c = nums[i - 1] + nums[i - 2];
             if (c > nums[i]) return c + nums[i];
         }
@@ -79,7 +105,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func largestPerimeter(nums []int) int {
@@ -94,7 +120,7 @@ func largestPerimeter(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function largestPerimeter(nums: number[]): number {
@@ -110,7 +136,7 @@ function largestPerimeter(nums: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -128,10 +154,26 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C
 
-```
+```c
+int cmp(const void* a, const void* b) {
+    return *(int*) b - *(int*) a;
+}
 
+int largestPerimeter(int* nums, int numsSize) {
+    qsort(nums, numsSize, sizeof(int), cmp);
+    for (int i = 2; i < numsSize; i++) {
+        if (nums[i - 2] < nums[i - 1] + nums[i]) {
+            return nums[i - 2] + nums[i - 1] + nums[i];
+        }
+    }
+    return 0;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

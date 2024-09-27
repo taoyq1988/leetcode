@@ -1,8 +1,25 @@
-# [1135. Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1135.Connecting%20Cities%20With%20Minimum%20Cost/README_EN.md
+rating: 1752
+source: Biweekly Contest 5 Q3
+tags:
+    - Union Find
+    - Graph
+    - Minimum Spanning Tree
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
+# [1135. Connecting Cities With Minimum Cost 🔒](https://leetcode.com/problems/connecting-cities-with-minimum-cost)
 
 [中文文档](/solution/1100-1199/1135.Connecting%20Cities%20With%20Minimum%20Cost/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There are <code>n</code> cities labeled from <code>1</code> to <code>n</code>. You are given the integer <code>n</code> and an array <code>connections</code> where <code>connections[i] = [x<sub>i</sub>, y<sub>i</sub>, cost<sub>i</sub>]</code> indicates that the cost of connecting city <code>x<sub>i</sub></code> and city <code>y<sub>i</sub></code> (bidirectional connection) is <code>cost<sub>i</sub></code>.</p>
 
@@ -11,7 +28,7 @@
 <p>The <strong>cost</strong> is the sum of the connections&#39; costs used.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1100-1199/1135.Connecting%20Cities%20With%20Minimum%20Cost/images/1314_ex2.png" style="width: 161px; height: 141px;" />
 <pre>
 <strong>Input:</strong> n = 3, connections = [[1,2,5],[1,3,6],[2,3,1]]
@@ -19,7 +36,7 @@
 <strong>Explanation:</strong> Choosing any 2 edges will connect all cities so we choose the minimum 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/1100-1199/1135.Connecting%20Cities%20With%20Minimum%20Cost/images/1314_ex1.png" style="width: 136px; height: 91px;" />
 <pre>
 <strong>Input:</strong> n = 4, connections = [[1,2,3],[3,4,4]]
@@ -39,11 +56,25 @@
 	<li><code>0 &lt;= cost<sub>i</sub> &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Kruskal's Algorithm
+
+Kruskal's algorithm is a greedy algorithm used to compute the minimum spanning tree.
+
+The basic idea of Kruskal's algorithm is to select the smallest edge from the edge set each time. If the two vertices connected by this edge are not in the same connected component, then add this edge to the minimum spanning tree, otherwise discard this edge.
+
+For this problem, we can sort the edges in ascending order of connection cost, use a union-find set to maintain connected components, select the smallest edge each time, and if the two vertices connected by this edge are not in the same connected component, then merge these two vertices and accumulate the connection cost. If a situation occurs where the number of connected components is $1$, it means that all vertices are connected, and we return the accumulated connection cost, otherwise, we return $-1$.
+
+The time complexity is $O(m \times \log m)$, and the space complexity is $O(n)$. Here, $m$ and $n$ are the number of edges and vertices, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,7 +99,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -104,55 +135,54 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    vector<int> p;
-
     int minimumCost(int n, vector<vector<int>>& connections) {
-        p.resize(n);
-        for (int i = 0; i < n; ++i) p[i] = i;
-        sort(connections.begin(), connections.end(), [](auto& a, auto& b) {return a[2] < b[2];});
+        vector<int> p(n);
+        iota(p.begin(), p.end(), 0);
+        sort(connections.begin(), connections.end(), [](auto& a, auto& b) { return a[2] < b[2]; });
         int ans = 0;
-        for (auto& e : connections)
-        {
+        function<int(int)> find = [&](int x) -> int {
+            if (p[x] != x) {
+                p[x] = find(p[x]);
+            }
+            return p[x];
+        };
+        for (auto& e : connections) {
             int x = e[0] - 1, y = e[1] - 1, cost = e[2];
-            if (find(x) == find(y)) continue;
+            if (find(x) == find(y)) {
+                continue;
+            }
             p[find(x)] = find(y);
             ans += cost;
-            if (--n == 1) return ans;
+            if (--n == 1) {
+                return ans;
+            }
         }
         return -1;
-    }
-
-    int find(int x) {
-        if (p[x] != x) p[x] = find(p[x]);
-        return p[x];
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func minimumCost(n int, connections [][]int) int {
+func minimumCost(n int, connections [][]int) (ans int) {
 	p := make([]int, n)
 	for i := range p {
 		p[i] = i
 	}
-	sort.Slice(connections, func(i, j int) bool {
-		return connections[i][2] < connections[j][2]
-	})
-	var find func(x int) int
+	sort.Slice(connections, func(i, j int) bool { return connections[i][2] < connections[j][2] })
+	var find func(int) int
 	find = func(x int) int {
 		if p[x] != x {
 			p[x] = find(p[x])
 		}
 		return p[x]
 	}
-	ans := 0
 	for _, e := range connections {
 		x, y, cost := e[0]-1, e[1]-1, e[2]
 		if find(x) == find(y) {
@@ -162,17 +192,42 @@ func minimumCost(n int, connections [][]int) int {
 		ans += cost
 		n--
 		if n == 1 {
-			return ans
+			return
 		}
 	}
 	return -1
 }
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function minimumCost(n: number, connections: number[][]): number {
+    const p: number[] = Array.from({ length: n }, (_, i) => i);
+    const find = (x: number): number => {
+        if (p[x] !== x) {
+            p[x] = find(p[x]);
+        }
+        return p[x];
+    };
+    connections.sort((a, b) => a[2] - b[2]);
+    let ans = 0;
+    for (const [x, y, cost] of connections) {
+        if (find(x - 1) === find(y - 1)) {
+            continue;
+        }
+        p[find(x - 1)] = find(y - 1);
+        ans += cost;
+        if (--n === 1) {
+            return ans;
+        }
+    }
+    return -1;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

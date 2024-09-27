@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1491.Average%20Salary%20Excluding%20the%20Minimum%20and%20Maximum%20Salary/README_EN.md
+rating: 1201
+source: Biweekly Contest 29 Q1
+tags:
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [1491. Average Salary Excluding the Minimum and Maximum Salary](https://leetcode.com/problems/average-salary-excluding-the-minimum-and-maximum-salary)
 
 [中文文档](/solution/1400-1499/1491.Average%20Salary%20Excluding%20the%20Minimum%20and%20Maximum%20Salary/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>You are given an array of <strong>unique</strong> integers <code>salary</code> where <code>salary[i]</code> is the salary of the <code>i<sup>th</sup></code> employee.</p>
 
 <p>Return <em>the average salary of employees excluding the minimum and maximum salary</em>. Answers within <code>10<sup>-5</sup></code> of the actual answer will be accepted.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> salary = [4000,3000,1000,2000]
@@ -18,7 +33,7 @@
 Average salary excluding minimum and maximum salary is (2000+3000) / 2 = 2500
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> salary = [1000,2000,3000]
@@ -36,23 +51,101 @@ Average salary excluding minimum and maximum salary is (2000) / 1 = 2000
 	<li>All the integers of <code>salary</code> are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+Simulate according to the problem's requirements.
+
+Traverse the array, find the maximum and minimum values, and accumulate the sum. Then calculate the average value after removing the maximum and minimum values.
+
+The time complexity is $O(n)$, where $n$ is the length of the array `salary`. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def average(self, salary: List[int]) -> float:
+        s = sum(salary) - min(salary) - max(salary)
+        return s / (len(salary) - 2)
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public double average(int[] salary) {
+        int s = 0;
+        int mi = 10000000, mx = 0;
+        for (int v : salary) {
+            mi = Math.min(mi, v);
+            mx = Math.max(mx, v);
+            s += v;
+        }
+        s -= (mi + mx);
+        return s * 1.0 / (salary.length - 2);
+    }
+}
 ```
 
-### **Rust**
+#### C++
+
+```cpp
+class Solution {
+public:
+    double average(vector<int>& salary) {
+        int s = 0;
+        int mi = 1e7, mx = 0;
+        for (int v : salary) {
+            s += v;
+            mi = min(mi, v);
+            mx = max(mx, v);
+        }
+        s -= (mi + mx);
+        return (double) s / (salary.size() - 2);
+    }
+};
+```
+
+#### Go
+
+```go
+func average(salary []int) float64 {
+	s := 0
+	mi, mx := 10000000, 0
+	for _, v := range salary {
+		s += v
+		mi = min(mi, v)
+		mx = max(mx, v)
+	}
+	s -= (mi + mx)
+	return float64(s) / float64(len(salary)-2)
+}
+```
+
+#### TypeScript
+
+```ts
+function average(salary: number[]): number {
+    let max = -Infinity;
+    let min = Infinity;
+    let sum = 0;
+    for (const v of salary) {
+        sum += v;
+        max = Math.max(max, v);
+        min = Math.min(min, v);
+    }
+    return (sum - max - min) / (salary.length - 2);
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -71,10 +164,48 @@ impl Solution {
 }
 ```
 
-### **...**
+#### PHP
 
+```php
+class Solution {
+    /**
+     * @param Integer[] $salary
+     * @return Float
+     */
+    function average($salary) {
+        $max = $sum = 0;
+        $min = 10 ** 6;
+        for ($i = 0; $i < count($salary); $i++) {
+            $min = min($min, $salary[$i]);
+            $max = max($max, $salary[$i]);
+            $sum += $salary[$i];
+        }
+        return ($sum - $max - $min) / (count($salary) - 2);
+    }
+}
 ```
 
+#### C
+
+```c
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
+double average(int* salary, int salarySize) {
+    int ma = INT_MIN;
+    int mi = INT_MAX;
+    int sum = 0;
+    for (int i = 0; i < salarySize; i++) {
+        sum += salary[i];
+        ma = max(ma, salary[i]);
+        mi = min(mi, salary[i]);
+    }
+    return (sum - mi - ma) * 1.0 / (salarySize - 2);
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

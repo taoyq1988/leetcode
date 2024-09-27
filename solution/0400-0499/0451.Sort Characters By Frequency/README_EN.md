@@ -1,15 +1,32 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0400-0499/0451.Sort%20Characters%20By%20Frequency/README_EN.md
+tags:
+    - Hash Table
+    - String
+    - Bucket Sort
+    - Counting
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [451. Sort Characters By Frequency](https://leetcode.com/problems/sort-characters-by-frequency)
 
 [中文文档](/solution/0400-0499/0451.Sort%20Characters%20By%20Frequency/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given a string <code>s</code>, sort it in <strong>decreasing order</strong> based on the <strong>frequency</strong> of the characters. The <strong>frequency</strong> of a character is the number of times it appears in the string.</p>
 
 <p>Return <em>the sorted string</em>. If there are multiple answers, return <em>any of them</em>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;tree&quot;
@@ -18,7 +35,7 @@
 So &#39;e&#39; must appear before both &#39;r&#39; and &#39;t&#39;. Therefore &quot;eetr&quot; is also a valid answer.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;cccaaa&quot;
@@ -27,7 +44,7 @@ So &#39;e&#39; must appear before both &#39;r&#39; and &#39;t&#39;. Therefore &q
 Note that &quot;cacaca&quot; is incorrect, as the same characters must be together.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;Aabb&quot;
@@ -44,126 +61,154 @@ Note that &#39;A&#39; and &#39;a&#39; are treated as two different characters.
 	<li><code>s</code> consists of uppercase and lowercase English letters and digits.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def frequencySort(self, s: str) -> str:
-        counter = Counter(s)
-        buckets = defaultdict(list)
-        for c, freq in counter.items():
-            buckets[freq].append(c)
-        res = []
-        for i in range(len(s), -1, -1):
-            if buckets[i]:
-                for c in buckets[i]:
-                    res.append(c * i)
-        return ''.join(res)
+        cnt = Counter(s)
+        return ''.join(c * v for c, v in sorted(cnt.items(), key=lambda x: -x[1]))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public String frequencySort(String s) {
-        Map<Character, Integer> counter = new HashMap<>();
-        for (char c : s.toCharArray()) {
-            counter.put(c, counter.getOrDefault(c, 0) + 1);
+        Map<Character, Integer> cnt = new HashMap<>(52);
+        for (int i = 0; i < s.length(); ++i) {
+            cnt.merge(s.charAt(i), 1, Integer::sum);
         }
-        List<Character>[] buckets = new List[s.length() + 1];
-        for (Map.Entry<Character, Integer> entry : counter.entrySet()) {
-            char c = entry.getKey();
-            int freq = entry.getValue();
-            if (buckets[freq] == null) {
-                buckets[freq] = new ArrayList<>();
-            }
-            buckets[freq].add(c);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = s.length(); i >= 0; --i) {
-            if (buckets[i] != null) {
-                for (char c : buckets[i]) {
-                    for (int j = 0; j < i; ++j) {
-                        sb.append(c);
-                    }
-                }
+        List<Character> cs = new ArrayList<>(cnt.keySet());
+        cs.sort((a, b) -> cnt.get(b) - cnt.get(a));
+        StringBuilder ans = new StringBuilder();
+        for (char c : cs) {
+            for (int v = cnt.get(c); v > 0; --v) {
+                ans.append(c);
             }
         }
-        return sb.toString();
+        return ans.toString();
     }
 }
 ```
 
-### **Go**
+#### C++
 
-Simulation with structure sorting.
+```cpp
+class Solution {
+public:
+    string frequencySort(string s) {
+        unordered_map<char, int> cnt;
+        for (char& c : s) {
+            ++cnt[c];
+        }
+        vector<char> cs;
+        for (auto& [c, _] : cnt) {
+            cs.push_back(c);
+        }
+        sort(cs.begin(), cs.end(), [&](char& a, char& b) {
+            return cnt[a] > cnt[b];
+        });
+        string ans;
+        for (char& c : cs) {
+            ans += string(cnt[c], c);
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
 
 ```go
-type pair struct {
-	b   byte
-	cnt int
-}
-
 func frequencySort(s string) string {
-	freq := make(map[byte]int)
-	for _, r := range s {
-		freq[byte(r)]++
+	cnt := map[byte]int{}
+	for i := range s {
+		cnt[s[i]]++
 	}
-	a := make([]pair, 0)
-	for k, v := range freq {
-		a = append(a, pair{b: k, cnt: v})
+	cs := make([]byte, 0, len(s))
+	for c := range cnt {
+		cs = append(cs, c)
 	}
-	sort.Slice(a, func(i, j int) bool { return a[i].cnt > a[j].cnt })
-	var sb strings.Builder
-	for _, p := range a {
-		sb.Write(bytes.Repeat([]byte{p.b}, p.cnt))
+	sort.Slice(cs, func(i, j int) bool { return cnt[cs[i]] > cnt[cs[j]] })
+	ans := make([]byte, 0, len(s))
+	for _, c := range cs {
+		ans = append(ans, bytes.Repeat([]byte{c}, cnt[c])...)
 	}
-	return sb.String()
+	return string(ans)
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function frequencySort(s: string): string {
-    const map = new Map<string, number>();
+    const cnt: Map<string, number> = new Map();
     for (const c of s) {
-        map.set(c, (map.get(c) ?? 0) + 1);
+        cnt.set(c, (cnt.get(c) || 0) + 1);
     }
-    return [...map.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .map(([k, v]) => k.padStart(v, k))
-        .join('');
+    const cs = Array.from(cnt.keys()).sort((a, b) => cnt.get(b)! - cnt.get(a)!);
+    const ans: string[] = [];
+    for (const c of cs) {
+        ans.push(c.repeat(cnt.get(c)!));
+    }
+    return ans.join('');
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::HashMap;
 impl Solution {
     pub fn frequency_sort(s: String) -> String {
-        let mut map = HashMap::new();
+        let mut cnt = HashMap::new();
         for c in s.chars() {
-            map.insert(c, map.get(&c).unwrap_or(&0) + 1);
+            cnt.insert(c, cnt.get(&c).unwrap_or(&0) + 1);
         }
-        let mut arr = map.into_iter().collect::<Vec<(char, i32)>>();
-        arr.sort_unstable_by(|(_, a), (_, b)| b.cmp(&a));
-        arr.into_iter()
+        let mut cs = cnt.into_iter().collect::<Vec<(char, i32)>>();
+        cs.sort_unstable_by(|(_, a), (_, b)| b.cmp(&a));
+        cs.into_iter()
             .map(|(c, v)| vec![c; v as usize].into_iter().collect::<String>())
             .collect()
     }
 }
 ```
 
-### **...**
+#### PHP
 
-```
-
+```php
+class Solution {
+    /**
+     * @param String $s
+     * @return String
+     */
+    function frequencySort($s) {
+        for ($i = 0; $i < strlen($s); $i++) {
+            $hashtable[$s[$i]] += 1;
+        }
+        arsort($hashtable);
+        $keys = array_keys($hashtable);
+        for ($j = 0; $j < count($keys); $j++) {
+            $rs = $rs . str_repeat($keys[$j], $hashtable[$keys[$j]]);
+        }
+        return $rs;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

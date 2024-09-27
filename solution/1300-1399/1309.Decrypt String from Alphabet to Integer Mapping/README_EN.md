@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1309.Decrypt%20String%20from%20Alphabet%20to%20Integer%20Mapping/README_EN.md
+rating: 1257
+source: Weekly Contest 170 Q1
+tags:
+    - String
+---
+
+<!-- problem:start -->
+
 # [1309. Decrypt String from Alphabet to Integer Mapping](https://leetcode.com/problems/decrypt-string-from-alphabet-to-integer-mapping)
 
 [中文文档](/solution/1300-1399/1309.Decrypt%20String%20from%20Alphabet%20to%20Integer%20Mapping/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a string <code>s</code> formed by digits and <code>&#39;#&#39;</code>. We want to map <code>s</code> to English lowercase characters as follows:</p>
 
@@ -16,7 +30,7 @@
 <p>The test cases are generated so that a unique mapping will always exist.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;10#11#12&quot;
@@ -24,7 +38,7 @@
 <strong>Explanation:</strong> &quot;j&quot; -&gt; &quot;10#&quot; , &quot;k&quot; -&gt; &quot;11#&quot; , &quot;a&quot; -&gt; &quot;1&quot; , &quot;b&quot; -&gt; &quot;2&quot;.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;1326#&quot;
@@ -40,11 +54,17 @@
 	<li><code>s</code> will be a valid string such that mapping is always possible.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -56,7 +76,7 @@ class Solution:
         res = []
         while i < n:
             if i + 2 < n and s[i + 2] == '#':
-                res.append(get(s[i: i + 2]))
+                res.append(get(s[i : i + 2]))
                 i += 3
             else:
                 res.append(get(s[i]))
@@ -64,7 +84,7 @@ class Solution:
         return ''.join(res)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -89,29 +109,27 @@ class Solution {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function freqAlphabets(s: string): string {
     const n = s.length;
-    const res = [];
+    const ans = [];
     let i = 0;
     while (i < n) {
-        let code: string;
-        if (s[i + 2] === '#') {
-            code = s.slice(i, i + 2);
+        if (s[i + 2] == '#') {
+            ans.push(s.slice(i, i + 2));
             i += 3;
         } else {
-            code = s[i];
+            ans.push(s[i]);
             i += 1;
         }
-        res.push(code);
     }
-    return res.map(v => String.fromCharCode(96 + Number(v))).join('');
+    return ans.map(c => String.fromCharCode('a'.charCodeAt(0) + Number(c) - 1)).join('');
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -129,17 +147,39 @@ impl Solution {
                 code = s[i];
                 i += 1;
             }
-            res.push(char::from(97 + code - b'1'));
+            res.push(char::from(('a' as u8) + code - b'1'));
         }
         res
     }
 }
 ```
 
-### **...**
+#### C
 
-```
-
+```c
+char* freqAlphabets(char* s) {
+    int n = strlen(s);
+    int i = 0;
+    int j = 0;
+    char* ans = malloc(sizeof(s) * n);
+    while (i < n) {
+        int t;
+        if (i + 2 < n && s[i + 2] == '#') {
+            t = (s[i] - '0') * 10 + s[i + 1];
+            i += 3;
+        } else {
+            t = s[i];
+            i += 1;
+        }
+        ans[j++] = 'a' + t - '1';
+    }
+    ans[j] = '\0';
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

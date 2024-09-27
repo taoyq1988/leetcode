@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0800-0899/0890.Find%20and%20Replace%20Pattern/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [890. Find and Replace Pattern](https://leetcode.com/problems/find-and-replace-pattern)
 
 [中文文档](/solution/0800-0899/0890.Find%20and%20Replace%20Pattern/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a list of strings <code>words</code> and a string <code>pattern</code>, return <em>a list of</em> <code>words[i]</code> <em>that match</em> <code>pattern</code>. You may return the answer in <strong>any order</strong>.</p>
 
@@ -11,7 +25,7 @@
 <p>Recall that a permutation of letters is a bijection from letters to letters: every letter maps to another letter, and no two letters map to the same letter.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;abc&quot;,&quot;deq&quot;,&quot;mee&quot;,&quot;aqq&quot;,&quot;dkd&quot;,&quot;ccc&quot;], pattern = &quot;abb&quot;
@@ -20,7 +34,7 @@
 &quot;ccc&quot; does not match the pattern because {a -&gt; c, b -&gt; c, ...} is not a permutation, since a and b map to the same letter.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> words = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;], pattern = &quot;a&quot;
@@ -37,11 +51,17 @@
 	<li><code>pattern</code> and <code>words[i]</code> are lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -57,7 +77,7 @@ class Solution:
         return [word for word in words if match(word, pattern)]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -88,34 +108,31 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
         vector<string> ans;
+        auto match = [](string& s, string& t) {
+            int m1[128] = {0};
+            int m2[128] = {0};
+            for (int i = 0; i < s.size(); ++i) {
+                if (m1[s[i]] != m2[t[i]]) return 0;
+                m1[s[i]] = i + 1;
+                m2[t[i]] = i + 1;
+            }
+            return 1;
+        };
         for (auto& word : words)
-            if (match(word, pattern))
-                ans.push_back(word);
+            if (match(word, pattern)) ans.emplace_back(word);
         return ans;
-    }
-
-    bool match(string s, string t) {
-        vector<int> m1(128);
-        vector<int> m2(128);
-        for (int i = 0; i < s.size(); ++i)
-        {
-            if (m1[s[i]] != m2[t[i]]) return 0;
-            m1[s[i]] = i + 1;
-            m2[t[i]] = i + 1;
-        }
-        return 1;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findAndReplacePattern(words []string, pattern string) []string {
@@ -140,7 +157,7 @@ func findAndReplacePattern(words []string, pattern string) []string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function findAndReplacePattern(words: string[], pattern: string): string[] {
@@ -159,7 +176,7 @@ function findAndReplacePattern(words: string[], pattern: string): string[] {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::HashMap;
@@ -187,10 +204,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

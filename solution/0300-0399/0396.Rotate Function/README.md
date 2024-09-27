@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0396.Rotate%20Function/README.md
+tags:
+    - 数组
+    - 数学
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [396. 旋转函数](https://leetcode.cn/problems/rotate-function)
 
 [English Version](/solution/0300-0399/0396.Rotate%20Function/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个长度为 <code>n</code> 的整数数组&nbsp;<code>nums</code>&nbsp;。</p>
 
@@ -50,22 +62,17 @@ F(3) = (0 * 3) + (1 * 2) + (2 * 6) + (3 * 4) = 0 + 2 + 12 + 12 = 26
 	<li><code>-100 &lt;= nums[i] &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-```
-f(0) = 0 * nums[0] + 1 * nums[1] + ... + (n - 1) * nums[n - 1]
-f(1) = 1 * nums[0] + 2 * nums[1] + ... + 0 * nums[n - 1]
-...
-f(k) = f(k - 1) + s - n * nums[n - k]
-```
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -79,9 +86,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -103,21 +108,19 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int maxRotateFunction(vector<int>& nums) {
         int f = 0, s = 0, n = nums.size();
-        for (int i = 0; i < n; ++i)
-        {
+        for (int i = 0; i < n; ++i) {
             f += i * nums[i];
             s += nums[i];
         }
         int ans = f;
-        for (int i = 1; i < n; ++i)
-        {
+        for (int i = 1; i < n; ++i) {
             f = f + s - n * nums[n - i];
             ans = max(ans, f);
         }
@@ -126,7 +129,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxRotateFunction(nums []int) int {
@@ -146,7 +149,7 @@ func maxRotateFunction(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxRotateFunction(nums: number[]): number {
@@ -162,18 +165,18 @@ function maxRotateFunction(nums: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
     pub fn max_rotate_function(nums: Vec<i32>) -> i32 {
         let n = nums.len();
         let sum: i32 = nums.iter().sum();
-        let mut pre: i32 = nums.iter().enumerate().map(|(i, &v)| i as i32 * v).sum();
+        let mut pre: i32 = nums.iter().enumerate().map(|(i, &v)| (i as i32) * v).sum();
         (0..n)
             .map(|i| {
                 let res = pre;
-                pre = pre - (sum - nums[i]) + nums[i] * (n - 1) as i32;
+                pre = pre - (sum - nums[i]) + nums[i] * ((n - 1) as i32);
                 res
             })
             .max()
@@ -182,10 +185,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

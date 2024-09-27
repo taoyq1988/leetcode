@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0710.Random%20Pick%20with%20Blacklist/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - Math
+    - Binary Search
+    - Sorting
+    - Randomized
+---
+
+<!-- problem:start -->
+
 # [710. Random Pick with Blacklist](https://leetcode.com/problems/random-pick-with-blacklist)
 
 [中文文档](/solution/0700-0799/0710.Random%20Pick%20with%20Blacklist/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer <code>n</code> and an array of <strong>unique</strong> integers <code>blacklist</code>. Design an algorithm to pick a random integer in the range <code>[0, n - 1]</code> that is <strong>not</strong> in <code>blacklist</code>. Any integer that is in the mentioned range and not in <code>blacklist</code> should be <strong>equally likely</strong> to be returned.</p>
 
@@ -16,7 +33,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input</strong>
@@ -48,15 +65,20 @@ solution.pick(); // return 4
 	<li>At most <code>2 * 10<sup>4</sup></code> calls will be made to <code>pick</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-
     def __init__(self, n: int, blacklist: List[int]):
         self.k = n - len(blacklist)
         self.d = {}
@@ -79,7 +101,7 @@ class Solution:
 # param_1 = obj.pick()
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -117,7 +139,7 @@ class Solution {
  */
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -129,10 +151,8 @@ public:
         k = n - blacklist.size();
         int i = k;
         unordered_set<int> black(blacklist.begin(), blacklist.end());
-        for (int& b : blacklist)
-        {
-            if (b < k)
-            {
+        for (int& b : blacklist) {
+            if (b < k) {
                 while (black.count(i)) ++i;
                 d[b] = i++;
             }
@@ -152,7 +172,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Solution struct {
@@ -195,10 +215,8 @@ func (this *Solution) Pick() int {
  */
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

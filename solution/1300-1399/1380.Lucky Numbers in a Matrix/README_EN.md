@@ -1,15 +1,30 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1300-1399/1380.Lucky%20Numbers%20in%20a%20Matrix/README_EN.md
+rating: 1207
+source: Weekly Contest 180 Q1
+tags:
+    - Array
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [1380. Lucky Numbers in a Matrix](https://leetcode.com/problems/lucky-numbers-in-a-matrix)
 
 [中文文档](/solution/1300-1399/1380.Lucky%20Numbers%20in%20a%20Matrix/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Given an <code>m x n</code> matrix of <strong>distinct </strong>numbers, return <em>all <strong>lucky numbers</strong> in the matrix in <strong>any </strong>order</em>.</p>
 
 <p>A <strong>lucky number</strong> is an element of the matrix such that it is the minimum element in its row and maximum in its column.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = [[3,7,8],[9,11,13],[15,16,17]]
@@ -17,7 +32,7 @@
 <strong>Explanation:</strong> 15 is the only lucky number since it is the minimum in its row and the maximum in its column.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = [[1,10,4,2],[9,3,8,7],[15,16,17,12]]
@@ -25,7 +40,7 @@
 <strong>Explanation:</strong> 12 is the only lucky number since it is the minimum in its row and the maximum in its column.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> matrix = [[7,8],[1,2]]
@@ -44,11 +59,23 @@
 	<li>All elements in the matrix are distinct.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Maintain Row Minimum and Column Maximum
+
+We can use two arrays $rows$ and $cols$ to record the minimum value of each row and the maximum value of each column in the matrix. Then, we traverse each element in the matrix, checking whether this element is the minimum value of its row and the maximum value of its column. If it is, then this element is a lucky number, and we add it to the answer array.
+
+After the traversal is finished, we return the answer array.
+
+The time complexity is $O(m \times n)$, and the space complexity is $O(m + n)$. Where $m$ and $n$ are the number of rows and columns in the matrix, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -58,15 +85,15 @@ class Solution:
         return list(rows & cols)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
-    public List<Integer> luckyNumbers (int[][] matrix) {
+    public List<Integer> luckyNumbers(int[][] matrix) {
         int m = matrix.length, n = matrix[0].length;
         int[] rows = new int[m];
         int[] cols = new int[n];
-        Arrays.fill(rows, Integer.MAX_VALUE);
+        Arrays.fill(rows, 1 << 30);
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 rows[i] = Math.min(rows[i], matrix[i][j]);
@@ -77,7 +104,7 @@ class Solution {
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (rows[i] == cols[j]) {
-                    ans.add(matrix[i][j]);
+                    ans.add(rows[i]);
                 }
             }
         }
@@ -86,103 +113,119 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
-    vector<int> luckyNumbers (vector<vector<int>>& matrix) {
+    vector<int> luckyNumbers(vector<vector<int>>& matrix) {
         int m = matrix.size(), n = matrix[0].size();
-        vector<int> rows(m, INT_MAX);
-        vector<int> cols(n);
-        for (int i = 0; i < m; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
+        int rows[m];
+        int cols[n];
+        memset(rows, 0x3f, sizeof(rows));
+        memset(cols, 0, sizeof(cols));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 rows[i] = min(rows[i], matrix[i][j]);
                 cols[j] = max(cols[j], matrix[i][j]);
             }
         }
         vector<int> ans;
-        for (int i = 0; i < m; ++i)
-            for (int j = 0; j < n; ++j)
-                if (rows[i] == cols[j])
-                    ans.push_back(matrix[i][j]);
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (rows[i] == cols[j]) {
+                    ans.push_back(rows[i]);
+                }
+            }
+        }
         return ans;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
-func luckyNumbers (matrix [][]int) []int {
-    m, n := len(matrix), len(matrix[0])
-    rows, cols := make([]int, m), make([]int, n)
-    for i := range rows {
-        rows[i] = math.MaxInt32
-    }
-    for i, row := range matrix {
-        for j, v := range row {
-            rows[i] = min(rows[i], v)
-            cols[j] = max(cols[j], v)
-        }
-    }
-    var ans []int
-    for i, row := range matrix {
-        for j, v := range row {
-            if rows[i] == cols[j] {
-                ans = append(ans, v)
-            }
-        }
-    }
-    return ans
-}
-
-func min(a, b int) int {
-    if a < b {
-        return a
-    }
-    return b
-}
-
-func max(a, b int) int {
-    if a > b {
-        return a
-    }
-    return b
+func luckyNumbers(matrix [][]int) (ans []int) {
+	m, n := len(matrix), len(matrix[0])
+	rows, cols := make([]int, m), make([]int, n)
+	for i := range rows {
+		rows[i] = 1 << 30
+	}
+	for i, row := range matrix {
+		for j, x := range row {
+			rows[i] = min(rows[i], x)
+			cols[j] = max(cols[j], x)
+		}
+	}
+	for i, row := range matrix {
+		for j, x := range row {
+			if rows[i] == cols[j] {
+				ans = append(ans, x)
+			}
+		}
+	}
+	return
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function luckyNumbers(matrix: number[][]): number[] {
     const m = matrix.length;
     const n = matrix[0].length;
-    const col = new Array(n).fill(0);
-    const res = [];
-    for (let j = 0; j < n; j++) {
-        for (let i = 0; i < m; i++) {
-            col[j] = Math.max(col[j], matrix[i][j]);
+    const rows: number[] = new Array(m).fill(1 << 30);
+    const cols: number[] = new Array(n).fill(0);
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; j++) {
+            rows[i] = Math.min(rows[i], matrix[i][j]);
+            cols[j] = Math.max(cols[j], matrix[i][j]);
         }
     }
-    for (let x = 0; x < m; x++) {
-        let i = 0;
-        for (let y = 1; y < n; y++) {
-            if (matrix[x][i] > matrix[x][y]) {
-                i = y;
+    const ans: number[] = [];
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; j++) {
+            if (rows[i] === cols[j]) {
+                ans.push(rows[i]);
             }
         }
-        if (matrix[x][i] === col[i]) {
-            res.push(col[i]);
-        }
     }
-    return res;
+    return ans;
 }
 ```
 
-### **Rust**
+#### JavaScript
+
+```js
+/**
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
+var luckyNumbers = function (matrix) {
+    const m = matrix.length;
+    const n = matrix[0].length;
+    const rows = new Array(m).fill(1 << 30);
+    const cols = new Array(n).fill(0);
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; j++) {
+            rows[i] = Math.min(rows[i], matrix[i][j]);
+            cols[j] = Math.max(cols[j], matrix[i][j]);
+        }
+    }
+    const ans = [];
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; j++) {
+            if (rows[i] === cols[j]) {
+                ans.push(rows[i]);
+            }
+        }
+    }
+    return ans;
+};
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -212,10 +255,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

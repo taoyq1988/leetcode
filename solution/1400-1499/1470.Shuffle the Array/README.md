@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1470.Shuffle%20the%20Array/README.md
+rating: 1120
+source: 第 192 场周赛 Q1
+tags:
+    - 数组
+---
+
+<!-- problem:start -->
+
 # [1470. 重新排列数组](https://leetcode.cn/problems/shuffle-the-array)
 
 [English Version](/solution/1400-1499/1470.Shuffle%20the%20Array/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个数组 <code>nums</code> ，数组中有 <code>2n</code> 个元素，按 <code>[x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>,y<sub>1</sub>,y<sub>2</sub>,...,y<sub>n</sub>]</code> 的格式排列。</p>
 
@@ -41,15 +53,17 @@
 	<li><code>1 &lt;= nums[i] &lt;= 10^3</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -61,9 +75,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -78,19 +90,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function shuffle(nums: number[], n: number): number[] {
-    let ans = [];
-    for (let i = 0; i < n; i++) {
-        ans.push(nums[i], nums[n + i]);
-    }
-    return ans;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -106,7 +106,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func shuffle(nums []int, n int) []int {
@@ -119,10 +119,94 @@ func shuffle(nums []int, n int) []int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function shuffle(nums: number[], n: number): number[] {
+    let ans = [];
+    for (let i = 0; i < n; i++) {
+        ans.push(nums[i], nums[n + i]);
+    }
+    return ans;
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn shuffle(nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        let mut res = Vec::new();
+        for i in 0..n {
+            res.push(nums[i]);
+            res.push(nums[n + i]);
+        }
+        res
+    }
+}
+```
+
+#### C
+
+```c
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* shuffle(int* nums, int numsSize, int n, int* returnSize) {
+    int* res = (int*) malloc(sizeof(int) * n * 2);
+    for (int i = 0; i < n; i++) {
+        res[2 * i] = nums[i];
+        res[2 * i + 1] = nums[i + n];
+    }
+    *returnSize = n * 2;
+    return res;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def shuffle(self, nums: List[int], n: int) -> List[int]:
+        nums[::2], nums[1::2] = nums[:n], nums[n:]
+        return nums
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn shuffle(mut nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        for i in 0..n * 2 {
+            let mut j = i;
+            while nums[i] > 0 {
+                j = if j < n { 2 * j } else { 2 * (j - n) + 1 };
+                nums.swap(i, j);
+                nums[j] *= -1;
+            }
+        }
+        for i in 0..n * 2 {
+            nums[i] *= -1;
+        }
+        nums
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

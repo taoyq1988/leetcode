@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0700-0799/0749.Contain%20Virus/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Array
+    - Matrix
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [749. Contain Virus](https://leetcode.com/problems/contain-virus)
 
 [中文文档](/solution/0700-0799/0749.Contain%20Virus/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A virus is spreading rapidly, and your task is to quarantine the infected area by installing walls.</p>
 
@@ -13,7 +29,7 @@
 <p>Return <em>the number of walls used to quarantine all the infected regions</em>. If the world will become fully infected, return the number of walls used.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus11-grid.jpg" style="width: 500px; height: 255px;" />
 <pre>
 <strong>Input:</strong> isInfected = [[0,1,0,0,0,0,0,1],[0,1,0,0,0,0,0,1],[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0]]
@@ -25,7 +41,7 @@ On the second day, add 5 walls to quarantine the viral region on the right. The 
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus13edited-grid.jpg" style="width: 500px; height: 261px;" />
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 <img alt="" src="https://fastly.jsdelivr.net/gh/doocs/leetcode@main/solution/0700-0799/0749.Contain%20Virus/images/virus2-grid.jpg" style="width: 653px; height: 253px;" />
 <pre>
 <strong>Input:</strong> isInfected = [[1,1,1],[1,0,1],[1,1,1]]
@@ -34,7 +50,7 @@ On the second day, add 5 walls to quarantine the viral region on the right. The 
 Notice that walls are only built on the shared boundary of two different cells.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> isInfected = [[1,1,1,0,0,0,0,0,0],[1,0,1,0,1,1,1,1,1],[1,1,1,0,0,0,0,0,0]]
@@ -53,11 +69,17 @@ Notice that walls are only built on the shared boundary of two different cells.
 	<li>There is always a contiguous viral region throughout the described process that will <strong>infect strictly more uncontaminated squares</strong> in the next round.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -105,7 +127,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -200,7 +222,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -220,18 +242,15 @@ public:
         n = infected[0].size();
         vis.assign(m, vector<bool>(n));
         int ans = 0;
-        while (1)
-        {
-            for (int i = 0; i < m; ++i) for (int j = 0; j < n; ++j) vis[i][j] = false;
+        while (1) {
+            for (int i = 0; i < m; ++i)
+                for (int j = 0; j < n; ++j) vis[i][j] = false;
             c.clear();
             areas.clear();
             boundaries.clear();
-            for (int i = 0; i < m; ++i)
-            {
-                for (int j = 0; j < n; ++j)
-                {
-                    if (infected[i][j] == 1 && !vis[i][j])
-                    {
+            for (int i = 0; i < m; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (infected[i][j] == 1 && !vis[i][j]) {
                         c.push_back(0);
                         areas.push_back({});
                         boundaries.push_back({});
@@ -242,23 +261,16 @@ public:
             if (areas.empty()) break;
             int idx = getMax();
             ans += c[idx];
-            for (int t = 0; t < areas.size(); ++t)
-            {
-                if (t == idx)
-                {
-                    for (int v : areas[t])
-                    {
+            for (int t = 0; t < areas.size(); ++t) {
+                if (t == idx) {
+                    for (int v : areas[t]) {
                         int i = v / n, j = v % n;
                         infected[i][j] = -1;
                     }
-                }
-                else
-                {
-                    for (int v : areas[t])
-                    {
+                } else {
+                    for (int v : areas[t]) {
                         int i = v / n, j = v % n;
-                        for (int k = 0; k < 4; ++k)
-                        {
+                        for (int k = 0; k < 4; ++k) {
                             int x = i + dirs[k], y = j + dirs[k + 1];
                             if (x >= 0 && x < m && y >= 0 && y < n && infected[x][y] == 0) infected[x][y] = 1;
                         }
@@ -272,11 +284,9 @@ public:
     int getMax() {
         int idx = 0;
         int mx = boundaries[0].size();
-        for (int i = 1; i < boundaries.size(); ++i)
-        {
+        for (int i = 1; i < boundaries.size(); ++i) {
             int t = boundaries[i].size();
-            if (mx < t)
-            {
+            if (mx < t) {
                 mx = t;
                 idx = i;
             }
@@ -287,14 +297,12 @@ public:
     void dfs(int i, int j) {
         vis[i][j] = true;
         areas.back().push_back(i * n + j);
-        for (int k = 0; k < 4; ++k)
-        {
+        for (int k = 0; k < 4; ++k) {
             int x = i + dirs[k], y = j + dirs[k + 1];
-            if (x >= 0 && x < m && y >= 0 && y < n)
-            {
-                if (infected[x][y] == 1 && !vis[x][y]) dfs(x, y);
-                else if (infected[x][y] == 0)
-                {
+            if (x >= 0 && x < m && y >= 0 && y < n) {
+                if (infected[x][y] == 1 && !vis[x][y])
+                    dfs(x, y);
+                else if (infected[x][y] == 0) {
                     c.back() += 1;
                     boundaries.back().insert(x * n + y);
                 }
@@ -304,7 +312,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func containVirus(isInfected [][]int) int {
@@ -390,10 +398,8 @@ func containVirus(isInfected [][]int) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0383.Ransom%20Note/README.md
+tags:
+    - 哈希表
+    - 字符串
+    - 计数
+---
+
+<!-- problem:start -->
+
 # [383. 赎金信](https://leetcode.cn/problems/ransom-note)
 
 [English Version](/solution/0300-0399/0383.Ransom%20Note/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你两个字符串：<code>ransomNote</code> 和 <code>magazine</code> ，判断 <code>ransomNote</code> 能不能由 <code>magazine</code> 里面的字符构成。</p>
 
@@ -44,103 +56,85 @@
 	<li><code>ransomNote</code> 和 <code>magazine</code> 由小写英文字母组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-用一个数组或字典 chars 存放 magazine 中每个字母出现的次数。遍历 ransomNote 中每个字母，判断 chars 是否包含即可。
+### 方法一：哈希表或数组
+
+我们可以用一个哈希表或长度为 $26$ 的数组 $cnt$ 记录字符串 `magazine` 中所有字符出现的次数。然后遍历字符串 `ransomNote`，对于其中的每个字符 $c$，我们将其从 $cnt$ 的次数减 $1$，如果减 $1$ 之后的次数小于 $0$，说明 $c$ 在 `magazine` 中出现的次数不够，因此无法构成 `ransomNote`，返回 $false$ 即可。
+
+否则，遍历结束后，说明 `ransomNote` 中的每个字符都可以在 `magazine` 中找到对应的字符，因此返回 $true$。
+
+时间复杂度 $O(m + n)$，空间复杂度 $O(C)$。其中 $m$ 和 $n$ 分别为字符串 `ransomNote` 和 `magazine` 的长度；而 $C$ 为字符集的大小，本题中 $C = 26$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
-        counter = Counter(magazine)
+        cnt = Counter(magazine)
         for c in ransomNote:
-            if counter[c] <= 0:
+            cnt[c] -= 1
+            if cnt[c] < 0:
                 return False
-            counter[c] -= 1
         return True
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
     public boolean canConstruct(String ransomNote, String magazine) {
-        int[] counter = new int[26];
-        for (char c : magazine.toCharArray()) {
-            ++counter[c - 'a'];
+        int[] cnt = new int[26];
+        for (int i = 0; i < magazine.length(); ++i) {
+            ++cnt[magazine.charAt(i) - 'a'];
         }
-        for (char c : ransomNote.toCharArray()) {
-            if (counter[c - 'a'] <= 0) {
+        for (int i = 0; i < ransomNote.length(); ++i) {
+            if (--cnt[ransomNote.charAt(i) - 'a'] < 0) {
                 return false;
             }
-            --counter[c - 'a'];
         }
         return true;
     }
 }
 ```
 
-### **TypeScript**
-
-```ts
-function canConstruct(ransomNote: string, magazine: string): boolean {
-    let counter = new Array(26).fill(0);
-    let base = 'a'.charCodeAt(0);
-    for (let s of magazine) {
-        ++counter[s.charCodeAt(0) - base];
-    }
-    for (let s of ransomNote) {
-        let idx = s.charCodeAt(0) - base;
-        if (counter[idx] == 0) return false;
-        --counter[idx];
-    }
-    return true;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool canConstruct(string ransomNote, string magazine) {
-        vector<int> counter(26);
-        for (char c : magazine) ++counter[c - 'a'];
-        for (char c : ransomNote)
-        {
-            if (counter[c - 'a'] <= 0) return false;
-            --counter[c - 'a'];
+        int cnt[26]{};
+        for (char& c : magazine) {
+            ++cnt[c - 'a'];
+        }
+        for (char& c : ransomNote) {
+            if (--cnt[c - 'a'] < 0) {
+                return false;
+            }
         }
         return true;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func canConstruct(ransomNote string, magazine string) bool {
-	rc := make([]int, 26)
-	for _, b := range ransomNote {
-		rc[b-'a']++
+	cnt := [26]int{}
+	for _, c := range magazine {
+		cnt[c-'a']++
 	}
-
-	mc := make([]int, 26)
-	for _, b := range magazine {
-		mc[b-'a']++
-	}
-
-	for i := 0; i < 26; i++ {
-		if rc[i] > mc[i] {
+	for _, c := range ransomNote {
+		cnt[c-'a']--
+		if cnt[c-'a'] < 0 {
 			return false
 		}
 	}
@@ -148,10 +142,70 @@ func canConstruct(ransomNote string, magazine string) bool {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function canConstruct(ransomNote: string, magazine: string): boolean {
+    const cnt: number[] = Array(26).fill(0);
+    for (const c of magazine) {
+        ++cnt[c.charCodeAt(0) - 97];
+    }
+    for (const c of ransomNote) {
+        if (--cnt[c.charCodeAt(0) - 97] < 0) {
+            return false;
+        }
+    }
+    return true;
+}
 ```
 
+#### C#
+
+```cs
+public class Solution {
+    public bool CanConstruct(string ransomNote, string magazine) {
+        int[] cnt = new int[26];
+        foreach (var c in magazine) {
+            ++cnt[c - 'a'];
+        }
+        foreach (var c in ransomNote) {
+            if (--cnt[c - 'a'] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param String $ransomNote
+     * @param String $magazine
+     * @return Boolean
+     */
+    function canConstruct($ransomNote, $magazine) {
+        $arrM = str_split($magazine);
+        for ($i = 0; $i < strlen($magazine); $i++) {
+            $hashtable[$arrM[$i]] += 1;
+        }
+        for ($j = 0; $j < strlen($ransomNote); $j++) {
+            if (!isset($hashtable[$ransomNote[$j]]) || $hashtable[$ransomNote[$j]] == 0) {
+                return false;
+            } else {
+                $hashtable[$ransomNote[$j]] -= 1;
+            }
+        }
+        return true;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

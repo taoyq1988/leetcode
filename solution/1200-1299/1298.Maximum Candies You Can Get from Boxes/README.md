@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1298.Maximum%20Candies%20You%20Can%20Get%20from%20Boxes/README.md
+rating: 1824
+source: 第 168 场周赛 Q4
+tags:
+    - 广度优先搜索
+    - 图
+    - 数组
+---
+
+<!-- problem:start -->
+
 # [1298. 你能从盒子里获得的最大糖果数](https://leetcode.cn/problems/maximum-candies-you-can-get-from-boxes)
 
 [English Version](/solution/1200-1299/1298.Maximum%20Candies%20You%20Can%20Get%20from%20Boxes/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你&nbsp;<code>n</code>&nbsp;个盒子，每个盒子的格式为&nbsp;<code>[status, candies, keys, containedBoxes]</code>&nbsp;，其中：</p>
 
@@ -79,21 +93,28 @@
 	<li><code>0 &lt;= initialBoxes[i] &lt; status.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：BFS**
+### 方法一：BFS
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
-    def maxCandies(self, status: List[int], candies: List[int], keys: List[List[int]], containedBoxes: List[List[int]], initialBoxes: List[int]) -> int:
+    def maxCandies(
+        self,
+        status: List[int],
+        candies: List[int],
+        keys: List[List[int]],
+        containedBoxes: List[List[int]],
+        initialBoxes: List[int],
+    ) -> int:
         q = deque([i for i in initialBoxes if status[i] == 1])
         ans = sum(candies[i] for i in initialBoxes if status[i] == 1)
         has = set(initialBoxes)
@@ -116,13 +137,12 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
-    public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+    public int maxCandies(
+        int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
         int ans = 0;
         int n = status.length;
         boolean[] has = new boolean[n];
@@ -160,7 +180,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -171,35 +191,28 @@ public:
         vector<bool> has(n);
         vector<bool> took(n);
         queue<int> q;
-        for (int& i : initialBoxes)
-        {
+        for (int& i : initialBoxes) {
             has[i] = true;
-            if (status[i])
-            {
+            if (status[i]) {
                 ans += candies[i];
                 took[i] = true;
                 q.push(i);
             }
         }
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             int i = q.front();
             q.pop();
-            for (int k : keys[i])
-            {
+            for (int k : keys[i]) {
                 status[k] = 1;
-                if (has[k] && !took[k])
-                {
+                if (has[k] && !took[k]) {
                     ans += candies[k];
                     took[k] = true;
                     q.push(k);
                 }
             }
-            for (int j : containedBoxes[i])
-            {
+            for (int j : containedBoxes[i]) {
                 has[j] = true;
-                if (status[j] && !took[j])
-                {
+                if (status[j] && !took[j]) {
                     ans += candies[j];
                     took[j] = true;
                     q.push(j);
@@ -211,7 +224,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxCandies(status []int, candies []int, keys [][]int, containedBoxes [][]int, initialBoxes []int) int {
@@ -252,10 +265,8 @@ func maxCandies(status []int, candies []int, keys [][]int, containedBoxes [][]in
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

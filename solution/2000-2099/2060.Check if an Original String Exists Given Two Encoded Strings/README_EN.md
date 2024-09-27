@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2060.Check%20if%20an%20Original%20String%20Exists%20Given%20Two%20Encoded%20Strings/README_EN.md
+rating: 2803
+source: Weekly Contest 265 Q4
+tags:
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [2060. Check if an Original String Exists Given Two Encoded Strings](https://leetcode.com/problems/check-if-an-original-string-exists-given-two-encoded-strings)
 
 [中文文档](/solution/2000-2099/2060.Check%20if%20an%20Original%20String%20Exists%20Given%20Two%20Encoded%20Strings/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>An original string, consisting of lowercase English letters, can be encoded by the following steps:</p>
 
@@ -25,7 +40,7 @@
 <p><strong>Note</strong>: The test cases are generated such that the number of consecutive digits in <code>s1</code> and <code>s2</code> does not exceed <code>3</code>.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;internationalization&quot;, s2 = &quot;i18n&quot;
@@ -41,7 +56,7 @@
   -&gt; Concatenate:  &quot;i18n&quot;, which is s2
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;l123e&quot;, s2 = &quot;44&quot;
@@ -57,7 +72,7 @@
   -&gt; Concatenate: &quot;44&quot;, which is s2.
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> s1 = &quot;a5b&quot;, s2 = &quot;c5b&quot;
@@ -76,25 +91,17 @@
 	<li>The number of consecutive digits in <code>s1</code> and <code>s2</code> does not exceed <code>3</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Dynamic Programming
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
-
-```python
-
-```
-
-### **Java**
-
-```java
-
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function possiblyEquals(s1: string, s2: string): boolean {
@@ -159,10 +166,8 @@ function isDigit(char: string): boolean {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

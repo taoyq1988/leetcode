@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2294.Partition%20Array%20Such%20That%20Maximum%20Difference%20Is%20K/README_EN.md
+rating: 1416
+source: Weekly Contest 296 Q2
+tags:
+    - Greedy
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2294. Partition Array Such That Maximum Difference Is K](https://leetcode.com/problems/partition-array-such-that-maximum-difference-is-k)
 
 [中文文档](/solution/2200-2299/2294.Partition%20Array%20Such%20That%20Maximum%20Difference%20Is%20K/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code> and an integer <code>k</code>. You may partition <code>nums</code> into one or more <strong>subsequences</strong> such that each element in <code>nums</code> appears in <strong>exactly</strong> one of the subsequences.</p>
 
@@ -11,7 +27,7 @@
 <p>A <strong>subsequence</strong> is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.</p>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [3,6,1,2,5], k = 2
@@ -23,7 +39,7 @@ The difference between the maximum and minimum value in the second subsequence i
 Since two subsequences were created, we return 2. It can be shown that 2 is the minimum number of subsequences needed.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [1,2,3], k = 1
@@ -35,7 +51,7 @@ The difference between the maximum and minimum value in the second subsequence i
 Since two subsequences were created, we return 2. Note that another optimal solution is to partition nums into the two subsequences [1] and [2,3].
 </pre>
 
-<p><strong>Example 3:</strong></p>
+<p><strong class="example">Example 3:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [2,2,4,5], k = 0
@@ -57,39 +73,44 @@ Since three subsequences were created, we return 3. It can be shown that 3 is th
 	<li><code>0 &lt;= k &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy + Sorting
+
+The problem requires dividing into subsequences, not subarrays, so the elements in a subsequence can be non-continuous. We can sort the array $\textit{nums}$. Assuming the first element of the current subsequence is $a$, the difference between the maximum and minimum values in the subsequence will not exceed $k$. Therefore, we can iterate through the array $\textit{nums}$. If the difference between the current element $b$ and $a$ is greater than $k$, then update $a$ to $b$ and increase the number of subsequences by 1. After the iteration, we can obtain the minimum number of subsequences, noting that the initial number of subsequences is $1$.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(\log n)$. Here, $n$ is the length of the array $\textit{nums}$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
     def partitionArray(self, nums: List[int], k: int) -> int:
         nums.sort()
-        d, ans = 0, 1
-        for a, b in pairwise(nums):
-            if (t := b - a) + d <= k:
-                d += t
-            else:
-                d, ans = 0, ans + 1
+        ans, a = 1, nums[0]
+        for b in nums:
+            if b - a > k:
+                a = b
+                ans += 1
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int partitionArray(int[] nums, int k) {
         Arrays.sort(nums);
-        int d = 0, ans = 1;
-        for (int i = 1; i < nums.length; ++i) {
-            int a = nums[i - 1], b = nums[i];
-            int t = b - a;
-            if (d + t <= k) {
-                d += t;
-            } else {
-                d = 0;
+        int ans = 1, a = nums[0];
+        for (int b : nums) {
+            if (b - a > k) {
+                a = b;
                 ++ans;
             }
         }
@@ -98,22 +119,17 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     int partitionArray(vector<int>& nums, int k) {
         sort(nums.begin(), nums.end());
-        int d = 0, ans = 1;
-        for (int i = 1; i < nums.size(); ++i)
-        {
-            int a = nums[i - 1], b = nums[i];
-            int t = b - a;
-            if (d + t <= k) d += t;
-            else
-            {
-                d = 0;
+        int ans = 1, a = nums[0];
+        for (int& b : nums) {
+            if (b - a > k) {
+                a = b;
                 ++ans;
             }
         }
@@ -122,18 +138,15 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func partitionArray(nums []int, k int) int {
 	sort.Ints(nums)
-	d, ans := 0, 1
-	for i, v := range nums[1:] {
-		t := v - nums[i]
-		if d+t <= k {
-			d += t
-		} else {
-			d = 0
+	ans, a := 1, nums[0]
+	for _, b := range nums {
+		if b-a > k {
+			a = b
 			ans++
 		}
 	}
@@ -141,26 +154,25 @@ func partitionArray(nums []int, k int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function partitionArray(nums: number[], k: number): number {
     nums.sort((a, b) => a - b);
     let ans = 1;
-    let prev = nums[0] + k;
-    for (let num of nums) {
-        if (num <= prev) continue;
-        prev = num + k;
-        ans++;
+    let a = nums[0];
+    for (const b of nums) {
+        if (b - a > k) {
+            a = b;
+            ++ans;
+        }
     }
     return ans;
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

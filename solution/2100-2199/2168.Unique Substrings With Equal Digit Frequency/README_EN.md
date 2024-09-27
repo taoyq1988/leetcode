@@ -1,13 +1,29 @@
-# [2168. Unique Substrings With Equal Digit Frequency](https://leetcode.com/problems/unique-substrings-with-equal-digit-frequency)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2168.Unique%20Substrings%20With%20Equal%20Digit%20Frequency/README_EN.md
+tags:
+    - Hash Table
+    - String
+    - Counting
+    - Hash Function
+    - Rolling Hash
+---
+
+<!-- problem:start -->
+
+# [2168. Unique Substrings With Equal Digit Frequency 🔒](https://leetcode.com/problems/unique-substrings-with-equal-digit-frequency)
 
 [中文文档](/solution/2100-2199/2168.Unique%20Substrings%20With%20Equal%20Digit%20Frequency/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 Given a digit string <code>s</code>, return <em>the number of <strong>unique substrings </strong>of </em><code>s</code><em> where every digit appears the same number of times.</em>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;1212&quot;
@@ -16,7 +32,7 @@ Given a digit string <code>s</code>, return <em>the number of <strong>unique sub
 Note that although the substring &quot;12&quot; appears twice, it is only counted once.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> s = &quot;12321&quot;
@@ -32,11 +48,17 @@ Note that although the substring &quot;12&quot; appears twice, it is only counte
 	<li><code>s</code> consists of digits.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -57,12 +79,11 @@ class Solution:
             presum[i + 1][int(c)] += 1
             for j in range(10):
                 presum[i + 1][j] += presum[i][j]
-        vis = set(s[i: j + 1] for i in range(n)
-                  for j in range(i, n) if check(i, j))
+        vis = set(s[i : j + 1] for i in range(n) for j in range(i, n) if check(i, j))
         return len(vis)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -102,7 +123,7 @@ class Solution {
 }
 ```
 
-### **Go**
+#### Go
 
 ```go
 func equalDigitFrequency(s string) int {
@@ -142,16 +163,8 @@ func equalDigitFrequency(s string) int {
 }
 ```
 
-### **TypeScript**
-
-```ts
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,28 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2300-2399/2343.Query%20Kth%20Smallest%20Trimmed%20Number/README_EN.md
+rating: 1651
+source: Weekly Contest 302 Q3
+tags:
+    - Array
+    - String
+    - Divide and Conquer
+    - Quickselect
+    - Radix Sort
+    - Sorting
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2343. Query Kth Smallest Trimmed Number](https://leetcode.com/problems/query-kth-smallest-trimmed-number)
 
 [中文文档](/solution/2300-2399/2343.Query%20Kth%20Smallest%20Trimmed%20Number/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> array of strings <code>nums</code>, where each string is of <strong>equal length</strong> and consists of only digits.</p>
 
@@ -24,7 +44,7 @@
 </ul>
 
 <p>&nbsp;</p>
-<p><strong>Example 1:</strong></p>
+<p><strong class="example">Example 1:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [&quot;102&quot;,&quot;473&quot;,&quot;251&quot;,&quot;814&quot;], queries = [[1,1],[2,3],[4,2],[1,2]]
@@ -37,7 +57,7 @@
    Note that the trimmed number &quot;02&quot; is evaluated as 2.
 </pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong class="example">Example 2:</strong></p>
 
 <pre>
 <strong>Input:</strong> nums = [&quot;24&quot;,&quot;37&quot;,&quot;96&quot;,&quot;04&quot;], queries = [[2,1],[2,2]]
@@ -65,62 +85,100 @@
 <p>&nbsp;</p>
 <p><strong>Follow up:</strong> Could you use the <strong>Radix Sort Algorithm</strong> to solve this problem? What will be the complexity of that solution?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
-    def smallestTrimmedNumbers(self, nums: List[str], queries: List[List[int]]) -> List[int]:
+    def smallestTrimmedNumbers(
+        self, nums: List[str], queries: List[List[int]]
+    ) -> List[int]:
         ans = []
-        for k, t in queries:
-            x = nums[:]
-            for i, v in enumerate(x):
-                x[i] = v[-t:]
-            p = list(zip(x, range(len(x))))
-            p.sort(key=lambda v: (int(v[0]), v[1]))
-            ans.append(p[k - 1][1])
+        for k, trim in queries:
+            t = sorted((v[-trim:], i) for i, v in enumerate(nums))
+            ans.append(t[k - 1][1])
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
-        int n = queries.length;
-        int m = nums.length;
-        int[] ans = new int[n];
-        for (int i = 0; i < n; ++i) {
-            int k = queries[i][0], t = queries[i][1];
-            String[][] arr = new String[m][2];
-            for (int j = 0; j < m; ++j) {
-                arr[j][0] = nums[j].substring(nums[j].length() - t);
-                arr[j][1] = String.valueOf(j);
+        int n = nums.length;
+        int m = queries.length;
+        int[] ans = new int[m];
+        String[][] t = new String[n][2];
+        for (int i = 0; i < m; ++i) {
+            int k = queries[i][0], trim = queries[i][1];
+            for (int j = 0; j < n; ++j) {
+                t[j] = new String[] {nums[j].substring(nums[j].length() - trim), String.valueOf(j)};
             }
-            Arrays.sort(arr, (a, b) -> {
+            Arrays.sort(t, (a, b) -> {
                 int x = a[0].compareTo(b[0]);
                 return x == 0 ? Long.compare(Integer.valueOf(a[1]), Integer.valueOf(b[1])) : x;
             });
-            ans[i] = Integer.valueOf(arr[k - 1][1]);
+            ans[i] = Integer.valueOf(t[k - 1][1]);
         }
         return ans;
     }
 }
 ```
 
-### **TypeScript**
+#### C++
 
-```ts
-
+```cpp
+class Solution {
+public:
+    vector<int> smallestTrimmedNumbers(vector<string>& nums, vector<vector<int>>& queries) {
+        int n = nums.size();
+        vector<pair<string, int>> t(n);
+        vector<int> ans;
+        for (auto& q : queries) {
+            int k = q[0], trim = q[1];
+            for (int j = 0; j < n; ++j) {
+                t[j] = {nums[j].substr(nums[j].size() - trim), j};
+            }
+            sort(t.begin(), t.end());
+            ans.push_back(t[k - 1].second);
+        }
+        return ans;
+    }
+};
 ```
 
-### **...**
+#### Go
 
-```
-
+```go
+func smallestTrimmedNumbers(nums []string, queries [][]int) []int {
+	type pair struct {
+		s string
+		i int
+	}
+	ans := make([]int, len(queries))
+	t := make([]pair, len(nums))
+	for i, q := range queries {
+		for j, s := range nums {
+			t[j] = pair{s[len(s)-q[1]:], j}
+		}
+		sort.Slice(t, func(i, j int) bool { a, b := t[i], t[j]; return a.s < b.s || a.s == b.s && a.i < b.i })
+		ans[i] = t[q[0]-1].i
+	}
+	return ans
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->
